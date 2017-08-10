@@ -53,7 +53,7 @@ export default TabNavigator(
       },
     }),
     tabBarComponent: TabBarBottom,
-    tabBarPosition: 'bottom',
+    tabBarPosition: 'bottom2',
     animationEnabled: false,
     swipeEnabled: true,
   }
