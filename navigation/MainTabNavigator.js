@@ -67,7 +67,7 @@ export default TabNavigator(
     tabBarOptions: {
       labelStyle: {
         fontSize: 10,
-        marginTop: 25,
+        marginTop: Platform.OS === 'ios' ? 25 : 0,
       },
       tabStyle: {
         // width: 100,
@@ -76,13 +76,13 @@ export default TabNavigator(
         backgroundColor: 'green',
       },
       showIcon: true,
-      indicatorStyle:{
+      indicatorStyle: {
         opacity: 1,
-        backgroundColor:'red'
+        backgroundColor: 'red'
       },
       upperCaseLabel: false,
       showLabel: true,
-      activeTintColor:'yellow'
+      activeTintColor: 'yellow'
     }
   }
 );
