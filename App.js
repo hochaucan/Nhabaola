@@ -1,5 +1,12 @@
 import React from 'react';
-import { Platform, StatusBar, StyleSheet, View } from 'react-native';
+import {
+  Platform,
+  StatusBar,
+  StyleSheet,
+  View,
+  Text,
+  Image,
+} from 'react-native';
 import { AppLoading, Asset, Font } from 'expo';
 import { Ionicons } from '@expo/vector-icons';
 import RootNavigation from './navigation/RootNavigation';
@@ -27,6 +34,17 @@ export default class App extends React.Component {
           {Platform.OS === 'android' &&
             <View style={styles.statusBarUnderlay} />
           }
+          <View style={styles.headerBar}>
+
+            <Image
+              style={styles.headerLogo}
+              source={{ uri: 'https://facebook.github.io/react/img/logo_og.png' }}
+            />
+            {/* <Text style={styles.headerText}>
+                Nha baola
+              </Text> */}
+
+          </View>
           <RootNavigation />
         </View>
       );
@@ -69,6 +87,23 @@ const styles = StyleSheet.create({
   },
   statusBarUnderlay: {
     height: 24,
-    backgroundColor: Platform.OS === 'ios' ? '#a4d227' : '#b8fb02', //b8fb02, ccff00, b4fe02, d1ff18
+    backgroundColor: Platform.OS === 'ios' ? '#73aa2a' : '#b8fb02', //b8fb02, ccff00, b4fe02, d1ff18
   },
+  headerBar: {
+    height: 32,
+    backgroundColor: '#a4d227',
+    justifyContent: 'center',
+    alignItems: 'center',
+
+  },
+  headerText: {
+    color: '#fff',
+
+  },
+  headerLogo: {
+    width: 25,
+    height: 25,
+
+  }
+
 });

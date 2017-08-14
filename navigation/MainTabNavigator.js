@@ -21,12 +21,15 @@ export default TabNavigator(
     Home: {
       screen: HomeScreen,
     },
-    Links: {
+    Search: {
       screen: LinksScreen,
     },
-    Settings: {
+    Notifications: {
       screen: SettingsScreen,
     },
+    Profiles: {
+      screen: HomeScreen,
+    }
   },
   {
     navigationOptions: ({ navigation }) => ({
@@ -34,25 +37,32 @@ export default TabNavigator(
         const { routeName } = navigation.state;
         let iconName;
         switch (routeName) {
+          case 'Testing':
+            iconName = Platform.OS === 'ios'
+              ? `ios-navigate${focused ? '' : '-outline'}`
+              : 'md-navigate';
+            break;
           case 'Home':
             iconName = Platform.OS === 'ios'
               ? `ios-home${focused ? '' : '-outline'}`
               : 'md-home';
             break;
-          case 'Links':
+          case 'Search':
             iconName = Platform.OS === 'ios'
-              ? `ios-link${focused ? '' : '-outline'}`
-              : 'md-link';
+              ? `ios-search${focused ? '' : '-outline'}`
+              : 'md-search';
             break;
-          case 'Settings':
+          case 'Notifications':
             iconName = Platform.OS === 'ios'
-              ? `ios-options${focused ? '' : '-outline'}`
-              : 'md-options';
-          case 'Testing':
+              ? `ios-notifications${focused ? '' : '-outline'}`
+              : 'md-notifications';
+            break;
+          case 'Profiles':
             iconName = Platform.OS === 'ios'
-              ? `ios-options${focused ? '' : '-outline'}`
-              : 'md-options';
+              ? `ios-person${focused ? '' : '-outline'}`
+              : 'md-person';
 
+            break;
           default:
             StatusBar.setBarStyle('light-content');
             if (Platform.OS === 'ios') {
@@ -75,7 +85,7 @@ export default TabNavigator(
             size={28}
             style={{ marginTop: Platform.OS === 'ios' ? 40 : 0 }}
             //color={focused ? Colors.tabIconSelected : Colors.tabIconDefault}
-            color={focused ? '#a4d227' : Colors.tabIconDefault}
+            color={focused ? '#a4d227' : '#5D5D5D'}
           />
         );
       },
@@ -106,7 +116,8 @@ export default TabNavigator(
       activeTintColor: '#a4d227',
       inactiveTintColor: '#000',
       iconStyle: {
-        marginTop: Platform.OS === 'ios' ? -30 : 0,
+        marginTop: Platform.OS === 'ios' ? -28 : 0,
+
       }
     }
   }
