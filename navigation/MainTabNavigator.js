@@ -54,7 +54,7 @@ export default TabNavigator(
               : 'md-options';
 
           default:
-            // StatusBar.setBarStyle('light-content');
+            StatusBar.setBarStyle('light-content');
             if (Platform.OS === 'ios') {
               // StatusBar.setTranslucent(false);
               // StatusBar.setBackgroundColor('#a4d227')

@@ -13,7 +13,8 @@ import MapView from 'react-native-maps';
 import ActionButton from 'react-native-action-button';
 import Icon from 'react-native-vector-icons/Ionicons';
 
-
+var date = new Date();
+var timeZone = (-1) * date.getTimezoneOffset() / 60;
 
 export default class Testing extends React.Component {
   static navigationOptions = {
@@ -31,9 +32,9 @@ export default class Testing extends React.Component {
     return (
       <View style={{ flex: 1, backgroundColor: '#f3f3f3' }}>
 
-      
 
-        <Text style={styles.fontColor}>Nguyen Thi Hoang Oanh</Text>
+
+        <Text style={styles.fontColor}>Time Zone : {timeZone}</Text>
         <ActionButton buttonColor="rgba(231,76,60,1)">
           <ActionButton.Item buttonColor='#9b59b6' title="New Task" onPress={() => console.log("notes tapped!")}>
             <Icon name="md-create" style={styles.actionButtonIcon} />
