@@ -1,5 +1,11 @@
 import { Notifications } from 'expo';
 import React from 'react';
+import {
+  View,
+  Text,
+  StatusBar
+}
+  from 'react-native'
 import { StackNavigator } from 'react-navigation';
 
 import MainTabNavigator from './MainTabNavigator';
@@ -29,8 +35,12 @@ export default class RootNavigator extends React.Component {
     this._notificationSubscription && this._notificationSubscription.remove();
   }
 
+
+
   render() {
-    return <RootStackNavigator />;
+    return (
+      <RootStackNavigator />
+    );
   }
 
   _registerForPushNotifications() {

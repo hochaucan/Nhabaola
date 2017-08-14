@@ -30,7 +30,7 @@ export default class HomeScreen extends React.Component {
        
 
 
-        <ActionButton buttonColor="rgba(231,76,60,1)">
+        <ActionButton buttonColor="#73aa2a">
           <ActionButton.Item buttonColor='#9b59b6' title="New Task" onPress={() => console.log("notes tapped!")}>
             <Icon name="md-create" style={styles.actionButtonIcon} />
           </ActionButton.Item>

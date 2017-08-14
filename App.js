@@ -19,9 +19,14 @@ export default class App extends React.Component {
     } else {
       return (
         <View style={styles.container}>
-          {Platform.OS === 'ios' && <StatusBar barStyle="default" />}
+          {Platform.OS === 'ios' &&
+            <StatusBar barStyle="light-content" /> &&
+            <View style={styles.statusBarUnderlay} />
+          }
+
           {Platform.OS === 'android' &&
-            <View style={styles.statusBarUnderlay} />}
+            <View style={styles.statusBarUnderlay} />
+          }
           <RootNavigation />
         </View>
       );
@@ -48,7 +53,7 @@ export default class App extends React.Component {
       // reporting service, for example Sentry
       console.warn(
         'There was an error caching assets (see: App.js), perhaps due to a ' +
-          'network timeout, so we skipped caching. Reload the app to try again.'
+        'network timeout, so we skipped caching. Reload the app to try again.'
       );
       console.log(e);
     } finally {
@@ -64,6 +69,6 @@ const styles = StyleSheet.create({
   },
   statusBarUnderlay: {
     height: 24,
-    backgroundColor: 'rgba(0,0,0,0.2)',
+    backgroundColor: Platform.OS === 'ios' ? '#a4d227' : '#b8fb02', //b8fb02, ccff00, b4fe02, d1ff18
   },
 });

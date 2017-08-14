@@ -1,5 +1,8 @@
 import React from 'react';
-import { Platform } from 'react-native';
+import {
+  Platform,
+  StatusBar,
+} from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { TabNavigator, TabBarBottom, TabBarTop } from 'react-navigation';
 
@@ -49,13 +52,30 @@ export default TabNavigator(
             iconName = Platform.OS === 'ios'
               ? `ios-options${focused ? '' : '-outline'}`
               : 'md-options';
+
+          default:
+            // StatusBar.setBarStyle('light-content');
+            if (Platform.OS === 'ios') {
+              // StatusBar.setTranslucent(false);
+              // StatusBar.setBackgroundColor('#a4d227')
+            }
+            else {
+
+              // StatusBar.setHidden(false);
+              // StatusBar.setBackgroundColor('transparent')
+              // StatusBar.setTranslucent(true);
+
+            }
+            break;
+
         }
         return (
           <Ionicons
             name={iconName}
             size={28}
             style={{ marginTop: Platform.OS === 'ios' ? 40 : 0 }}
-            color={focused ? Colors.tabIconSelected : Colors.tabIconDefault}
+            //color={focused ? Colors.tabIconSelected : Colors.tabIconDefault}
+            color={focused ? '#a4d227' : Colors.tabIconDefault}
           />
         );
       },
@@ -67,22 +87,27 @@ export default TabNavigator(
     tabBarOptions: {
       labelStyle: {
         fontSize: 10,
-        marginTop: Platform.OS === 'ios' ? 25 : 0,
+        marginTop: Platform.OS === 'ios' ? 25 : 5,
       },
       tabStyle: {
         // width: 100,
       },
       style: {
-        backgroundColor: 'green',
+        backgroundColor: '#fff',
+        height: Platform.OS === 'ios' ? 40 : 50,
       },
       showIcon: true,
       indicatorStyle: {
         opacity: 1,
-        backgroundColor: 'red'
+        backgroundColor: '#a4d227'
       },
       upperCaseLabel: false,
-      showLabel: true,
-      activeTintColor: 'yellow'
+      showLabel: false,
+      activeTintColor: '#a4d227',
+      inactiveTintColor: '#000',
+      iconStyle: {
+        marginTop: Platform.OS === 'ios' ? -30 : 0,
+      }
     }
   }
 );
