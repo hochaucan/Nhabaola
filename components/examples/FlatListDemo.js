@@ -18,7 +18,7 @@ import Icon from 'react-native-vector-icons/Ionicons';
 var date = new Date();
 var timeZone = (-1) * date.getTimezoneOffset() / 60;
 
-export default class FlatList extends React.Component {
+export default class FlatListDemo extends React.Component {
   static navigationOptions = {
     // title: 'app.json',
     header: null,
