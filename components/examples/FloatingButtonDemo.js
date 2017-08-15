@@ -11,23 +11,29 @@ import ActionButton from 'react-native-action-button';
 export default class FloatingButtonDemo extends React.Component {
     render() {
         return (
+            <View style={styles.container}>
+                {/* <Text>{this.props.hoten}</Text> */}
 
-            <ActionButton buttonColor="#73aa2a">
-                <ActionButton.Item buttonColor='#9b59b6' title="New Task" onPress={() => console.log("notes tapped!")}>
-                    <Icon name="md-create" style={styles.actionButtonIcon} />
-                </ActionButton.Item>
-                <ActionButton.Item buttonColor='#3498db' title="Notifications" onPress={() => { }}>
-                    <Icon name="md-notifications-off" style={styles.actionButtonIcon} />
-                </ActionButton.Item>
-                <ActionButton.Item buttonColor='#1abc9c' title="All Tasks" onPress={() => { }}>
-                    <Icon name="md-done-all" style={styles.actionButtonIcon} />
-                </ActionButton.Item>
-            </ActionButton>
+                <ActionButton buttonColor="#73aa2a">
+                    <ActionButton.Item buttonColor='#9b59b6' title="New Task" onPress={() => console.log("notes tapped!")}>
+                        <Icon name="md-create" style={styles.actionButtonIcon} />
+                    </ActionButton.Item>
+                    <ActionButton.Item buttonColor='#3498db' title="Notifications" onPress={() => { }}>
+                        <Icon name="md-notifications-off" style={styles.actionButtonIcon} />
+                    </ActionButton.Item>
+                    <ActionButton.Item buttonColor='#1abc9c' title="All Tasks" onPress={() => { }}>
+                        <Icon name="md-done-all" style={styles.actionButtonIcon} />
+                    </ActionButton.Item>
+                </ActionButton>
+            </View>
         );
     }
 }
 
 const styles = StyleSheet.create({
+   container:{
+flex:1,
+   },
     actionButtonIcon: {
         fontSize: 20,
         height: 22,
