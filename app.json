@@ -18,10 +18,16 @@
       "hideExponentText": false
     },
     "packagerOpts": {
-      "assetExts": ["ttf"]
+      "assetExts": [
+        "ttf"
+      ]
     },
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.solutioncenter.nhabaola"
+    },
+    "android": {
+      "package": "com.solutioncenter.nhabaola"
     }
   }
 }
