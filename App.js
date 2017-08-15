@@ -34,17 +34,14 @@ export default class App extends React.Component {
           {Platform.OS === 'android' &&
             <View style={styles.statusBarUnderlay} />
           }
-          <View style={styles.headerBar}>
-
+          <View style={Platform.OS === 'ios' ? styles.headerLogoBackgroundIos : styles.headerLogoBackgroundAndroid}>
             <Image
               style={styles.headerLogo}
-              source={{ uri: 'https://facebook.github.io/react/img/logo_og.png' }}
+              /* source={{ uri: 'https://facebook.github.io/react/img/logo_og.png' }} */
+              source={require('./images/nha-bao-la.jpg')}
             />
-            {/* <Text style={styles.headerText}>
-                Nha baola
-              </Text> */}
-
           </View>
+          <View style={styles.headerBar}></View>
           <RootNavigation />
         </View>
       );
@@ -94,16 +91,28 @@ const styles = StyleSheet.create({
     backgroundColor: '#a4d227',
     justifyContent: 'center',
     alignItems: 'center',
-
+    zIndex: 1,
   },
   headerText: {
     color: '#fff',
 
   },
   headerLogo: {
-    width: 25,
-    height: 25,
+    width: 40,
+    height: 40,
+    position: 'absolute',
+    top: 3,
+    zIndex: 2,
+    borderRadius: Platform.OS === 'ios' ? 10 : 100,
 
-  }
-
+  },
+  headerLogoBackgroundIos: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    zIndex: 3
+  },
+  headerLogoBackgroundAndroid: {
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
 });

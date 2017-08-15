@@ -96,15 +96,17 @@ export default TabNavigator(
     swipeEnabled: true,
     tabBarOptions: {
       labelStyle: {
-        fontSize: 10,
-        marginTop: Platform.OS === 'ios' ? 25 : 5,
+        // fontSize: 10,
+        // marginTop: Platform.OS === 'ios' ? 25 : 5,
       },
       tabStyle: {
         // width: 100,
       },
       style: {
         backgroundColor: '#fff',
-        height: Platform.OS === 'ios' ? 40 : 50,
+        height: Platform.OS === 'ios' ? 50 : 50,
+        // marginTop: 20,
+
       },
       showIcon: true,
       indicatorStyle: {
@@ -116,8 +118,8 @@ export default TabNavigator(
       activeTintColor: '#a4d227',
       inactiveTintColor: '#000',
       iconStyle: {
-        marginTop: Platform.OS === 'ios' ? -28 : 0,
-
+        marginTop: Platform.OS === 'ios' ? -25 : 0,
+        height: Platform.OS === 'ios' ? 40 : 30,
       }
     }
   }
