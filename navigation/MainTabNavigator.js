@@ -104,9 +104,7 @@ export default TabNavigator(
       },
       style: {
         backgroundColor: '#fff',
-        height: Platform.OS === 'ios' ? 50 : 50,
-        // marginTop: 20,
-
+        height: 50,
       },
       showIcon: true,
       indicatorStyle: {
