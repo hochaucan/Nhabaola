@@ -12,6 +12,7 @@ import HomeScreen from '../screens/HomeScreen';
 import LinksScreen from '../screens/LinksScreen';
 import SettingsScreen from '../screens/SettingsScreen';
 import Testing from '../screens/Testing';
+import ProfileScreen from '../screens/ProfileScreen';
 
 export default TabNavigator(
   {
@@ -28,7 +29,7 @@ export default TabNavigator(
       screen: SettingsScreen,
     },
     Profiles: {
-      screen: HomeScreen,
+      screen: ProfileScreen,
     }
   },
   {
@@ -61,7 +62,6 @@ export default TabNavigator(
             iconName = Platform.OS === 'ios'
               ? `ios-person${focused ? '' : '-outline'}`
               : 'md-person';
-
             break;
           default:
             StatusBar.setBarStyle('light-content');

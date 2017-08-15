@@ -6,7 +6,8 @@ import {
   Text,
   Dimensions,
   TouchableOpacity,
-  StatusBar
+  StatusBar,
+  FlatList
 }
   from 'react-native';
 import MapView from 'react-native-maps';
@@ -32,10 +33,18 @@ export default class Testing extends React.Component {
     return (
       <View style={{ flex: 1, backgroundColor: '#f3f3f3' }}>
 
-
-
         <Text style={styles.fontColor}>Time Zone : {timeZone}</Text>
-        <ActionButton buttonColor="rgba(231,76,60,1)">
+
+        <FlatList
+          data={[{ key: 'a' }, { key: 'b' }]}
+          renderItem={({ item }) => <Text>{item.key}</Text>}
+        />
+
+
+
+
+
+        {/* <ActionButton buttonColor="rgba(231,76,60,1)">
           <ActionButton.Item buttonColor='#9b59b6' title="New Task" onPress={() => console.log("notes tapped!")}>
             <Icon name="md-create" style={styles.actionButtonIcon} />
           </ActionButton.Item>
@@ -45,7 +54,7 @@ export default class Testing extends React.Component {
           <ActionButton.Item buttonColor='#1abc9c' title="All Tasks" onPress={() => { }}>
             <Icon name="md-done-all" style={styles.actionButtonIcon} />
           </ActionButton.Item>
-        </ActionButton>
+        </ActionButton> */}
       </View>
     );
   }
