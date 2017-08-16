@@ -19,6 +19,7 @@ import FlatListDemo from '../components/examples/FlatListDemo';
 import FloatingButtonDemo from '../components/examples/FloatingButtonDemo';
 import PostDemo from '../components/examples/PostDemo';
 import AsyncStorageDemo from '../components/examples/AsyncStorageDemo';
+import NavigatorDemo from '../components/examples/NavigatorDemo';
 
 
 
@@ -39,26 +40,14 @@ export default class Testing extends React.Component {
     }
   }
 
-  renderScene(route, navigator) {
-    switch (route.name) {
-      case 'roomDetail':
-        return (
-          <Text>Test do mah</Text>
-        );
-        break;
 
-      default:
-        break;
-    }
-
-  };
 
 
   render() {
     return (
       <View style={styles.container}>
+        <NavigatorDemo />
 
-        <AsyncStorageDemo />
 
         <FloatingButtonDemo hoten='Ho Chau Can2' />
       </View>
