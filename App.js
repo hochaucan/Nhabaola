@@ -39,6 +39,7 @@ export default class App extends React.Component {
               style={styles.headerLogo}
               /* source={{ uri: 'https://facebook.github.io/react/img/logo_og.png' }} */
               source={require('./images/nha-bao-la.jpg')}
+            /* source={require('./assets/images/nbl-header_logo.png')} */
             />
           </View>
           <View style={styles.headerBar}></View>

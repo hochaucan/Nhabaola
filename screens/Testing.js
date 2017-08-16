@@ -9,7 +9,7 @@ import {
   StatusBar,
   FlatList,
   Image,
-  
+
 }
   from 'react-native';
 import MapView from 'react-native-maps';
@@ -18,6 +18,8 @@ import Icon from 'react-native-vector-icons/Ionicons';
 import FlatListDemo from '../components/examples/FlatListDemo';
 import FloatingButtonDemo from '../components/examples/FloatingButtonDemo';
 import PostDemo from '../components/examples/PostDemo';
+import AsyncStorageDemo from '../components/examples/AsyncStorageDemo';
+
 
 
 var date = new Date();
@@ -37,17 +39,17 @@ export default class Testing extends React.Component {
     }
   }
 
-  renderScene(route, navigator){
-switch (route.name) {
-  case 'roomDetail':
-    return(
-      <Text>Test do mah</Text>
-    );
-    break;
+  renderScene(route, navigator) {
+    switch (route.name) {
+      case 'roomDetail':
+        return (
+          <Text>Test do mah</Text>
+        );
+        break;
 
-  default:
-    break;
-}
+      default:
+        break;
+    }
 
   };
 
@@ -55,9 +57,10 @@ switch (route.name) {
   render() {
     return (
       <View style={styles.container}>
-      
-        <PostDemo/>
-        <FloatingButtonDemo hoten = 'Ho Chau Can2' />
+
+        <AsyncStorageDemo />
+
+        <FloatingButtonDemo hoten='Ho Chau Can2' />
       </View>
 
     );

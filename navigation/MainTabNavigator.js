@@ -64,6 +64,7 @@ export default TabNavigator(
               : 'md-person';
             break;
           default:
+          
             StatusBar.setBarStyle('light-content');
             if (Platform.OS === 'ios') {
               // StatusBar.setTranslucent(false);
