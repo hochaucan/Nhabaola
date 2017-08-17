@@ -16,9 +16,9 @@ import ProfileScreen from '../screens/ProfileScreen';
 
 export default TabNavigator(
   {
-    Testing: {
-      screen: Testing,
-    },
+    // Testing: {
+    //   screen: Testing,
+    // },
     Home: {
       screen: HomeScreen,
     },

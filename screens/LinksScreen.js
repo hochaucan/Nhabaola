@@ -7,7 +7,7 @@ export default class LinksScreen extends React.Component {
 
   static navigationOptions = {
     // title: 'Links',
-    // header: null,
+    header: null,
   };
 
   state = {

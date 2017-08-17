@@ -7,29 +7,106 @@ import {
   Text,
   TouchableOpacity,
   View,
+  FlatList,
+  Dimensions,
 } from 'react-native';
 import { WebBrowser } from 'expo';
 import { MonoText } from '../components/StyledText';
 import ActionButton from 'react-native-action-button';
 import Icon from 'react-native-vector-icons/Ionicons';
+import { Ionicons } from '@expo/vector-icons';
+import { users } from '../components/examples/data';
+var { height, width } = Dimensions.get('window');
 
 export default class HomeScreen extends React.Component {
   static navigationOptions = {
     header: null,
   };
+  constructor(props) {
+    super(props);
+    this.state = {
+      dataUsers: users,
+      refresh: false,
+      txt: 'test threshole'
+    }
+
+  }
+  refresh() {
+    this.setState({
+      refresh: false,
+    })
+  }
+
+  componentDidMount() {
+
+  }
 
   render() {
     return (
       <View style={styles.container}>
-        <ScrollView
+        {/* <ScrollView
           style={styles.container}
           contentContainerStyle={styles.contentContainer}>
           
-        </ScrollView>
+        </ScrollView> */}
 
-       
+        <FlatList
+          ref='homepage'
+          refreshing={this.state.refresh}
+          onRefresh={() => { this.refresh() }}
 
+          onEndReachedThreshold={-0.2}
+          onEndReached={() => {
+            this.setState({
+              txt: 'Can Ho'
+            });
+          }}
 
+          data={this.state.dataUsers}
+          renderItem={({ item }) =>
+            <View style={styles.card}>
+              <View style={styles.cardHeader}>
+                <View style={styles.cardAvatarBox}>
+                  <Image
+                    style={styles.cardAvatarImage}
+                    source={{ uri: item.picture.thumbnail }} />
+                </View>
+                <View style={styles.cardAvatarTextBox}>
+                  <Text style={styles.cardAvatarName}>{item.name.first} {item.name.last}</Text>
+                  <View style={styles.cardAvatarPhoneBox}>
+                    <Ionicons name='ios-star' size={15} />
+                    <Text style={styles.cardAvatarPhone}>{item.phone}</Text>
+                  </View>
+                </View>
+              </View>
+              <TouchableOpacity
+                style={styles.cardImageBox}
+                onPress={() => {
+                  alert("item.title")
+                }}
+              >
+                <Image
+                  style={styles.cardImage}
+                  source={{ uri: item.picture.large }} />
+              </TouchableOpacity>
+              <View style={styles.cardDes}>
+                <Text>
+                  Although dimensions are available immediately, they may change (e.g due to device rotation) so any rendering logic or styles that depend on these constants should try to
+                </Text>
+              </View>
+              <View style={styles.cardBottom}>
+                <Ionicons
+                  name='ios-star'
+                  size={20}
+                />
+              </View>
+            </View>
+          }
+          keyExtractor={item => item.email}
+
+        /* horizontal={false}
+        numColumns={3} */
+        />
         <ActionButton buttonColor="#73aa2a">
           <ActionButton.Item buttonColor='#9b59b6' title="New Task" onPress={() => console.log("notes tapped!")}>
             <Icon name="md-create" style={styles.actionButtonIcon} />
@@ -82,6 +159,89 @@ export default class HomeScreen extends React.Component {
 }
 
 const styles = StyleSheet.create({
+  card: {
+    flex: 1,
+    height: 480,
+    // borderBottomWidth: 0.5,
+    borderColor: '#d6d7da',
+    padding: 0,
+    flexDirection: 'column',
+  },
+  cardHeader: {
+    flex: 2,
+    flexDirection: 'row',
+    padding: 20,
+    // borderWidth: 1,
+    // borderColor: 'green',
+  },
+  cardAvatarBox: {
+    flex: 1
+  },
+  cardAvatarImage: {
+    borderRadius: Platform.OS === 'ios' ? 23 : 50,
+    height: 45,
+    width: 45,
+  },
+  cardAvatarTextBox: {
+    flex: 4,
+  },
+  cardAvatarName: {
+    fontSize: 17,
+  },
+  cardAvatarPhoneBox: {
+    flex: 1,
+    flexDirection: 'row',
+  },
+  cardAvatarPhone: {
+    color: '#9B9D9D',
+    fontSize: 13,
+    paddingLeft: 8,
+  },
+  cardImageBox: {
+    flex: 9,
+    // borderWidth: 1,
+    // borderColor: 'blue',
+  },
+  cardImage: {
+    height: height * 0.4,
+
+  },
+  cardDes: {
+    flex: 3,
+    padding: 20,
+    backgroundColor: '#fff',
+    // borderWidth: 1,
+    // borderColor: 'red',
+  
+  },
+  cardBottom: {
+    flex: 1,
+    paddingLeft: 20,
+    paddingRight: 20,
+    paddingTop:10,
+    // paddingBottom:5,
+    // borderWidth: 1,
+    // borderColor: 'black',
+
+  },
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
   actionButtonIcon: {
     fontSize: 20,
     height: 22,
