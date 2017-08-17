@@ -10,11 +10,28 @@ import { StackNavigator } from 'react-navigation';
 
 import MainTabNavigator from './MainTabNavigator';
 import registerForPushNotificationsAsync from '../api/registerForPushNotificationsAsync';
+// import ScreenStack from './ScreenNavigator';
+
+
+import Settings3 from '../screens/SettingsScreen';
+export const ScreenStack = StackNavigator({
+  Settings2: {
+    screen: Settings3,
+    navigationOptions: ({ navigation }) => ({
+      // title: 'CanHO'
+    }),
+  },
+});
+
+
 
 const RootStackNavigator = StackNavigator(
   {
     Main: {
       screen: MainTabNavigator,
+    },
+    Settings4: {
+      screen: Settings3,
     },
   },
   {
@@ -23,6 +40,8 @@ const RootStackNavigator = StackNavigator(
         fontWeight: 'normal',
       },
     }),
+    // mode: 'modal',
+    // headerMode: 'none',
   }
 );
 

@@ -10,6 +10,7 @@ import {
 import { AppLoading, Asset, Font } from 'expo';
 import { Ionicons } from '@expo/vector-icons';
 import RootNavigation from './navigation/RootNavigation';
+import FeedStack from './components/examples/NavigatorDemo'
 
 export default class App extends React.Component {
   state = {
@@ -44,6 +45,7 @@ export default class App extends React.Component {
           </View>
           <View style={styles.headerBar}></View>
           <RootNavigation />
+          
         </View>
       );
     }

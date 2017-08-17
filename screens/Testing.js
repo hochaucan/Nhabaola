@@ -9,7 +9,7 @@ import {
   StatusBar,
   FlatList,
   Image,
-
+  Button,
 }
   from 'react-native';
 import MapView from 'react-native-maps';
@@ -19,7 +19,7 @@ import FlatListDemo from '../components/examples/FlatListDemo';
 import FloatingButtonDemo from '../components/examples/FloatingButtonDemo';
 import PostDemo from '../components/examples/PostDemo';
 import AsyncStorageDemo from '../components/examples/AsyncStorageDemo';
-import NavigatorDemo from '../components/examples/NavigatorDemo';
+// import NavigatorDemo from '../components/examples/NavigatorDemo';
 
 
 
@@ -40,13 +40,19 @@ export default class Testing extends React.Component {
     }
   }
 
-
+  handleSettingsPress = () => {
+    this.props.navigation.navigate('Settings4');
+  };
 
 
   render() {
     return (
       <View style={styles.container}>
-        <NavigatorDemo />
+        <Button
+          title="Detail"
+          buttonStyle={{ marginTop: 20 }}
+          onPress={this.handleSettingsPress}
+        />
 
 
         <FloatingButtonDemo hoten='Ho Chau Can2' />
