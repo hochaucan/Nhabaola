@@ -13,15 +13,16 @@ import registerForPushNotificationsAsync from '../api/registerForPushNotificatio
 // import ScreenStack from './ScreenNavigator';
 
 
-import Settings3 from '../screens/SettingsScreen';
-export const ScreenStack = StackNavigator({
-  Settings2: {
-    screen: Settings3,
-    navigationOptions: ({ navigation }) => ({
-      // title: 'CanHO'
-    }),
-  },
-});
+import RoomDetailScreen from '../screens/RoomDetailScreen';
+import ProfileScreen from '../screens/ProfileScreen';
+// export const ScreenStack = StackNavigator({
+//   Settings2: {
+//     screen: Settings3,
+//     navigationOptions: ({ navigation }) => ({
+//       // title: 'CanHO'
+//     }),
+//   },
+// });
 
 
 
@@ -30,8 +31,11 @@ const RootStackNavigator = StackNavigator(
     Main: {
       screen: MainTabNavigator,
     },
-    Settings4: {
-      screen: Settings3,
+    RoomDetailScreen: {
+      screen: RoomDetailScreen,
+    },
+    ProfileScreen: {
+      screen: ProfileScreen,
     },
   },
   {

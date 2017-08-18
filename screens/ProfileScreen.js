@@ -1,5 +1,5 @@
 import React from 'react';
-import { ScrollView, StyleSheet } from 'react-native';
+import { ScrollView, StyleSheet, Text, View } from 'react-native';
 import { ExpoLinksView } from '@expo/samples';
 import { Constants } from 'expo';
 
@@ -19,7 +19,8 @@ export default class ProfileScreen extends React.Component {
     render() {
         return (
             <ScrollView style={styles.container}>
-
+                <Text>Oanh Nguyen</Text>
+                <Text>{this.props.key}</Text>
             </ScrollView>
         );
     }

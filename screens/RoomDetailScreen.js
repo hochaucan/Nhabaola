@@ -1,5 +1,5 @@
 import React from 'react';
-import { ScrollView, StyleSheet,Text } from 'react-native';
+import { ScrollView, StyleSheet, Text } from 'react-native';
 import { ExpoLinksView } from '@expo/samples';
 import { Constants } from 'expo';
 
@@ -13,9 +13,10 @@ export default class RoomDetailScreen extends React.Component {
 
 
     render() {
+        const { picture, name, email, phone, login, dob, location } = this.props.navigation.state.params;
         return (
             <ScrollView style={styles.container}>
-                <Text>Room Detail</Text>
+                <Text>Room Detail {phone}</Text>
             </ScrollView>
         );
     }

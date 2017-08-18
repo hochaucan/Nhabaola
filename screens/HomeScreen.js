@@ -73,6 +73,10 @@ export default class HomeScreen extends React.Component {
     //alert(currentOffset)
   }
 
+  _moveToRoomDetail = (user) => {
+    this.props.navigation.navigate('RoomDetailScreen', { ...user });
+  };
+
   render() {
     return (
       <View style={styles.container}>
@@ -100,9 +104,16 @@ export default class HomeScreen extends React.Component {
             <View style={styles.card}>
               <View style={styles.cardHeader}>
                 <View style={styles.cardAvatarBox}>
-                  <Image
-                    style={styles.cardAvatarImage}
-                    source={{ uri: item.picture.thumbnail }} />
+                  <TouchableOpacity
+                    onPress={() => {
+                      //alert("item.title")
+                      this.props.navigation.navigate('ProfileScreen', { key: 'CanHo' });
+                    }}
+                  >
+                    <Image
+                      style={styles.cardAvatarImage}
+                      source={{ uri: item.picture.large }} />
+                  </TouchableOpacity>
                 </View>
                 <View style={styles.cardAvatarTextBox}>
                   <Text style={styles.cardAvatarName}>{item.name.first} {item.name.last}</Text>
@@ -114,9 +125,7 @@ export default class HomeScreen extends React.Component {
               </View>
               <TouchableOpacity
                 style={styles.cardImageBox}
-                onPress={() => {
-                  {/* alert("item.title") */ }
-                }}
+                onPress={() => this._moveToRoomDetail(item)}
               >
                 <Image
                   style={styles.cardImage}
