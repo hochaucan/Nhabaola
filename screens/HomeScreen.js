@@ -73,10 +73,10 @@ export default class HomeScreen extends React.Component {
                 </View>
                 <View style={styles.cardAvatarTextBox}>
                   <Text style={styles.cardAvatarName}>{item.name.first} {item.name.last}</Text>
-                  <View style={styles.cardAvatarPhoneBox}>
-                    <Ionicons name='ios-star' size={15} />
-                    <Text style={styles.cardAvatarPhone}>{item.phone}</Text>
-                  </View>
+                  <TouchableOpacity style={styles.cardAvatarPhoneBox}>
+                    <Ionicons style={styles.cardAvatarPhoneIcon} name='logo-whatsapp' />
+                    <Text style={styles.cardAvatarPhone}>: {item.phone}</Text>
+                  </TouchableOpacity>
                 </View>
               </View>
               <TouchableOpacity
@@ -89,16 +89,33 @@ export default class HomeScreen extends React.Component {
                   style={styles.cardImage}
                   source={{ uri: item.picture.large }} />
               </TouchableOpacity>
-              <View style={styles.cardDes}>
-                <Text>
+              <View style={styles.cardDesBox}>
+                <Text style={styles.cardDesText}>
                   Although dimensions are available immediately, they may change (e.g due to device rotation) so any rendering logic or styles that depend on these constants should try to
                 </Text>
               </View>
               <View style={styles.cardBottom}>
-                <Ionicons
-                  name='ios-star'
-                  size={20}
-                />
+                <View style={styles.cardBottomLeft}>
+                  <Text style={styles.cardBottomIconText}>5</Text>
+                  <TouchableOpacity>
+                    <Ionicons style={styles.cardBottomIcon} name='ios-star' />
+                  </TouchableOpacity>
+                  <Text style={styles.cardBottomIconText}>3</Text>
+                  <TouchableOpacity >
+                    <Ionicons style={styles.cardBottomIcon} name='ios-chatbubbles' />
+                  </TouchableOpacity>
+                </View>
+                <View style={styles.cardBottomRight}>
+                  <TouchableOpacity >
+                    <Ionicons style={styles.cardBottomIcon} name='ios-thumbs-up' />
+                  </TouchableOpacity>
+                  <TouchableOpacity>
+                    <Ionicons style={styles.cardBottomIcon} name='md-share' />
+                  </TouchableOpacity>
+                  <TouchableOpacity>
+                    <Ionicons style={styles.cardBottomIconRightEnd} name='md-flag' />
+                  </TouchableOpacity>
+                </View>
               </View>
             </View>
           }
@@ -175,7 +192,7 @@ const styles = StyleSheet.create({
     // borderColor: 'green',
   },
   cardAvatarBox: {
-    flex: 1
+    // flex: 1
   },
   cardAvatarImage: {
     borderRadius: Platform.OS === 'ios' ? 23 : 50,
@@ -184,6 +201,7 @@ const styles = StyleSheet.create({
   },
   cardAvatarTextBox: {
     flex: 4,
+    paddingLeft: 20,
   },
   cardAvatarName: {
     fontSize: 17,
@@ -191,39 +209,96 @@ const styles = StyleSheet.create({
   cardAvatarPhoneBox: {
     flex: 1,
     flexDirection: 'row',
+    paddingTop:5,
+  },
+  cardAvatarPhoneIcon: {
+    color: '#7E7E7E',
+    fontSize: 15,
   },
   cardAvatarPhone: {
-    color: '#9B9D9D',
+    color: '#7E7E7E',
     fontSize: 13,
     paddingLeft: 8,
   },
   cardImageBox: {
     flex: 9,
+    paddingLeft: 20,
+    paddingRight: 20,
     // borderWidth: 1,
     // borderColor: 'blue',
   },
   cardImage: {
-    height: height * 0.4,
+    flex: 1,
 
   },
-  cardDes: {
+  cardDesBox: {
     flex: 3,
     padding: 20,
     backgroundColor: '#fff',
     // borderWidth: 1,
     // borderColor: 'red',
-  
+
+  },
+  cardDesText: {
+    color: '#7E7E7E',
   },
   cardBottom: {
     flex: 1,
+    flexDirection: 'row',
     paddingLeft: 20,
     paddingRight: 20,
-    paddingTop:10,
+    paddingTop: 10,
     // paddingBottom:5,
     // borderWidth: 1,
     // borderColor: 'black',
-
   },
+  cardBottomLeft: {
+    flex: 1,
+    flexDirection: 'row',
+    // borderWidth: 1,
+    // borderColor: 'black',
+  },
+  cardBottomRight: {
+    flex: 1,
+    flexDirection: 'row',
+    justifyContent: 'flex-end',
+    // borderWidth: 1,
+    // borderColor: 'black',
+  },
+  cardBottomIcon: {
+
+    fontSize: 20,
+    paddingRight: 20,
+    paddingLeft: 5,
+    color: '#7E7E7E',
+  },
+  cardBottomIconRightEnd: {
+    fontSize: 20,
+    paddingLeft: 5,
+    color: '#7E7E7E',
+  },
+  cardBottomIconText: {
+    color: '#7E7E7E',
+  },
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

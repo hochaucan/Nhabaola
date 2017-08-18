@@ -1,13 +1,17 @@
-#73aa2a (dam)
-#a4d227 (sang)
+#73aa2a (Xanh dam)
+#a4d227 (Xanh sang)
+
+ cardAvatarPhone:'#9B9D9D',
+ React Native Icon: http://ionicframework.com/docs/ionicons/
+    
 
 GMAP Key: AIzaSyBIhOGDA4Cvocj02AYdnxYK5oGeg6VwetM 
 
  <uses-permission android:name="android.permission.INTERNET" />
 
  <script async defer
-    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBIhOGDA4Cvocj02AYdnxYK5oGeg6VwetM&callback=initMap">
- </script>
+ï¿½ ï¿½ src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBIhOGDA4Cvocj02AYdnxYK5oGeg6VwetM&callback=initMap">
+ï¿½</script>
 
 Facebook App ID: 143030619610047
 Facebook App Secret: 698f3dd6bd17327ec2c9e45753c7d053
