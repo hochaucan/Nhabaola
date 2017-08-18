@@ -7,6 +7,7 @@ import {
   Text,
   TouchableOpacity,
   TouchableHighlight,
+  TouchableNativeFeedback,
   View,
   FlatList,
   Dimensions,
@@ -111,16 +112,16 @@ export default class HomeScreen extends React.Component {
                   </TouchableOpacity>
                 </View>
               </View>
-              <TouchableHighlight
+              <TouchableOpacity
                 style={styles.cardImageBox}
                 onPress={() => {
-                  alert("item.title")
+                  {/* alert("item.title") */ }
                 }}
               >
                 <Image
                   style={styles.cardImage}
                   source={{ uri: item.picture.large }} />
-              </TouchableHighlight>
+              </TouchableOpacity>
               <View style={styles.cardDesBox}>
                 <Text style={styles.cardDesText}>
                   Although dimensions are available immediately, they may change (e.g due to device rotation) so any rendering logic or styles that depend on these constants should try to
@@ -212,14 +213,14 @@ export default class HomeScreen extends React.Component {
 const styles = StyleSheet.create({
   card: {
     flex: 1,
-    height: 460,
+    height: height * 0.8, //500,
     // borderBottomWidth: 0.5,
     borderColor: '#d6d7da',
     padding: 0,
     flexDirection: 'column',
   },
   cardHeader: {
-    flex: 2,
+    // flex: 2,
     flexDirection: 'row',
     padding: 20,
     // borderWidth: 1,
@@ -255,7 +256,7 @@ const styles = StyleSheet.create({
     paddingLeft: 8,
   },
   cardImageBox: {
-    flex: 9,
+    flex: 6,
     paddingLeft: 20,
     paddingRight: 20,
     // borderWidth: 1,
@@ -266,7 +267,7 @@ const styles = StyleSheet.create({
 
   },
   cardDesBox: {
-    flex: 3,
+    // flex: 2,
     padding: 20,
     backgroundColor: '#fff',
     // borderWidth: 1,
@@ -277,13 +278,12 @@ const styles = StyleSheet.create({
     color: '#7E7E7E',
   },
   cardBottom: {
-    flex: 1,
+    // flex: 1,
     flexDirection: 'row',
     paddingLeft: 20,
     paddingRight: 20,
-    paddingTop: 10,
+    // paddingTop: 20,
     paddingBottom: 10,
-    // paddingBottom:5,
     // borderWidth: 1,
     // borderColor: 'black',
   },
