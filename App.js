@@ -36,6 +36,7 @@ export default class App extends React.Component {
             <View style={styles.statusBarUnderlay} />
           }
           <View style={Platform.OS === 'ios' ? styles.headerLogoBackgroundIos : styles.headerLogoBackgroundAndroid}>
+
             <Image
               style={styles.headerLogo}
               /* source={{ uri: 'https://facebook.github.io/react/img/logo_og.png' }} */
@@ -43,9 +44,11 @@ export default class App extends React.Component {
             /* source={require('./assets/images/nbl-header_logo.png')} */
             />
           </View>
-          <View style={styles.headerBar}></View>
+          <View style={styles.headerBar}>
+            <Text style={styles.headerBarTitle}>Trang chủ</Text>
+          </View>
           <RootNavigation />
-          
+
         </View>
       );
     }
@@ -93,12 +96,12 @@ const styles = StyleSheet.create({
     height: 32,
     backgroundColor: '#a4d227',
     justifyContent: 'center',
-    alignItems: 'center',
+    // alignItems: 'center',
     zIndex: 1,
   },
-  headerText: {
+  headerBarTitle: {
     color: '#fff',
-
+paddingLeft:10,
   },
   headerLogo: {
     width: 40,

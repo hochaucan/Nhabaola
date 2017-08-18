@@ -6,9 +6,11 @@ import {
   StyleSheet,
   Text,
   TouchableOpacity,
+  TouchableHighlight,
   View,
   FlatList,
   Dimensions,
+  LayoutAnimation,
 } from 'react-native';
 import { WebBrowser } from 'expo';
 import { MonoText } from '../components/StyledText';
@@ -27,10 +29,14 @@ export default class HomeScreen extends React.Component {
     this.state = {
       dataUsers: users,
       refresh: false,
-      txt: 'test threshole'
+      txt: 'test threshole',
+      isActionButtonVisible: true, // 1. Define a state variable for showing/hiding the action-button 
     }
 
   }
+  // 2. Define a variable that will keep track of the current scroll position
+  _listViewOffset = 0
+
   refresh() {
     this.setState({
       refresh: false,
@@ -39,6 +45,31 @@ export default class HomeScreen extends React.Component {
 
   componentDidMount() {
 
+  }
+
+  _onScroll = (event) => {
+    // Simple fade-in / fade-out animation
+    const CustomLayoutLinear = {
+      duration: 100,
+      create: { type: LayoutAnimation.Types.linear, property: LayoutAnimation.Properties.opacity },
+      update: { type: LayoutAnimation.Types.linear, property: LayoutAnimation.Properties.opacity },
+      delete: { type: LayoutAnimation.Types.linear, property: LayoutAnimation.Properties.opacity }
+    }
+    // Check if the user is scrolling up or down by confronting the new scroll position with your own one
+    const currentOffset = event.nativeEvent.contentOffset.y
+    const direction = (currentOffset > 0 && currentOffset > this._listViewOffset)
+      ? 'down'
+      : 'up'
+    // If the user is scrolling down (and the action-button is still visible) hide it
+    const isActionButtonVisible = direction === 'up'
+    if (isActionButtonVisible !== this.state.isActionButtonVisible) {
+      LayoutAnimation.configureNext(CustomLayoutLinear)
+      this.setState({ isActionButtonVisible })
+    }
+    // Update your scroll position
+    this._listViewOffset = currentOffset
+
+    //alert(currentOffset)
   }
 
   render() {
@@ -51,6 +82,7 @@ export default class HomeScreen extends React.Component {
         </ScrollView> */}
 
         <FlatList
+          //onScroll={this._onScroll}
           ref='homepage'
           refreshing={this.state.refresh}
           onRefresh={() => { this.refresh() }}
@@ -79,7 +111,7 @@ export default class HomeScreen extends React.Component {
                   </TouchableOpacity>
                 </View>
               </View>
-              <TouchableOpacity
+              <TouchableHighlight
                 style={styles.cardImageBox}
                 onPress={() => {
                   alert("item.title")
@@ -88,7 +120,7 @@ export default class HomeScreen extends React.Component {
                 <Image
                   style={styles.cardImage}
                   source={{ uri: item.picture.large }} />
-              </TouchableOpacity>
+              </TouchableHighlight>
               <View style={styles.cardDesBox}>
                 <Text style={styles.cardDesText}>
                   Although dimensions are available immediately, they may change (e.g due to device rotation) so any rendering logic or styles that depend on these constants should try to
@@ -124,17 +156,19 @@ export default class HomeScreen extends React.Component {
         /* horizontal={false}
         numColumns={3} */
         />
-        <ActionButton buttonColor="#73aa2a">
-          <ActionButton.Item buttonColor='#9b59b6' title="New Task" onPress={() => console.log("notes tapped!")}>
-            <Icon name="md-create" style={styles.actionButtonIcon} />
-          </ActionButton.Item>
-          <ActionButton.Item buttonColor='#3498db' title="Notifications" onPress={() => { }}>
-            <Icon name="md-notifications-off" style={styles.actionButtonIcon} />
-          </ActionButton.Item>
-          <ActionButton.Item buttonColor='#1abc9c' title="All Tasks" onPress={() => { }}>
-            <Icon name="md-done-all" style={styles.actionButtonIcon} />
-          </ActionButton.Item>
-        </ActionButton>
+        {this.state.isActionButtonVisible ?
+          <ActionButton buttonColor="#73aa2a">
+            <ActionButton.Item buttonColor='#9b59b6' title="New Task" onPress={() => console.log("notes tapped!")}>
+              <Icon name="md-create" style={styles.actionButtonIcon} />
+            </ActionButton.Item>
+            <ActionButton.Item buttonColor='#3498db' title="Notifications" onPress={() => { }}>
+              <Icon name="md-notifications-off" style={styles.actionButtonIcon} />
+            </ActionButton.Item>
+            <ActionButton.Item buttonColor='#1abc9c' title="All Tasks" onPress={() => { }}>
+              <Icon name="md-done-all" style={styles.actionButtonIcon} />
+            </ActionButton.Item>
+          </ActionButton>
+          : null}
       </View>
     );
   }
@@ -178,7 +212,7 @@ export default class HomeScreen extends React.Component {
 const styles = StyleSheet.create({
   card: {
     flex: 1,
-    height: 480,
+    height: 460,
     // borderBottomWidth: 0.5,
     borderColor: '#d6d7da',
     padding: 0,
@@ -209,7 +243,7 @@ const styles = StyleSheet.create({
   cardAvatarPhoneBox: {
     flex: 1,
     flexDirection: 'row',
-    paddingTop:5,
+    paddingTop: 5,
   },
   cardAvatarPhoneIcon: {
     color: '#7E7E7E',
@@ -248,6 +282,7 @@ const styles = StyleSheet.create({
     paddingLeft: 20,
     paddingRight: 20,
     paddingTop: 10,
+    paddingBottom: 10,
     // paddingBottom:5,
     // borderWidth: 1,
     // borderColor: 'black',
