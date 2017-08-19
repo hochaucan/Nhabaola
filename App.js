@@ -6,22 +6,42 @@ import {
   View,
   Text,
   Image,
+  Animated,
+  Dimensions,
+  Easing,
 } from 'react-native';
 import { AppLoading, Asset, Font } from 'expo';
 import { Ionicons } from '@expo/vector-icons';
 import RootNavigation from './navigation/RootNavigation';
 import FeedStack from './components/examples/NavigatorDemo'
 
+// var STRINGS = require('./components/Localisation');
+var GLOBAL = require('./components/Global');
+var {height,width} = Dimensions.get('window');
+
 export default class App extends React.Component {
+  
   state = {
     assetsAreLoaded: false,
+    topLogo: new Animated.Value(500), 
+
   };
 
   componentWillMount() {
     this._loadAssetsAsync();
+
+      Animated.timing(                  // Animate over time
+      this.state.topLogo,            // The animated value to drive
+      {
+        toValue: 3,                   // Animate to opacity: 1 (opaque)
+        duration: 3000,     
+        easing:Easing.bounce,         // Make it take a while
+      }
+    ).start(); 
   }
 
   render() {
+     let { topLogo } = this.state;
     if (!this.state.assetsAreLoaded && !this.props.skipLoadingScreen) {
       return <AppLoading />;
     } else {
@@ -37,15 +57,19 @@ export default class App extends React.Component {
           }
           <View style={Platform.OS === 'ios' ? styles.headerLogoBackgroundIos : styles.headerLogoBackgroundAndroid}>
 
-            <Image
-              style={styles.headerLogo}
+            <Animated.Image
+              style={{  width: 40,
+    height: 40,
+    position: 'absolute',
+    top: topLogo,
+    zIndex: 2,
+    borderRadius: Platform.OS === 'ios' ? 10 : 100,}}
               /* source={{ uri: 'https://facebook.github.io/react/img/logo_og.png' }} */
               source={require('./images/nha-bao-la.jpg')}
-            /* source={require('./assets/images/nbl-header_logo.png')} */
-            />
+     />
           </View>
           <View style={styles.headerBar}>
-            <Text style={styles.headerBarTitle}>Trang chủ</Text>
+            <Text style={styles.headerBarTitle}> </Text>
           </View>
           <RootNavigation />
 
@@ -101,7 +125,7 @@ const styles = StyleSheet.create({
   },
   headerBarTitle: {
     color: '#fff',
-paddingLeft:10,
+    paddingLeft: 10,
   },
   headerLogo: {
     width: 40,

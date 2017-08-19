@@ -12,6 +12,7 @@ import {
   FlatList,
   Dimensions,
   LayoutAnimation,
+  
 } from 'react-native';
 import { WebBrowser } from 'expo';
 import { MonoText } from '../components/StyledText';
@@ -314,15 +315,15 @@ const styles = StyleSheet.create({
     fontSize: 20,
     paddingRight: 20,
     paddingLeft: 5,
-    color: '#AFAFAF',
+    color: '#8B8E8E',
   },
   cardBottomIconRightEnd: {
     fontSize: 20,
     paddingLeft: 5,
-    color: '#AFAFAF',
+    color: '#8B8E8E',
   },
   cardBottomIconText: {
-    color: '#AFAFAF',
+    color: '#8B8E8E',
   },
 
 

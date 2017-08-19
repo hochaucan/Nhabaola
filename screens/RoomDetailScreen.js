@@ -10,6 +10,7 @@ import {
     View,
     TextInput,
     Button,
+   
 } from 'react-native';
 import { ExpoLinksView } from '@expo/samples';
 import { Constants, MapView } from 'expo';
@@ -18,15 +19,28 @@ import { Ionicons } from '@expo/vector-icons';
 
 var { height, width } = Dimensions.get('window');
 export default class RoomDetailScreen extends React.Component {
+    // static navigationOptions = ({ navigation }) => ({
 
+    //     title: `Chat with ${navigation.state.params.name}`,
+    //     header: () => (
+
+    //         <View style={{ height: 50, backgroundColor: '#fff' }}>
+    //             <TouchableOpacity onPress={() => navigation.goBack()}>
+    //                 <Text> BACK </Text>
+    //             </TouchableOpacity>
+
+    //         </View>)
+    //     // headerRight: <Button title="Info" />,
+    // });
     static navigationOptions = {
-        // title: 'Links',
+        title: 'Chi tiết',
         header: null,
-      
+
     };
 
     state = {
-        mapRegion: { latitude: 37.78825, longitude: -122.4324, latitudeDelta: 0.0922, longitudeDelta: 0.0421 }
+        mapRegion: { latitude: 37.78825, longitude: -122.4324, latitudeDelta: 0.0922, longitudeDelta: 0.0421 },
+     
     };
 
     _handleMapRegionChange = mapRegion => {
@@ -36,9 +50,18 @@ export default class RoomDetailScreen extends React.Component {
     render() {
         const { picture, name, email, phone, login, dob, location } = this.props.navigation.state.params;
         return (
+              
             <ScrollView style={styles.container}>
+             
                 <View style={styles.card}>
                     <View style={styles.cardHeader}>
+                           <TouchableOpacity 
+                style={styles.backScreenBox} 
+                onPress={() => this.props.navigation.goBack()}>
+                            <Ionicons  style={styles.backScreenIcon}  name='md-arrow-back'></Ionicons>
+                        </TouchableOpacity>
+                      
+
                         <View style={styles.cardAvatarBox}>
                             <TouchableOpacity
                                 onPress={() => {
@@ -99,14 +122,16 @@ export default class RoomDetailScreen extends React.Component {
 
 
 
-                <View style={styles.cardMapBar}>
+                {/* <View style={styles.cardMapBar}>
                     <Text style={styles.cardMapBarText} >Bản đồ</Text>
+                </View> */}
+                <View style={styles.cardMapViewBox}>
+                    <MapView
+                        style={styles.CardMapView}
+                        region={this.state.mapRegion}
+                        onRegionChange={this._handleMapRegionChange}
+                    />
                 </View>
-                <MapView
-                    style={styles.CardMapView}
-                    region={this.state.mapRegion}
-                    onRegionChange={this._handleMapRegionChange}
-                />
 
                 {/* <View style={styles.cardCommentBar}>
                     <Text style={styles.cardCommentBarText}>Bình luận</Text>
@@ -129,6 +154,14 @@ export default class RoomDetailScreen extends React.Component {
 }
 
 const styles = StyleSheet.create({
+    backScreenBox:{
+justifyContent:'center',
+marginRight:10,
+    },
+backScreenIcon:{
+fontSize:28,
+color:'#a4d227',
+},
     cardCommentSubmitText: {
         color: '#fff',
     },
@@ -144,10 +177,13 @@ const styles = StyleSheet.create({
     cardCommentInput: {
         flex: 3,
         borderWidth: 1,
-        borderColor: '#AFAFAF',
+        borderColor: '#8B8E8E',
         height: 40,
         padding: 5,
-        borderRadius:5,
+        borderRadius: 5,
+    },
+    cardMapViewBox: {
+        padding: 20,
     },
     CardMapView: {
         alignSelf: 'stretch',
@@ -158,8 +194,8 @@ const styles = StyleSheet.create({
         flex: 1,
         flexDirection: 'row',
         height: 300,
-        padding: 5,
-        marginTop:10,
+        padding: 20,
+        marginTop: 10,
     },
     cardMapBar: {
         height: 35,
@@ -186,7 +222,7 @@ const styles = StyleSheet.create({
     },
     container: {
         flex: 1,
-        paddingTop: 15,
+        // paddingTop: 5,
         backgroundColor: '#fff',
     },
 
@@ -284,14 +320,14 @@ const styles = StyleSheet.create({
         fontSize: 20,
         paddingRight: 20,
         paddingLeft: 5,
-        color: '#AFAFAF',
+        color: '#8B8E8E',
     },
     cardBottomIconRightEnd: {
         fontSize: 20,
         paddingLeft: 5,
-        color: '#AFAFAF',
+        color: '#8B8E8E',
     },
     cardBottomIconText: {
-        color: '#AFAFAF',
+        color: '#8B8E8E',
     },
 });
