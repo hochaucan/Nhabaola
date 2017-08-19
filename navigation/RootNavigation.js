@@ -6,7 +6,7 @@ import {
   StatusBar
 }
   from 'react-native'
-import { StackNavigator } from 'react-navigation';
+import { StackNavigator,NavigationActions } from 'react-navigation';
 
 import MainTabNavigator from './MainTabNavigator';
 import registerForPushNotificationsAsync from '../api/registerForPushNotificationsAsync';
@@ -48,6 +48,18 @@ const RootStackNavigator = StackNavigator(
     // headerMode: 'none',
   }
 );
+
+// Prevents double taps navigating twice
+const navigateOnce = (getStateForAction) => (action, state) => {
+  const { type, routeName } = action;
+  return (
+    state &&
+    type === NavigationActions.NAVIGATE &&
+    routeName === state.routes[state.routes.length - 1].routeName
+  ) ? state : getStateForAction(action, state);
+};
+
+RootStackNavigator.router.getStateForAction = navigateOnce(RootStackNavigator.router.getStateForAction);
 
 export default class RootNavigator extends React.Component {
   componentDidMount() {
