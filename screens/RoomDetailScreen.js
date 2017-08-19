@@ -115,6 +115,7 @@ export default class RoomDetailScreen extends React.Component {
                     <TextInput
                         style={styles.cardCommentInput}
                         placeholder='Bình luận'
+                        underlineColorAndroid='transparent'
                     ></TextInput>
                     <TouchableOpacity style={styles.cardCommentSubmit}
 
@@ -143,7 +144,7 @@ const styles = StyleSheet.create({
     cardCommentInput: {
         flex: 3,
         borderWidth: 1,
-        borderColor: '#F2F2F2',
+        borderColor: '#AFAFAF',
         height: 40,
         padding: 5,
         borderRadius:5,
@@ -283,14 +284,14 @@ const styles = StyleSheet.create({
         fontSize: 20,
         paddingRight: 20,
         paddingLeft: 5,
-        color: '#7E7E7E',
+        color: '#AFAFAF',
     },
     cardBottomIconRightEnd: {
         fontSize: 20,
         paddingLeft: 5,
-        color: '#7E7E7E',
+        color: '#AFAFAF',
     },
     cardBottomIconText: {
-        color: '#7E7E7E',
+        color: '#AFAFAF',
     },
 });

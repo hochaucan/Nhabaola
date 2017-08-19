@@ -314,15 +314,15 @@ const styles = StyleSheet.create({
     fontSize: 20,
     paddingRight: 20,
     paddingLeft: 5,
-    color: '#7E7E7E',
+    color: '#AFAFAF',
   },
   cardBottomIconRightEnd: {
     fontSize: 20,
     paddingLeft: 5,
-    color: '#7E7E7E',
+    color: '#AFAFAF',
   },
   cardBottomIconText: {
-    color: '#7E7E7E',
+    color: '#AFAFAF',
   },
 
 
