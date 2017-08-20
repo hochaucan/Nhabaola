@@ -17,31 +17,31 @@ import FeedStack from './components/examples/NavigatorDemo'
 
 // var STRINGS = require('./components/Localisation');
 var GLOBAL = require('./components/Global');
-var {height,width} = Dimensions.get('window');
+var { height, width } = Dimensions.get('window');
 
 export default class App extends React.Component {
-  
+
   state = {
     assetsAreLoaded: false,
-    topLogo: new Animated.Value(500), 
+    topLogo: new Animated.Value(500),
 
   };
 
   componentWillMount() {
     this._loadAssetsAsync();
 
-      Animated.timing(                  // Animate over time
+    Animated.timing(                  // Animate over time
       this.state.topLogo,            // The animated value to drive
       {
         toValue: 3,                   // Animate to opacity: 1 (opaque)
-        duration: 3000,     
-        easing:Easing.bounce,         // Make it take a while
+        duration: 3000,
+        easing: Easing.bounce,         // Make it take a while
       }
-    ).start(); 
+    ).start();
   }
 
   render() {
-     let { topLogo } = this.state;
+    let { topLogo } = this.state;
     if (!this.state.assetsAreLoaded && !this.props.skipLoadingScreen) {
       return <AppLoading />;
     } else {
@@ -58,15 +58,17 @@ export default class App extends React.Component {
           <View style={Platform.OS === 'ios' ? styles.headerLogoBackgroundIos : styles.headerLogoBackgroundAndroid}>
 
             <Animated.Image
-              style={{  width: 40,
-    height: 40,
-    position: 'absolute',
-    top: topLogo,
-    zIndex: 2,
-    borderRadius: Platform.OS === 'ios' ? 10 : 100,}}
+              style={{
+                width: 40,
+                height: 40,
+                position: 'absolute',
+                top: topLogo,
+                zIndex: 2,
+                borderRadius: Platform.OS === 'ios' ? 10 : 100,
+              }}
               /* source={{ uri: 'https://facebook.github.io/react/img/logo_og.png' }} */
               source={require('./images/nha-bao-la.jpg')}
-     />
+            />
           </View>
           <View style={styles.headerBar}>
             <Text style={styles.headerBarTitle}> </Text>

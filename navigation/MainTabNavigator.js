@@ -13,6 +13,7 @@ import LinksScreen from '../screens/LinksScreen';
 import SettingsScreen from '../screens/SettingsScreen';
 import Testing from '../screens/Testing';
 import ProfileScreen from '../screens/ProfileScreen';
+import SearchScreen from '../screens/SearchScreen';
 
 export default TabNavigator(
   {
@@ -23,7 +24,7 @@ export default TabNavigator(
       screen: HomeScreen,
     },
     Search: {
-      screen: LinksScreen,
+      screen: SearchScreen,
     },
     Notifications: {
       screen: SettingsScreen,

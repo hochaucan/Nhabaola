@@ -6,13 +6,13 @@ import {
   StyleSheet,
   Text,
   TouchableOpacity,
-  TouchableHighlight,
+  TouchableWithoutFeedback,
   TouchableNativeFeedback,
   View,
   FlatList,
   Dimensions,
   LayoutAnimation,
-  
+
 } from 'react-native';
 import { WebBrowser } from 'expo';
 import { MonoText } from '../components/StyledText';
@@ -124,14 +124,14 @@ export default class HomeScreen extends React.Component {
                   </TouchableOpacity>
                 </View>
               </View>
-              <TouchableOpacity
+              <TouchableWithoutFeedback
                 style={styles.cardImageBox}
                 onPress={() => this._moveToRoomDetail(item)}
               >
                 <Image
                   style={styles.cardImage}
                   source={{ uri: item.picture.large }} />
-              </TouchableOpacity>
+              </TouchableWithoutFeedback>
               <View style={styles.cardDesBox}>
                 <Text style={styles.cardDesText}>
                   Although dimensions are available immediately, they may change (e.g due to device rotation) so any rendering logic or styles that depend on these constants should try to

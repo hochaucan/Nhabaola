@@ -195,7 +195,7 @@ color:'#a4d227',
         flexDirection: 'row',
         height: 300,
         padding: 20,
-        marginTop: 10,
+        marginTop: 5,
     },
     cardMapBar: {
         height: 35,
