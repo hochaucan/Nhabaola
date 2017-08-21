@@ -9,11 +9,13 @@ import {
     Picker,
     FlatList,
     Image,
+    Platform,
 } from 'react-native';
 import { ExpoLinksView } from '@expo/samples';
 import { Constants, MapView } from 'expo';
 import { Ionicons } from '@expo/vector-icons';
 import { users } from '../components/examples/data';
+import ModalDropdown from 'react-native-modal-dropdown';
 
 
 var { height, width } = Dimensions.get('window');
@@ -48,9 +50,16 @@ export default class SearchScreen extends React.Component {
         alert("can");
     }
 
+    _dropdown_onSelect(idx, value) {
+        // BUG: alert in a modal will auto dismiss and causes crash after reload and touch. @sohobloo 2016-12-1
+        //alert(`idx=${idx}, value='${value}'`);
+        //console.debug(`idx=${idx}, value='${value}'`);
+
+    }
+
     render() {
         return (
-            
+
             <ScrollView style={styles.container}>
                 <MapView
                     style={styles.searchMapView}
@@ -61,17 +70,30 @@ export default class SearchScreen extends React.Component {
                 <View style={styles.searchRoolResultBox}>
                     <View style={styles.searchRadiusBox}>
                         <Text >Bán kính: </Text>
-                        <Picker
-                            style={styles.searchRadiusPicker}
-                            mode='dropdown'
-                            selectedValue={this.state.language}
-                            onValueChange={(itemValue, itemIndex) => this.setState({ language: itemValue })}>
-                            <Picker.Item label="2 km" value="2" />
-                            <Picker.Item label="4 km" value="4" />
-                            <Picker.Item label="6 km" value="6" />
-                            <Picker.Item label="8 km" value="8" />
-                            <Picker.Item label="10 km" value="10" />
-                        </Picker>
+                        {Platform.OS === 'ios' ?
+                            <ModalDropdown
+                                style={styles.ModalDropdown}
+                                dropdownStyle={styles.dropdownStyle}
+                                textStyle={styles.dropdowntextStyle}
+                                options={['2 km', '4 km', '6 km', '8 km', '10 km']}
+                                defaultIndex={0}
+                                defaultValue='2 km'
+                                onSelect={(idx, value) => this._dropdown_onSelect(idx, value)}
+                            >
+                            </ModalDropdown>
+                            :
+                            <Picker
+                                style={styles.searchRadiusPicker}
+                                mode='dropdown'
+                                selectedValue={this.state.language}
+                                onValueChange={(itemValue, itemIndex) => this.setState({ language: itemValue })}>
+                                <Picker.Item label="2 km" value="2" />
+                                <Picker.Item label="4 km" value="4" />
+                                <Picker.Item label="6 km" value="6" />
+                                <Picker.Item label="8 km" value="8" />
+                                <Picker.Item label="10 km" value="10" />
+                            </Picker>
+                        }
                         <TouchableOpacity>
                             <Text style={{ flex: 3, textAlign: 'right', color: '#73aa2a' }}>Đăng ký vùng này</Text>
                         </TouchableOpacity>
@@ -117,6 +139,16 @@ export default class SearchScreen extends React.Component {
 }
 
 const styles = StyleSheet.create({
+    dropdowntextStyle: {
+        fontSize: 14,
+    },
+    ModalDropdown: {
+        flex: 1,
+
+    },
+    dropdownStyle: {
+        width: 100,
+    },
     searchCardImage: {
         flex: 3
     },
@@ -134,7 +166,7 @@ const styles = StyleSheet.create({
 
     searchFilterIcon: {
         paddingTop: 5,
-        paddingLeft: 25,
+        paddingLeft: 22,
     },
     searchRadiusPicker: {
         flex: 1,
@@ -146,6 +178,7 @@ const styles = StyleSheet.create({
     searchFilterBox: {
         flexDirection: 'row',
         marginBottom: 10,
+        marginTop:10,
     },
     searchRoolResultBox: {
         flex: 1,
