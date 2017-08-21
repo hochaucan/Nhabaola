@@ -10,6 +10,8 @@ import {
     FlatList,
     Image,
     Platform,
+    Modal,
+    Slider,
 } from 'react-native';
 import { ExpoLinksView } from '@expo/samples';
 import { Constants, MapView } from 'expo';
@@ -31,12 +33,15 @@ export default class SearchScreen extends React.Component {
         this.state = {
             mapRegion: { latitude: 37.78825, longitude: -122.4324, latitudeDelta: 0.0922, longitudeDelta: 0.0421 },
             searchResultData: users,
+            modalVisible: false,
+            value: 0.2
         }
     }
 
-    // state = {
-    //     mapRegion: { latitude: 37.78825, longitude: -122.4324, latitudeDelta: 0.0922, longitudeDelta: 0.0421 }
-    // };
+ 
+    _setModalVisible(visible) {
+        this.setState({ modalVisible: visible });
+    }
 
     _handleMapRegionChange = mapRegion => {
         this.setState({ mapRegion });
@@ -46,9 +51,6 @@ export default class SearchScreen extends React.Component {
         this.props.navigation.navigate('RoomDetailScreen', { ...user });
     };
 
-    _moveToFilterScreen() {
-        alert("can");
-    }
 
     _dropdown_onSelect(idx, value) {
         // BUG: alert in a modal will auto dismiss and causes crash after reload and touch. @sohobloo 2016-12-1
@@ -101,7 +103,7 @@ export default class SearchScreen extends React.Component {
                     <View style={styles.searchFilterBox}>
                         <Text >Bộ lọc: </Text>
                         <TouchableOpacity
-                            onPress={() => this._moveToFilterScreen()}
+                            onPress={() => this._setModalVisible(true)}
                         >
                             <Ionicons style={styles.searchFilterIcon} name='ios-funnel'></Ionicons>
                         </TouchableOpacity>
@@ -112,33 +114,82 @@ export default class SearchScreen extends React.Component {
                         ref='searchresult'
                         data={this.state.searchResultData}
                         renderItem={({ item }) =>
-
-                            <View style={styles.searchCard}>
-                                <TouchableOpacity
-                                    style={styles.searchCardImage}
-                                    onPress={() => this._moveToRoomDetail(item)}
-                                >
+                            <TouchableOpacity
+                                style={styles.searchCardImage}
+                                onPress={() => this._moveToRoomDetail(item)}
+                            >
+                                <View style={styles.searchCard}>
                                     <Image
                                         style={styles.searchCardImage}
                                         source={{ uri: item.picture.large }} />
-                                </TouchableOpacity>
-                                <Text style={styles.searchCardText}>{item.phone}</Text>
-                            </View>
 
+                                    <View style={styles.searchCardTextBox}>
+                                        <Text style={styles.searchCardAddress}>{item.location.street} {item.location.city}</Text>
+                                        <Text style={styles.searchCardPostDate}>Ngày đăng: {item.registered}</Text>
+                                        <View style={styles.searchCardPriceBox}>
+                                            <Text style={styles.searchCardPrice}>Giá: 2.000.000 đ</Text>
+                                            <Ionicons style={styles.searCardDistanceIcon} name='md-pin' >  3 km</Ionicons>
+                                            {/* <Text>3 km</Text> */}
+                                        </View>
+                                    </View>
+                                </View>
+                            </TouchableOpacity>
                         }
                         keyExtractor={item => item.email}
                     />
 
                 </View>
+                <Modal
+                    animationType={"slide"}
+                    transparent={false}
+                    visible={this.state.modalVisible}
+                    onRequestClose={() => { alert("Modal has been closed.") }}
+                >
+                    <View style={{ marginTop: 22 }}>
+                        <View>
+                            <Slider
+                                value={this.state.value}
+                                onValueChange={value => this.setState({ value })}
+                            />
 
+                            <TouchableOpacity onPress={() => {
+                                this._setModalVisible(!this.state.modalVisible)
+                            }}>
+                                <Text>Hide Modal</Text>
+                            </TouchableOpacity>
 
-
+                        </View>
+                    </View>
+                </Modal>
             </ScrollView>
+
         );
     }
 }
 
 const styles = StyleSheet.create({
+    searchCardPriceBox: {
+        flexDirection: 'row',
+    },
+    searCardDistanceIcon: {
+        flex: 1,
+        // fontSize: 14,
+        // marginLeft: 20,
+    },
+    searchCardPrice: {
+        flex: 2,
+        color: '#7E7E7E',
+    },
+    searchCardTextBox: {
+        flex: 9,
+        paddingLeft: 10,
+    },
+    searchCardPostDate: {
+        flex: 1,
+        color: '#9B9D9D',
+        // paddingTop: 10,
+        fontSize: 12,
+    },
     dropdowntextStyle: {
         fontSize: 14,
     },
@@ -152,9 +203,9 @@ const styles = StyleSheet.create({
     searchCardImage: {
         flex: 3
     },
-    searchCardText: {
-        flex: 9,
-        paddingLeft: 10,
+    searchCardAddress: {
+        flex: 2,
+        fontSize: 15,
     },
     searchCard: {
         flex: 1,
@@ -162,6 +213,9 @@ const styles = StyleSheet.create({
         height: 100,
         // borderWidth: 1,
         paddingTop: 10,
+        paddingBottom: 10,
+        borderBottomWidth: 0.3,
+        borderColor: '#9B9D9D',
     },
 
     searchFilterIcon: {
@@ -177,15 +231,18 @@ const styles = StyleSheet.create({
     },
     searchFilterBox: {
         flexDirection: 'row',
-        marginBottom: 10,
-        marginTop:10,
+        // marginBottom: 10,
+        marginTop: 10,
+        borderBottomWidth: 0.3,
+        paddingBottom: 10,
+        borderColor: '#9B9D9D',
     },
     searchRoolResultBox: {
         flex: 1,
         // height: 400,
         backgroundColor: '#fff',
         // position: 'absolute',
-        opacity: 0.9,
+        opacity: 0.8,
         marginTop: -70,
         padding: 10,
         borderTopWidth: 2,
