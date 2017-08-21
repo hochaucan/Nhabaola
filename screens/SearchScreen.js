@@ -17,6 +17,7 @@ import { users } from '../components/examples/data';
 
 
 var { height, width } = Dimensions.get('window');
+
 export default class SearchScreen extends React.Component {
 
     static navigationOptions = {
@@ -43,8 +44,13 @@ export default class SearchScreen extends React.Component {
         this.props.navigation.navigate('RoomDetailScreen', { ...user });
     };
 
+    _moveToFilterScreen() {
+        alert("can");
+    }
+
     render() {
         return (
+            
             <ScrollView style={styles.container}>
                 <MapView
                     style={styles.searchMapView}
@@ -57,7 +63,7 @@ export default class SearchScreen extends React.Component {
                         <Text >Bán kính: </Text>
                         <Picker
                             style={styles.searchRadiusPicker}
-
+                            mode='dropdown'
                             selectedValue={this.state.language}
                             onValueChange={(itemValue, itemIndex) => this.setState({ language: itemValue })}>
                             <Picker.Item label="2 km" value="2" />
@@ -67,12 +73,14 @@ export default class SearchScreen extends React.Component {
                             <Picker.Item label="10 km" value="10" />
                         </Picker>
                         <TouchableOpacity>
-                            <Text style={{ flex: 1, textAlign: 'right', color: '#73aa2a' }}>Đăng ký vùng này</Text>
+                            <Text style={{ flex: 3, textAlign: 'right', color: '#73aa2a' }}>Đăng ký vùng này</Text>
                         </TouchableOpacity>
                     </View>
                     <View style={styles.searchFilterBox}>
                         <Text >Bộ lọc: </Text>
-                        <TouchableOpacity>
+                        <TouchableOpacity
+                            onPress={() => this._moveToFilterScreen()}
+                        >
                             <Ionicons style={styles.searchFilterIcon} name='ios-funnel'></Ionicons>
                         </TouchableOpacity>
                     </View>
