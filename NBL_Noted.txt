@@ -3,6 +3,7 @@
 
  cardAvatarPhone:'#9B9D9D',
  React Native Icon: http://ionicframework.com/docs/ionicons/
+ Carousel: https://github.com/archriss/react-native-snap-carousel
     
 
 GMAP Key: AIzaSyBIhOGDA4Cvocj02AYdnxYK5oGeg6VwetM 

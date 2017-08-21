@@ -12,13 +12,13 @@ import {
     Platform,
     Modal,
     Slider,
+    SliderIOS,
 } from 'react-native';
 import { ExpoLinksView } from '@expo/samples';
 import { Constants, MapView } from 'expo';
 import { Ionicons } from '@expo/vector-icons';
 import { users } from '../components/examples/data';
 import ModalDropdown from 'react-native-modal-dropdown';
-
 
 var { height, width } = Dimensions.get('window');
 
@@ -34,11 +34,12 @@ export default class SearchScreen extends React.Component {
             mapRegion: { latitude: 37.78825, longitude: -122.4324, latitudeDelta: 0.0922, longitudeDelta: 0.0421 },
             searchResultData: users,
             modalVisible: false,
-            value: 0.2
+            age: 18,
+
         }
     }
 
- 
+
     _setModalVisible(visible) {
         this.setState({ modalVisible: visible });
     }
@@ -57,6 +58,11 @@ export default class SearchScreen extends React.Component {
         //alert(`idx=${idx}, value='${value}'`);
         //console.debug(`idx=${idx}, value='${value}'`);
 
+    }
+
+
+    getVal(val) {
+        // console.warn(val);
     }
 
     render() {
@@ -145,20 +151,49 @@ export default class SearchScreen extends React.Component {
                     visible={this.state.modalVisible}
                     onRequestClose={() => { alert("Modal has been closed.") }}
                 >
-                    <View style={{ marginTop: 22 }}>
-                        <View>
+                    <View style={styles.searchFilterModalBox}>
+                        <View style={styles.searhFilterSliderBox}>
+                            <Text>Giá: </Text>
                             <Slider
-                                value={this.state.value}
-                                onValueChange={value => this.setState({ value })}
+                                step={1}
+                                minimumValue={18}
+                                maximumValue={71}
+                                value={this.state.age}
+                                onValueChange={val => this.setState({ age: val })}
+                                onSlidingComplete={val => this.getVal(val)}
                             />
+                            <Text>{this.state.age}</Text>
+                            <Text style={{ marginTop: 20, }}>Diện tích: </Text>
+                            <Slider
 
-                            <TouchableOpacity onPress={() => {
-                                this._setModalVisible(!this.state.modalVisible)
-                            }}>
-                                <Text>Hide Modal</Text>
+                                step={2}
+                                minimumValue={18}
+                                maximumValue={71}
+                                value={this.state.age}
+                                onValueChange={val => this.setState({ age: val })}
+                                onSlidingComplete={val => this.getVal(val)}
+                            />
+                            <Text>{this.state.age}</Text>
+                        </View>
+                        <View style={styles.searchFilterButtonBox} >
+
+                            <TouchableOpacity
+                                style={styles.searchFilterButtonCancel}
+                                onPress={() => {
+                                    this._setModalVisible(!this.state.modalVisible)
+                                }}>
+                                <Text style={styles.searchFilterButtonText}>Hủy</Text>
                             </TouchableOpacity>
 
+                            <TouchableOpacity
+                                style={styles.searchFilterButtonSubmit}
+                                onPress={() => {
+                                    this._setModalVisible(!this.state.modalVisible)
+                                }}>
+                                <Text style={styles.searchFilterButtonText}>Áp dụng</Text>
+                            </TouchableOpacity>
                         </View>
+
                     </View>
                 </Modal>
             </ScrollView>
@@ -168,6 +203,40 @@ export default class SearchScreen extends React.Component {
 }
 
 const styles = StyleSheet.create({
+    searchFilterButtonCancel: {
+        flex: 1,
+        height: 50,
+        backgroundColor: '#73aa2a',
+        justifyContent: 'center',
+        alignItems: 'center',
+        marginLeft: 10,
+        marginRight: 10,
+    },
+    searchFilterButtonSubmit: {
+        flex: 1,
+        height: 50,
+        backgroundColor: '#73aa2a',
+        justifyContent: 'center',
+        alignItems: 'center',
+        marginRight: 10,
+    },
+    searchFilterButtonText: {
+        color: '#fff',
+    },
+    searchFilterModalBox: {
+        flex: 1,
+        paddingTop: 30,
+    },
+    searhFilterSliderBox: {
+        flex: 1,
+        padding: 10,
+    },
+    searchFilterButtonBox: {
+        flex: 1,
+        flexDirection: 'row',
+        borderColor: 'black',
+        justifyContent: 'flex-start',
+    },
     searchCardPriceBox: {
         flexDirection: 'row',
     },
