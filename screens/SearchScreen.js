@@ -243,7 +243,7 @@ const styles = StyleSheet.create({
     searCardDistanceIcon: {
         flex: 1,
         // fontSize: 14,
-        // marginLeft: 20,
+        paddingTop: 3,
     },
     searchCardPrice: {
         flex: 2,
@@ -290,6 +290,7 @@ const styles = StyleSheet.create({
     searchFilterIcon: {
         paddingTop: 5,
         paddingLeft: 22,
+        textAlign: 'center',
     },
     searchRadiusPicker: {
         flex: 1,
@@ -323,7 +324,7 @@ const styles = StyleSheet.create({
     },
     container: {
         flex: 1,
-        paddingTop: 15,
+        // paddingTop: 15,
         backgroundColor: '#fff',
     },
 });

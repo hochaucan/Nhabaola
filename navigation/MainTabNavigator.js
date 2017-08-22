@@ -14,6 +14,7 @@ import SettingsScreen from '../screens/SettingsScreen';
 import Testing from '../screens/Testing';
 import ProfileScreen from '../screens/ProfileScreen';
 import SearchScreen from '../screens/SearchScreen';
+import RegisterRoomScreen from '../screens/RegisterRoomScreen';
 
 export default TabNavigator(
   {
@@ -27,7 +28,7 @@ export default TabNavigator(
       screen: SearchScreen,
     },
     Notifications: {
-      screen: SettingsScreen,
+      screen: RegisterRoomScreen,
     },
     Profiles: {
       screen: ProfileScreen,
@@ -106,7 +107,7 @@ export default TabNavigator(
       },
       style: {
         backgroundColor: '#fff',
-        height: 50,
+        height: 45,
       },
       showIcon: true,
       indicatorStyle: {

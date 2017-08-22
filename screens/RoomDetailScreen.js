@@ -10,7 +10,7 @@ import {
     View,
     TextInput,
     Button,
-   
+
 } from 'react-native';
 import { ExpoLinksView } from '@expo/samples';
 import { Constants, MapView } from 'expo';
@@ -40,7 +40,7 @@ export default class RoomDetailScreen extends React.Component {
 
     state = {
         mapRegion: { latitude: 37.78825, longitude: -122.4324, latitudeDelta: 0.0922, longitudeDelta: 0.0421 },
-     
+
     };
 
     _handleMapRegionChange = mapRegion => {
@@ -50,17 +50,17 @@ export default class RoomDetailScreen extends React.Component {
     render() {
         const { picture, name, email, phone, login, dob, location } = this.props.navigation.state.params;
         return (
-              
+
             <ScrollView style={styles.container}>
-             
+
                 <View style={styles.card}>
                     <View style={styles.cardHeader}>
-                           <TouchableOpacity 
-                style={styles.backScreenBox} 
-                onPress={() => this.props.navigation.goBack()}>
-                            <Ionicons  style={styles.backScreenIcon}  name='md-arrow-back'></Ionicons>
+                        <TouchableOpacity
+                            style={styles.backScreenBox}
+                            onPress={() => this.props.navigation.goBack()}>
+                            <Ionicons style={styles.backScreenIcon} name='md-arrow-back'></Ionicons>
                         </TouchableOpacity>
-                      
+
 
                         <View style={styles.cardAvatarBox}>
                             <TouchableOpacity
@@ -154,14 +154,14 @@ export default class RoomDetailScreen extends React.Component {
 }
 
 const styles = StyleSheet.create({
-    backScreenBox:{
-justifyContent:'center',
-marginRight:10,
+    backScreenBox: {
+        justifyContent: 'center',
+        marginRight: 10,
     },
-backScreenIcon:{
-fontSize:28,
-color:'#a4d227',
-},
+    backScreenIcon: {
+        fontSize: 28,
+        color: '#a4d227',
+    },
     cardCommentSubmitText: {
         color: '#fff',
     },
