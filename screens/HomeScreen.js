@@ -12,7 +12,7 @@ import {
   FlatList,
   Dimensions,
   LayoutAnimation,
-
+  Modal,
 } from 'react-native';
 import { WebBrowser } from 'expo';
 import { MonoText } from '../components/StyledText';
@@ -20,6 +20,7 @@ import ActionButton from 'react-native-action-button';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { Ionicons } from '@expo/vector-icons';
 import { users } from '../components/examples/data';
+
 var { height, width } = Dimensions.get('window');
 
 export default class HomeScreen extends React.Component {
@@ -33,6 +34,7 @@ export default class HomeScreen extends React.Component {
       refresh: false,
       txt: 'test threshole',
       isActionButtonVisible: true, // 1. Define a state variable for showing/hiding the action-button 
+      modalVisible: false,
     }
 
   }
@@ -77,6 +79,10 @@ export default class HomeScreen extends React.Component {
   _moveToRoomDetail = (user) => {
     this.props.navigation.navigate('RoomDetailScreen', { ...user });
   };
+
+  _setModalVisible(visible) {
+    this.setState({ modalVisible: visible });
+  }
 
   render() {
     return (
@@ -169,17 +175,49 @@ export default class HomeScreen extends React.Component {
         />
         {this.state.isActionButtonVisible ?
           <ActionButton buttonColor="#73aa2a">
-            <ActionButton.Item buttonColor='#9b59b6' title="New Task" onPress={() => console.log("notes tapped!")}>
-              <Icon name="md-create" style={styles.actionButtonIcon} />
+            <ActionButton.Item buttonColor='#9b59b6' title="Đăng tin" onPress={() => this._setModalVisible(true)}>
+              <Icon name="md-cloud-upload" style={styles.actionButtonIcon} />
             </ActionButton.Item>
-            <ActionButton.Item buttonColor='#3498db' title="Notifications" onPress={() => { }}>
-              <Icon name="md-notifications-off" style={styles.actionButtonIcon} />
+            <ActionButton.Item buttonColor='#3498db' title="Nạp ví tiền" onPress={() => { }}>
+              <Icon name="logo-usd" style={styles.actionButtonIcon} />
             </ActionButton.Item>
-            <ActionButton.Item buttonColor='#1abc9c' title="All Tasks" onPress={() => { }}>
+            {/* <ActionButton.Item buttonColor='#1abc9c' title="All Tasks" onPress={() => { }}>
               <Icon name="md-done-all" style={styles.actionButtonIcon} />
-            </ActionButton.Item>
+            </ActionButton.Item> */}
           </ActionButton>
           : null}
+
+
+
+        <Modal
+          animationType={"slide"}
+          transparent={false}
+          visible={this.state.modalVisible}
+          onRequestClose={() => { alert("Modal has been closed.") }}
+        >
+          <View style={styles.searchFilterModalBox}>
+
+            <View style={styles.searchFilterButtonBox} >
+
+              <TouchableOpacity
+                style={styles.searchFilterButtonCancel}
+                onPress={() => {
+                  this._setModalVisible(!this.state.modalVisible)
+                }}>
+                <Text style={styles.searchFilterButtonText}>Hủy</Text>
+              </TouchableOpacity>
+
+              <TouchableOpacity
+                style={styles.searchFilterButtonSubmit}
+                onPress={() => {
+                  this._setModalVisible(!this.state.modalVisible)
+                }}>
+                <Text style={styles.searchFilterButtonText}>Áp dụng</Text>
+              </TouchableOpacity>
+            </View>
+
+          </View>
+        </Modal>
       </View>
     );
   }
@@ -221,6 +259,32 @@ export default class HomeScreen extends React.Component {
 }
 
 const styles = StyleSheet.create({
+  searchFilterButtonBox: {
+    flex: 1,
+    flexDirection: 'row',
+    borderColor: 'black',
+    justifyContent: 'flex-start',
+  },
+  searchFilterButtonCancel: {
+    flex: 1,
+    height: 50,
+    backgroundColor: '#73aa2a',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginLeft: 10,
+    marginRight: 10,
+  },
+  searchFilterButtonSubmit: {
+    flex: 1,
+    height: 50,
+    backgroundColor: '#73aa2a',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginRight: 10,
+  },
+  searchFilterButtonText: {
+    color: '#fff',
+  },
   card: {
     flex: 1,
     height: height * 0.8, //500,

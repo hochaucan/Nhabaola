@@ -67,7 +67,7 @@ export default class SearchScreen extends React.Component {
 
     render() {
         return (
-            <View style={{flex:1}}>
+            <View style={{ flex: 1 }}>
                 <View style={styles.registerRoomFilterBox}>
                     <View style={styles.searchRadiusBox}>
                         <Text style={styles.registerRoomTitleText}>Bạn đã đắng ký vùng này</Text>
@@ -177,9 +177,10 @@ const styles = StyleSheet.create({
     registerRoomFilterText: {
         width: width,
         textAlign: 'center',
+        fontSize: 13,
     },
     registerRoomTitleText: {
-        fontSize: 18,
+        fontSize: 17,
         width: width,
         textAlign: 'center',
         color: '#73aa2a',

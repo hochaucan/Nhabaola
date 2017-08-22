@@ -46,6 +46,7 @@ export default class ProfileScreen extends React.Component {
                         </View>
                         <View style={styles.cardAvatarTextBox}>
                             <Text style={styles.cardAvatarName}>Nguyễn Văn Bảo</Text>
+                            <Text style={styles.cardAvatarAddress}>Đăng ký ngày 23 tháng 8 năm 2017</Text>
                             <TouchableOpacity style={styles.cardAvatarPhoneBox}>
                                 <Ionicons style={styles.cardAvatarPhoneIcon} name='logo-whatsapp' />
                                 <Text style={styles.cardAvatarPhone}>: 0973730111</Text>
@@ -54,8 +55,37 @@ export default class ProfileScreen extends React.Component {
                     </View>
                 </View>
                 <ScrollView style={styles.profileMenuBox}>
-                    <Text>Oanh Nguyen</Text>
-                    <Text>{this.props.key}</Text>
+                    <TouchableOpacity style={styles.profileMenuItem}>
+                        <Ionicons style={styles.profileMenuItemText} name='md-cloud-upload'>
+                            <Text>  Đăng tin</Text>
+                        </Ionicons>
+                    </TouchableOpacity>
+                    <TouchableOpacity style={styles.profileMenuItem}>
+                        <Ionicons style={styles.profileMenuItemText} name='md-folder'>
+                            <Text>  Tin đã đăng</Text>
+                        </Ionicons>
+                    </TouchableOpacity>
+                    <TouchableOpacity style={styles.profileMenuItem}>
+                        <Ionicons style={styles.profileMenuItemText} name='logo-usd'>
+                            <Text>  Nạp ví tiền</Text>
+                        </Ionicons>
+                    </TouchableOpacity>
+                    <View style={styles.profileMenuItemSeparator}></View>
+                    <TouchableOpacity style={styles.profileMenuItem}>
+                        <Ionicons style={styles.profileMenuItemText} name='md-information-circle'>
+                            <Text>  Thông tin cá nhân</Text>
+                        </Ionicons>
+                    </TouchableOpacity>
+                    <TouchableOpacity style={styles.profileMenuItem}>
+                        <Ionicons style={styles.profileMenuItemText} name='md-lock'>
+                            <Text>  Đổi mật khẩu</Text>
+                        </Ionicons>
+                    </TouchableOpacity>
+                    <TouchableOpacity style={styles.profileMenuItem}>
+                        <Ionicons style={styles.profileMenuItemText} name='md-help'>
+                            <Text>  Giúp đỡ</Text>
+                        </Ionicons>
+                    </TouchableOpacity>
                 </ScrollView>
             </View>
         );
@@ -63,9 +93,23 @@ export default class ProfileScreen extends React.Component {
 }
 
 const styles = StyleSheet.create({
+    profileMenuItemText: {
+        fontSize: 18,
+    },
+    profileMenuItem: {
+        paddingBottom: 20,
+        padding: 10,
+        paddingLeft: 15,
+    },
+    profileMenuItemSeparator: {
+        height: 0.7,
+        // width: width,
+        backgroundColor: '#a4d227',
+        marginBottom: 5
+    },
     profileMenuBox: {
         flex: 1,
-        padding: 10,
+        marginTop: 25,
     },
     container: {
         flex: 1,
@@ -155,23 +199,28 @@ const styles = StyleSheet.create({
         // flex: 2,
         flexDirection: 'row',
         padding: 10,
-        // borderWidth: 1,
-        // borderColor: 'green',
+        borderBottomWidth: 0.7,
+        borderColor: '#a4d227',
     },
     cardAvatarBox: {
         // flex: 1
     },
     cardAvatarImage: {
         borderRadius: Platform.OS === 'ios' ? 23 : 50,
-        height: 45,
-        width: 45,
+        height: 60,
+        width: 60,
     },
     cardAvatarTextBox: {
         flex: 4,
         paddingLeft: 20,
     },
     cardAvatarName: {
-        fontSize: 17,
+        fontSize: 15,
+    },
+    cardAvatarAddress: {
+        color: '#7E7E7E',
+        fontSize: 10,
+        paddingTop: 3,
     },
     cardAvatarPhoneBox: {
         flex: 1,
