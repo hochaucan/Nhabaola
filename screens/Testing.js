@@ -20,6 +20,7 @@ import FloatingButtonDemo from '../components/examples/FloatingButtonDemo';
 import PostDemo from '../components/examples/PostDemo';
 import AsyncStorageDemo from '../components/examples/AsyncStorageDemo';
 import Demo from '../components/examples/DropdownDemo';
+import MyLocationMapMarker from '../components/examples/MyLocationMapMakerDemo';
 
 
 
@@ -48,9 +49,9 @@ export default class Testing extends React.Component {
   render() {
     return (
       <View style={styles.container}>
-        <Demo />
 
-        <FloatingButtonDemo hoten='Ho Chau Can2' />
+<Text>Can</Text>
+        <MyLocationMapMarker />
       </View>
 
     );

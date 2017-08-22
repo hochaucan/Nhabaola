@@ -1,8 +1,8 @@
 {
-  "name": "nhabaola-reactnative",
+  "name": "Nhà baola",
   "version": "0.0.0",
-  "description": "Hello Expo!",
-  "author": null,
+  "description": "Chào mừng đến với Nhà baola",
+  "author": "Hồ Châu Cần",
   "license": "",
   "main": "node_modules/expo/AppEntry.js",
   "scripts": {

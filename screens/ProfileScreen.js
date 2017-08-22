@@ -94,7 +94,7 @@ export default class ProfileScreen extends React.Component {
 
 const styles = StyleSheet.create({
     profileMenuItemText: {
-        fontSize: 18,
+        fontSize: 16,
     },
     profileMenuItem: {
         paddingBottom: 20,
@@ -189,7 +189,7 @@ const styles = StyleSheet.create({
     },
 
     card: {
-        height: 60,
+        height: 82,
         // borderBottomWidth: 0.5,
         borderColor: '#d6d7da',
         padding: 0,
