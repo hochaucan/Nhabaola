@@ -175,10 +175,10 @@ export default class HomeScreen extends React.Component {
         />
         {this.state.isActionButtonVisible ?
           <ActionButton buttonColor="#73aa2a">
-            <ActionButton.Item buttonColor='#9b59b6' title="Đăng tin" onPress={() => this._setModalVisible(true)}>
+            <ActionButton.Item buttonColor='#a4d227' title="Đăng tin" onPress={() => this._setModalVisible(true)}>
               <Icon name="md-cloud-upload" style={styles.actionButtonIcon} />
             </ActionButton.Item>
-            <ActionButton.Item buttonColor='#3498db' title="Nạp ví tiền" onPress={() => { }}>
+            <ActionButton.Item buttonColor='#a4d227' title="Nạp ví tiền" onPress={() => { }}>
               <Icon name="logo-usd" style={styles.actionButtonIcon} />
             </ActionButton.Item>
             {/* <ActionButton.Item buttonColor='#1abc9c' title="All Tasks" onPress={() => { }}>
