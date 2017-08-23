@@ -10,8 +10,10 @@ import {
   FlatList,
   Image,
   Button,
+  Platform,
 }
   from 'react-native';
+import { Constants, Location, Permissions } from 'expo';
 import MapView from 'react-native-maps';
 import ActionButton from 'react-native-action-button';
 import Icon from 'react-native-vector-icons/Ionicons';
@@ -37,9 +39,33 @@ export default class Testing extends React.Component {
     super(props)
     this.state = {
 
-      txt: 'Hoang Oanh'
+      txt: 'Hoang Oanh',
+      location: null,
+      errorMessage: null,
     }
   }
+
+  componentWillMount() {
+    if (Platform.OS === 'android' && !Constants.isDevice) {
+      this.setState({
+        errorMessage: 'Oops, this will not work on Sketch in an Android emulator. Try it on your device!',
+      });
+    } else {
+      this._getLocationAsync();
+    }
+  }
+
+  _getLocationAsync = async () => {
+    let { status } = await Permissions.askAsync(Permissions.LOCATION);
+    if (status !== 'granted') {
+      this.setState({
+        errorMessage: 'Permission to access location was denied',
+      });
+    }
+
+    let location = await Location.getCurrentPositionAsync({});
+    this.setState({ location });
+  };
 
   handleSettingsPress = () => {
     this.props.navigation.navigate('Settings4');
@@ -47,11 +73,16 @@ export default class Testing extends React.Component {
 
 
   render() {
+    let text = 'Waiting..';
+    if (this.state.errorMessage) {
+      text = this.state.errorMessage;
+    } else if (this.state.location) {
+      text = JSON.stringify(this.state.location.coords);
+    }
     return (
       <View style={styles.container}>
 
-<Text>Can</Text>
-        <MyLocationMapMarker />
+        <Text style={styles.paragraph}>{text}</Text>
       </View>
 
     );
@@ -69,6 +100,11 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
 
+  },
+  paragraph: {
+    margin: 24,
+    fontSize: 18,
+    textAlign: 'center',
   },
 });
 

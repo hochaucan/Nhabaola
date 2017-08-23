@@ -18,9 +18,9 @@ import RegisterRoomScreen from '../screens/RegisterRoomScreen';
 
 export default TabNavigator(
   {
-    // Testing: {
-    //   screen: Testing,
-    // },
+    Testing: {
+      screen: Testing,
+    },
     Home: {
       screen: HomeScreen,
     },

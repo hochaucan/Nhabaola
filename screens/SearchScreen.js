@@ -32,7 +32,7 @@ export default class SearchScreen extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            mapRegion: { latitude: 37.78825, longitude: -122.4324, latitudeDelta: 0.0922, longitudeDelta: 0.0421 },
+            mapRegion: { latitude: 10.7777935, longitude: 106.7068674, latitudeDelta: 0.0922, longitudeDelta: 0.0421 },
             searchResultData: users,
             modalVisible: false,
             age: 18,
