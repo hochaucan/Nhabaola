@@ -36,7 +36,7 @@ export default class SearchScreen extends React.Component {
             searchResultData: users,
             modalVisible: false,
             age: 18,
-
+            hackHeight: height,
         }
     }
 
@@ -65,18 +65,26 @@ export default class SearchScreen extends React.Component {
     getVal(val) {
         // console.warn(val);
     }
-
+    componentWillMount() {
+        setTimeout(() => this.setState({ hackHeight: height + 1 }), 500);
+        setTimeout(() => this.setState({ hackHeight: height*0.5 }), 1000);
+    }
     render() {
         return (
 
             <ScrollView style={styles.container}>
                 <MapView
-                    style={styles.searchMapView}
+                    style={{ paddingBottom: this.state.hackHeight, height: 200, alignSelf: 'stretch', }}
 
                     region={this.state.mapRegion}
                     onRegionChange={this._handleMapRegionChange}
-                    >
-                    
+
+                    showsUserLocation={true}
+                    showsMyLocationButton={true}
+                    followsUserLocation={false}
+
+                >
+
                 </MapView>
 
 
@@ -332,7 +340,7 @@ const styles = StyleSheet.create({
     },
     searchMapView: {
         alignSelf: 'stretch',
-        height: height * 0.6,
+        height: height * 0.5,
     },
     container: {
         flex: 1,

@@ -95,17 +95,19 @@ export default class ProfileScreen extends React.Component {
 const styles = StyleSheet.create({
     profileMenuItemText: {
         fontSize: 16,
+        height: 20,
     },
     profileMenuItem: {
         paddingBottom: 20,
         padding: 10,
         paddingLeft: 15,
+
     },
     profileMenuItemSeparator: {
         height: 0.7,
         // width: width,
         backgroundColor: '#a4d227',
-        marginBottom: 5
+        marginBottom: 10,
     },
     profileMenuBox: {
         flex: 1,
@@ -189,7 +191,7 @@ const styles = StyleSheet.create({
     },
 
     card: {
-        height: 82,
+        height: 80,
         // borderBottomWidth: 0.5,
         borderColor: '#d6d7da',
         padding: 0,
@@ -199,8 +201,8 @@ const styles = StyleSheet.create({
         // flex: 2,
         flexDirection: 'row',
         padding: 10,
-        borderBottomWidth: 0.7,
-        borderColor: '#a4d227',
+        // borderBottomWidth: 0.7,
+        // borderColor: '#a4d227',
     },
     cardAvatarBox: {
         // flex: 1
