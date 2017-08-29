@@ -13,6 +13,7 @@ import {
   Dimensions,
   LayoutAnimation,
   Modal,
+  Share,
 } from 'react-native';
 import { WebBrowser } from 'expo';
 import { MonoText } from '../components/StyledText';
@@ -20,8 +21,9 @@ import ActionButton from 'react-native-action-button';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { Ionicons } from '@expo/vector-icons';
 import { users } from '../components/examples/data';
-import PopupDialog, { SlideAnimation, ScaleAnimation, DialogTitle } from 'react-native-popup-dialog';
-import { CheckBox, Rating } from 'react-native-elements'
+import PopupDialog, { SlideAnimation, ScaleAnimation, DialogTitle, DialogButton } from 'react-native-popup-dialog';
+import { CheckBox, Rating, Button } from 'react-native-elements'
+import StarRating from 'react-native-star-rating';
 
 var { height, width } = Dimensions.get('window');
 
@@ -38,6 +40,7 @@ export default class HomeScreen extends React.Component {
       isActionButtonVisible: true, // 1. Define a state variable for showing/hiding the action-button 
       modalVisible: false,
       reportCheck: false,
+      starCount: 3.5,
     }
 
   }
@@ -91,6 +94,13 @@ export default class HomeScreen extends React.Component {
     console.log("Rating is: " + rating)
   }
 
+  onStarRatingPress(rating) {
+    this.setState({
+      starCount: rating
+    });
+    this.popupRating.dismiss();
+    // console.log(rating);
+  }
 
   render() {
     return (
@@ -154,7 +164,11 @@ export default class HomeScreen extends React.Component {
               <View style={styles.cardBottom}>
                 <View style={styles.cardBottomLeft}>
                   <Text style={styles.cardBottomIconText}>5</Text>
-                  <TouchableOpacity>
+                  <TouchableOpacity
+                    onPress={() => {
+                      this.popupRating.show();
+                    }}
+                  >
                     <Ionicons style={styles.cardBottomIcon} name='ios-star' />
                   </TouchableOpacity>
                   <Text style={styles.cardBottomIconText}>3</Text>
@@ -166,7 +180,21 @@ export default class HomeScreen extends React.Component {
                   <TouchableOpacity >
                     <Ionicons style={styles.cardBottomIcon} name='ios-thumbs-up' />
                   </TouchableOpacity>
-                  <TouchableOpacity>
+                  <TouchableOpacity
+                    onPress={() => {
+                      Share.share({
+                        message: item.name.first,
+                        url: 'http://bam.tech',
+                        title: 'Wow, did you see that?'
+                      }, {
+                          // Android only:
+                          dialogTitle: 'Share BAM goodness',
+                          // iOS only:
+                          excludedActivityTypes: [
+                            'com.apple.UIKit.activity.PostToTwitter'
+                          ]
+                        })
+                    }}>
                     <Ionicons style={styles.cardBottomIcon} name='md-share' />
                   </TouchableOpacity>
                   <TouchableOpacity
@@ -187,7 +215,7 @@ export default class HomeScreen extends React.Component {
         />
         {this.state.isActionButtonVisible ?
           <ActionButton buttonColor="#73aa2a">
-            <ActionButton.Item buttonColor='#a4d227' title="Đăng tin" onPress={() => this._setModalVisible(true)}>
+            <ActionButton.Item buttonColor='#a4d227' title="Đăng tin" onPress={() => this.popupPosting.show()}>
               <Icon name="md-cloud-upload" style={styles.actionButtonIcon} />
             </ActionButton.Item>
             <ActionButton.Item buttonColor='#a4d227' title="Nạp ví tiền" onPress={() => { }}>
@@ -203,7 +231,9 @@ export default class HomeScreen extends React.Component {
         <PopupDialog
           ref={(popupDialog) => { this.popupDialog = popupDialog; }}
           dialogAnimation={new ScaleAnimation()}
-          dialogTitle={<DialogTitle title="Báo cáo Nhà baola" titleStyle={{backgroundColor:'#a4d227'}} titleTextStyle={{color:'#fff'}} />}
+          dialogTitle={<DialogTitle title="Báo cáo Nhà baola" titleStyle={{}} titleTextStyle={{ color: '#73aa2a' }} />}
+          dismissOnTouchOutside={false}
+          dialogStyle={{ marginBottom: 10, width: width * 0.9 }}
         >
           <View>
             <CheckBox
@@ -221,9 +251,46 @@ export default class HomeScreen extends React.Component {
               title='Nhà đã cho thuê'
               checked={this.state.checked}
             />
+            <View style={{ flex: 1, flexDirection: 'row', marginTop: 8, }}>
+              <TouchableOpacity
+                style={{ flex: 1, backgroundColor: '#9B9D9D', margin: 20, }}
+                onPress={() => { this.popupDialog.dismiss() }}
+              >
+                <Text style={{ color: '#fff', textAlign: 'center', padding: 10 }}>Hủy</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={{ flex: 1, backgroundColor: '#73aa2a', margin: 20, }}
+              >
+                <Text style={{ color: '#fff', textAlign: 'center', padding: 10 }}>Gửi</Text>
+              </TouchableOpacity>
+            </View>
           </View>
         </PopupDialog>
 
+
+        <PopupDialog
+          ref={(popupRating) => { this.popupRating = popupRating; }}
+          dialogAnimation={new ScaleAnimation()}
+          dialogStyle={{ marginBottom: 10, width: width * 0.9 }}
+        >
+          <StarRating
+            disabled={false}
+            maxStars={5}
+            rating={this.state.starCount}
+            selectedStar={(rating) => { this.onStarRatingPress(rating) }}
+          />
+        </PopupDialog>
+
+        <PopupDialog
+          ref={(popupPosting) => { this.popupPosting = popupPosting; }}
+          dialogAnimation={new ScaleAnimation()}
+          dialogStyle={{ marginBottom: 10, width: width * 0.9 }}
+          dialogTitle={<DialogTitle title="Đăng bài" titleStyle={{}} titleTextStyle={{ color: '#73aa2a' }} />}
+        >
+          <View>
+            <Text>Đăng bài</Text>
+          </View>
+        </PopupDialog>
 
         <Modal
           animationType={"slide"}
