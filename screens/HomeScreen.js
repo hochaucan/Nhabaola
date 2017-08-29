@@ -20,6 +20,8 @@ import ActionButton from 'react-native-action-button';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { Ionicons } from '@expo/vector-icons';
 import { users } from '../components/examples/data';
+import PopupDialog, { SlideAnimation, ScaleAnimation, DialogTitle } from 'react-native-popup-dialog';
+import { CheckBox, Rating } from 'react-native-elements'
 
 var { height, width } = Dimensions.get('window');
 
@@ -35,6 +37,7 @@ export default class HomeScreen extends React.Component {
       txt: 'test threshole',
       isActionButtonVisible: true, // 1. Define a state variable for showing/hiding the action-button 
       modalVisible: false,
+      reportCheck: false,
     }
 
   }
@@ -83,6 +86,11 @@ export default class HomeScreen extends React.Component {
   _setModalVisible(visible) {
     this.setState({ modalVisible: visible });
   }
+
+  ratingCompleted(rating) {
+    console.log("Rating is: " + rating)
+  }
+
 
   render() {
     return (
@@ -161,7 +169,11 @@ export default class HomeScreen extends React.Component {
                   <TouchableOpacity>
                     <Ionicons style={styles.cardBottomIcon} name='md-share' />
                   </TouchableOpacity>
-                  <TouchableOpacity>
+                  <TouchableOpacity
+                    onPress={() => {
+                      this.popupDialog.show();
+                    }}
+                  >
                     <Ionicons style={styles.cardBottomIconRightEnd} name='md-flag' />
                   </TouchableOpacity>
                 </View>
@@ -187,6 +199,30 @@ export default class HomeScreen extends React.Component {
           </ActionButton>
           : null}
 
+
+        <PopupDialog
+          ref={(popupDialog) => { this.popupDialog = popupDialog; }}
+          dialogAnimation={new ScaleAnimation()}
+          dialogTitle={<DialogTitle title="Báo cáo Nhà baola" titleStyle={{backgroundColor:'#a4d227'}} titleTextStyle={{color:'#fff'}} />}
+        >
+          <View>
+            <CheckBox
+              title='Không đúng địa chỉ'
+              checked={this.state.reportCheck}
+              onPress={() => {
+
+              }}
+            />
+            <CheckBox
+              title='Không gọi được'
+              checked={this.state.checked}
+            />
+            <CheckBox
+              title='Nhà đã cho thuê'
+              checked={this.state.checked}
+            />
+          </View>
+        </PopupDialog>
 
 
         <Modal
@@ -385,6 +421,7 @@ const styles = StyleSheet.create({
     fontSize: 20,
     paddingLeft: 5,
     color: '#8B8E8E',
+    textAlign: 'right',
   },
   cardBottomIconText: {
     color: '#8B8E8E',
