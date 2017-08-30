@@ -157,6 +157,8 @@ const styles = StyleSheet.create({
     backScreenBox: {
         justifyContent: 'center',
         marginRight: 10,
+        marginLeft: -10,
+        width: 20,
     },
     backScreenIcon: {
         fontSize: 28,
@@ -272,8 +274,8 @@ const styles = StyleSheet.create({
     },
     cardImageBox: {
         flex: 6,
-        paddingLeft: 20,
-        paddingRight: 20,
+        // paddingLeft: 20,
+        // paddingRight: 20,
         // borderWidth: 1,
         // borderColor: 'blue',
     },
@@ -291,6 +293,7 @@ const styles = StyleSheet.create({
     },
     cardDesText: {
         color: '#7E7E7E',
+        textAlign: 'justify',
     },
     cardBottom: {
         // flex: 1,

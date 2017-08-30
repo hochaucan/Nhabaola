@@ -22,8 +22,9 @@ import Icon from 'react-native-vector-icons/Ionicons';
 import { Ionicons } from '@expo/vector-icons';
 import { users } from '../components/examples/data';
 import PopupDialog, { SlideAnimation, ScaleAnimation, DialogTitle, DialogButton } from 'react-native-popup-dialog';
-import { CheckBox, Rating, Button, FormLabel, FormInput } from 'react-native-elements'
+import { CheckBox, Rating, Button, FormLabel, FormInput, } from 'react-native-elements'
 import StarRating from 'react-native-star-rating';
+import MapView from 'react-native-maps';
 
 var { height, width } = Dimensions.get('window');
 
@@ -41,6 +42,7 @@ export default class HomeScreen extends React.Component {
       modalVisible: false,
       reportCheck: false,
       starCount: 3.5,
+      mapRegion: { latitude: 10.7777935, longitude: 106.7068674, latitudeDelta: 0.0922, longitudeDelta: 0.0421 },
     }
 
   }
@@ -306,32 +308,55 @@ export default class HomeScreen extends React.Component {
           visible={this.state.modalVisible}
           onRequestClose={() => { alert("Modal has been closed.") }}
         >
-          <ScrollView style={styles.searchFilterModalBox}>
-            <FormLabel>Name</FormLabel>
-            <FormInput/>
-            {/* <FormInput onChangeText={} /> */}
-            
-
-
-            <View style={{ flex: 1, justifyContent: 'center', borderWidth: 2, borderColor: 'red' }}>
-              <View style={styles.searchFilterButtonBox} >
-                <TouchableOpacity
-                  style={styles.searchFilterButtonCancel}
-                  onPress={() => {
-                    this._setModalVisible(!this.state.modalVisible)
-                  }}>
-                  <Text style={styles.searchFilterButtonText}>Hủy</Text>
-                </TouchableOpacity>
-
-                <TouchableOpacity
-                  style={styles.searchFilterButtonSubmit}
-                  onPress={() => {
-                    this._setModalVisible(!this.state.modalVisible)
-                  }}>
-                  <Text style={styles.searchFilterButtonText}>Áp dụng</Text>
-                </TouchableOpacity>
-              </View>
+          <ScrollView style={{ paddingTop: 10, marginTop: 20, }}>
+            <FormLabel>Hình ảnh</FormLabel>
+            <View style={{ height: 100, padding: 20, flexDirection: 'row' }}>
+              <Ionicons style={{ fontSize: 80, color: '#73aa2a', flex: 1, textAlign: 'center', }} name='ios-image-outline' />
+              <Ionicons style={{ fontSize: 80, color: '#73aa2a', flex: 1, textAlign: 'center', }} name='ios-image-outline' />
+              <Ionicons style={{ fontSize: 80, color: '#73aa2a', flex: 1, textAlign: 'center', }} name='ios-image-outline' />
             </View>
+            <View style={{ height: 100, padding: 20, flexDirection: 'row' }}>
+              <Ionicons style={{ fontSize: 80, color: '#73aa2a', flex: 1, textAlign: 'center', }} name='ios-image-outline' />
+              <Ionicons style={{ fontSize: 80, color: '#73aa2a', flex: 1, textAlign: 'center', }} name='ios-image-outline' />
+              <Ionicons style={{ fontSize: 80, color: '#73aa2a', flex: 1, textAlign: 'center', }} name='ios-image-outline' />
+            </View>
+            <FormLabel style={{ borderBottomWidth: 0.7, borderColor: '#a4d227' }}>Địa chỉ</FormLabel>
+            <View style={{ height: 200, padding: 20, }}>
+              <FormInput
+                placeholder='Vui lòng nhập địa chỉ'
+                autoCapitalize='sentences'
+                maxLength={300}
+              />
+              <MapView
+                style={{ flex: 1 }}
+                region={this.state.mapRegion}
+              />
+            </View>
+            <FormLabel style={{ borderBottomWidth: 0.7, borderColor: '#a4d227' }}>Thông tin chi tiết</FormLabel>
+            <View style={{ height: 200, paddingTop: 20 }}>
+
+              <FormInput
+                placeholder='Vui lòng nhập thông tin chi tiết'
+                multiline={true}
+                autoCapitalize='sentences'
+                maxLength={300}
+                clearButtonMode='always'
+                underlineColorAndroid='#fff'
+              />
+              {/* <FormInput onChangeText={} /> */}
+            </View>
+            <View style={{ height: 100, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', paddingBottom: 50, }}>
+              <Button
+                buttonStyle={{ backgroundColor: '#9B9D9D', padding: 15, borderRadius: 10 }}
+                icon={{ name: 'ios-backspace', type: 'ionicon' }}
+                onPress={() => this._setModalVisible(false)}
+                title='Hủy' />
+              <Button
+                buttonStyle={{ backgroundColor: '#73aa2a', padding: 15, borderRadius: 10 }}
+                icon={{ name: 'md-cloud-upload', type: 'ionicon' }}
+                title='Đăng tin' />
+            </View>
+
           </ScrollView>
         </Modal>
       </View>
@@ -375,10 +400,7 @@ export default class HomeScreen extends React.Component {
 }
 
 const styles = StyleSheet.create({
-  searchFilterModalBox: {
-    flex: 1,
-    paddingTop: 30,
-  },
+
   searchFilterButtonBox: {
     height: 100,
 
