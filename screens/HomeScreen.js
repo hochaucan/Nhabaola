@@ -22,7 +22,7 @@ import Icon from 'react-native-vector-icons/Ionicons';
 import { Ionicons } from '@expo/vector-icons';
 import { users } from '../components/examples/data';
 import PopupDialog, { SlideAnimation, ScaleAnimation, DialogTitle, DialogButton } from 'react-native-popup-dialog';
-import { CheckBox, Rating, Button } from 'react-native-elements'
+import { CheckBox, Rating, Button, FormLabel, FormInput } from 'react-native-elements'
 import StarRating from 'react-native-star-rating';
 
 var { height, width } = Dimensions.get('window');
@@ -95,10 +95,11 @@ export default class HomeScreen extends React.Component {
   }
 
   onStarRatingPress(rating) {
+    this.popupRating.dismiss();
     this.setState({
       starCount: rating
     });
-    this.popupRating.dismiss();
+
     // console.log(rating);
   }
 
@@ -132,7 +133,7 @@ export default class HomeScreen extends React.Component {
                   <TouchableOpacity
                     onPress={() => {
                       //alert("item.title")
-                      this.props.navigation.navigate('ProfileScreen', { key: 'CanHo' });
+                      {/* this.props.navigation.navigate('ProfileScreen', { key: 'CanHo' }); */ }
                     }}
                   >
                     <Image
@@ -152,9 +153,12 @@ export default class HomeScreen extends React.Component {
                 style={styles.cardImageBox}
                 onPress={() => this._moveToRoomDetail(item)}
               >
+                {/* <Image
+                  style={styles.cardImage}
+                  source={{ uri: item.picture.large }} /> */}
                 <Image
                   style={styles.cardImage}
-                  source={{ uri: item.picture.large }} />
+                  source={require('../images/1.jpg')} />
               </TouchableWithoutFeedback>
               <View style={styles.cardDesBox}>
                 <Text style={styles.cardDesText}>
@@ -215,7 +219,7 @@ export default class HomeScreen extends React.Component {
         />
         {this.state.isActionButtonVisible ?
           <ActionButton buttonColor="#73aa2a">
-            <ActionButton.Item buttonColor='#a4d227' title="Đăng tin" onPress={() => this.popupPosting.show()}>
+            <ActionButton.Item buttonColor='#a4d227' title="Đăng tin" onPress={() => this._setModalVisible(true)}>
               <Icon name="md-cloud-upload" style={styles.actionButtonIcon} />
             </ActionButton.Item>
             <ActionButton.Item buttonColor='#a4d227' title="Nạp ví tiền" onPress={() => { }}>
@@ -234,6 +238,7 @@ export default class HomeScreen extends React.Component {
           dialogTitle={<DialogTitle title="Báo cáo Nhà baola" titleStyle={{}} titleTextStyle={{ color: '#73aa2a' }} />}
           dismissOnTouchOutside={false}
           dialogStyle={{ marginBottom: 10, width: width * 0.9 }}
+
         >
           <View>
             <CheckBox
@@ -251,7 +256,7 @@ export default class HomeScreen extends React.Component {
               title='Nhà đã cho thuê'
               checked={this.state.checked}
             />
-            <View style={{ flex: 1, flexDirection: 'row', marginTop: 8, }}>
+            <View style={{ height: 80, flexDirection: 'row', marginBottom: 15, }}>
               <TouchableOpacity
                 style={{ flex: 1, backgroundColor: '#9B9D9D', margin: 20, }}
                 onPress={() => { this.popupDialog.dismiss() }}
@@ -271,11 +276,12 @@ export default class HomeScreen extends React.Component {
         <PopupDialog
           ref={(popupRating) => { this.popupRating = popupRating; }}
           dialogAnimation={new ScaleAnimation()}
-          dialogStyle={{ marginBottom: 10, width: width * 0.9 }}
+          dialogStyle={{ marginBottom: 10, width: width * 0.9, height: 100, justifyContent: 'center', padding: 20 }}
         >
           <StarRating
             disabled={false}
             maxStars={5}
+            starColor={'#a4d227'}
             rating={this.state.starCount}
             selectedStar={(rating) => { this.onStarRatingPress(rating) }}
           />
@@ -284,7 +290,7 @@ export default class HomeScreen extends React.Component {
         <PopupDialog
           ref={(popupPosting) => { this.popupPosting = popupPosting; }}
           dialogAnimation={new ScaleAnimation()}
-          dialogStyle={{ marginBottom: 10, width: width * 0.9 }}
+          dialogStyle={{ marginBottom: 10, width: width * 0.9, height: height * 0.9 }}
           dialogTitle={<DialogTitle title="Đăng bài" titleStyle={{}} titleTextStyle={{ color: '#73aa2a' }} />}
         >
           <View>
@@ -292,34 +298,41 @@ export default class HomeScreen extends React.Component {
           </View>
         </PopupDialog>
 
+
+        {/* Post Room */}
         <Modal
           animationType={"slide"}
           transparent={false}
           visible={this.state.modalVisible}
           onRequestClose={() => { alert("Modal has been closed.") }}
         >
-          <View style={styles.searchFilterModalBox}>
+          <ScrollView style={styles.searchFilterModalBox}>
+            <FormLabel>Name</FormLabel>
+            <FormInput/>
+            {/* <FormInput onChangeText={} /> */}
+            
 
-            <View style={styles.searchFilterButtonBox} >
 
-              <TouchableOpacity
-                style={styles.searchFilterButtonCancel}
-                onPress={() => {
-                  this._setModalVisible(!this.state.modalVisible)
-                }}>
-                <Text style={styles.searchFilterButtonText}>Hủy</Text>
-              </TouchableOpacity>
+            <View style={{ flex: 1, justifyContent: 'center', borderWidth: 2, borderColor: 'red' }}>
+              <View style={styles.searchFilterButtonBox} >
+                <TouchableOpacity
+                  style={styles.searchFilterButtonCancel}
+                  onPress={() => {
+                    this._setModalVisible(!this.state.modalVisible)
+                  }}>
+                  <Text style={styles.searchFilterButtonText}>Hủy</Text>
+                </TouchableOpacity>
 
-              <TouchableOpacity
-                style={styles.searchFilterButtonSubmit}
-                onPress={() => {
-                  this._setModalVisible(!this.state.modalVisible)
-                }}>
-                <Text style={styles.searchFilterButtonText}>Áp dụng</Text>
-              </TouchableOpacity>
+                <TouchableOpacity
+                  style={styles.searchFilterButtonSubmit}
+                  onPress={() => {
+                    this._setModalVisible(!this.state.modalVisible)
+                  }}>
+                  <Text style={styles.searchFilterButtonText}>Áp dụng</Text>
+                </TouchableOpacity>
+              </View>
             </View>
-
-          </View>
+          </ScrollView>
         </Modal>
       </View>
     );
@@ -362,11 +375,16 @@ export default class HomeScreen extends React.Component {
 }
 
 const styles = StyleSheet.create({
-  searchFilterButtonBox: {
+  searchFilterModalBox: {
     flex: 1,
+    paddingTop: 30,
+  },
+  searchFilterButtonBox: {
+    height: 100,
+
     flexDirection: 'row',
-    borderColor: 'black',
-    justifyContent: 'flex-start',
+    borderWidth: 1
+    // justifyContent: 'flex-start',
   },
   searchFilterButtonCancel: {
     flex: 1,
@@ -453,6 +471,7 @@ const styles = StyleSheet.create({
   },
   cardDesText: {
     color: '#7E7E7E',
+    textAlign: 'justify',
   },
   cardBottom: {
     // flex: 1,
@@ -480,7 +499,7 @@ const styles = StyleSheet.create({
   cardBottomIcon: {
 
     fontSize: 20,
-    paddingRight: 20,
+    paddingRight: 25,
     paddingLeft: 5,
     color: '#8B8E8E',
   },
