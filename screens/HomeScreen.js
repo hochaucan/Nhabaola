@@ -14,17 +14,20 @@ import {
   LayoutAnimation,
   Modal,
   Share,
+  Alert,
 } from 'react-native';
-import { WebBrowser } from 'expo';
+import { WebBrowser, ImagePicker, Facebook } from 'expo';
 import { MonoText } from '../components/StyledText';
 import ActionButton from 'react-native-action-button';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { Ionicons } from '@expo/vector-icons';
 import { users } from '../components/examples/data';
 import PopupDialog, { SlideAnimation, ScaleAnimation, DialogTitle, DialogButton } from 'react-native-popup-dialog';
-import { CheckBox, Rating, Button, FormLabel, FormInput, } from 'react-native-elements'
+import { CheckBox, Rating, Button, FormLabel, FormInput, SocialIcon } from 'react-native-elements'
 import StarRating from 'react-native-star-rating';
 import MapView from 'react-native-maps';
+import Communications from 'react-native-communications';
+
 
 var { height, width } = Dimensions.get('window');
 
@@ -43,6 +46,7 @@ export default class HomeScreen extends React.Component {
       reportCheck: false,
       starCount: 3.5,
       mapRegion: { latitude: 10.7777935, longitude: 106.7068674, latitudeDelta: 0.0922, longitudeDelta: 0.0421 },
+      image: null,
     }
 
   }
@@ -105,7 +109,61 @@ export default class HomeScreen extends React.Component {
     // console.log(rating);
   }
 
+  _pickImage = async () => {
+    let result = await ImagePicker.launchImageLibraryAsync({
+      allowsEditing: true,
+      aspect: [4, 3],
+    });
+
+    console.log(result);
+
+    if (!result.cancelled) {
+      this.setState({ image: result.uri });
+    }
+  };
+
+  _handleFacebookLogin = async () => {
+    try {
+      const { type, token } = await Facebook.logInWithReadPermissionsAsync(
+        '143030619610047', // Replace with your own app id in standalone app
+        { permissions: ['public_profile'] }
+      );
+
+      switch (type) {
+        case 'success': {
+          // Get the user's name using Facebook's Graph API
+          const response = await fetch(`https://graph.facebook.com/me?access_token=${token}`);
+          const profile = await response.json();
+          Alert.alert(
+            'Logged in!',
+            `Hi ${profile.name}!`,
+          );
+          break;
+        }
+        case 'cancel': {
+          Alert.alert(
+            'Cancelled!',
+            'Login was cancelled!',
+          );
+          break;
+        }
+        default: {
+          Alert.alert(
+            'Oops!',
+            'Login failed!',
+          );
+        }
+      }
+    } catch (e) {
+      Alert.alert(
+        'Oops!',
+        'Login failed!',
+      );
+    }
+  };
+
   render() {
+    let { image } = this.state;
     return (
       <View style={styles.container}>
         {/* <ScrollView
@@ -145,7 +203,9 @@ export default class HomeScreen extends React.Component {
                 </View>
                 <View style={styles.cardAvatarTextBox}>
                   <Text style={styles.cardAvatarName}>{item.name.first} {item.name.last}</Text>
-                  <TouchableOpacity style={styles.cardAvatarPhoneBox}>
+                  <TouchableOpacity style={styles.cardAvatarPhoneBox}
+                    onPress={() => { Communications.phonecall(item.phone, true) }}
+                  >
                     <Ionicons style={styles.cardAvatarPhoneIcon} name='logo-whatsapp' />
                     <Text style={styles.cardAvatarPhone}>: {item.phone}</Text>
                   </TouchableOpacity>
@@ -221,6 +281,9 @@ export default class HomeScreen extends React.Component {
         />
         {this.state.isActionButtonVisible ?
           <ActionButton buttonColor="#73aa2a">
+            <ActionButton.Item buttonColor='#a4d227' title="Đăng nhập" onPress={() => { this.popupLogin.show() }}>
+              <Icon name="ios-contact" style={styles.actionButtonIcon} />
+            </ActionButton.Item>
             <ActionButton.Item buttonColor='#a4d227' title="Đăng tin" onPress={() => this._setModalVisible(true)}>
               <Icon name="md-cloud-upload" style={styles.actionButtonIcon} />
             </ActionButton.Item>
@@ -233,6 +296,36 @@ export default class HomeScreen extends React.Component {
           </ActionButton>
           : null}
 
+
+        <PopupDialog
+          ref={(popupLogin) => { this.popupLogin = popupLogin; }}
+          dialogAnimation={new ScaleAnimation()}
+          dialogTitle={<DialogTitle title="Đăng nhập" titleStyle={{}} titleTextStyle={{ color: '#73aa2a' }} />}
+          dismissOnTouchOutside={false}
+          dialogStyle={{ marginBottom: 10, width: width * 0.9 }}
+
+        >
+          <View>
+            <SocialIcon
+              type='facebook'
+              onPress={this._handleFacebookLogin}
+            />
+
+            <View style={{ height: 80, flexDirection: 'row', marginBottom: 15, }}>
+              <TouchableOpacity
+                style={{ flex: 1, backgroundColor: '#9B9D9D', margin: 20, }}
+                onPress={() => { this.popupLogin.dismiss() }}
+              >
+                <Text style={{ color: '#fff', textAlign: 'center', padding: 10 }}>Hủy</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={{ flex: 1, backgroundColor: '#73aa2a', margin: 20, }}
+              >
+                <Text style={{ color: '#fff', textAlign: 'center', padding: 10 }}>Đăng nhập</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </PopupDialog>
 
         <PopupDialog
           ref={(popupDialog) => { this.popupDialog = popupDialog; }}
@@ -311,6 +404,14 @@ export default class HomeScreen extends React.Component {
           <ScrollView style={{ paddingTop: 10, marginTop: 20, }}>
             <FormLabel>Hình ảnh</FormLabel>
             <View style={{ height: 100, padding: 20, flexDirection: 'row' }}>
+              <Button
+                title="Pick an image from camera roll"
+                onPress={this._pickImage}
+              />
+              {image &&
+                <Image source={{ uri: image }} style={{ width: 200, height: 200 }} />}
+
+
               <Ionicons style={{ fontSize: 80, color: '#73aa2a', flex: 1, textAlign: 'center', }} name='ios-image-outline' />
               <Ionicons style={{ fontSize: 80, color: '#73aa2a', flex: 1, textAlign: 'center', }} name='ios-image-outline' />
               <Ionicons style={{ fontSize: 80, color: '#73aa2a', flex: 1, textAlign: 'center', }} name='ios-image-outline' />
@@ -349,7 +450,10 @@ export default class HomeScreen extends React.Component {
               <Button
                 buttonStyle={{ backgroundColor: '#9B9D9D', padding: 15, borderRadius: 10 }}
                 icon={{ name: 'ios-backspace', type: 'ionicon' }}
-                onPress={() => this._setModalVisible(false)}
+                onPress={() => {
+                  this._setModalVisible(false)
+                  this.setState({ image: null })
+                }}
                 title='Hủy' />
               <Button
                 buttonStyle={{ backgroundColor: '#73aa2a', padding: 15, borderRadius: 10 }}
