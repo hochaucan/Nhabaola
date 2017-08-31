@@ -15,7 +15,7 @@ import {
     SliderIOS,
 } from 'react-native';
 import { ExpoLinksView } from '@expo/samples';
-import { Constants } from 'expo';
+import { Constants, Location, Permissions } from 'expo';
 import { Ionicons } from '@expo/vector-icons';
 import { users } from '../components/examples/data';
 import ModalDropdown from 'react-native-modal-dropdown';
@@ -32,11 +32,13 @@ export default class SearchScreen extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            mapRegion: { latitude: 10.7777935, longitude: 106.7068674, latitudeDelta: 0.0922, longitudeDelta: 0.0421 },
+            mapRegion: { latitude: 10.7777935, longitude: 106.7068674, latitudeDelta: 0.04, longitudeDelta: 0.04 },
             searchResultData: users,
             modalVisible: false,
             age: 18,
             hackHeight: height,
+            location: null,
+            errorMessage: null,
         }
     }
 
@@ -67,22 +69,51 @@ export default class SearchScreen extends React.Component {
     }
     componentWillMount() {
         setTimeout(() => this.setState({ hackHeight: height + 1 }), 500);
-        setTimeout(() => this.setState({ hackHeight: height*0.5 }), 1000);
+        setTimeout(() => this.setState({ hackHeight: height * 0.5 }), 1000);
+
+        if (Platform.OS === 'android' && !Constants.isDevice) {
+            this.setState({
+                errorMessage: 'Oops, this will not work on Sketch in an Android emulator. Try it on your device!',
+            });
+        } else {
+            this._getLocationAsync();
+        }
     }
+
+    _getLocationAsync = async () => {
+        let { status } = await Permissions.askAsync(Permissions.LOCATION);
+        if (status !== 'granted') {
+            this.setState({
+                errorMessage: 'Permission to access location was denied',
+            });
+        }
+
+        let location = await Location.getCurrentPositionAsync({});
+        this.setState({ location });
+    };
+
+
     render() {
+        let text = 'Waiting..';
+        if (this.state.errorMessage) {
+            text = this.state.errorMessage;
+        } else if (this.state.location) {
+            text = JSON.stringify(this.state.location.coords);
+        }
+
         return (
 
             <ScrollView style={styles.container}>
+                {/* <Text style={styles.paragraph}>{text}</Text> */}
                 <MapView
                     style={{ paddingBottom: this.state.hackHeight, height: 200, alignSelf: 'stretch', }}
 
                     region={this.state.mapRegion}
                     onRegionChange={this._handleMapRegionChange}
-
+                    provider='google'
                     showsUserLocation={true}
                     showsMyLocationButton={true}
-                    followsUserLocation={false}
-
+                    followsUserLocation={true}
                 >
 
                 </MapView>

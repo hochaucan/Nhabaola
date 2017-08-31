@@ -15,6 +15,7 @@ import {
   Modal,
   Share,
   Alert,
+  Animated
 } from 'react-native';
 import { WebBrowser, ImagePicker, Facebook } from 'expo';
 import { MonoText } from '../components/StyledText';
@@ -27,6 +28,8 @@ import { CheckBox, Rating, Button, FormLabel, FormInput, SocialIcon } from 'reac
 import StarRating from 'react-native-star-rating';
 import MapView from 'react-native-maps';
 import Communications from 'react-native-communications';
+
+
 
 
 var { height, width } = Dimensions.get('window');
@@ -47,6 +50,16 @@ export default class HomeScreen extends React.Component {
       starCount: 3.5,
       mapRegion: { latitude: 10.7777935, longitude: 106.7068674, latitudeDelta: 0.0922, longitudeDelta: 0.0421 },
       image: null,
+
+      // Login
+      username: '',
+      password: '',
+      animation: {
+        usernamePostionLeft: new Animated.Value(795),
+        passwordPositionLeft: new Animated.Value(905),
+        loginPositionTop: new Animated.Value(1402),
+        statusPositionTop: new Animated.Value(1542)
+      }
     }
 
   }
@@ -60,6 +73,7 @@ export default class HomeScreen extends React.Component {
   }
 
   componentDidMount() {
+    // Animation for Login
 
   }
 
@@ -161,6 +175,8 @@ export default class HomeScreen extends React.Component {
       );
     }
   };
+
+
 
   render() {
     let { image } = this.state;
@@ -281,7 +297,29 @@ export default class HomeScreen extends React.Component {
         />
         {this.state.isActionButtonVisible ?
           <ActionButton buttonColor="#73aa2a">
-            <ActionButton.Item buttonColor='#a4d227' title="Đăng nhập" onPress={() => { this.popupLogin.show() }}>
+            <ActionButton.Item buttonColor='#a4d227' title="Đăng nhập" onPress={() => {
+              this.popupLogin.show()
+              const timing = Animated.timing;
+              Animated.parallel([
+                timing(this.state.animation.usernamePostionLeft, {
+                  toValue: 0,
+                  duration: 900
+                }),
+                timing(this.state.animation.passwordPositionLeft, {
+                  toValue: 0,
+                  duration: 1100
+                }),
+                timing(this.state.animation.loginPositionTop, {
+                  toValue: 0,
+                  duration: 700
+                }),
+                timing(this.state.animation.statusPositionTop, {
+                  toValue: 0,
+                  duration: 700
+                })
+
+              ]).start()
+            }}>
               <Icon name="ios-contact" style={styles.actionButtonIcon} />
             </ActionButton.Item>
             <ActionButton.Item buttonColor='#a4d227' title="Đăng tin" onPress={() => this._setModalVisible(true)}>
@@ -297,19 +335,38 @@ export default class HomeScreen extends React.Component {
           : null}
 
 
+        {/* Popup Login */}
         <PopupDialog
           ref={(popupLogin) => { this.popupLogin = popupLogin; }}
           dialogAnimation={new ScaleAnimation()}
           dialogTitle={<DialogTitle title="Đăng nhập" titleStyle={{}} titleTextStyle={{ color: '#73aa2a' }} />}
           dismissOnTouchOutside={false}
-          dialogStyle={{ marginBottom: 10, width: width * 0.9 }}
+          dialogStyle={{ marginBottom: 20, width: width * 0.9, height: height * 0.6 }}
 
         >
           <View>
-            <SocialIcon
-              type='facebook'
-              onPress={this._handleFacebookLogin}
-            />
+
+            <Animated.View style={{ position: 'relative', left: this.state.animation.usernamePostionLeft }}>
+              <FormInput
+                placeholder='Vui lòng nhập địa chỉ'
+                autoCapitalize='sentences'
+                maxLength={300}
+              />
+            </Animated.View>
+            <Animated.View style={{ position: 'relative', left: this.state.animation.passwordPositionLeft }}>
+              <FormInput
+                placeholder='Vui lòng nhập địa chỉ'
+                autoCapitalize='sentences'
+                maxLength={300}
+              />
+            </Animated.View>
+            <Animated.View style={{ position: 'relative', top: this.state.animation.loginPositionTop }}>
+              <SocialIcon
+                type='facebook'
+                onPress={this._handleFacebookLogin}
+              />
+            </Animated.View>
+
 
             <View style={{ height: 80, flexDirection: 'row', marginBottom: 15, }}>
               <TouchableOpacity
