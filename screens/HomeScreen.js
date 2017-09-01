@@ -346,29 +346,42 @@ export default class HomeScreen extends React.Component {
         >
           <View>
 
-            <Animated.View style={{ position: 'relative', left: this.state.animation.usernamePostionLeft }}>
+            <Animated.View style={{ position: 'relative', left: this.state.animation.usernamePostionLeft, flexDirection: 'row', padding: 10, }}>
+              <Ionicons style={{ fontSize: 22, }} name='ios-person-outline' />
               <FormInput
-                placeholder='Vui lòng nhập địa chỉ'
+                containerStyle={{ flex: 1 }}
+                placeholder='Số điện thoại'
                 autoCapitalize='sentences'
-                maxLength={300}
+                keyboardType='phone-pad'
               />
             </Animated.View>
-            <Animated.View style={{ position: 'relative', left: this.state.animation.passwordPositionLeft }}>
+            <Animated.View style={{ position: 'relative', left: this.state.animation.passwordPositionLeft, flexDirection: 'row', padding: 10, paddingTop: 0, }}>
+              <Ionicons style={{ fontSize: 22, }} name='ios-lock-outline' />
               <FormInput
-                placeholder='Vui lòng nhập địa chỉ'
-                autoCapitalize='sentences'
-                maxLength={300}
+                containerStyle={{ flex: 1 }}
+                placeholder='Mật khẩu'
+                secureTextEntry={true}
+
               />
             </Animated.View>
-            <Animated.View style={{ position: 'relative', top: this.state.animation.loginPositionTop }}>
-              <SocialIcon
-                type='facebook'
-                onPress={this._handleFacebookLogin}
+            <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center', marginTop: 10, }}>
+              <Button
+                buttonStyle={{ backgroundColor: '#9B9D9D', padding: 10, borderRadius: 5, }}
+                raised={false}
+                icon={{ name: 'ios-backspace', type: 'ionicon' }}
+                title='Hủy'
+                onPress={() => { this.popupLogin.dismiss() }}
               />
-            </Animated.View>
+
+              <Button
+                buttonStyle={{ backgroundColor: '#73aa2a', padding: 10, borderRadius: 5, }}
+                raised={false}
+                icon={{ name: 'md-checkmark', type: 'ionicon' }}
+                title='Đăng nhập' />
+            </View>
 
 
-            <View style={{ height: 80, flexDirection: 'row', marginBottom: 15, }}>
+            {/* <View style={{ height: 80, flexDirection: 'row', marginBottom: 15, }}>
               <TouchableOpacity
                 style={{ flex: 1, backgroundColor: '#9B9D9D', margin: 20, }}
                 onPress={() => { this.popupLogin.dismiss() }}
@@ -380,7 +393,14 @@ export default class HomeScreen extends React.Component {
               >
                 <Text style={{ color: '#fff', textAlign: 'center', padding: 10 }}>Đăng nhập</Text>
               </TouchableOpacity>
-            </View>
+            </View> */}
+
+            <Animated.View style={{ position: 'relative', top: this.state.animation.loginPositionTop }}>
+              <SocialIcon
+                type='facebook'
+                onPress={this._handleFacebookLogin}
+              />
+            </Animated.View>
           </View>
         </PopupDialog>
 

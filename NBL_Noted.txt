@@ -1,5 +1,6 @@
 #73aa2a (Xanh dam)
 #a4d227 (Xanh sang)
+#9B9D9D (Xam)
 
  cardAvatarPhone:'#9B9D9D',
  React Native Icon: http://ionicframework.com/docs/ionicons/
