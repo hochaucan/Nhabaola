@@ -23,6 +23,35 @@ import MapView from 'react-native-maps';
 
 var { height, width } = Dimensions.get('window');
 
+const ASPECT_RATIO = width / height;
+const LATITUDE = 37.78825;
+const LONGITUDE = -122.4324;
+const LATITUDE_DELTA = 0.05;
+const LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO;
+const SPACE = 0.01;
+let id = 0;
+
+function randomColor() {
+    return `#${Math.floor(Math.random() * 16777215).toString(16)}`;
+}
+
+function createMarker(modifier = 1) {
+    return {
+        latitude: LATITUDE - (SPACE * modifier),
+        longitude: LONGITUDE - (SPACE * modifier),
+    };
+}
+
+const MARKERS = [
+    createMarker(),
+    createMarker(2),
+    createMarker(3),
+    createMarker(4),
+    createMarker(5),
+];
+
+const DEFAULT_PADDING = { top: 40, right: 40, bottom: 40, left: 40 };
+
 export default class SearchScreen extends React.Component {
 
     static navigationOptions = {
@@ -32,16 +61,37 @@ export default class SearchScreen extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            mapRegion: { latitude: 10.7777935, longitude: 106.7068674, latitudeDelta: 0.04, longitudeDelta: 0.04 },
+            mapRegion: { latitude: LATITUDE, longitude: LONGITUDE, latitudeDelta: LATITUDE_DELTA, longitudeDelta: LONGITUDE_DELTA },
             searchResultData: users,
             modalVisible: false,
             age: 18,
             hackHeight: height,
             location: null,
             errorMessage: null,
+            markers: [],
         }
     }
 
+    onMapPress(e) {
+        this.setState({
+            markers: [
+                ...this.state.markers,
+                {
+                    coordinate: e.nativeEvent.coordinate,
+                    key: id++,
+                    color: randomColor(),
+                },
+            ],
+        });
+    }
+
+
+    fitAllMarkers() {
+        this.map.fitToCoordinates(MARKERS, {
+            edgePadding: DEFAULT_PADDING,
+            animated: true,
+        });
+    }
 
     _setModalVisible(visible) {
         this.setState({ modalVisible: visible });
@@ -80,6 +130,10 @@ export default class SearchScreen extends React.Component {
         }
     }
 
+    componentDidMount() {
+
+    }
+
     _getLocationAsync = async () => {
         let { status } = await Permissions.askAsync(Permissions.LOCATION);
         if (status !== 'granted') {
@@ -106,6 +160,8 @@ export default class SearchScreen extends React.Component {
             <ScrollView style={styles.container}>
                 {/* <Text style={styles.paragraph}>{text}</Text> */}
                 <MapView
+                    ref={ref => { this.map = ref; }}
+
                     style={{ paddingBottom: this.state.hackHeight, height: 200, alignSelf: 'stretch', }}
 
                     region={this.state.mapRegion}
@@ -114,7 +170,25 @@ export default class SearchScreen extends React.Component {
                     showsUserLocation={true}
                     showsMyLocationButton={true}
                     followsUserLocation={true}
+                    onPress={(e) => this.onMapPress(e)}
+                    
                 >
+                    {/* {this.state.markers.map(marker => (
+                        <MapView.Marker
+                            key={marker.key}
+                            coordinate={marker.coordinate}
+                            pinColor={marker.color}
+                            image={require('../images/nbl-house_icon.png')}
+                        />
+                    ))} */}
+
+                    {MARKERS.map((marker, i) => (
+                        <MapView.Marker
+                            key={i}
+                            coordinate={marker}
+                            image={require('../images/nbl-house_icon.png')}
+                        />
+                    ))}
 
                 </MapView>
 
@@ -153,7 +227,9 @@ export default class SearchScreen extends React.Component {
                                 <Picker.Item label="10 km" value="10" />
                             </Picker>
                         }
-                        <TouchableOpacity>
+                        <TouchableOpacity
+                            onPress={() => this.fitAllMarkers()}
+                        >
                             <Text style={{ flex: 3, textAlign: 'right', color: '#73aa2a' }}>Đăng ký vùng này</Text>
                         </TouchableOpacity>
                     </View>

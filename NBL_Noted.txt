@@ -5,9 +5,8 @@
  cardAvatarPhone:'#9B9D9D',
  React Native Icon: http://ionicframework.com/docs/ionicons/
  Carousel: https://github.com/archriss/react-native-snap-carousel
- react-native-maps-google: https://www.npmjs.com/package/react-native-maps-google
 react-native-elements: https://github.com/react-native-training/react-native-elements
-    
+react-native-map: https://github.com/airbnb/react-native-maps
 
 Android SDK Location: C:\Users\NickHo\AppData\Local\Android\Sdk
 

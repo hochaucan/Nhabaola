@@ -15,10 +15,11 @@ import {
     SliderIOS,
 } from 'react-native';
 import { ExpoLinksView } from '@expo/samples';
-import { Constants, MapView } from 'expo';
+import { Constants } from 'expo';
 import { Ionicons } from '@expo/vector-icons';
 import { users } from '../components/examples/data';
 import ModalDropdown from 'react-native-modal-dropdown';
+import MapView from 'react-native-maps';
 
 var { height, width } = Dimensions.get('window');
 
@@ -31,7 +32,7 @@ export default class SearchScreen extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            mapRegion: { latitude: 37.78825, longitude: -122.4324, latitudeDelta: 0.0922, longitudeDelta: 0.0421 },
+            mapRegion: { latitude: 37.78825, longitude: -122.4324, latitudeDelta: 0.05, longitudeDelta: 0.05 },
             searchResultData: users,
             modalVisible: false,
             age: 18,
@@ -73,7 +74,7 @@ export default class SearchScreen extends React.Component {
                         <Text style={styles.registerRoomTitleText}>Bạn đã đắng ký vùng này</Text>
                     </View>
                     <View style={styles.searchFilterBox}>
-                        <Text style={styles.registerRoomFilterText}>Bán kính 4 km. Giá từ 2 triệu đến 5 triệu. Diện tích từ 60m2 đến 100m2</Text>
+                        <Text style={styles.registerRoomFilterText}>Bán kính 4 km. Giá 2-5 triệu. Diện tích 60-100 mét vuông</Text>
                     </View>
                 </View>
                 <ScrollView style={styles.container}>
@@ -175,15 +176,19 @@ export default class SearchScreen extends React.Component {
 
 const styles = StyleSheet.create({
     registerRoomFilterText: {
-        width: width,
+        flex: 1,
         textAlign: 'center',
         fontSize: 13,
+        backgroundColor: '#fff',
+        borderRadius: 10,
+        padding: 10,
     },
     registerRoomTitleText: {
+        flex: 1,
         fontSize: 17,
-        width: width,
         textAlign: 'center',
         color: '#73aa2a',
+
     },
     registerRoomFilterBox: {
         // padding: 10,
@@ -192,6 +197,8 @@ const styles = StyleSheet.create({
         backgroundColor: '#fff',
         opacity: 0.7,
         width: width,
+        borderWidth: 2,
+        borderColor: '#fff'
     },
     searchFilterButtonCancel: {
         flex: 1,
@@ -299,14 +306,14 @@ const styles = StyleSheet.create({
         backgroundColor: '#fff',
         // position: 'absolute',
         opacity: 0.8,
-        marginTop: -70,
+        // marginTop: -70,
         padding: 10,
         borderTopWidth: 2,
         borderColor: 'white',
     },
     searchMapView: {
         alignSelf: 'stretch',
-        height: height * 0.6,
+        height: height * 0.5,
     },
     container: {
         flex: 1,

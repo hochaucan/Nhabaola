@@ -348,18 +348,18 @@ export default class HomeScreen extends React.Component {
           <View>
 
             <Animated.View style={{ position: 'relative', left: this.state.animation.usernamePostionLeft, flexDirection: 'row', padding: 10, }}>
-              <Ionicons style={{ fontSize: 22, }} name='ios-person-outline' />
+              <Ionicons style={{ flex: 1, fontSize: 22, paddingTop: 12, textAlign: 'center', }} name='ios-person-outline' />
               <FormInput
-                containerStyle={{ flex: 1 }}
+                containerStyle={{ flex: 15 }}
                 placeholder='Số điện thoại'
                 autoCapitalize='sentences'
                 keyboardType='phone-pad'
               />
             </Animated.View>
             <Animated.View style={{ position: 'relative', left: this.state.animation.passwordPositionLeft, flexDirection: 'row', padding: 10, paddingTop: 0, }}>
-              <Ionicons style={{ fontSize: 22, }} name='ios-lock-outline' />
+              <Ionicons style={{ flex: 1, fontSize: 22, paddingTop: 12, textAlign: 'center', }} name='ios-lock-outline' />
               <FormInput
-                containerStyle={{ flex: 1 }}
+                containerStyle={{ flex: 15 }}
                 placeholder='Mật khẩu'
                 secureTextEntry={true}
 
@@ -385,7 +385,7 @@ export default class HomeScreen extends React.Component {
 
             <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center', marginTop: 10, }}>
               <TouchableOpacity style={{ flex: 1, }}>
-                <Text style={{ padding: 15, textAlign: 'center' }}>Quên mật khẩu</Text>
+                <Text style={{ padding: 15, textAlign: 'center' }}>Quên mật khẩu?</Text>
               </TouchableOpacity>
               <TouchableOpacity style={{ flex: 1, }}>
                 <Text style={{ padding: 15, textAlign: 'center' }}>Đăng ký mới</Text>
@@ -396,7 +396,7 @@ export default class HomeScreen extends React.Component {
             <FormLabel
               containerStyle={{
                 alignItems: 'center', justifyContent: 'center',
-                height: 50, marginTop: 5,
+                height: 50,
               }}
             >
               ----- Hoặc đăng nhập bằng -----
@@ -418,15 +418,16 @@ export default class HomeScreen extends React.Component {
                 raised={false}
                 onPress={this._handleFacebookLogin}
               />
+              <SocialIcon
+                type='twitter'
+                raised={false}
+                onPress={this._handleFacebookLogin}
+              />
             </Animated.View>
-
-
-
-
-
           </View>
         </PopupDialog>
 
+        {/* popupReport */}
         <PopupDialog
           ref={(popupDialog) => { this.popupDialog = popupDialog; }}
           dialogAnimation={new ScaleAnimation()}
@@ -505,7 +506,7 @@ export default class HomeScreen extends React.Component {
             <FormLabel>Hình ảnh</FormLabel>
             <View style={{ height: 100, padding: 20, flexDirection: 'row' }}>
               <Button
-                title="Pick an image from camera roll"
+                title="Pick"
                 onPress={this._pickImage}
               />
               {image &&
