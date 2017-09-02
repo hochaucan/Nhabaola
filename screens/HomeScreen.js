@@ -343,6 +343,7 @@ export default class HomeScreen extends React.Component {
           dismissOnTouchOutside={false}
           dialogStyle={{ marginBottom: 20, width: width * 0.9, height: height * 0.6 }}
 
+
         >
           <View>
 
@@ -381,26 +382,48 @@ export default class HomeScreen extends React.Component {
             </View>
 
 
-            {/* <View style={{ height: 80, flexDirection: 'row', marginBottom: 15, }}>
-              <TouchableOpacity
-                style={{ flex: 1, backgroundColor: '#9B9D9D', margin: 20, }}
-                onPress={() => { this.popupLogin.dismiss() }}
-              >
-                <Text style={{ color: '#fff', textAlign: 'center', padding: 10 }}>Hủy</Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                style={{ flex: 1, backgroundColor: '#73aa2a', margin: 20, }}
-              >
-                <Text style={{ color: '#fff', textAlign: 'center', padding: 10 }}>Đăng nhập</Text>
-              </TouchableOpacity>
-            </View> */}
 
-            <Animated.View style={{ position: 'relative', top: this.state.animation.loginPositionTop }}>
+            <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center', marginTop: 10, }}>
+              <TouchableOpacity style={{ flex: 1, }}>
+                <Text style={{ padding: 15, textAlign: 'center' }}>Quên mật khẩu</Text>
+              </TouchableOpacity>
+              <TouchableOpacity style={{ flex: 1, }}>
+                <Text style={{ padding: 15, textAlign: 'center' }}>Đăng ký mới</Text>
+              </TouchableOpacity>
+            </View>
+
+
+            <FormLabel
+              containerStyle={{
+                alignItems: 'center', justifyContent: 'center',
+                height: 50, marginTop: 5,
+              }}
+            >
+              ----- Hoặc đăng nhập bằng -----
+            </FormLabel>
+
+            <Animated.View style={{
+              position: 'relative',
+              top: this.state.animation.loginPositionTop, marginTop: 5, flexDirection: 'row',
+              alignItems: 'center', justifyContent: 'center'
+
+            }}>
               <SocialIcon
                 type='facebook'
+                raised={false}
+                onPress={this._handleFacebookLogin}
+              />
+              <SocialIcon
+                type='youtube'
+                raised={false}
                 onPress={this._handleFacebookLogin}
               />
             </Animated.View>
+
+
+
+
+
           </View>
         </PopupDialog>
 

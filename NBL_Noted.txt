@@ -9,6 +9,9 @@
 react-native-elements: https://github.com/react-native-training/react-native-elements
     
 
+Android SDK Location: C:\Users\NickHo\AppData\Local\Android\Sdk
+
+
 const styleButton = {
     container: {
         paddingTop: 16,
