@@ -15,11 +15,11 @@ import {
     SliderIOS,
 } from 'react-native';
 import { ExpoLinksView } from '@expo/samples';
-import { Constants, Location, Permissions } from 'expo';
+import { Constants, Location, Permissions, MapView } from 'expo';
 import { Ionicons } from '@expo/vector-icons';
 import { users } from '../components/examples/data';
 import ModalDropdown from 'react-native-modal-dropdown';
-import MapView from 'react-native-maps';
+//import MapView from 'react-native-maps';
 
 var { height, width } = Dimensions.get('window');
 
@@ -118,23 +118,33 @@ export default class SearchScreen extends React.Component {
         // console.warn(val);
     }
     componentWillMount() {
+        this._getLocationAsync();
+
+        // if (Platform.OS === 'android' && !Constants.isDevice) {
+        //     this.setState({
+        //         errorMessage: 'Oops, this will not work on Sketch in an Android emulator. Try it on your device!',
+        //     });
+        // } else {
+        //     this._getLocationAsync();
+        // }
+
         setTimeout(() => this.setState({ hackHeight: height + 1 }), 500);
         setTimeout(() => this.setState({ hackHeight: height * 0.5 }), 1000);
-
-        if (Platform.OS === 'android' && !Constants.isDevice) {
-            this.setState({
-                errorMessage: 'Oops, this will not work on Sketch in an Android emulator. Try it on your device!',
-            });
-        } else {
-            this._getLocationAsync();
-        }
     }
 
     componentDidMount() {
-
+        //mapRegion: { latitude: LATITUDE, longitude: LONGITUDE, latitudeDelta: LATITUDE_DELTA, longitudeDelta: LONGITUDE_DELTA },
+        // let mapRegion = {
+        //     latitude: this.state.location.coords.latitude,
+        //     longitude: this.state.location.coords.longitude,
+        //     latitudeDelta: LATITUDE_DELTA,
+        //     longitudeDelta: LONGITUDE_DELTA
+        // }
+        // this.setState({ mapRegion });
     }
 
     _getLocationAsync = async () => {
+
         let { status } = await Permissions.askAsync(Permissions.LOCATION);
         if (status !== 'granted') {
             this.setState({
@@ -144,6 +154,14 @@ export default class SearchScreen extends React.Component {
 
         let location = await Location.getCurrentPositionAsync({});
         this.setState({ location });
+
+        let region = {
+            latitude: location.coords.latitude,
+            longitude: location.coords.longitude,
+            latitudeDelta: LATITUDE_DELTA,
+            longitudeDelta: LONGITUDE_DELTA
+        }
+        this.setState({ mapRegion: region });
     };
 
 
@@ -156,175 +174,190 @@ export default class SearchScreen extends React.Component {
         }
 
         return (
+            <View>
+                <View style={{ height: height * 0.5, }}>
 
-            <ScrollView style={styles.container}>
-                {/* <Text style={styles.paragraph}>{text}</Text> */}
-                <MapView
-                    ref={ref => { this.map = ref; }}
+                    {this.state.location ?
+                        <MapView
+                            ref={ref => { this.map = ref; }}
 
-                    style={{ paddingBottom: this.state.hackHeight, height: 200, alignSelf: 'stretch', }}
+                            style={{ paddingBottom: this.state.hackHeight,  alignSelf: 'stretch', }}
 
-                    region={this.state.mapRegion}
-                    onRegionChange={this._handleMapRegionChange}
-                    provider='google'
-                    showsUserLocation={true}
-                    showsMyLocationButton={true}
-                    followsUserLocation={true}
-                    onPress={(e) => this.onMapPress(e)}
-                    
-                >
-                    {/* {this.state.markers.map(marker => (
-                        <MapView.Marker
-                            key={marker.key}
-                            coordinate={marker.coordinate}
-                            pinColor={marker.color}
-                            image={require('../images/nbl-house_icon.png')}
-                        />
-                    ))} */}
+                            region={this.state.mapRegion}
+                            onRegionChange={this._handleMapRegionChange}
+                            provider='google'
+                            showsUserLocation={true}
+                            showsMyLocationButton={true}
+                            followsUserLocation={true}
+                            onPress={(e) => this.onMapPress(e)}
 
-                    {MARKERS.map((marker, i) => (
-                        <MapView.Marker
-                            key={i}
-                            coordinate={marker}
-                            image={require('../images/nbl-house_icon.png')}
-                        />
-                    ))}
-
-                </MapView>
-
-
-
-
-
-
-
-
-
-                <View style={styles.searchRoolResultBox}>
-                    <View style={styles.searchRadiusBox}>
-                        <Text >Bán kính: </Text>
-                        {Platform.OS === 'ios' ?
-                            <ModalDropdown
-                                style={styles.ModalDropdown}
-                                dropdownStyle={styles.dropdownStyle}
-                                textStyle={styles.dropdowntextStyle}
-                                options={['2 km', '4 km', '6 km', '8 km', '10 km']}
-                                defaultIndex={0}
-                                defaultValue='2 km'
-                                onSelect={(idx, value) => this._dropdown_onSelect(idx, value)}
-                            >
-                            </ModalDropdown>
-                            :
-                            <Picker
-                                style={styles.searchRadiusPicker}
-                                mode='dropdown'
-                                selectedValue={this.state.language}
-                                onValueChange={(itemValue, itemIndex) => this.setState({ language: itemValue })}>
-                                <Picker.Item label="2 km" value="2" />
-                                <Picker.Item label="4 km" value="4" />
-                                <Picker.Item label="6 km" value="6" />
-                                <Picker.Item label="8 km" value="8" />
-                                <Picker.Item label="10 km" value="10" />
-                            </Picker>
-                        }
-                        <TouchableOpacity
-                            onPress={() => this.fitAllMarkers()}
                         >
-                            <Text style={{ flex: 3, textAlign: 'right', color: '#73aa2a' }}>Đăng ký vùng này</Text>
-                        </TouchableOpacity>
-                    </View>
-                    <View style={styles.searchFilterBox}>
-                        <Text >Bộ lọc: </Text>
-                        <TouchableOpacity
-                            onPress={() => this._setModalVisible(true)}
-                        >
-                            <Ionicons style={styles.searchFilterIcon} name='ios-funnel'></Ionicons>
-                        </TouchableOpacity>
-                    </View>
 
-                    <FlatList
-                        //onScroll={this._onScroll}
-                        ref='searchresult'
-                        data={this.state.searchResultData}
-                        renderItem={({ item }) =>
+                            {/* <MapView.Marker
+                        coordinate={{
+                            latitude: (this.state.lastLat + 0.00050) || -36.82339,
+                            longitude: (this.state.lastLong + 0.00050) || -73.03569,
+                        }}>
+                        <View>
+                            <Text style={{ color: '#000' }}>
+                                {this.state.lastLong} / {this.state.lastLat}
+                            </Text>
+                        </View>
+                    </MapView.Marker> */}
+
+
+                            {this.state.markers.map(marker => (
+                                <MapView.Marker
+                                    key={marker.key}
+                                    coordinate={marker.coordinate}
+                                    pinColor={marker.color}
+                                /* image={require('../images/nbl-house_icon.png')} */
+                                />
+                            ))}
+
+                            {MARKERS.map((marker, i) => (
+                                <MapView.Marker
+                                    key={i}
+                                    coordinate={marker}
+                                    image={require('../images/nbl-house_icon.png')}
+                                />
+                            ))}
+
+                        </MapView>
+
+                        : null
+                    }
+                </View>
+
+                <ScrollView style={styles.container}>
+                    {/* <Text style={styles.paragraph}>{text}</Text> */}
+
+
+                    <View style={styles.searchRoolResultBox}>
+                        <View style={styles.searchRadiusBox}>
+                            <Text >Bán kính: </Text>
+                            {Platform.OS === 'ios' ?
+                                <ModalDropdown
+                                    style={styles.ModalDropdown}
+                                    dropdownStyle={styles.dropdownStyle}
+                                    textStyle={styles.dropdowntextStyle}
+                                    options={['2 km', '4 km', '6 km', '8 km', '10 km']}
+                                    defaultIndex={0}
+                                    defaultValue='2 km'
+                                    onSelect={(idx, value) => this._dropdown_onSelect(idx, value)}
+                                >
+                                </ModalDropdown>
+                                :
+                                <Picker
+                                    style={styles.searchRadiusPicker}
+                                    mode='dropdown'
+                                    selectedValue={this.state.language}
+                                    onValueChange={(itemValue, itemIndex) => this.setState({ language: itemValue })}>
+                                    <Picker.Item label="2 km" value="2" />
+                                    <Picker.Item label="4 km" value="4" />
+                                    <Picker.Item label="6 km" value="6" />
+                                    <Picker.Item label="8 km" value="8" />
+                                    <Picker.Item label="10 km" value="10" />
+                                </Picker>
+                            }
                             <TouchableOpacity
-                                style={styles.searchCardImage}
-                                onPress={() => this._moveToRoomDetail(item)}
+                                onPress={() => this.fitAllMarkers()}
                             >
-                                <View style={styles.searchCard}>
-                                    <Image
-                                        style={styles.searchCardImage}
-                                        source={{ uri: item.picture.large }} />
+                                <Text style={{ flex: 3, textAlign: 'right', color: '#73aa2a' }}>Đăng ký vùng này</Text>
+                            </TouchableOpacity>
+                        </View>
+                        <View style={styles.searchFilterBox}>
+                            <Text >Bộ lọc: </Text>
+                            <TouchableOpacity
+                                onPress={() => this._setModalVisible(true)}
+                            >
+                                <Ionicons style={styles.searchFilterIcon} name='ios-funnel'></Ionicons>
+                            </TouchableOpacity>
+                        </View>
 
-                                    <View style={styles.searchCardTextBox}>
-                                        <Text style={styles.searchCardAddress}>{item.location.street} {item.location.city}</Text>
-                                        <Text style={styles.searchCardPostDate}>Ngày đăng: {item.registered}</Text>
-                                        <View style={styles.searchCardPriceBox}>
-                                            <Text style={styles.searchCardPrice}>Giá: 2.000.000 đ</Text>
-                                            <Ionicons style={styles.searCardDistanceIcon} name='md-pin' >  3 km</Ionicons>
-                                            {/* <Text>3 km</Text> */}
+                        <FlatList
+                            //onScroll={this._onScroll}
+                            ref='searchresult'
+                            data={this.state.searchResultData}
+                            renderItem={({ item }) =>
+                                <TouchableOpacity
+                                    style={styles.searchCardImage}
+                                    onPress={() => this._moveToRoomDetail(item)}
+                                >
+                                    <View style={styles.searchCard}>
+                                        <Image
+                                            style={styles.searchCardImage}
+                                            source={{ uri: item.picture.large }} />
+
+                                        <View style={styles.searchCardTextBox}>
+                                            <Text style={styles.searchCardAddress}>{item.location.street} {item.location.city}</Text>
+                                            <Text style={styles.searchCardPostDate}>Ngày đăng: {item.registered}</Text>
+                                            <View style={styles.searchCardPriceBox}>
+                                                <Text style={styles.searchCardPrice}>Giá: 2.000.000 đ</Text>
+                                                <Ionicons style={styles.searCardDistanceIcon} name='md-pin' >  3 km</Ionicons>
+                                                {/* <Text>3 km</Text> */}
+                                            </View>
                                         </View>
                                     </View>
-                                </View>
-                            </TouchableOpacity>
-                        }
-                        keyExtractor={item => item.email}
-                    />
-
-                </View>
-                <Modal
-                    animationType={"slide"}
-                    transparent={false}
-                    visible={this.state.modalVisible}
-                    onRequestClose={() => { alert("Modal has been closed.") }}
-                >
-                    <View style={styles.searchFilterModalBox}>
-                        <View style={styles.searhFilterSliderBox}>
-                            <Text>Giá: </Text>
-                            <Slider
-                                step={1}
-                                minimumValue={18}
-                                maximumValue={71}
-                                value={this.state.age}
-                                onValueChange={val => this.setState({ age: val })}
-                                onSlidingComplete={val => this.getVal(val)}
-                            />
-                            <Text>{this.state.age}</Text>
-                            <Text style={{ marginTop: 20, }}>Diện tích: </Text>
-                            <Slider
-
-                                step={2}
-                                minimumValue={18}
-                                maximumValue={71}
-                                value={this.state.age}
-                                onValueChange={val => this.setState({ age: val })}
-                                onSlidingComplete={val => this.getVal(val)}
-                            />
-                            <Text>{this.state.age}</Text>
-                        </View>
-                        <View style={styles.searchFilterButtonBox} >
-
-                            <TouchableOpacity
-                                style={styles.searchFilterButtonCancel}
-                                onPress={() => {
-                                    this._setModalVisible(!this.state.modalVisible)
-                                }}>
-                                <Text style={styles.searchFilterButtonText}>Hủy</Text>
-                            </TouchableOpacity>
-
-                            <TouchableOpacity
-                                style={styles.searchFilterButtonSubmit}
-                                onPress={() => {
-                                    this._setModalVisible(!this.state.modalVisible)
-                                }}>
-                                <Text style={styles.searchFilterButtonText}>Áp dụng</Text>
-                            </TouchableOpacity>
-                        </View>
+                                </TouchableOpacity>
+                            }
+                            keyExtractor={item => item.email}
+                        />
 
                     </View>
-                </Modal>
-            </ScrollView>
+                    <Modal
+                        animationType={"slide"}
+                        transparent={false}
+                        visible={this.state.modalVisible}
+                        onRequestClose={() => { alert("Modal has been closed.") }}
+                    >
+                        <View style={styles.searchFilterModalBox}>
+                            <View style={styles.searhFilterSliderBox}>
+                                <Text>Giá: </Text>
+                                <Slider
+                                    step={1}
+                                    minimumValue={18}
+                                    maximumValue={71}
+                                    value={this.state.age}
+                                    onValueChange={val => this.setState({ age: val })}
+                                    onSlidingComplete={val => this.getVal(val)}
+                                />
+                                <Text>{this.state.age}</Text>
+                                <Text style={{ marginTop: 20, }}>Diện tích: </Text>
+                                <Slider
 
+                                    step={2}
+                                    minimumValue={18}
+                                    maximumValue={71}
+                                    value={this.state.age}
+                                    onValueChange={val => this.setState({ age: val })}
+                                    onSlidingComplete={val => this.getVal(val)}
+                                />
+                                <Text>{this.state.age}</Text>
+                            </View>
+                            <View style={styles.searchFilterButtonBox} >
+
+                                <TouchableOpacity
+                                    style={styles.searchFilterButtonCancel}
+                                    onPress={() => {
+                                        this._setModalVisible(!this.state.modalVisible)
+                                    }}>
+                                    <Text style={styles.searchFilterButtonText}>Hủy</Text>
+                                </TouchableOpacity>
+
+                                <TouchableOpacity
+                                    style={styles.searchFilterButtonSubmit}
+                                    onPress={() => {
+                                        this._setModalVisible(!this.state.modalVisible)
+                                    }}>
+                                    <Text style={styles.searchFilterButtonText}>Áp dụng</Text>
+                                </TouchableOpacity>
+                            </View>
+
+                        </View>
+                    </Modal>
+                </ScrollView>
+            </View>
         );
     }
 }
@@ -440,17 +473,18 @@ const styles = StyleSheet.create({
         backgroundColor: '#fff',
         // position: 'absolute',
         opacity: 0.8,
-        marginTop: -70,
+        // marginTop: -70,
         padding: 10,
         borderTopWidth: 2,
         borderColor: 'white',
     },
     searchMapView: {
         alignSelf: 'stretch',
-        height: height * 0.5,
+        // height: height * 0.3,
+        height: 100,
     },
     container: {
-        flex: 1,
+        height: height * 0.5,
         // paddingTop: 15,
         backgroundColor: '#fff',
     },

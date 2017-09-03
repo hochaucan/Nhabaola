@@ -341,7 +341,7 @@ export default class HomeScreen extends React.Component {
           dialogAnimation={new ScaleAnimation()}
           dialogTitle={<DialogTitle title="Đăng nhập" titleStyle={{}} titleTextStyle={{ color: '#73aa2a' }} />}
           dismissOnTouchOutside={false}
-          dialogStyle={{ marginBottom: 20, width: width * 0.9, height: height * 0.6 }}
+          dialogStyle={{ marginBottom: 20, width: width * 0.9, height: height * 0.7 }}
 
 
         >
