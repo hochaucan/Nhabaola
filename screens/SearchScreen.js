@@ -16,9 +16,9 @@ import {
 } from 'react-native';
 import { ExpoLinksView } from '@expo/samples';
 import { Constants, Location, Permissions, MapView } from 'expo';
-import { Ionicons } from '@expo/vector-icons';
+import { Ionicons } from '@expo/vector-icons';import ModalDropdown from 'react-native-modal-dropdown';
 import { users } from '../components/examples/data';
-import ModalDropdown from 'react-native-modal-dropdown';
+
 //import MapView from 'react-native-maps';
 
 var { height, width } = Dimensions.get('window');

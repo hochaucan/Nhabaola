@@ -28,7 +28,8 @@ import { CheckBox, Rating, Button, FormLabel, FormInput, SocialIcon } from 'reac
 import StarRating from 'react-native-star-rating';
 import MapView from 'react-native-maps';
 import Communications from 'react-native-communications';
-
+import ModalDropdown from 'react-native-modal-dropdown';
+import { TextInputMask } from 'react-native-masked-text';
 
 
 
@@ -49,7 +50,14 @@ export default class HomeScreen extends React.Component {
       reportCheck: false,
       starCount: 3.5,
       mapRegion: { latitude: 10.7777935, longitude: 106.7068674, latitudeDelta: 0.0922, longitudeDelta: 0.0421 },
-      image: null,
+
+      // Post Room
+      postRoomImage1: null,
+      postRoomImage2: null,
+      postRoomImage3: null,
+      postRoomImage4: null,
+      postRoomImage5: null,
+      postRoomImage6: null,
 
       // Login
       username: '',
@@ -123,17 +131,30 @@ export default class HomeScreen extends React.Component {
     // console.log(rating);
   }
 
-  _pickImage = async () => {
+  _pickPostRoomImage = async (imageNo) => {
     let result = await ImagePicker.launchImageLibraryAsync({
       allowsEditing: true,
       aspect: [4, 3],
     });
 
-    console.log(result);
-
+    // console.log(result);
     if (!result.cancelled) {
-      this.setState({ image: result.uri });
+      switch (imageNo) {
+        case '1':
+          console.log(result);
+          this.setState({ postRoomImage1: result.uri });
+          break;
+        case '2':
+          this.setState({ postRoomImage2: result.uri });
+          break;
+        case '3':
+          this.setState({ postRoomImage3: result.uri });
+          break;
+        default:
+
+      }
     }
+
   };
 
   _handleFacebookLogin = async () => {
@@ -341,7 +362,7 @@ export default class HomeScreen extends React.Component {
           dialogAnimation={new ScaleAnimation()}
           dialogTitle={<DialogTitle title="Đăng nhập" titleStyle={{}} titleTextStyle={{ color: '#73aa2a' }} />}
           dismissOnTouchOutside={false}
-          dialogStyle={{ marginBottom: 20, width: width * 0.9, height: height * 0.7 }}
+          dialogStyle={{ marginBottom: 20, width: width * 0.9, height: height * 0.64 }}
 
 
         >
@@ -427,7 +448,7 @@ export default class HomeScreen extends React.Component {
           </View>
         </PopupDialog>
 
-        {/* popupReport */}
+        {/* Popup Report */}
         <PopupDialog
           ref={(popupDialog) => { this.popupDialog = popupDialog; }}
           dialogAnimation={new ScaleAnimation()}
@@ -468,7 +489,7 @@ export default class HomeScreen extends React.Component {
           </View>
         </PopupDialog>
 
-
+        {/* Popup Rating */}
         <PopupDialog
           ref={(popupRating) => { this.popupRating = popupRating; }}
           dialogAnimation={new ScaleAnimation()}
@@ -495,7 +516,7 @@ export default class HomeScreen extends React.Component {
         </PopupDialog>
 
 
-        {/* Post Room */}
+        {/* Modal Post Room */}
         <Modal
           animationType={"slide"}
           transparent={false}
@@ -504,27 +525,70 @@ export default class HomeScreen extends React.Component {
         >
           <ScrollView style={{ paddingTop: 10, marginTop: 20, }}>
             <FormLabel>Hình ảnh</FormLabel>
-            <View style={{ height: 100, padding: 20, flexDirection: 'row' }}>
-              <Button
-                title="Pick"
-                onPress={this._pickImage}
-              />
-              {image &&
-                <Image source={{ uri: image }} style={{ width: 200, height: 200 }} />}
+            <View style={{
+              height: 120, paddingRight: 20,
+              paddingLeft: 20, flexDirection: 'row', justifyContent: 'space-between',
 
+            }}>
 
-              <Ionicons style={{ fontSize: 80, color: '#73aa2a', flex: 1, textAlign: 'center', }} name='ios-image-outline' />
-              <Ionicons style={{ fontSize: 80, color: '#73aa2a', flex: 1, textAlign: 'center', }} name='ios-image-outline' />
-              <Ionicons style={{ fontSize: 80, color: '#73aa2a', flex: 1, textAlign: 'center', }} name='ios-image-outline' />
+              <TouchableOpacity
+                style={{}}
+                onPress={() => this._pickPostRoomImage('1')}
+              >
+                <Ionicons style={{ fontSize: 133, color: '#73aa2a', flex: 1, textAlign: 'center', }} name='ios-image-outline' />
+                {this.state.postRoomImage1 && <Image source={{ uri: this.state.postRoomImage1 }} style={{ width: 100, height: 100 }} />}
+              </TouchableOpacity>
+
+              <TouchableOpacity
+                style={{}}
+                onPress={() => this._pickPostRoomImage('2')}
+              >
+                <Ionicons style={{ fontSize: 133, color: '#73aa2a', flex: 1, textAlign: 'center', }} name='ios-image-outline' />
+                {this.state.postRoomImage2 && <Image source={{ uri: this.state.postRoomImage2 }} style={{ width: 100, height: 100 }} />}
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={{}}
+                onPress={() => this._pickPostRoomImage('3')}
+              >
+                <Ionicons style={{ fontSize: 133, color: '#73aa2a', flex: 1, textAlign: 'center', }} name='ios-image-outline' />
+                {this.state.postRoomImage3 && <Image source={{ uri: this.state.postRoomImage3 }} style={{ width: 100, height: 100 }} />}
+              </TouchableOpacity>
+
             </View>
-            <View style={{ height: 100, padding: 20, flexDirection: 'row' }}>
-              <Ionicons style={{ fontSize: 80, color: '#73aa2a', flex: 1, textAlign: 'center', }} name='ios-image-outline' />
-              <Ionicons style={{ fontSize: 80, color: '#73aa2a', flex: 1, textAlign: 'center', }} name='ios-image-outline' />
-              <Ionicons style={{ fontSize: 80, color: '#73aa2a', flex: 1, textAlign: 'center', }} name='ios-image-outline' />
+            <View style={{
+              height: 120, paddingRight: 20,
+              paddingLeft: 20, flexDirection: 'row', justifyContent: 'space-between',
+
+            }}>
+
+              <TouchableOpacity
+                style={{}}
+                onPress={() => this._pickPostRoomImage('4')}
+              >
+                <Ionicons style={{ fontSize: 133, color: '#73aa2a', flex: 1, textAlign: 'center', }} name='ios-image-outline' />
+                {this.state.postRoomImage4 && <Image source={{ uri: this.state.postRoomImage4 }} style={{ width: 100, height: 100 }} />}
+              </TouchableOpacity>
+
+              <TouchableOpacity
+                style={{}}
+                onPress={() => this._pickPostRoomImage('5')}
+              >
+                <Ionicons style={{ fontSize: 133, color: '#73aa2a', flex: 1, textAlign: 'center', }} name='ios-image-outline' />
+                {this.state.postRoomImage5 && <Image source={{ uri: this.state.postRoomImage5 }} style={{ width: 100, height: 100 }} />}
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={{}}
+                onPress={() => this._pickPostRoomImage('6')}
+              >
+                <Ionicons style={{ fontSize: 133, color: '#73aa2a', flex: 1, textAlign: 'center', }} name='ios-image-outline' />
+                {this.state.postRoomImage6 && <Image source={{ uri: this.state.postRoomImage6 }} style={{ width: 100, height: 100 }} />}
+              </TouchableOpacity>
+
             </View>
-            <FormLabel style={{ borderBottomWidth: 0.7, borderColor: '#a4d227' }}>Địa chỉ</FormLabel>
+            {/* <FormLabel style={{ borderBottomWidth: 0.7, borderColor: '#a4d227', marginTop: 15, }}>Địa chỉ</FormLabel> */}
             <View style={{ height: 200, padding: 20, }}>
               <FormInput
+                containerStyle={{ marginLeft: 0, marginRight: 0, }}
                 placeholder='Vui lòng nhập địa chỉ'
                 autoCapitalize='sentences'
                 maxLength={300}
@@ -534,10 +598,67 @@ export default class HomeScreen extends React.Component {
                 region={this.state.mapRegion}
               />
             </View>
-            <FormLabel style={{ borderBottomWidth: 0.7, borderColor: '#a4d227' }}>Thông tin chi tiết</FormLabel>
-            <View style={{ height: 200, paddingTop: 20 }}>
+            {/* <FormLabel style={{ borderBottomWidth: 0.7, borderColor: '#a4d227' }}>Thông tin chi tiết</FormLabel> */}
+            <View style={{ height: 200, paddingTop: 20, }}>
+              <View style={{ flexDirection: 'row', }}>
+                <FormLabel style={{}}>Gía:</FormLabel>
+                <TextInputMask
+                  ref={'myDateText'}
+                  type={'money'}
+                  options={{ suffixUnit: 'đồng', precision: 0, unit: '', separator: '' }}
+                  style={{ flex: 1, paddingLeft: 44, paddingTop: 8, }}
+                  placeholder='Vui lòng nhập giá (triệu)'
+                  underlineColorAndroid='#fff'
+                />
+                {/* <FormInput
+                  containerStyle={{ flex: 1, paddingLeft: 29 }}
+                  placeholder='Vui lòng nhập giá (triệu)'
+                  autoCapitalize='sentences'
+                  maxLength={300}
+                  underlineColorAndroid='#fff'
+                  keyboardType='numeric'
+                /> */}
+              </View>
+              <View style={{ flexDirection: 'row', }}>
+                <FormLabel style={{}}>Diện tích:</FormLabel>
+                {/* <TextInputMask
+                  ref={'myDateText'}
+                  type={'only-numbers'}
+                  options={{ suffixUnit: '(mét vuông)', precision: 0, unit: '', separator: '' }}
+                  style={{ flex: 1, paddingTop: 8, }}
+                  placeholder='Vui lòng nhập diện tích (mét vuông)'
+                  underlineColorAndroid='#fff'
+                /> */}
 
+                <FormInput
+                  containerStyle={{ flex: 1, }}
+                  placeholder='Vui lòng nhập diện tích (mét vuông)'
+                  autoCapitalize='sentences'
+                  maxLength={300}
+                  underlineColorAndroid='#fff'
+                  keyboardType='numeric'
+                  onFocus={() => {
+
+
+                  }}
+                />
+              </View>
+              <View style={{ flexDirection: 'row', }}>
+                <FormLabel style={{}}>Loại BĐS:</FormLabel>
+                <ModalDropdown
+                  style={{ paddingTop: 15, marginLeft: 15, }}
+                  dropdownStyle={{ padding: 10, }}
+                  textStyle={{}}
+                  options={['Nhà trọ', 'Khách sạn', 'Biệt thự', 'Vila', 'Đất thổ cư']}
+                  defaultIndex={0}
+                  defaultValue='Nhà trọ'
+                  onSelect={(idx, value) => this._dropdown_onSelect(idx, value)}
+                >
+                </ModalDropdown>
+              </View>
+              <FormLabel style={{ marginTop: 10, }}>Thông tin chi tiết</FormLabel>
               <FormInput
+                containerStyle={{ paddingLeft: 8, }}
                 placeholder='Vui lòng nhập thông tin chi tiết'
                 multiline={true}
                 autoCapitalize='sentences'
@@ -545,23 +666,24 @@ export default class HomeScreen extends React.Component {
                 clearButtonMode='always'
                 underlineColorAndroid='#fff'
               />
-              {/* <FormInput onChangeText={} /> */}
-            </View>
-            <View style={{ height: 100, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', paddingBottom: 50, }}>
-              <Button
-                buttonStyle={{ backgroundColor: '#9B9D9D', padding: 15, borderRadius: 10 }}
-                icon={{ name: 'ios-backspace', type: 'ionicon' }}
-                onPress={() => {
-                  this._setModalVisible(false)
-                  this.setState({ image: null })
-                }}
-                title='Hủy' />
-              <Button
-                buttonStyle={{ backgroundColor: '#73aa2a', padding: 15, borderRadius: 10 }}
-                icon={{ name: 'md-cloud-upload', type: 'ionicon' }}
-                title='Đăng tin' />
-            </View>
 
+            </View>
+            <View style={{ marginTop: 150, }}>
+              <View style={{ height: 100, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', paddingBottom: 50, }}>
+                <Button
+                  buttonStyle={{ backgroundColor: '#9B9D9D', padding: 15, borderRadius: 10 }}
+                  icon={{ name: 'ios-backspace', type: 'ionicon' }}
+                  onPress={() => {
+                    this._setModalVisible(false)
+                    this.setState({ image: null })
+                  }}
+                  title='Hủy' />
+                <Button
+                  buttonStyle={{ backgroundColor: '#73aa2a', padding: 15, borderRadius: 10 }}
+                  icon={{ name: 'md-cloud-upload', type: 'ionicon' }}
+                  title='Đăng tin' />
+              </View>
+            </View>
           </ScrollView>
         </Modal>
       </View>
