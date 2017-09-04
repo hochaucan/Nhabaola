@@ -24,7 +24,7 @@ import Icon from 'react-native-vector-icons/Ionicons';
 import { Ionicons } from '@expo/vector-icons';
 import { users } from '../components/examples/data';
 import PopupDialog, { SlideAnimation, ScaleAnimation, DialogTitle, DialogButton } from 'react-native-popup-dialog';
-import { CheckBox, Rating, Button, FormLabel, FormInput, SocialIcon } from 'react-native-elements'
+import { CheckBox, Rating, Button, FormLabel, FormInput, SocialIcon, FormValidationMessage } from 'react-native-elements'
 import StarRating from 'react-native-star-rating';
 import MapView from 'react-native-maps';
 import Communications from 'react-native-communications';
@@ -355,6 +355,90 @@ export default class HomeScreen extends React.Component {
           </ActionButton>
           : null}
 
+        {/* Popup Register Account */}
+        <PopupDialog
+          ref={(popupRegisterAccount) => { this.popupRegisterAccount = popupRegisterAccount; }}
+          dialogAnimation={new ScaleAnimation()}
+          dialogTitle={<DialogTitle title="Đăng ký tài khoản" titleStyle={{}} titleTextStyle={{ color: '#73aa2a' }} />}
+          dismissOnTouchOutside={false}
+          dialogStyle={{ marginBottom: 20, width: width * 0.9, height: height * 0.64 }}
+
+
+        >
+
+          <View>
+            <Animated.View style={{ position: 'relative', left: this.state.animation.usernamePostionLeft, flexDirection: 'row', padding: 10, }}>
+              <Ionicons style={{ flex: 1, fontSize: 22, paddingTop: 12, textAlign: 'center', }} name='ios-person-outline' />
+              <FormInput
+                containerStyle={{ flex: 15 }}
+                placeholder='Số điện thoại'
+                autoCapitalize='sentences'
+                keyboardType='phone-pad'
+                underlineColorAndroid={'#fff'}
+                onChangeText={(text) => this.setState({ text })}
+                value={this.state.text}
+              />
+              <TouchableOpacity>
+                <FormLabel
+                  containerStyle={{
+                    alignItems: 'center', justifyContent: 'center',
+
+                  }}
+                >
+                  (Xác nhận ĐT)
+                </FormLabel>
+              </TouchableOpacity>
+              {/* <FormValidationMessage>
+                {'This field is required'}
+              </FormValidationMessage> */}
+            </Animated.View>
+            <Animated.View style={{ position: 'relative', left: this.state.animation.passwordPositionLeft, flexDirection: 'row', padding: 10, paddingTop: 0, }}>
+              <Ionicons style={{ flex: 1, fontSize: 22, paddingTop: 12, textAlign: 'center', }} name='ios-lock-outline' />
+              <FormInput
+                containerStyle={{ flex: 15 }}
+                placeholder='Mật khẩu'
+                secureTextEntry={true}
+                underlineColorAndroid={'#fff'}
+              />
+            </Animated.View>
+            <Animated.View style={{ position: 'relative', left: this.state.animation.passwordPositionLeft, flexDirection: 'row', padding: 10, paddingTop: 0, }}>
+              <Ionicons style={{ flex: 1, fontSize: 22, paddingTop: 12, textAlign: 'center', }} name='ios-lock-outline' />
+              <FormInput
+                containerStyle={{ flex: 15 }}
+                placeholder='Xác nhận lại mật khẩu'
+                secureTextEntry={true}
+                underlineColorAndroid={'#fff'}
+              />
+            </Animated.View>
+            <Animated.View style={{ position: 'relative', left: this.state.animation.passwordPositionLeft, flexDirection: 'row', padding: 10, paddingTop: 0, }}>
+
+              <FormInput
+                containerStyle={{ flex: 1, borderWidth: 0.6, borderColor: '#9B9D9D', borderRadius: 10, padding: 5, marginTop: 10, }}
+                placeholder='Mã xác nhận số điện thoại (4 số)'
+                secureTextEntry={true}
+                underlineColorAndroid={'#fff'}
+                keyboardType='phone-pad'
+              />
+            </Animated.View>
+          </View>
+
+          <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center', marginTop: 20, }}>
+            <Button
+              buttonStyle={{ backgroundColor: '#9B9D9D', padding: 10, borderRadius: 5, }}
+              raised={false}
+              icon={{ name: 'ios-backspace', type: 'ionicon' }}
+              title='Hủy'
+              onPress={() => { this.popupRegisterAccount.dismiss() }}
+            />
+
+            <Button
+              buttonStyle={{ backgroundColor: '#73aa2a', padding: 10, borderRadius: 5, }}
+              raised={false}
+              icon={{ name: 'md-checkmark', type: 'ionicon' }}
+              title='Đăng ký' />
+          </View>
+        </PopupDialog>
+
 
         {/* Popup Login */}
         <PopupDialog
@@ -408,7 +492,12 @@ export default class HomeScreen extends React.Component {
               <TouchableOpacity style={{ flex: 1, }}>
                 <Text style={{ padding: 15, textAlign: 'center' }}>Quên mật khẩu?</Text>
               </TouchableOpacity>
-              <TouchableOpacity style={{ flex: 1, }}>
+              <TouchableOpacity style={{ flex: 1, }}
+                onPress={() => {
+                  this.popupLogin.dismiss();
+                  this.popupRegisterAccount.show();
+                }}
+              >
                 <Text style={{ padding: 15, textAlign: 'center' }}>Đăng ký mới</Text>
               </TouchableOpacity>
             </View>
