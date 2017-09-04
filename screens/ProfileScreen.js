@@ -8,10 +8,15 @@ import {
     Image,
     Dimensions,
     Platform,
+    Animated,
+    Modal,
 } from 'react-native';
 import { ExpoLinksView } from '@expo/samples';
 import { Constants } from 'expo';
 import { Ionicons } from '@expo/vector-icons';
+import PopupDialog, { SlideAnimation, ScaleAnimation, DialogTitle, DialogButton } from 'react-native-popup-dialog';
+import { CheckBox, Rating, Button, FormLabel, FormInput, SocialIcon, FormValidationMessage } from 'react-native-elements'
+
 
 var { height, width } = Dimensions.get('window');
 export default class ProfileScreen extends React.Component {
@@ -21,11 +26,33 @@ export default class ProfileScreen extends React.Component {
         header: null,
     };
 
+    constructor(props) {
+        super(props);
+        this.state = {
+            // Login
+            username: '',
+            password: '',
+            animation: {
+                usernamePostionLeft: new Animated.Value(795),
+                passwordPositionLeft: new Animated.Value(905),
+                loginPositionTop: new Animated.Value(1402),
+                statusPositionTop: new Animated.Value(1542)
+            },
+
+            modalUpdateAccount: false,
+            modalHelp: false,
+            modalPostedRoomHistory: false,
+        }
+    }
 
 
     _handleMapRegionChange = mapRegion => {
         this.setState({ mapRegion });
     };
+
+    _updateAccount = () => {
+
+    }
 
     render() {
         return (
@@ -60,7 +87,9 @@ export default class ProfileScreen extends React.Component {
                             <Text>  Đăng tin</Text>
                         </Ionicons>
                     </TouchableOpacity>
-                    <TouchableOpacity style={styles.profileMenuItem}>
+                    <TouchableOpacity style={styles.profileMenuItem}
+                        onPress={() => { this.setState({ modalPostedRoomHistory: true }) }}
+                    >
                         <Ionicons style={styles.profileMenuItemText} name='md-folder'>
                             <Text>  Tin đã đăng</Text>
                         </Ionicons>
@@ -71,22 +100,275 @@ export default class ProfileScreen extends React.Component {
                         </Ionicons>
                     </TouchableOpacity>
                     <View style={styles.profileMenuItemSeparator}></View>
-                    <TouchableOpacity style={styles.profileMenuItem}>
+                    <TouchableOpacity style={styles.profileMenuItem}
+                        onPress={() => { this.setState({ modalUpdateAccount: true }) }}
+                    >
                         <Ionicons style={styles.profileMenuItemText} name='md-information-circle'>
                             <Text>  Thông tin cá nhân</Text>
                         </Ionicons>
                     </TouchableOpacity>
-                    <TouchableOpacity style={styles.profileMenuItem}>
+                    <TouchableOpacity style={styles.profileMenuItem}
+                        onPress={() => {
+                            this.popupChangePassword.show();
+                            const timing = Animated.timing;
+                            Animated.parallel([
+                                timing(this.state.animation.usernamePostionLeft, {
+                                    toValue: 0,
+                                    duration: 900
+                                }),
+                                timing(this.state.animation.passwordPositionLeft, {
+                                    toValue: 0,
+                                    duration: 1100
+                                }),
+                                timing(this.state.animation.loginPositionTop, {
+                                    toValue: 0,
+                                    duration: 700
+                                }),
+                                timing(this.state.animation.statusPositionTop, {
+                                    toValue: 0,
+                                    duration: 700
+                                })
+
+                            ]).start()
+
+                        }}
+                    >
                         <Ionicons style={styles.profileMenuItemText} name='md-lock'>
                             <Text>  Đổi mật khẩu</Text>
                         </Ionicons>
                     </TouchableOpacity>
-                    <TouchableOpacity style={styles.profileMenuItem}>
+                    <TouchableOpacity style={styles.profileMenuItem}
+                        onPress={() => { this.setState({ modalHelp: true }) }}
+                    >
                         <Ionicons style={styles.profileMenuItemText} name='md-help'>
                             <Text>  Giúp đỡ</Text>
                         </Ionicons>
                     </TouchableOpacity>
                 </ScrollView>
+
+
+
+                {/* Popup Change Password*/}
+                <PopupDialog
+                    ref={(popupChangePassword) => { this.popupChangePassword = popupChangePassword; }}
+                    dialogAnimation={new ScaleAnimation()}
+                    dialogTitle={<DialogTitle title="Đổi mật khẩu" titleStyle={{}} titleTextStyle={{ color: '#73aa2a' }} />}
+                    dismissOnTouchOutside={false}
+                    dialogStyle={{ marginBottom: 150, width: width * 0.9, height: height * 0.5, }}
+
+
+                >
+
+                    <View>
+                        <Animated.View style={{ position: 'relative', left: this.state.animation.usernamePostionLeft, flexDirection: 'row', padding: 10, }}>
+                            <Ionicons style={{ flex: 1, fontSize: 22, paddingTop: 12, textAlign: 'center', }} name='ios-lock-outline' />
+                            <FormInput
+                                containerStyle={{ flex: 15, paddingLeft: 5, }}
+                                placeholder='Mật khẩu củ'
+                                autoCapitalize='sentences'
+                                keyboardType='phone-pad'
+                                underlineColorAndroid={'#fff'}
+                                onChangeText={(text) => this.setState({ text })}
+                                value={this.state.text}
+                            />
+
+
+                        </Animated.View>
+                        <Animated.View style={{ position: 'relative', left: this.state.animation.passwordPositionLeft, flexDirection: 'row', padding: 10, paddingTop: 0, }}>
+                            <Ionicons style={{ flex: 1, fontSize: 22, paddingTop: 12, textAlign: 'center', }} name='ios-lock-outline' />
+                            <FormInput
+                                containerStyle={{ flex: 15 }}
+                                placeholder='Mật khẩu mới'
+                                secureTextEntry={true}
+                                underlineColorAndroid={'#fff'}
+                            />
+                        </Animated.View>
+                        <Animated.View style={{ position: 'relative', left: this.state.animation.passwordPositionLeft, flexDirection: 'row', padding: 10, paddingTop: 0, }}>
+                            <Ionicons style={{ flex: 1, fontSize: 22, paddingTop: 12, textAlign: 'center', }} name='ios-lock-outline' />
+                            <FormInput
+                                containerStyle={{ flex: 15 }}
+                                placeholder='Xác nhận mật khẩu mới'
+                                secureTextEntry={true}
+                                underlineColorAndroid={'#fff'}
+                            />
+                        </Animated.View>
+
+                    </View>
+
+
+                    <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center', marginTop: 20, }}>
+                        <Button
+                            buttonStyle={{ backgroundColor: '#9B9D9D', padding: 10, borderRadius: 5, }}
+                            raised={false}
+                            icon={{ name: 'ios-backspace', type: 'ionicon' }}
+                            title='Hủy'
+                            onPress={() => { this.popupChangePassword.dismiss() }}
+                        />
+
+                        <Button
+                            buttonStyle={{ backgroundColor: '#73aa2a', padding: 10, borderRadius: 5, }}
+                            raised={false}
+                            icon={{ name: 'md-checkmark', type: 'ionicon' }}
+                            title='Đồng ý' />
+                    </View>
+                </PopupDialog>
+
+                {/* Modal Update Account*/}
+                <Modal
+                    animationType={"slide"}
+                    transparent={false}
+                    visible={this.state.modalUpdateAccount}
+                    onRequestClose={() => { alert("Modal has been closed.") }}
+                >
+                    <ScrollView>
+                        <View style={{ flexDirection: 'row', padding: 20, justifyContent: 'center', alignItems: 'center' }}>
+                            <TouchableOpacity
+                                style={{}}
+                                onPress={() => this._pickPostRoomImage('1')}
+                            >
+                                <Ionicons style={{ opacity: 0.7, fontSize: 100, color: '#73aa2a', flex: 1, textAlign: 'center', }} name='ios-contact' />
+                                {this.state.postRoomImage1 && <Image source={{ uri: this.state.postRoomImage1 }} style={{ width: 100, height: 100 }} />}
+                                <Text style={{}}>Hình đại diện</Text>
+                            </TouchableOpacity>
+
+                        </View>
+                        <View>
+                            <Animated.View style={{ position: 'relative', left: this.state.animation.usernamePostionLeft, flexDirection: 'row', padding: 10, }}>
+                                <Ionicons style={{ flex: 1, fontSize: 22, paddingTop: 12, textAlign: 'center', }} name='ios-person-outline' />
+                                <FormInput
+                                    containerStyle={{ flex: 15, paddingLeft: 5, }}
+                                    placeholder='Số điện thoại'
+                                    autoCapitalize='sentences'
+                                    keyboardType='phone-pad'
+                                    underlineColorAndroid={'#fff'}
+                                    onChangeText={(text) => this.setState({ text })}
+                                    value={this.state.text}
+                                />
+                                <TouchableOpacity>
+                                    <FormLabel
+                                        containerStyle={{
+                                            alignItems: 'center', justifyContent: 'center',
+
+                                        }}
+                                    >
+                                        (Xác nhận ĐT)
+                                      </FormLabel>
+                                </TouchableOpacity>
+
+                            </Animated.View>
+                            <Animated.View style={{ position: 'relative', left: this.state.animation.passwordPositionLeft, flexDirection: 'row', padding: 10, paddingTop: 0, }}>
+                                <Ionicons style={{ flex: 1, fontSize: 22, paddingTop: 12, textAlign: 'center', }} name='ios-lock-outline' />
+                                <FormInput
+                                    containerStyle={{ flex: 15 }}
+                                    placeholder='Mật khẩu'
+                                    secureTextEntry={true}
+                                    underlineColorAndroid={'#fff'}
+                                />
+                            </Animated.View>
+                            <Animated.View style={{ position: 'relative', left: this.state.animation.passwordPositionLeft, flexDirection: 'row', padding: 10, paddingTop: 0, }}>
+                                <Ionicons style={{ flex: 1, fontSize: 22, paddingTop: 12, textAlign: 'center', }} name='ios-lock-outline' />
+                                <FormInput
+                                    containerStyle={{ flex: 15 }}
+                                    placeholder='Xác nhận mật khẩu'
+                                    secureTextEntry={true}
+                                    underlineColorAndroid={'#fff'}
+                                />
+                            </Animated.View>
+                            <Animated.View style={{ position: 'relative', left: this.state.animation.passwordPositionLeft, flexDirection: 'row', padding: 10, paddingTop: 0, }}>
+
+                                <FormInput
+                                    containerStyle={{ flex: 1, borderWidth: 0.6, borderColor: '#9B9D9D', borderRadius: 10, padding: 5, marginTop: 10, }}
+                                    placeholder='Mã xác nhận số điện thoại (4 số)'
+                                    secureTextEntry={true}
+                                    underlineColorAndroid={'#fff'}
+                                    keyboardType='phone-pad'
+                                />
+                            </Animated.View>
+                        </View>
+
+                        <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center', marginTop: 20, }}>
+                            <Button
+                                buttonStyle={{ backgroundColor: '#9B9D9D', padding: 10, borderRadius: 5, }}
+                                raised={false}
+                                icon={{ name: 'ios-backspace', type: 'ionicon' }}
+                                title='Hủy'
+                                onPress={() => { this.setState({ modalUpdateAccount: false }) }}
+                            />
+
+                            <Button
+                                buttonStyle={{ backgroundColor: '#73aa2a', padding: 10, borderRadius: 5, }}
+                                raised={false}
+                                icon={{ name: 'md-checkmark', type: 'ionicon' }}
+                                title='Đồng ý'
+                                onPress={() => {
+                                    this._updateAccount();
+                                }}
+                            />
+                        </View>
+                    </ScrollView>
+                </Modal>
+
+                {/* Modal Help*/}
+                <Modal
+                    animationType={"slide"}
+                    transparent={false}
+                    visible={this.state.modalHelp}
+                    onRequestClose={() => { alert("Modal has been closed.") }}
+                >
+                    <ScrollView>
+
+                        <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center', marginTop: 20, }}>
+                            <Button
+                                buttonStyle={{ backgroundColor: '#9B9D9D', padding: 10, borderRadius: 5, }}
+                                raised={false}
+                                icon={{ name: 'ios-backspace', type: 'ionicon' }}
+                                title='Hủy'
+                                onPress={() => { this.setState({ modalHelp: false }) }}
+                            />
+
+                            <Button
+                                buttonStyle={{ backgroundColor: '#73aa2a', padding: 10, borderRadius: 5, }}
+                                raised={false}
+                                icon={{ name: 'md-checkmark', type: 'ionicon' }}
+                                title='Đồng ý'
+                                onPress={() => {
+                                    this._updateAccount();
+                                }}
+                            />
+                        </View>
+                    </ScrollView>
+                </Modal>
+
+                {/* Modal Posted Room History*/}
+                <Modal
+                    animationType={"slide"}
+                    transparent={false}
+                    visible={this.state.modalPostedRoomHistory}
+                    onRequestClose={() => { alert("Modal has been closed.") }}
+                >
+                    <ScrollView>
+
+                        <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center', marginTop: 20, }}>
+                            <Button
+                                buttonStyle={{ backgroundColor: '#9B9D9D', padding: 10, borderRadius: 5, }}
+                                raised={false}
+                                icon={{ name: 'ios-backspace', type: 'ionicon' }}
+                                title='Hủy'
+                                onPress={() => { this.setState({ modalPostedRoomHistory: false }) }}
+                            />
+
+                            <Button
+                                buttonStyle={{ backgroundColor: '#73aa2a', padding: 10, borderRadius: 5, }}
+                                raised={false}
+                                icon={{ name: 'md-checkmark', type: 'ionicon' }}
+                                title='Đồng ý'
+                                onPress={() => {
+                                    this._updateAccount();
+                                }}
+                            />
+                        </View>
+                    </ScrollView>
+                </Modal>
             </View>
         );
     }
