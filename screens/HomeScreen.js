@@ -34,9 +34,6 @@ import Toast from 'react-native-simple-toast';
 
 
 
-
-
-
 var { height, width } = Dimensions.get('window');
 
 export default class HomeScreen extends React.Component {
@@ -237,15 +234,13 @@ export default class HomeScreen extends React.Component {
     }
   }
 
+
+
   render() {
     let { image } = this.state;
     return (
       <View style={styles.container}>
-        {/* <ScrollView
-          style={styles.container}
-          contentContainerStyle={styles.contentContainer}>
-          
-        </ScrollView> */}
+
 
         <FlatList
           //onScroll={this._onScroll}
@@ -354,6 +349,8 @@ export default class HomeScreen extends React.Component {
         /* horizontal={false}
         numColumns={3} */
         />
+
+        {/* Action Button */}
         {this.state.isActionButtonVisible ?
           <ActionButton buttonColor="#73aa2a">
             <ActionButton.Item buttonColor='#a4d227' title="Đăng nhập" onPress={() => {
@@ -392,6 +389,9 @@ export default class HomeScreen extends React.Component {
             </ActionButton.Item> */}
           </ActionButton>
           : null}
+
+
+
 
         {/* Popup Reset Password */}
         <PopupDialog
@@ -787,10 +787,20 @@ export default class HomeScreen extends React.Component {
                 autoCapitalize='sentences'
                 maxLength={300}
               />
+
+
+
+
+
+
+
+
               <MapView
                 style={{ flex: 1 }}
                 region={this.state.mapRegion}
               />
+
+
             </View>
             {/* <FormLabel style={{ borderBottomWidth: 0.7, borderColor: '#a4d227' }}>Thông tin chi tiết</FormLabel> */}
             <View style={{ height: 200, paddingTop: 20, }}>
@@ -877,7 +887,11 @@ export default class HomeScreen extends React.Component {
                 <Button
                   buttonStyle={{ backgroundColor: '#73aa2a', padding: 15, borderRadius: 10 }}
                   icon={{ name: 'md-cloud-upload', type: 'ionicon' }}
-                  title='Đăng tin' />
+                  title='Đăng tin'
+                  onPress={() => {
+
+                  }}
+                />
               </View>
             </View>
           </ScrollView>
