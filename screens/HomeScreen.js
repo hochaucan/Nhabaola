@@ -729,7 +729,7 @@ export default class HomeScreen extends React.Component {
                 style={{}}
                 onPress={() => this._pickPostRoomImage('1')}
               >
-                <Ionicons style={{ opacity: 0.6, fontSize: 133, color: '#73aa2a', flex: 1, textAlign: 'center', }} name='ios-image-outline' />
+                <Ionicons style={{ opacity: 0.5, fontSize: 133, color: '#73aa2a', flex: 1, textAlign: 'center', }} name='ios-image-outline' />
                 {this.state.postRoomImage1 && <Image source={{ uri: this.state.postRoomImage1 }} style={{ width: 100, height: 100 }} />}
               </TouchableOpacity>
 
@@ -737,14 +737,14 @@ export default class HomeScreen extends React.Component {
                 style={{}}
                 onPress={() => this._pickPostRoomImage('2')}
               >
-                <Ionicons style={{ opacity: 0.6, fontSize: 133, color: '#73aa2a', flex: 1, textAlign: 'center', }} name='ios-image-outline' />
+                <Ionicons style={{ opacity: 0.5, fontSize: 133, color: '#73aa2a', flex: 1, textAlign: 'center', }} name='ios-image-outline' />
                 {this.state.postRoomImage2 && <Image source={{ uri: this.state.postRoomImage2 }} style={{ width: 100, height: 100 }} />}
               </TouchableOpacity>
               <TouchableOpacity
                 style={{}}
                 onPress={() => this._pickPostRoomImage('3')}
               >
-                <Ionicons style={{ opacity: 0.6, fontSize: 133, color: '#73aa2a', flex: 1, textAlign: 'center', }} name='ios-image-outline' />
+                <Ionicons style={{ opacity: 0.5, fontSize: 133, color: '#73aa2a', flex: 1, textAlign: 'center', }} name='ios-image-outline' />
                 {this.state.postRoomImage3 && <Image source={{ uri: this.state.postRoomImage3 }} style={{ width: 100, height: 100 }} />}
               </TouchableOpacity>
 
@@ -759,7 +759,7 @@ export default class HomeScreen extends React.Component {
                 style={{}}
                 onPress={() => this._pickPostRoomImage('4')}
               >
-                <Ionicons style={{ opacity: 0.6, fontSize: 133, color: '#73aa2a', flex: 1, textAlign: 'center', }} name='ios-image-outline' />
+                <Ionicons style={{ opacity: 0.5, fontSize: 133, color: '#73aa2a', flex: 1, textAlign: 'center', }} name='ios-image-outline' />
                 {this.state.postRoomImage4 && <Image source={{ uri: this.state.postRoomImage4 }} style={{ width: 100, height: 100 }} />}
               </TouchableOpacity>
 
@@ -767,14 +767,14 @@ export default class HomeScreen extends React.Component {
                 style={{}}
                 onPress={() => this._pickPostRoomImage('5')}
               >
-                <Ionicons style={{ opacity: 0.6, fontSize: 133, color: '#73aa2a', flex: 1, textAlign: 'center', }} name='ios-image-outline' />
+                <Ionicons style={{ opacity: 0.5, fontSize: 133, color: '#73aa2a', flex: 1, textAlign: 'center', }} name='ios-image-outline' />
                 {this.state.postRoomImage5 && <Image source={{ uri: this.state.postRoomImage5 }} style={{ width: 100, height: 100 }} />}
               </TouchableOpacity>
               <TouchableOpacity
                 style={{}}
                 onPress={() => this._pickPostRoomImage('6')}
               >
-                <Ionicons style={{ opacity: 0.6, fontSize: 133, color: '#73aa2a', flex: 1, textAlign: 'center', }} name='ios-image-outline' />
+                <Ionicons style={{ opacity: 0.5, fontSize: 133, color: '#73aa2a', flex: 1, textAlign: 'center', }} name='ios-image-outline' />
                 {this.state.postRoomImage6 && <Image source={{ uri: this.state.postRoomImage6 }} style={{ width: 100, height: 100 }} />}
               </TouchableOpacity>
 
@@ -795,11 +795,11 @@ export default class HomeScreen extends React.Component {
             {/* <FormLabel style={{ borderBottomWidth: 0.7, borderColor: '#a4d227' }}>Thông tin chi tiết</FormLabel> */}
             <View style={{ height: 200, paddingTop: 20, }}>
               <View style={{ flexDirection: 'row', }}>
-                <FormLabel style={{}}>Gía:</FormLabel>
+                <FormLabel style={{}}>Giá:</FormLabel>
                 <TextInputMask
                   ref={'myDateText'}
                   type={'money'}
-                  options={{ suffixUnit: 'đồng', precision: 0, unit: '', separator: '' }}
+                  options={{ suffixUnit: 'đồng', precision: 0, unit: '', separator: ' ' }}
                   style={{ flex: 1, paddingLeft: 44, paddingTop: 8, }}
                   placeholder='Vui lòng nhập giá (triệu)'
                   underlineColorAndroid='#fff'
@@ -826,7 +826,7 @@ export default class HomeScreen extends React.Component {
 
                 <FormInput
                   containerStyle={{ flex: 1, }}
-                  placeholder='Vui lòng nhập diện tích (mét vuông)'
+                  placeholder='Vui lòng nhập diện tích'
                   autoCapitalize='sentences'
                   maxLength={300}
                   underlineColorAndroid='#fff'
@@ -835,7 +835,9 @@ export default class HomeScreen extends React.Component {
 
 
                   }}
+
                 />
+                <FormLabel>(mét vuông)</FormLabel>
               </View>
               <View style={{ flexDirection: 'row', }}>
                 <FormLabel style={{}}>Loại BĐS:</FormLabel>
@@ -850,9 +852,9 @@ export default class HomeScreen extends React.Component {
                 >
                 </ModalDropdown>
               </View>
-              <FormLabel style={{ marginTop: 10, }}>Thông tin chi tiết</FormLabel>
+              <FormLabel style={{ marginTop: 10, }}>Chi tiết:</FormLabel>
               <FormInput
-                containerStyle={{ paddingLeft: 8, }}
+                containerStyle={{ paddingLeft: 8, borderWidth: 0.5, borderColor: '#9B9D9D', borderRadius: 10, height: 140, }}
                 placeholder='Vui lòng nhập thông tin chi tiết'
                 multiline={true}
                 autoCapitalize='sentences'
@@ -862,7 +864,7 @@ export default class HomeScreen extends React.Component {
               />
 
             </View>
-            <View style={{ marginTop: 150, }}>
+            <View style={{ marginTop: 140, }}>
               <View style={{ height: 100, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', paddingBottom: 50, }}>
                 <Button
                   buttonStyle={{ backgroundColor: '#9B9D9D', padding: 15, borderRadius: 10 }}

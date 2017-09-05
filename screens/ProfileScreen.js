@@ -13,14 +13,40 @@ import {
     FlatList,
 } from 'react-native';
 import { ExpoLinksView } from '@expo/samples';
-import { Constants } from 'expo';
+import { Constants, ImagePicker } from 'expo';
 import { Ionicons } from '@expo/vector-icons';
 import PopupDialog, { SlideAnimation, ScaleAnimation, DialogTitle, DialogButton } from 'react-native-popup-dialog';
 import { CheckBox, Rating, Button, FormLabel, FormInput, SocialIcon, FormValidationMessage } from 'react-native-elements'
 import { users } from '../components/examples/data';
+import Accordion from 'react-native-collapsible/Accordion';
 
 
 var { height, width } = Dimensions.get('window');
+
+const SECTIONS = [
+    {
+        title: 'First',
+        content: 'Lorem ipsum...',
+    },
+    {
+        title: 'Second',
+        content: 'Lorem ipsum...',
+    },
+    {
+        title: 'Third',
+        content: 'BACON_IPSUM',
+    },
+    {
+        title: 'Fourth',
+        content: 'BACON_IPSUM',
+    },
+    {
+        title: 'Fifth',
+        content: 'BACON_IPSUM',
+    },
+];
+
+
 export default class ProfileScreen extends React.Component {
 
     static navigationOptions = {
@@ -47,6 +73,9 @@ export default class ProfileScreen extends React.Component {
 
             // Posted Room History
             postedRoomHistoryData: users,
+
+            // Update Account
+            updateAccountImage: null,
         }
     }
 
@@ -63,24 +92,62 @@ export default class ProfileScreen extends React.Component {
         this.props.navigation.navigate('RoomDetailScreen', { ...user });
     };
 
+    _renderHeader(section) {
+        return (
+            <View style={{ borderWidth: 0.6, borderColor: '#73aa2a', borderRadius: 10, padding: 10, }}>
+                <Text style={{}}>{section.title}</Text>
+            </View>
+        );
+    }
+
+    _renderContent(section) {
+        return (
+            <View style={{ padding: 20, }}>
+                <Text>{section.content}</Text>
+            </View>
+        );
+    }
+
+    _pickPostRoomImage = async (imageNo) => {
+        let result = await ImagePicker.launchImageLibraryAsync({
+            allowsEditing: true,
+            aspect: [4, 3],
+        });
+
+        // console.log(result);
+        if (!result.cancelled) {
+            switch (imageNo) {
+                case 'updateAccountImage':
+                    console.log(result);
+                    this.setState({ updateAccountImage: result.uri });
+                    break;
+                default:
+
+            }
+        }
+
+    };
+
     render() {
         return (
             <View style={styles.container}>
                 <View style={styles.card}>
                     <View style={styles.cardHeader}>
 
-                        <View style={styles.cardAvatarBox}>
+                        <View style={{ marginTop: 10, }}>
                             <TouchableOpacity
                                 onPress={() => {
-                                    this.props.navigation.navigate('ProfileScreen');
+                                    {/* this.props.navigation.navigate('ProfileScreen'); */ }
                                 }}
                             >
-                                <Image
-                                    style={styles.cardAvatarImage}
-                                    source={require('../images/nha-bao-la.jpg')} />
+                                {this.state.updateAccountImage
+                                    ? <Image source={{ uri: this.state.updateAccountImage }} style={{ width: 60, height: 60, borderRadius: 100, }} />
+                                    : <Image style={{ borderRadius: Platform.OS === 'ios' ? 23 : 50, height: 60, width: 60, }} source={require('../images/nha-bao-la.jpg')} />
+                                }
+
                             </TouchableOpacity>
                         </View>
-                        <View style={styles.cardAvatarTextBox}>
+                        <View style={{ flex: 4, paddingLeft: 20, marginTop: 10 }}>
                             <Text style={styles.cardAvatarName}>Nguyễn Văn Bảo</Text>
                             <Text style={styles.cardAvatarAddress}>Đăng ký ngày 23 tháng 8 năm 2017</Text>
                             <TouchableOpacity style={styles.cardAvatarPhoneBox}>
@@ -113,7 +180,11 @@ export default class ProfileScreen extends React.Component {
                     </TouchableOpacity>
                     <View style={styles.profileMenuItemSeparator}></View>
                     <TouchableOpacity style={styles.profileMenuItem}
-                        onPress={() => { this.setState({ modalUpdateAccount: true }) }}
+                        onPress={() => {
+                            this.setState({
+                                modalUpdateAccount: true,
+                            })
+                        }}
                     >
                         <Ionicons style={styles.profileMenuItemText} name='md-information-circle'>
                             <Text>  Thông tin cá nhân</Text>
@@ -236,66 +307,42 @@ export default class ProfileScreen extends React.Component {
                         <View style={{ flexDirection: 'row', padding: 20, justifyContent: 'center', alignItems: 'center' }}>
                             <TouchableOpacity
                                 style={{}}
-                                onPress={() => this._pickPostRoomImage('1')}
+                                onPress={() => this._pickPostRoomImage('updateAccountImage')}
                             >
                                 <Ionicons style={{ opacity: 0.7, fontSize: 100, color: '#73aa2a', flex: 1, textAlign: 'center', }} name='ios-contact' />
-                                {this.state.postRoomImage1 && <Image source={{ uri: this.state.postRoomImage1 }} style={{ width: 100, height: 100 }} />}
-                                <Text style={{}}>Hình đại diện</Text>
+                                {this.state.updateAccountImage && <Image source={{ uri: this.state.updateAccountImage }} style={{ width: 80, height: 80, borderRadius: 100, marginTop: -90, marginLeft: 17, marginBottom: 10, }} />}
+                                <Text style={{}}>Đổi hình đại diện</Text>
                             </TouchableOpacity>
 
                         </View>
                         <View>
-                            <Animated.View style={{ position: 'relative', left: this.state.animation.usernamePostionLeft, flexDirection: 'row', padding: 10, }}>
+                            <View style={{ flexDirection: 'row', padding: 10, }}>
+                                <Ionicons style={{ flex: 1, fontSize: 22, paddingTop: 12, textAlign: 'center', }} name='ios-call-outline' />
+                                <FormLabel containerStyle={{ flex: 15, marginLeft: -5, }}>(+84) 973730111</FormLabel>
+
+                            </View>
+                            <View style={{ position: 'relative', flexDirection: 'row', padding: 10, }}>
                                 <Ionicons style={{ flex: 1, fontSize: 22, paddingTop: 12, textAlign: 'center', }} name='ios-person-outline' />
                                 <FormInput
                                     containerStyle={{ flex: 15, paddingLeft: 5, }}
-                                    placeholder='Số điện thoại'
+                                    placeholder='Họ và Tên'
                                     autoCapitalize='sentences'
-                                    keyboardType='phone-pad'
+                                    /* keyboardType='phone-pad' */
                                     underlineColorAndroid={'#fff'}
                                     onChangeText={(text) => this.setState({ text })}
                                     value={this.state.text}
                                 />
-                                <TouchableOpacity>
-                                    <FormLabel
-                                        containerStyle={{
-                                            alignItems: 'center', justifyContent: 'center',
 
-                                        }}
-                                    >
-                                        (Xác nhận ĐT)
-                                      </FormLabel>
-                                </TouchableOpacity>
-
-                            </Animated.View>
-                            <Animated.View style={{ position: 'relative', left: this.state.animation.passwordPositionLeft, flexDirection: 'row', padding: 10, paddingTop: 0, }}>
-                                <Ionicons style={{ flex: 1, fontSize: 22, paddingTop: 12, textAlign: 'center', }} name='ios-lock-outline' />
+                            </View>
+                            <View style={{ position: 'relative', flexDirection: 'row', padding: 10, paddingTop: 0, }}>
+                                <Ionicons style={{ flex: 1, fontSize: 22, paddingTop: 12, textAlign: 'center', }} name='ios-mail-outline' />
                                 <FormInput
-                                    containerStyle={{ flex: 15 }}
-                                    placeholder='Mật khẩu'
-                                    secureTextEntry={true}
+                                    containerStyle={{ flex: 15, paddingLeft: 5, }}
+                                    placeholder='Email'
+                                    /* keyboardType='email-address' */
                                     underlineColorAndroid={'#fff'}
                                 />
-                            </Animated.View>
-                            <Animated.View style={{ position: 'relative', left: this.state.animation.passwordPositionLeft, flexDirection: 'row', padding: 10, paddingTop: 0, }}>
-                                <Ionicons style={{ flex: 1, fontSize: 22, paddingTop: 12, textAlign: 'center', }} name='ios-lock-outline' />
-                                <FormInput
-                                    containerStyle={{ flex: 15 }}
-                                    placeholder='Xác nhận mật khẩu'
-                                    secureTextEntry={true}
-                                    underlineColorAndroid={'#fff'}
-                                />
-                            </Animated.View>
-                            <Animated.View style={{ position: 'relative', left: this.state.animation.passwordPositionLeft, flexDirection: 'row', padding: 10, paddingTop: 0, }}>
-
-                                <FormInput
-                                    containerStyle={{ flex: 1, borderWidth: 0.6, borderColor: '#9B9D9D', borderRadius: 10, padding: 5, marginTop: 10, }}
-                                    placeholder='Mã xác nhận số điện thoại (4 số)'
-                                    secureTextEntry={true}
-                                    underlineColorAndroid={'#fff'}
-                                    keyboardType='phone-pad'
-                                />
-                            </Animated.View>
+                            </View>
                         </View>
 
                         <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center', marginTop: 20, }}>
@@ -311,7 +358,7 @@ export default class ProfileScreen extends React.Component {
                                 buttonStyle={{ backgroundColor: '#73aa2a', padding: 10, borderRadius: 5, }}
                                 raised={false}
                                 icon={{ name: 'md-checkmark', type: 'ionicon' }}
-                                title='Đồng ý'
+                                title='Cập nhật'
                                 onPress={() => {
                                     this._updateAccount();
                                 }}
@@ -327,12 +374,25 @@ export default class ProfileScreen extends React.Component {
                     visible={this.state.modalHelp}
                     onRequestClose={() => { alert("Modal has been closed.") }}
                 >
+                    <View style={{ flexDirection: 'row', padding: 20, }}>
+                        <TouchableOpacity
+                            style={{}}
+                            onPress={() => this.setState({ modalHelp: false })}>
+                            <Ionicons style={{ fontSize: 28, color: '#a4d227', }} name='md-arrow-back'></Ionicons>
+                        </TouchableOpacity>
+                        <Text style={{ marginLeft: 20, color: '#73aa2a', fontSize: 20, justifyContent: 'center' }}>Câu hỏi phổ biến</Text>
+                    </View>
                     <ScrollView>
-                        <View>
-                            <Text>Testing</Text>
+                        <View style={{ padding: 20, }}>
+                            <Accordion
+                                sections={SECTIONS}
+                                renderHeader={this._renderHeader}
+                                renderContent={this._renderContent}
+                                easing='bounce'
+                            />
                         </View>
 
-                        <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center', marginTop: 20, }}>
+                        {/* <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center', marginTop: 20, }}>
                             <Button
                                 buttonStyle={{ backgroundColor: '#9B9D9D', padding: 10, borderRadius: 5, }}
                                 raised={false}
@@ -350,7 +410,7 @@ export default class ProfileScreen extends React.Component {
                                     this._updateAccount();
                                 }}
                             />
-                        </View>
+                        </View> */}
                     </ScrollView>
                 </Modal>
 
@@ -593,18 +653,9 @@ const styles = StyleSheet.create({
         // borderBottomWidth: 0.7,
         // borderColor: '#a4d227',
     },
-    cardAvatarBox: {
-        // flex: 1
-    },
-    cardAvatarImage: {
-        borderRadius: Platform.OS === 'ios' ? 23 : 50,
-        height: 60,
-        width: 60,
-    },
-    cardAvatarTextBox: {
-        flex: 4,
-        paddingLeft: 20,
-    },
+
+
+
     cardAvatarName: {
         fontSize: 15,
     },
