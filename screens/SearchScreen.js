@@ -13,13 +13,14 @@ import {
     Modal,
     Slider,
     SliderIOS,
+
 } from 'react-native';
 import { ExpoLinksView } from '@expo/samples';
-import { Constants, Location, Permissions, MapView } from 'expo';
-import { Ionicons } from '@expo/vector-icons';import ModalDropdown from 'react-native-modal-dropdown';
+import { Constants, Location, Permissions } from 'expo';
+import { Ionicons } from '@expo/vector-icons'; import ModalDropdown from 'react-native-modal-dropdown';
 import { users } from '../components/examples/data';
 
-//import MapView from 'react-native-maps';
+import MapView from 'react-native-maps';
 
 var { height, width } = Dimensions.get('window');
 
@@ -30,6 +31,168 @@ const LATITUDE_DELTA = 0.05;
 const LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO;
 const SPACE = 0.01;
 let id = 0;
+
+const customStyle = [
+    {
+        elementType: 'geometry',
+        stylers: [
+            {
+                color: '#242f3e',
+            },
+        ],
+    },
+    {
+        elementType: 'labels.text.fill',
+        stylers: [
+            {
+                color: '#746855',
+            },
+        ],
+    },
+    {
+        elementType: 'labels.text.stroke',
+        stylers: [
+            {
+                color: '#242f3e',
+            },
+        ],
+    },
+    {
+        featureType: 'administrative.locality',
+        elementType: 'labels.text.fill',
+        stylers: [
+            {
+                color: '#d59563',
+            },
+        ],
+    },
+    {
+        featureType: 'poi',
+        elementType: 'labels.text.fill',
+        stylers: [
+            {
+                color: '#d59563',
+            },
+        ],
+    },
+    {
+        featureType: 'poi.park',
+        elementType: 'geometry',
+        stylers: [
+            {
+                color: '#263c3f',
+            },
+        ],
+    },
+    {
+        featureType: 'poi.park',
+        elementType: 'labels.text.fill',
+        stylers: [
+            {
+                color: '#6b9a76',
+            },
+        ],
+    },
+    {
+        featureType: 'road',
+        elementType: 'geometry',
+        stylers: [
+            {
+                color: '#38414e',
+            },
+        ],
+    },
+    {
+        featureType: 'road',
+        elementType: 'geometry.stroke',
+        stylers: [
+            {
+                color: '#212a37',
+            },
+        ],
+    },
+    {
+        featureType: 'road',
+        elementType: 'labels.text.fill',
+        stylers: [
+            {
+                color: '#9ca5b3',
+            },
+        ],
+    },
+    {
+        featureType: 'road.highway',
+        elementType: 'geometry',
+        stylers: [
+            {
+                color: '#746855',
+            },
+        ],
+    },
+    {
+        featureType: 'road.highway',
+        elementType: 'geometry.stroke',
+        stylers: [
+            {
+                color: '#1f2835',
+            },
+        ],
+    },
+    {
+        featureType: 'road.highway',
+        elementType: 'labels.text.fill',
+        stylers: [
+            {
+                color: '#f3d19c',
+            },
+        ],
+    },
+    {
+        featureType: 'transit',
+        elementType: 'geometry',
+        stylers: [
+            {
+                color: '#2f3948',
+            },
+        ],
+    },
+    {
+        featureType: 'transit.station',
+        elementType: 'labels.text.fill',
+        stylers: [
+            {
+                color: '#d59563',
+            },
+        ],
+    },
+    {
+        featureType: 'water',
+        elementType: 'geometry',
+        stylers: [
+            {
+                color: '#17263c',
+            },
+        ],
+    },
+    {
+        featureType: 'water',
+        elementType: 'labels.text.fill',
+        stylers: [
+            {
+                color: '#515c6d',
+            },
+        ],
+    },
+    {
+        featureType: 'water',
+        elementType: 'labels.text.stroke',
+        stylers: [
+            {
+                color: '#17263c',
+            },
+        ],
+    },
+];
 
 function randomColor() {
     return `#${Math.floor(Math.random() * 16777215).toString(16)}`;
@@ -69,6 +232,7 @@ export default class SearchScreen extends React.Component {
             location: null,
             errorMessage: null,
             markers: [],
+
         }
     }
 
@@ -162,35 +326,47 @@ export default class SearchScreen extends React.Component {
             longitudeDelta: LONGITUDE_DELTA
         }
         this.setState({ mapRegion: region });
+
     };
 
+    _getCurrentPosition() {
+        //  this.refs.map.animateToRegion(this.region, 1000);
+    }
 
     render() {
         let text = 'Waiting..';
+        let currentMaker = null;
         if (this.state.errorMessage) {
             text = this.state.errorMessage;
         } else if (this.state.location) {
             text = JSON.stringify(this.state.location.coords);
+            currentMaker = {
+                latitude: this.state.location.coords.latitude,
+                longitude: this.state.location.coords.longitude
+            }
         }
 
         return (
             <View>
-                <View style={{ height: height * 0.5, }}>
+                <View style={{ height: height * 0.4, }}>
+
+                    {/* <View><Text>{text}</Text></View> */}
 
                     {this.state.location ?
                         <MapView
                             ref={ref => { this.map = ref; }}
 
-                            style={{ paddingBottom: this.state.hackHeight,  alignSelf: 'stretch', }}
+                            /* style={{ paddingBottom: this.state.hackHeight, alignSelf: 'stretch', }} */
+                            style={{ alignSelf: 'stretch', height: height * 0.4, }}
 
                             region={this.state.mapRegion}
                             onRegionChange={this._handleMapRegionChange}
                             provider='google'
-                            showsUserLocation={true}
-                            showsMyLocationButton={true}
-                            followsUserLocation={true}
+                            showsUserLocation={false}
+                            showsMyLocationButton={false}
+                            followsUserLocation={false}
                             onPress={(e) => this.onMapPress(e)}
-
+                        /* customMapStyle={customStyle} */
                         >
 
                             {/* <MapView.Marker
@@ -205,16 +381,31 @@ export default class SearchScreen extends React.Component {
                         </View>
                     </MapView.Marker> */}
 
+                            <MapView.Marker
+                                coordinate={currentMaker}
+                                title='Im here'
+                                description='Home'
+                                image={require('../images/nbl-here-icon.png')}
+                            />
 
-                            {this.state.markers.map(marker => (
+                            {/* <MapView.Circle
+                                center={currentMaker}
+                                fillColor='#73aa2a'
+                                radius={this.state.location.coords.accuracy}
+                                strokeColor='#a4d227'
+                                strokeWidth={2}
+                            /> */}
+
+                            {/* Tap to show maker on map */}
+                            {/* {this.state.markers.map(marker => (
                                 <MapView.Marker
                                     key={marker.key}
                                     coordinate={marker.coordinate}
                                     pinColor={marker.color}
-                                /* image={require('../images/nbl-house_icon.png')} */
                                 />
-                            ))}
+                            ))} */}
 
+                            {/* Fix all makers on Map */}
                             {MARKERS.map((marker, i) => (
                                 <MapView.Marker
                                     key={i}
@@ -261,7 +452,10 @@ export default class SearchScreen extends React.Component {
                                 </Picker>
                             }
                             <TouchableOpacity
-                                onPress={() => this.fitAllMarkers()}
+                                onPress={() => {
+                                    //this.fitAllMarkers()
+                                    this.map.animateToCoordinate(currentMaker, 100);
+                                }}
                             >
                                 <Text style={{ flex: 3, textAlign: 'right', color: '#73aa2a' }}>Đăng ký vùng này</Text>
                             </TouchableOpacity>
@@ -357,7 +551,7 @@ export default class SearchScreen extends React.Component {
                         </View>
                     </Modal>
                 </ScrollView>
-            </View>
+            </View >
         );
     }
 }

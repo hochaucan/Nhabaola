@@ -23,7 +23,6 @@
     "react-native-masked-text": "^1.6.2",
     "react-native-modal-dropdown": "^0.4.4",
     "react-native-popup-dialog": "^0.9.35",
-    "react-native-simple-toast": "0.0.6",
     "react-native-star-rating": "^1.0.8",
     "react-navigation": "^1.0.0-beta.12"
   },

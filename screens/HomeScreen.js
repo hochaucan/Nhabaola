@@ -15,7 +15,8 @@ import {
   Modal,
   Share,
   Alert,
-  Animated
+  Animated,
+  ToastAndroid,
 } from 'react-native';
 import { WebBrowser, ImagePicker, Facebook } from 'expo';
 import { MonoText } from '../components/StyledText';
@@ -30,7 +31,6 @@ import MapView from 'react-native-maps';
 import Communications from 'react-native-communications';
 import ModalDropdown from 'react-native-modal-dropdown';
 import { TextInputMask } from 'react-native-masked-text';
-import Toast from 'react-native-simple-toast';
 
 
 
@@ -216,21 +216,28 @@ export default class HomeScreen extends React.Component {
   };
 
   _registerAccount = () => {
-    if (this.state.registerCellPhone === null) {
-      Toast.show('Vui lòng nhập Số Điện Thoại.');
-      return;
-    }
-    if (this.state.registerPassword === null) {
-      Toast.show('Vui lòng nhập mật khẩu.');
-      return;
-    }
-    if (this.state.registerPassword != this.state.registerConfirmPassword) {
-      Toast.show('Xác nhận mật khẩu không khớp với mật khẩu.');
-      return;
-    }
-    if (this.state.registerPassword != this.state.registerConfirmPassword) {
-      Toast.show('Vui lòng nhập mã xác nhận Số Điện Thoại.');
-      return;
+    if (Platform.OS === 'android') {
+      if (this.state.registerCellPhone === null) {
+        ToastAndroid.showWithGravity('Vui lòng nhập Số Điện Thoại', ToastAndroid.SHORT, ToastAndroid.CENTER);
+        return;
+      }
+      if (this.state.registerPassword === null) {
+        ToastAndroid.showWithGravity('Vui lòng nhập mật khẩu', ToastAndroid.SHORT, ToastAndroid.CENTER);
+        return;
+      }
+      if (this.state.registerPassword != this.state.registerConfirmPassword) {
+        ToastAndroid.showWithGravity('Xác nhận mật khẩu không khớp với mật khẩu', ToastAndroid.SHORT, ToastAndroid.CENTER);
+        return;
+      }
+      if (this.state.registerPassword != this.state.registerConfirmPassword) {
+        ToastAndroid.showWithGravity('Vui lòng nhập mã xác nhận Số Điện Thoại', ToastAndroid.SHORT, ToastAndroid.CENTER);
+        return;
+      }
+    } else {
+      if (this.state.registerCellPhone === null) {
+        Alert.alert('Oops!', 'Vui lòng nhập Số Điện Thoại');
+        return;
+      }
     }
   }
 
@@ -399,7 +406,7 @@ export default class HomeScreen extends React.Component {
           dialogAnimation={new ScaleAnimation()}
           dialogTitle={<DialogTitle title="Lấy lại mật khẩu" titleStyle={{}} titleTextStyle={{ color: '#73aa2a' }} />}
           dismissOnTouchOutside={false}
-          dialogStyle={{ marginBottom: 150, width: width * 0.9, height: height * 0.3, }}
+          dialogStyle={{ marginBottom: 150, width: width * 0.9, height: Platform.OS === 'ios' ? height * 0.35 : height * 0.3, }}
 
 
         >
@@ -445,7 +452,7 @@ export default class HomeScreen extends React.Component {
           dialogAnimation={new ScaleAnimation()}
           dialogTitle={<DialogTitle title="Đăng nhập" titleStyle={{}} titleTextStyle={{ color: '#73aa2a' }} />}
           dismissOnTouchOutside={false}
-          dialogStyle={{ marginBottom: 150, width: width * 0.9, height: height * 0.64 }}
+          dialogStyle={{ marginBottom: 150, width: width * 0.9, height: Platform.OS === 'ios' ? height * 0.7 : height * 0.64 }}
 
 
         >
@@ -494,7 +501,7 @@ export default class HomeScreen extends React.Component {
                   this.popupResetPassword.show();
                 }}
               >
-                <Text style={{ padding: 15, textAlign: 'center' }}>Quên mật khẩu?</Text>
+                <Text style={{ padding: 15, textAlign: 'center', }}>Quên mật khẩu</Text>
               </TouchableOpacity>
               <TouchableOpacity style={{ flex: 1, }}
                 onPress={() => {
@@ -619,9 +626,9 @@ export default class HomeScreen extends React.Component {
             </View>
             <View>
               <Animated.View style={{ position: 'relative', left: this.state.animation.usernamePostionLeft, flexDirection: 'row', padding: 10, }}>
-                <Ionicons style={{ flex: 1, fontSize: 22, paddingTop: 12, textAlign: 'center', paddingLeft: 5, }} name='ios-person-outline' />
+                <Ionicons style={{ flex: 2, fontSize: 22, paddingTop: 12, textAlign: 'center', }} name='ios-person-outline' />
                 <FormInput
-                  containerStyle={{ flex: 15, paddingLeft: 5, }}
+                  containerStyle={{ flex: 15, }}
                   placeholder='Số điện thoại'
                   autoCapitalize='sentences'
                   keyboardType='numeric'
