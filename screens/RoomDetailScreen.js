@@ -66,7 +66,7 @@ export default class RoomDetailScreen extends React.Component {
                             <TouchableOpacity
                                 onPress={() => {
                                     //alert("item.title")
-                                    this.props.navigation.navigate('ProfileScreen');
+                                    {/* this.props.navigation.navigate('ProfileScreen'); */}
                                 }}
                             >
                                 <Image

@@ -75,6 +75,16 @@ export default class HomeScreen extends React.Component {
 
       // Register Account
       modalRegisterAccount: false,
+      objectRegisterAccount: {
+        cellPhone: null,
+        password: null,
+        confirmPassword: null,
+      },
+      registerCellPhone: null,
+      registerPassword: null,
+      registerConfirmPassword: null,
+      registerConfirmCellPhone: null,
+      registerAccountImage: null,
     }
 
   }
@@ -157,6 +167,10 @@ export default class HomeScreen extends React.Component {
         case '3':
           this.setState({ postRoomImage3: result.uri });
           break;
+        case 'registerAccountImage':
+          this.setState({ registerAccountImage: result.uri });
+          break;
+
         default:
 
       }
@@ -205,7 +219,22 @@ export default class HomeScreen extends React.Component {
   };
 
   _registerAccount = () => {
-    Toast.show('This is a toast.');
+    if (this.state.registerCellPhone === null) {
+      Toast.show('Vui lòng nhập Số Điện Thoại.');
+      return;
+    }
+    if (this.state.registerPassword === null) {
+      Toast.show('Vui lòng nhập mật khẩu.');
+      return;
+    }
+    if (this.state.registerPassword != this.state.registerConfirmPassword) {
+      Toast.show('Xác nhận mật khẩu không khớp với mật khẩu.');
+      return;
+    }
+    if (this.state.registerPassword != this.state.registerConfirmPassword) {
+      Toast.show('Vui lòng nhập mã xác nhận Số Điện Thoại.');
+      return;
+    }
   }
 
   render() {
@@ -580,25 +609,25 @@ export default class HomeScreen extends React.Component {
             <View style={{ flexDirection: 'row', padding: 20, justifyContent: 'center', alignItems: 'center' }}>
               <TouchableOpacity
                 style={{}}
-                onPress={() => this._pickPostRoomImage('1')}
+                onPress={() => this._pickPostRoomImage('registerAccountImage')}
               >
                 <Ionicons style={{ opacity: 0.7, fontSize: 100, color: '#73aa2a', flex: 1, textAlign: 'center', }} name='ios-contact' />
-                {this.state.postRoomImage1 && <Image source={{ uri: this.state.postRoomImage1 }} style={{ width: 100, height: 100 }} />}
+                {this.state.registerAccountImage && <Image source={{ uri: this.state.registerAccountImage }} style={{ width: 80, height: 80, borderRadius: 100, marginTop: -90, marginLeft: 1, marginBottom: 10, }} />}
                 <Text style={{}}>Hình đại diện</Text>
               </TouchableOpacity>
 
             </View>
             <View>
               <Animated.View style={{ position: 'relative', left: this.state.animation.usernamePostionLeft, flexDirection: 'row', padding: 10, }}>
-                <Ionicons style={{ flex: 1, fontSize: 22, paddingTop: 12, textAlign: 'center', }} name='ios-person-outline' />
+                <Ionicons style={{ flex: 1, fontSize: 22, paddingTop: 12, textAlign: 'center', paddingLeft: 5, }} name='ios-person-outline' />
                 <FormInput
                   containerStyle={{ flex: 15, paddingLeft: 5, }}
                   placeholder='Số điện thoại'
                   autoCapitalize='sentences'
-                  keyboardType='phone-pad'
+                  keyboardType='numeric'
                   underlineColorAndroid={'#fff'}
-                  onChangeText={(text) => this.setState({ text })}
-                  value={this.state.text}
+                  onChangeText={(registerCellPhone) => this.setState({ registerCellPhone })}
+                  value={this.state.registerCellPhone}
                 />
                 <TouchableOpacity>
                   <FormLabel
@@ -621,6 +650,8 @@ export default class HomeScreen extends React.Component {
                   placeholder='Mật khẩu'
                   secureTextEntry={true}
                   underlineColorAndroid={'#fff'}
+                  value={this.state.registerPassword}
+                  onChangeText={(registerPassword) => { this.setState({ registerPassword }) }}
                 />
               </Animated.View>
               <Animated.View style={{ position: 'relative', left: this.state.animation.passwordPositionLeft, flexDirection: 'row', padding: 10, paddingTop: 0, }}>
@@ -630,7 +661,10 @@ export default class HomeScreen extends React.Component {
                   placeholder='Xác nhận mật khẩu'
                   secureTextEntry={true}
                   underlineColorAndroid={'#fff'}
+                  value={this.state.registerConfirmPassword}
+                  onChangeText={(registerConfirmPassword) => { this.setState({ registerConfirmPassword }) }}
                 />
+
               </Animated.View>
               <Animated.View style={{ position: 'relative', left: this.state.animation.passwordPositionLeft, flexDirection: 'row', padding: 10, paddingTop: 0, }}>
 
@@ -639,7 +673,9 @@ export default class HomeScreen extends React.Component {
                   placeholder='Mã xác nhận số điện thoại (4 số)'
                   secureTextEntry={true}
                   underlineColorAndroid={'#fff'}
-                  keyboardType='phone-pad'
+                  keyboardType='numeric'
+                  value={this.state.registerConfirmCellPhone}
+                  onChangeText={(registerConfirmCellPhone) => { this.setState({ registerConfirmCellPhone }) }}
                 />
               </Animated.View>
             </View>
@@ -650,7 +686,15 @@ export default class HomeScreen extends React.Component {
                 raised={false}
                 icon={{ name: 'ios-backspace', type: 'ionicon' }}
                 title='Hủy'
-                onPress={() => { this.setState({ modalRegisterAccount: false }) }}
+                onPress={() => {
+                  this.setState({
+                    modalRegisterAccount: false,
+                    registerCellPhone: null,
+                    registerPassword: null,
+                    registerConfirmPassword: null,
+                  })
+
+                }}
               />
 
               <Button

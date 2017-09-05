@@ -10,12 +10,14 @@ import {
     Platform,
     Animated,
     Modal,
+    FlatList,
 } from 'react-native';
 import { ExpoLinksView } from '@expo/samples';
 import { Constants } from 'expo';
 import { Ionicons } from '@expo/vector-icons';
 import PopupDialog, { SlideAnimation, ScaleAnimation, DialogTitle, DialogButton } from 'react-native-popup-dialog';
 import { CheckBox, Rating, Button, FormLabel, FormInput, SocialIcon, FormValidationMessage } from 'react-native-elements'
+import { users } from '../components/examples/data';
 
 
 var { height, width } = Dimensions.get('window');
@@ -42,6 +44,9 @@ export default class ProfileScreen extends React.Component {
             modalUpdateAccount: false,
             modalHelp: false,
             modalPostedRoomHistory: false,
+
+            // Posted Room History
+            postedRoomHistoryData: users,
         }
     }
 
@@ -53,6 +58,10 @@ export default class ProfileScreen extends React.Component {
     _updateAccount = () => {
 
     }
+
+    _moveToRoomDetail = (user) => {
+        this.props.navigation.navigate('RoomDetailScreen', { ...user });
+    };
 
     render() {
         return (
@@ -88,7 +97,10 @@ export default class ProfileScreen extends React.Component {
                         </Ionicons>
                     </TouchableOpacity>
                     <TouchableOpacity style={styles.profileMenuItem}
-                        onPress={() => { this.setState({ modalPostedRoomHistory: true }) }}
+                        onPress={() => {
+                            {/* this.setState({ modalPostedRoomHistory: true }) */ }
+                            this.props.navigation.navigate('PostedRoomHIstoryScreen');
+                        }}
                     >
                         <Ionicons style={styles.profileMenuItemText} name='md-folder'>
                             <Text>  Tin đã đăng</Text>
@@ -316,6 +328,9 @@ export default class ProfileScreen extends React.Component {
                     onRequestClose={() => { alert("Modal has been closed.") }}
                 >
                     <ScrollView>
+                        <View>
+                            <Text>Testing</Text>
+                        </View>
 
                         <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center', marginTop: 20, }}>
                             <Button
@@ -346,9 +361,46 @@ export default class ProfileScreen extends React.Component {
                     visible={this.state.modalPostedRoomHistory}
                     onRequestClose={() => { alert("Modal has been closed.") }}
                 >
+                    <View style={{ flexDirection: 'row', padding: 20, }}>
+                        <TouchableOpacity
+                            style={{}}
+                            onPress={() => this.setState({ modalPostedRoomHistory: false, })}>
+                            <Ionicons style={{ fontSize: 28, color: '#a4d227', }} name='md-arrow-back'></Ionicons>
+                        </TouchableOpacity>
+                        <Text style={{ marginLeft: 20, color: '#73aa2a', fontSize: 20, justifyContent: 'center' }}>Tin Bạn Đã Đăng</Text>
+                    </View>
                     <ScrollView>
+                        <View style={styles.searchRoolResultBox}>
+                            <FlatList
+                                //onScroll={this._onScroll}
+                                ref='refPostedRoomHistory'
+                                data={this.state.postedRoomHistoryData}
+                                renderItem={({ item }) =>
+                                    <TouchableOpacity
+                                        style={styles.searchCardImage}
+                                        onPress={() => this._moveToRoomDetail(item)}
+                                    >
+                                        <View style={styles.searchCard}>
+                                            <Image
+                                                style={styles.searchCardImage}
+                                                source={{ uri: item.picture.large }} />
 
-                        <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center', marginTop: 20, }}>
+                                            <View style={styles.searchCardTextBox}>
+                                                <Text style={styles.searchCardAddress}>{item.location.street} {item.location.city}</Text>
+                                                <Text style={styles.searchCardPostDate}>Ngày đăng: {item.registered}</Text>
+                                                <View style={styles.searchCardPriceBox}>
+                                                    <Text style={styles.searchCardPrice}>Giá: 2.000.000 đ</Text>
+                                                    <Ionicons style={styles.searCardDistanceIcon} name='md-pin' >  3 km</Ionicons>
+                                                    {/* <Text>3 km</Text> */}
+                                                </View>
+                                            </View>
+                                        </View>
+                                    </TouchableOpacity>
+                                }
+                                keyExtractor={item => item.email}
+                            />
+                        </View>
+                        {/* <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center', marginTop: 20, }}>
                             <Button
                                 buttonStyle={{ backgroundColor: '#9B9D9D', padding: 10, borderRadius: 5, }}
                                 raised={false}
@@ -366,7 +418,7 @@ export default class ProfileScreen extends React.Component {
                                     this._updateAccount();
                                 }}
                             />
-                        </View>
+                        </View> */}
                     </ScrollView>
                 </Modal>
             </View>
@@ -375,6 +427,64 @@ export default class ProfileScreen extends React.Component {
 }
 
 const styles = StyleSheet.create({
+    searchCardImage: {
+        flex: 3
+    },
+
+    searchCard: {
+        flex: 1,
+        flexDirection: 'row',
+        height: 100,
+        // borderWidth: 1,
+        paddingTop: 10,
+        paddingBottom: 10,
+        borderBottomWidth: 0.3,
+        borderColor: '#9B9D9D',
+    },
+
+    searchRoolResultBox: {
+        flex: 1,
+        // height: 400,
+        backgroundColor: '#fff',
+        // position: 'absolute',
+        opacity: 0.8,
+        // marginTop: -70,
+        padding: 10,
+        borderTopWidth: 2,
+        borderColor: 'white',
+    },
+
+    searchCardTextBox: {
+        flex: 9,
+        paddingLeft: 10,
+    },
+    searchCardPostDate: {
+        flex: 1,
+        color: '#9B9D9D',
+        // paddingTop: 10,
+        fontSize: 12,
+    },
+    searchCardAddress: {
+        flex: 2,
+        fontSize: 15,
+    },
+    searchCardPriceBox: {
+        flexDirection: 'row',
+    },
+    searchCardPrice: {
+        flex: 2,
+        color: '#7E7E7E',
+    },
+
+    searCardDistanceIcon: {
+        flex: 1,
+        // fontSize: 14,
+        paddingTop: 3,
+    },
+
+
+
+
     profileMenuItemText: {
         fontSize: 16,
         height: 20,
@@ -404,10 +514,7 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         marginRight: 10,
     },
-    backScreenIcon: {
-        fontSize: 28,
-        color: '#a4d227',
-    },
+
     cardCommentSubmitText: {
         color: '#fff',
     },

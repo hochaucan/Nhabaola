@@ -6,7 +6,7 @@ import {
   StatusBar
 }
   from 'react-native'
-import { StackNavigator,NavigationActions } from 'react-navigation';
+import { StackNavigator, NavigationActions } from 'react-navigation';
 
 import MainTabNavigator from './MainTabNavigator';
 import registerForPushNotificationsAsync from '../api/registerForPushNotificationsAsync';
@@ -15,6 +15,8 @@ import registerForPushNotificationsAsync from '../api/registerForPushNotificatio
 
 import RoomDetailScreen from '../screens/RoomDetailScreen';
 import ProfileScreen from '../screens/ProfileScreen';
+import PostedRoomHIstoryScreen from '../screens/PostedRoomHIstoryScreen';
+
 // export const ScreenStack = StackNavigator({
 //   Settings2: {
 //     screen: Settings3,
@@ -36,6 +38,9 @@ const RootStackNavigator = StackNavigator(
     },
     ProfileScreen: {
       screen: ProfileScreen,
+    },
+    PostedRoomHIstoryScreen: {
+      screen: PostedRoomHIstoryScreen,
     },
   },
   {
