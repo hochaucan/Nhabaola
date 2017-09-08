@@ -258,19 +258,19 @@ export default class SearchScreen extends React.Component {
         });
     }
 
-    // _fitAllFindingHouseMakers = () => {
-    //     this.map.fitToCoordinates(findingHouseMakers, {
-    //         edgePadding: DEFAULT_PADDING,
-    //         animated: true,
-    //     });
-    // }
+    _fitAllFindingHouseMakers() {
+        this.map.fitToCoordinates(this.state.findingHouseMakers, {
+            edgePadding: DEFAULT_PADDING,
+            animated: true,
+        });
+    }
 
-    // _createTempMarker(modifier = 1, lat, long) {
-    //     return {
-    //         latitude: lat - (SPACE * modifier),
-    //         longitude: long - (SPACE * modifier),
-    //     };
-    // }
+    _createTempMarker(modifier = 1, lat, long) {
+        return {
+            latitude: lat - (SPACE * modifier),
+            longitude: long - (SPACE * modifier),
+        };
+    }
 
     _setModalVisible(visible) {
         this.setState({ modalVisible: visible });
@@ -363,9 +363,9 @@ export default class SearchScreen extends React.Component {
             // this.setState({
             //     findingHouseMakers: [
             //         currentMaker,
-            //         _createTempMarker(1, this.state.location.coords.latitude, this.state.location.coords.longitude),
-            //         _createTempMarker(2, this.state.location.coords.latitude, this.state.location.coords.longitude),
-            //         _createTempMarker(3, this.state.location.coords.latitude, this.state.location.coords.longitude),
+            //         this._createTempMarker(1, this.state.location.coords.latitude, this.state.location.coords.longitude),
+            //         this._createTempMarker(2, this.state.location.coords.latitude, this.state.location.coords.longitude),
+            //         this._createTempMarker(3, this.state.location.coords.latitude, this.state.location.coords.longitude),
 
             //     ]
             // })
@@ -376,7 +376,14 @@ export default class SearchScreen extends React.Component {
                 <View style={{ height: height * 0.4, }}>
 
                     {/* <View><Text>{text}</Text></View> */}
-
+                    <TouchableOpacity
+                        style={{ height: 35, position: 'absolute', top: height * 0.3, zIndex: 10, right: 15, backgroundColor: 'transparent' }}
+                        onPress={() => {
+                            this.map.animateToCoordinate(currentMaker, 1000);
+                        }}
+                    >
+                        <Ionicons style={{ fontSize: 37, color: '#73aa2a', textAlign: 'right' }} name='ios-locate-outline' />
+                    </TouchableOpacity>
                     {this.state.location ?
                         <MapView
                             ref={ref => { this.map = ref; }}
@@ -450,6 +457,10 @@ export default class SearchScreen extends React.Component {
                                     <Image
                                         source={require('../images/nbl-house_icon3.png')}
                                         style={{ height: height * 0.05, width: width * 0.08 }}
+                                        onLayout={() => {
+                                            this.setState({ initialRenderCurrentMaker: false })
+                                        }}
+                                        key={`${this.state.initialRenderCurrentMaker}`}
                                     />
                                 </MapView.Marker>
                             ))}
@@ -467,6 +478,8 @@ export default class SearchScreen extends React.Component {
 
                         : null
                     }
+
+
                 </View>
 
                 <ScrollView style={styles.container}>
