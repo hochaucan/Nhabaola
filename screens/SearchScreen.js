@@ -232,6 +232,7 @@ export default class SearchScreen extends React.Component {
             location: null,
             errorMessage: null,
             markers: [],
+            findingHouseMakers: [],
 
         }
     }
@@ -256,6 +257,20 @@ export default class SearchScreen extends React.Component {
             animated: true,
         });
     }
+
+    // _fitAllFindingHouseMakers = () => {
+    //     this.map.fitToCoordinates(findingHouseMakers, {
+    //         edgePadding: DEFAULT_PADDING,
+    //         animated: true,
+    //     });
+    // }
+
+    // _createTempMarker(modifier = 1, lat, long) {
+    //     return {
+    //         latitude: lat - (SPACE * modifier),
+    //         longitude: long - (SPACE * modifier),
+    //     };
+    // }
 
     _setModalVisible(visible) {
         this.setState({ modalVisible: visible });
@@ -344,6 +359,16 @@ export default class SearchScreen extends React.Component {
                 latitude: this.state.location.coords.latitude,
                 longitude: this.state.location.coords.longitude
             }
+
+            // this.setState({
+            //     findingHouseMakers: [
+            //         currentMaker,
+            //         _createTempMarker(1, this.state.location.coords.latitude, this.state.location.coords.longitude),
+            //         _createTempMarker(2, this.state.location.coords.latitude, this.state.location.coords.longitude),
+            //         _createTempMarker(3, this.state.location.coords.latitude, this.state.location.coords.longitude),
+
+            //     ]
+            // })
         }
 
         return (
@@ -385,8 +410,14 @@ export default class SearchScreen extends React.Component {
                                 coordinate={currentMaker}
                                 title='Im here'
                                 description='Home'
-                                image={require('../images/nbl-here-icon.png')}
-                            />
+                            /* image={require('../images/nbl-here-icon.png')} */
+
+                            >
+                                <Image
+                                    source={require('../images/nbl-here-icon.png')}
+                                    style={{ height: height * 0.07, width: width * 0.07 }}
+                                />
+                            </MapView.Marker>
 
                             {/* <MapView.Circle
                                 center={currentMaker}
@@ -410,9 +441,23 @@ export default class SearchScreen extends React.Component {
                                 <MapView.Marker
                                     key={i}
                                     coordinate={marker}
+                                /* image={require('../images/nbl-house_icon.png')} */
+                                >
+                                    <Image
+                                        source={require('../images/nbl-house_icon3.png')}
+                                        style={{ height: height * 0.05, width: width * 0.08 }}
+                                    />
+                                </MapView.Marker>
+                            ))}
+
+                            {/* Fix all finding house makers on Map */}
+                            {/* {findingHouseMakers.map((marker, i) => (
+                                <MapView.Marker
+                                    key={i}
+                                    coordinate={marker}
                                     image={require('../images/nbl-house_icon.png')}
                                 />
-                            ))}
+                            ))} */}
 
                         </MapView>
 
@@ -453,8 +498,9 @@ export default class SearchScreen extends React.Component {
                             }
                             <TouchableOpacity
                                 onPress={() => {
-                                    //this.fitAllMarkers()
-                                    this.map.animateToCoordinate(currentMaker, 100);
+                                    this.fitAllMarkers()
+                                    //this._fitAllFindingHouseMakers();
+                                    //this.map.animateToCoordinate(currentMaker, 1000);
                                 }}
                             >
                                 <Text style={{ flex: 3, textAlign: 'right', color: '#73aa2a' }}>Đăng ký vùng này</Text>
