@@ -233,7 +233,7 @@ export default class SearchScreen extends React.Component {
             errorMessage: null,
             markers: [],
             findingHouseMakers: [],
-
+            initialRenderCurrentMaker: true,
         }
     }
 
@@ -415,7 +415,11 @@ export default class SearchScreen extends React.Component {
                             >
                                 <Image
                                     source={require('../images/nbl-here-icon.png')}
-                                    style={{ height: height * 0.07, width: width * 0.07 }}
+                                    style={{ height: height * 0.08, width: width * 0.08 }}
+                                    onLayout={() => {
+                                        this.setState({ initialRenderCurrentMaker: false })
+                                    }}
+                                    key={`${this.state.initialRenderCurrentMaker}`}
                                 />
                             </MapView.Marker>
 
