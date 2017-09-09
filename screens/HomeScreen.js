@@ -797,20 +797,20 @@ export default class HomeScreen extends React.Component {
 
             </View>
             {/* <FormLabel style={{ borderBottomWidth: 0.7, borderColor: '#a4d227', marginTop: 15, }}>Địa chỉ</FormLabel> */}
-            <View style={{ height: 200, padding: 20, }}>
-              <FormInput
+            <View style={{ height: 270, padding: 20, }}>
+              {/* <FormInput
                 containerStyle={{ marginLeft: 0, marginRight: 0, }}
                 placeholder='Vui lòng nhập địa chỉ'
                 autoCapitalize='sentences'
                 maxLength={300}
-              />
+              /> */}
 
 
 
 
               <GooglePlacesAutocomplete
-                placeholder="Search"
-                minLength={2} // minimum length of text to search
+                placeholder="Vui lòng nhập địa chỉ"
+                minLength={1} // minimum length of text to search
                 autoFocus={false}
                 returnKeyType={'search'} // Can be left out for default return key https://facebook.github.io/react-native/docs/textinput.html#returnkeytype
                 listViewDisplayed="auto" // true/false/undefined
@@ -818,8 +818,12 @@ export default class HomeScreen extends React.Component {
                 renderDescription={row => row.description} // custom description render
                 onPress={(data, details = null) => {
                   // 'details' is provided when fetchDetails = true
-                  console.log(data);
-                  console.log(details);
+                  {/* console.log(data); */}
+                  console.log(details.geometry);
+
+
+                 // this.map.animateToCoordinate(currentMaker, 1000);
+
                 }}
                 getDefaultValue={() => {
                   return ''; // text input default value
@@ -862,10 +866,15 @@ export default class HomeScreen extends React.Component {
 
 
 
-              {/* <MapView
-                style={{ flex: 1 }}
+              <MapView
+                style={{ height: 150, alignSelf: 'stretch' }}
+                ref={ref => { this.map = ref; }}
                 region={this.state.mapRegion}
-              /> */}
+                provider='google'
+                showsUserLocation={false}
+                showsMyLocationButton={false}
+                followsUserLocation={false}
+              />
 
 
             </View>
@@ -878,7 +887,7 @@ export default class HomeScreen extends React.Component {
                   type={'money'}
                   options={{ suffixUnit: 'đồng', precision: 0, unit: '', separator: ' ' }}
                   style={{ flex: 1, paddingLeft: 44, paddingTop: 8, }}
-                  placeholder='Vui lòng nhập giá (triệu)'
+                  placeholder='(triệu)'
                   underlineColorAndroid='#fff'
                 />
                 {/* <FormInput
@@ -903,7 +912,7 @@ export default class HomeScreen extends React.Component {
 
                 <FormInput
                   containerStyle={{ flex: 1, }}
-                  placeholder='Vui lòng nhập diện tích'
+                  placeholder=''
                   autoCapitalize='sentences'
                   maxLength={300}
                   underlineColorAndroid='#fff'
