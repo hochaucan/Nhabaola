@@ -818,11 +818,14 @@ export default class HomeScreen extends React.Component {
                 renderDescription={row => row.description} // custom description render
                 onPress={(data, details = null) => {
                   // 'details' is provided when fetchDetails = true
-                  {/* console.log(data); */}
+                  {/* console.log(data); */ }
                   console.log(details.geometry);
 
-
-                 // this.map.animateToCoordinate(currentMaker, 1000);
+                  {/* let currentMaker = {
+                    latitude: this.state.location.coords.latitude,
+                    longitude: this.state.location.coords.longitude
+                  } */}
+                  // this.map.animateToCoordinate(currentMaker, 1000);
 
                 }}
                 getDefaultValue={() => {
@@ -842,7 +845,7 @@ export default class HomeScreen extends React.Component {
                     color: '#1faadb',
                   },
                 }}
-                currentLocation={true} // Will add a 'Current location' button at the top of the predefined places list
+                currentLocation={false} // Will add a 'Current location' button at the top of the predefined places list
                 currentLocationLabel="Current location"
                 nearbyPlacesAPI="GooglePlacesSearch" // Which API to use: GoogleReverseGeocoding or GooglePlacesSearch
                 GoogleReverseGeocodingQuery={{
@@ -857,7 +860,7 @@ export default class HomeScreen extends React.Component {
                   'locality',
                   'administrative_area_level_3',
                 ]} // filter the reverse geocoding results by types - ['locality', 'administrative_area_level_3'] if you want to display only cities
-                predefinedPlaces={[homePlace, workPlace]}
+                //predefinedPlaces={[homePlace, workPlace]}
                 debounce={200}
               />
 
@@ -901,16 +904,16 @@ export default class HomeScreen extends React.Component {
               </View>
               <View style={{ flexDirection: 'row', }}>
                 <FormLabel style={{}}>Diện tích:</FormLabel>
-                {/* <TextInputMask
+                <TextInputMask
                   ref={'myDateText'}
-                  type={'only-numbers'}
-                  options={{ suffixUnit: '(mét vuông)', precision: 0, unit: '', separator: '' }}
+                  type={'money'}
+                  options={{ suffixUnit: '(m2)', precision: 0, unit: '', separator: ' ', delimiter: ' ' }}
                   style={{ flex: 1, paddingTop: 8, }}
-                  placeholder='Vui lòng nhập diện tích (mét vuông)'
+                  placeholder='(mét vuông)'
                   underlineColorAndroid='#fff'
-                /> */}
+                />
 
-                <FormInput
+                {/* <FormInput
                   containerStyle={{ flex: 1, }}
                   placeholder=''
                   autoCapitalize='sentences'
@@ -923,11 +926,23 @@ export default class HomeScreen extends React.Component {
                   }}
 
                 />
-                <FormLabel>(mét vuông)</FormLabel>
+                <FormLabel>(mét vuông)</FormLabel> */}
               </View>
               <View style={{ flexDirection: 'row', }}>
                 <FormLabel style={{}}>Loại BĐS:</FormLabel>
-                <ModalDropdown
+                <Picker
+                  style={{}}
+                  mode='dropdown'
+                  selectedValue={this.state.language}
+                  onValueChange={(itemValue, itemIndex) => this.setState({ language: itemValue })}>
+                  <Picker.Item label="2 km" value="2" />
+                  <Picker.Item label="4 km" value="4" />
+                  <Picker.Item label="6 km" value="6" />
+                  <Picker.Item label="8 km" value="8" />
+                  <Picker.Item label="10 km" value="10" />
+                </Picker>
+
+                {/* <ModalDropdown
                   style={{ paddingTop: 15, marginLeft: 15, }}
                   dropdownStyle={{ padding: 10, }}
                   textStyle={{}}
@@ -936,7 +951,7 @@ export default class HomeScreen extends React.Component {
                   defaultValue='Nhà trọ'
                   onSelect={(idx, value) => this._dropdown_onSelect(idx, value)}
                 >
-                </ModalDropdown>
+                </ModalDropdown> */}
               </View>
               <FormLabel style={{ marginTop: 10, }}>Chi tiết:</FormLabel>
               <FormInput
