@@ -17,6 +17,7 @@ import {
   Alert,
   Animated,
   ToastAndroid,
+  Picker,
 } from 'react-native';
 import { WebBrowser, ImagePicker, Facebook } from 'expo';
 import { MonoText } from '../components/StyledText';
@@ -45,6 +46,11 @@ const workPlace = {
 };
 
 var { height, width } = Dimensions.get('window');
+const ASPECT_RATIO = width / height;
+const LATITUDE = 37.78825;
+const LONGITUDE = -122.4324;
+const LATITUDE_DELTA = 0.05;
+const LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO;
 
 export default class HomeScreen extends React.Component {
   static navigationOptions = {
@@ -819,13 +825,15 @@ export default class HomeScreen extends React.Component {
                 onPress={(data, details = null) => {
                   // 'details' is provided when fetchDetails = true
                   {/* console.log(data); */ }
-                  console.log(details.geometry);
+                  console.log(details.geometry.location);
 
-                  {/* let currentMaker = {
-                    latitude: this.state.location.coords.latitude,
-                    longitude: this.state.location.coords.longitude
-                  } */}
-                  // this.map.animateToCoordinate(currentMaker, 1000);
+                  let currentMaker = {
+                    latitude: details.geometry.location.lat,
+                    longitude: details.geometry.location.lng,
+                    latitudeDelta: LATITUDE_DELTA,
+                    longitudeDelta: LONGITUDE_DELTA,
+                  }
+                  this.map.animateToRegion(currentMaker, 1000);
 
                 }}
                 getDefaultValue={() => {
