@@ -13,6 +13,7 @@
   },
   "dependencies": {
     "@expo/samples": "^2.0.2",
+    "@ptomasroos/react-native-multi-slider": "0.0.11",
     "expo": "^19.0.0",
     "react": "16.0.0-alpha.12",
     "react-native": "https://github.com/expo/react-native/archive/sdk-19.0.0.tar.gz",

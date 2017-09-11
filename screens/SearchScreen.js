@@ -19,8 +19,9 @@ import { ExpoLinksView } from '@expo/samples';
 import { Constants, Location, Permissions } from 'expo';
 import { Ionicons } from '@expo/vector-icons'; import ModalDropdown from 'react-native-modal-dropdown';
 import { users } from '../components/examples/data';
-
+import { Button, FormLabel, FormInput, SocialIcon, } from 'react-native-elements'
 import MapView from 'react-native-maps';
+import MultiSlider from '@ptomasroos/react-native-multi-slider';
 
 var { height, width } = Dimensions.get('window');
 
@@ -226,7 +227,7 @@ export default class SearchScreen extends React.Component {
         this.state = {
             mapRegion: { latitude: LATITUDE, longitude: LONGITUDE, latitudeDelta: LATITUDE_DELTA, longitudeDelta: LONGITUDE_DELTA },
             searchResultData: users,
-            modalVisible: false,
+            modalSearchFilterVisible: false,
             age: 18,
             hackHeight: height,
             location: null,
@@ -234,7 +235,22 @@ export default class SearchScreen extends React.Component {
             markers: [],
             findingHouseMakers: [],
             initialRenderCurrentMaker: true,
+
+            // Searching Filter
+            multiSliderPriceValue: [0, 10],
+            multiSliderAreaValue: [0, 200],
         }
+    }
+
+    _multiSliderPriceValuesChange = (values) => {
+        this.setState({
+            multiSliderPriceValue: values,
+        });
+    }
+    _multiSliderAreaValuesChange = (values) => {
+        this.setState({
+            multiSliderAreaValue: values,
+        });
     }
 
     onMapPress(e) {
@@ -346,6 +362,13 @@ export default class SearchScreen extends React.Component {
 
     _getCurrentPosition() {
         //  this.refs.map.animateToRegion(this.region, 1000);
+    }
+
+    _dropdown_onSelect(idx, value) {
+        // BUG: alert in a modal will auto dismiss and causes crash after reload and touch. @sohobloo 2016-12-1
+        //alert(`idx=${idx}, value='${value}'`);
+        //console.debug(`idx=${idx}, value='${value}'`);
+
     }
 
     render() {
@@ -526,7 +549,7 @@ export default class SearchScreen extends React.Component {
                         <View style={styles.searchFilterBox}>
                             <Text >Bộ lọc: </Text>
                             <TouchableOpacity
-                                onPress={() => this._setModalVisible(true)}
+                                onPress={() => this.setState({ modalSearchFilterVisible: true })}
                             >
                                 <Ionicons style={styles.searchFilterIcon} name='ios-funnel'></Ionicons>
                             </TouchableOpacity>
@@ -562,53 +585,89 @@ export default class SearchScreen extends React.Component {
                         />
 
                     </View>
+
+                    {/* Modal Filter Searching */}
                     <Modal
                         animationType={"slide"}
                         transparent={false}
-                        visible={this.state.modalVisible}
+                        visible={this.state.modalSearchFilterVisible}
                         onRequestClose={() => { alert("Modal has been closed.") }}
                     >
-                        <View style={styles.searchFilterModalBox}>
+                        <View style={{ flex: 1, marginTop: 30, padding: 15, }}>
                             <View style={styles.searhFilterSliderBox}>
-                                <Text>Giá: </Text>
-                                <Slider
+                                <FormLabel style={{ marginBottom: 40, }}>Giá: {this.state.multiSliderPriceValue[0]} - {this.state.multiSliderPriceValue[1]} triệu đồng</FormLabel>
+                                <MultiSlider
+                                    values={[this.state.multiSliderPriceValue[0], this.state.multiSliderPriceValue[1]]}
+                                    sliderLength={280}
+                                    onValuesChange={this._multiSliderPriceValuesChange}
+                                    min={0}
+                                    max={10}
                                     step={1}
-                                    minimumValue={18}
-                                    maximumValue={71}
-                                    value={this.state.age}
-                                    onValueChange={val => this.setState({ age: val })}
-                                    onSlidingComplete={val => this.getVal(val)}
-                                />
-                                <Text>{this.state.age}</Text>
-                                <Text style={{ marginTop: 20, }}>Diện tích: </Text>
-                                <Slider
+                                    allowOverlap
+                                    snapped
+                                    selectedStyle={{
+                                        backgroundColor: '#73aa2a',
+                                    }}
+                                    unselectedStyle={{
+                                        backgroundColor: 'silver',
+                                    }}
 
-                                    step={2}
-                                    minimumValue={18}
-                                    maximumValue={71}
-                                    value={this.state.age}
-                                    onValueChange={val => this.setState({ age: val })}
-                                    onSlidingComplete={val => this.getVal(val)}
                                 />
-                                <Text>{this.state.age}</Text>
+
+                                <FormLabel style={{ marginBottom: 40, marginTop: 20, }}>Diện tích: {this.state.multiSliderAreaValue[0]} - {this.state.multiSliderAreaValue[1]} mét vuông</FormLabel>
+                                <MultiSlider
+                                    values={[this.state.multiSliderAreaValue[0], this.state.multiSliderAreaValue[1]]}
+                                    sliderLength={280}
+                                    onValuesChange={this._multiSliderAreaValuesChange}
+                                    min={0}
+                                    max={200}
+                                    step={1}
+                                    allowOverlap
+                                    snapped
+                                    selectedStyle={{
+                                        backgroundColor: '#73aa2a',
+                                    }}
+                                    unselectedStyle={{
+                                        backgroundColor: 'silver',
+                                    }}
+                                />
+
+
+
+
+                                <View style={{ flexDirection: 'row', marginTop: 20, }}>
+                                    <FormLabel>Loại bất động sản:</FormLabel>
+                                    <ModalDropdown
+                                        style={{ paddingTop: 15, marginLeft: 15, }}
+                                        dropdownStyle={{ padding: 10, }}
+                                        textStyle={{}}
+                                        options={['Nhà trọ', 'Khách sạn', 'Biệt thự', 'Vila', 'Đất thổ cư']}
+                                        defaultIndex={0}
+                                        defaultValue='Nhà trọ'
+                                        onSelect={(idx, value) => this._dropdown_onSelect(idx, value)}
+                                    >
+                                    </ModalDropdown>
+                                </View>
                             </View>
-                            <View style={styles.searchFilterButtonBox} >
 
-                                <TouchableOpacity
-                                    style={styles.searchFilterButtonCancel}
-                                    onPress={() => {
-                                        this._setModalVisible(!this.state.modalVisible)
-                                    }}>
-                                    <Text style={styles.searchFilterButtonText}>Hủy</Text>
-                                </TouchableOpacity>
+                            <View style={{ marginTop: 140, }}>
+                                <View style={{ height: 100, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', paddingBottom: 50, }}>
+                                    <Button
+                                        buttonStyle={{ backgroundColor: '#9B9D9D', padding: 15, borderRadius: 10 }}
+                                        icon={{ name: 'ios-backspace', type: 'ionicon' }}
+                                        onPress={() => {
+                                            this.setState({ modalSearchFilterVisible: false })
+                                        }}
+                                        title='Hủy' />
+                                    <Button
+                                        buttonStyle={{ backgroundColor: '#73aa2a', padding: 15, borderRadius: 10 }}
+                                        icon={{ name: 'md-checkmark', type: 'ionicon' }}
+                                        title='Đồng ý'
+                                        onPress={() => {
 
-                                <TouchableOpacity
-                                    style={styles.searchFilterButtonSubmit}
-                                    onPress={() => {
-                                        this._setModalVisible(!this.state.modalVisible)
-                                    }}>
-                                    <Text style={styles.searchFilterButtonText}>Áp dụng</Text>
-                                </TouchableOpacity>
+                                        }}
+                                    />
+                                </View>
                             </View>
 
                         </View>
@@ -620,40 +679,15 @@ export default class SearchScreen extends React.Component {
 }
 
 const styles = StyleSheet.create({
-    searchFilterButtonCancel: {
-        flex: 1,
-        height: 50,
-        backgroundColor: '#73aa2a',
-        justifyContent: 'center',
-        alignItems: 'center',
-        marginLeft: 10,
-        marginRight: 10,
-    },
-    searchFilterButtonSubmit: {
-        flex: 1,
-        height: 50,
-        backgroundColor: '#73aa2a',
-        justifyContent: 'center',
-        alignItems: 'center',
-        marginRight: 10,
-    },
-    searchFilterButtonText: {
-        color: '#fff',
-    },
-    searchFilterModalBox: {
-        flex: 1,
-        paddingTop: 30,
-    },
+
+
+
+
     searhFilterSliderBox: {
         flex: 1,
         padding: 10,
     },
-    searchFilterButtonBox: {
-        flex: 1,
-        flexDirection: 'row',
-        borderColor: 'black',
-        justifyContent: 'flex-start',
-    },
+
     searchCardPriceBox: {
         flexDirection: 'row',
     },

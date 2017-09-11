@@ -66,7 +66,7 @@ export default class HomeScreen extends React.Component {
       modalVisible: false,
       reportCheck: false,
       starCount: 3.5,
-      mapRegion: { latitude: 10.7777935, longitude: 106.7068674, latitudeDelta: 0.0922, longitudeDelta: 0.0421 },
+      mapRegion: { latitude: 10.7777935, longitude: 106.7068674, latitudeDelta: 0.03, longitudeDelta: 0.03 },
 
       // Post Room
       postRoomImage1: null,
@@ -75,6 +75,10 @@ export default class HomeScreen extends React.Component {
       postRoomImage4: null,
       postRoomImage5: null,
       postRoomImage6: null,
+      postRoomAddressMaker: {
+        latitude: null,
+        longitude: null,
+      },
 
       // Login
       username: '',
@@ -257,7 +261,12 @@ export default class HomeScreen extends React.Component {
     }
   }
 
+  _dropdown_onSelect(idx, value) {
+    // BUG: alert in a modal will auto dismiss and causes crash after reload and touch. @sohobloo 2016-12-1
+    //alert(`idx=${idx}, value='${value}'`);
+    //console.debug(`idx=${idx}, value='${value}'`);
 
+  }
 
   render() {
     let { image } = this.state;
@@ -827,13 +836,21 @@ export default class HomeScreen extends React.Component {
                   {/* console.log(data); */ }
                   console.log(details.geometry.location);
 
-                  let currentMaker = {
+                  {/* let currentMaker = {
                     latitude: details.geometry.location.lat,
                     longitude: details.geometry.location.lng,
                     latitudeDelta: LATITUDE_DELTA,
                     longitudeDelta: LONGITUDE_DELTA,
-                  }
-                  this.map.animateToRegion(currentMaker, 1000);
+                  } */}
+                  // this.map.animateToRegion(currentMaker, 1000);
+
+                  this.setState({
+                    postRoomAddressMaker: {
+                      latitude: details.geometry.location.lat,
+                      longitude: details.geometry.location.lng,
+                    }
+                  })
+                  this.map.animateToCoordinate(this.state.postRoomAddressMaker, 1000);
 
                 }}
                 getDefaultValue={() => {
@@ -851,6 +868,15 @@ export default class HomeScreen extends React.Component {
                   },
                   predefinedPlacesDescription: {
                     color: '#1faadb',
+                  },
+                  textInputContainer: {
+                    backgroundColor: '#fff',
+                    height: 44,
+                    //borderTopColor: '#7e7e7e',
+                    borderBottomColor: '#b5b5b5',
+                    borderTopWidth: 0,
+                    borderBottomWidth: 0.5,
+                    flexDirection: 'row',
                   },
                 }}
                 currentLocation={false} // Will add a 'Current location' button at the top of the predefined places list
@@ -885,7 +911,18 @@ export default class HomeScreen extends React.Component {
                 showsUserLocation={false}
                 showsMyLocationButton={false}
                 followsUserLocation={false}
-              />
+              >
+
+                {this.state.postRoomAddressMaker.latitude ?
+                  <MapView.Marker
+                    coordinate={this.state.postRoomAddressMaker}
+                    title='Im here'
+                    description='Home'
+                  >
+
+                  </MapView.Marker>
+                  : null}
+              </MapView>
 
 
             </View>
@@ -894,13 +931,14 @@ export default class HomeScreen extends React.Component {
               <View style={{ flexDirection: 'row', }}>
                 <FormLabel style={{}}>Giá:</FormLabel>
                 <TextInputMask
-                  ref={'myDateText'}
+                  ref={'price'}
                   type={'money'}
-                  options={{ suffixUnit: 'đồng', precision: 0, unit: '', separator: ' ' }}
-                  style={{ flex: 1, paddingLeft: 44, paddingTop: 8, }}
-                  placeholder='(triệu)'
+                  options={{ suffixUnit: '', precision: 0, unit: '', separator: ' ' }}
+                  style={{ flex: 1, paddingLeft: 25, paddingTop: 11, }}
+                  placeholder=''
                   underlineColorAndroid='#fff'
                 />
+                <FormLabel>(đồng)</FormLabel>
                 {/* <FormInput
                   containerStyle={{ flex: 1, paddingLeft: 29 }}
                   placeholder='Vui lòng nhập giá (triệu)'
@@ -913,11 +951,10 @@ export default class HomeScreen extends React.Component {
               <View style={{ flexDirection: 'row', }}>
                 <FormLabel style={{}}>Diện tích:</FormLabel>
                 <TextInputMask
-                  ref={'myDateText'}
-                  type={'money'}
-                  options={{ suffixUnit: '(m2)', precision: 0, unit: '', separator: ' ', delimiter: ' ' }}
-                  style={{ flex: 1, paddingTop: 8, }}
-                  placeholder='(mét vuông)'
+                  ref={'acreage'}
+                  type={'only-numbers'}
+                  style={{ flex: 1, paddingTop: 11, marginLeft: -11, }}
+                  placeholder=''
                   underlineColorAndroid='#fff'
                 />
 
@@ -930,27 +967,13 @@ export default class HomeScreen extends React.Component {
                   keyboardType='numeric'
                   onFocus={() => {
 
-
                   }}
-
-                />
-                <FormLabel>(mét vuông)</FormLabel> */}
+                /> */}
+                <FormLabel>(mét vuông)</FormLabel>
               </View>
               <View style={{ flexDirection: 'row', }}>
                 <FormLabel style={{}}>Loại BĐS:</FormLabel>
-                <Picker
-                  style={{}}
-                  mode='dropdown'
-                  selectedValue={this.state.language}
-                  onValueChange={(itemValue, itemIndex) => this.setState({ language: itemValue })}>
-                  <Picker.Item label="2 km" value="2" />
-                  <Picker.Item label="4 km" value="4" />
-                  <Picker.Item label="6 km" value="6" />
-                  <Picker.Item label="8 km" value="8" />
-                  <Picker.Item label="10 km" value="10" />
-                </Picker>
-
-                {/* <ModalDropdown
+                <ModalDropdown
                   style={{ paddingTop: 15, marginLeft: 15, }}
                   dropdownStyle={{ padding: 10, }}
                   textStyle={{}}
@@ -959,7 +982,7 @@ export default class HomeScreen extends React.Component {
                   defaultValue='Nhà trọ'
                   onSelect={(idx, value) => this._dropdown_onSelect(idx, value)}
                 >
-                </ModalDropdown> */}
+                </ModalDropdown>
               </View>
               <FormLabel style={{ marginTop: 10, }}>Chi tiết:</FormLabel>
               <FormInput
