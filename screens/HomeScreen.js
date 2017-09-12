@@ -198,7 +198,7 @@ export default class HomeScreen extends React.Component {
   _handleFacebookLogin = async () => {
     try {
       const { type, token } = await Facebook.logInWithReadPermissionsAsync(
-        '143030619610047', // Replace with your own app id in standalone app
+        '485931318448821', // Replace with your own app id in standalone app
         { permissions: ['public_profile'] }
       );
 
