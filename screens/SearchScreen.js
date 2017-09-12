@@ -351,10 +351,10 @@ export default class SearchScreen extends React.Component {
             });
         }
 
-        let watchLocationTmp = await Location.watchPositionAsync({})
-        this.setState({
-            watchLocation: JSON.stringify(watchLocationTmp),
-        })
+        // let watchLocationTmp = await Location.watchPositionAsync({})
+        // this.setState({
+        //     watchLocation: JSON.stringify(watchLocationTmp),
+        // })
 
         let location = await Location.getCurrentPositionAsync({});
         this.setState({ location });
@@ -410,7 +410,7 @@ export default class SearchScreen extends React.Component {
                 <View style={{ height: height * 0.4, }}>
 
                     {/* <View><Text>{text}</Text></View> */}
-                    <View><Text>{this.state.watchLocation}</Text></View>
+                    {/* <View><Text>{this.state.watchLocation}</Text></View> */}
 
                     <TouchableOpacity
                         style={{ height: 35, position: 'absolute', top: height * 0.3, zIndex: 10, right: 15, backgroundColor: 'transparent' }}
