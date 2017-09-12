@@ -48,11 +48,11 @@ GMAP Key: AIzaSyBIhOGDA4Cvocj02AYdnxYK5oGeg6VwetM
 � � src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBIhOGDA4Cvocj02AYdnxYK5oGeg6VwetM&callback=initMap">
 �</script>
 
-Facebook App ID: 143030619610047
-Facebook App Secret: 698f3dd6bd17327ec2c9e45753c7d053
-Facebook client token: 38993d4ad1dbad320ea4ecf941734380
+Facebook App ID: 485931318448821
+Facebook App Secret: 
+Facebook client token: 
 Facebook Code: 
-http://localhost/callback?code=AQAoUVv9gW9nF7GbWas8BNX07lUOiX7RmLurshoDfUaIsDD0EjyFUpw6-KI9PnsUog2ZSPRXC8VoT9UTICb1GgYwM_Zw81fC0dUOGTpANRpFT5L_8itQAnSS060e0A1TRIrqVC7p7Oz3u67sdirp4RbqLOrCepg2dXCcZJE5Cy96L9mOhDr3Grx6WLpC8Vw_itY9w2Ubvpa6UAY4ehp6HUv2c_vTLguiGopp5rer19NhColVlIk1Uznbp0dgf2LGyD3QCbtOD_JNGbbZL9FmA4WNmWDxiewy9iT6CX3VpNgDP5dkhJHIbpnxGfRv_AGP6tLax4LFu7pp3Oh0w6WXglSO#_=_
+
 
 
 Setup the Facebook SDK for JavaScript
@@ -129,6 +129,16 @@ main .pulsing-rings .pulsing-ringlet {
 
 
 
+
+Get SHA1 for restricted Google API Key:
+c:\Program Files (x86)\Java\jdk1.7.0_55\bin>keytool -list -v -keystore D:\Project\Nhabaola\keystores.jks -alias keystores
+
+
+Release Hash Key for Facebook Login:
+GlFVMvF+WLraFAhgm/jhD+vev/w=
+
+
+https://localhost/callback
 
 
 
