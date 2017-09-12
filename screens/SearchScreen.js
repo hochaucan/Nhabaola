@@ -239,6 +239,10 @@ export default class SearchScreen extends React.Component {
             // Searching Filter
             multiSliderPriceValue: [0, 10],
             multiSliderAreaValue: [0, 200],
+            txtFilterResult: null,
+            selectedBDS: 'Nhà trọ',
+
+            watchLocation: null,
         }
     }
 
@@ -347,6 +351,11 @@ export default class SearchScreen extends React.Component {
             });
         }
 
+        let watchLocationTmp = await Location.watchPositionAsync({})
+        this.setState({
+            watchLocation: JSON.stringify(watchLocationTmp),
+        })
+
         let location = await Location.getCurrentPositionAsync({});
         this.setState({ location });
 
@@ -364,11 +373,13 @@ export default class SearchScreen extends React.Component {
         //  this.refs.map.animateToRegion(this.region, 1000);
     }
 
-    _dropdown_onSelect(idx, value) {
+    _dropdownFilter_onSelect(idx, value) {
         // BUG: alert in a modal will auto dismiss and causes crash after reload and touch. @sohobloo 2016-12-1
         //alert(`idx=${idx}, value='${value}'`);
         //console.debug(`idx=${idx}, value='${value}'`);
-
+        this.setState({
+            selectedBDS: value,
+        })
     }
 
     render() {
@@ -399,6 +410,8 @@ export default class SearchScreen extends React.Component {
                 <View style={{ height: height * 0.4, }}>
 
                     {/* <View><Text>{text}</Text></View> */}
+                    <View><Text>{this.state.watchLocation}</Text></View>
+
                     <TouchableOpacity
                         style={{ height: 35, position: 'absolute', top: height * 0.3, zIndex: 10, right: 15, backgroundColor: 'transparent' }}
                         onPress={() => {
@@ -546,13 +559,25 @@ export default class SearchScreen extends React.Component {
                                 <Text style={{ flex: 3, textAlign: 'right', color: '#73aa2a' }}>Đăng ký vùng này</Text>
                             </TouchableOpacity>
                         </View>
-                        <View style={styles.searchFilterBox}>
+                        <View style={{
+                            flexDirection: 'row',
+                            marginTop: 10,
+                            borderBottomWidth: 0.3,
+                            paddingBottom: 10,
+                            borderColor: '#9B9D9D',
+                        }}>
                             <Text >Bộ lọc: </Text>
                             <TouchableOpacity
+                                style={{ paddingRight: 20, }}
                                 onPress={() => this.setState({ modalSearchFilterVisible: true })}
                             >
-                                <Ionicons style={styles.searchFilterIcon} name='ios-funnel'></Ionicons>
+                                {this.state.txtFilterResult
+                                    ? <Text style={{ color: '#9B9D9D', }}>{this.state.txtFilterResult}</Text>
+                                    : <Ionicons style={styles.searchFilterIcon} name='ios-funnel'></Ionicons>
+                                }
+
                             </TouchableOpacity>
+
                         </View>
 
                         <FlatList
@@ -593,61 +618,64 @@ export default class SearchScreen extends React.Component {
                         visible={this.state.modalSearchFilterVisible}
                         onRequestClose={() => { alert("Modal has been closed.") }}
                     >
-                        <View style={{ flex: 1, marginTop: 30, padding: 15, }}>
-                            <View style={styles.searhFilterSliderBox}>
-                                <FormLabel style={{ marginBottom: 40, }}>Giá: {this.state.multiSliderPriceValue[0]} - {this.state.multiSliderPriceValue[1]} triệu đồng</FormLabel>
-                                <MultiSlider
-                                    values={[this.state.multiSliderPriceValue[0], this.state.multiSliderPriceValue[1]]}
-                                    sliderLength={280}
-                                    onValuesChange={this._multiSliderPriceValuesChange}
-                                    min={0}
-                                    max={10}
-                                    step={1}
-                                    allowOverlap
-                                    snapped
-                                    selectedStyle={{
-                                        backgroundColor: '#73aa2a',
-                                    }}
-                                    unselectedStyle={{
-                                        backgroundColor: 'silver',
-                                    }}
-
-                                />
-
-                                <FormLabel style={{ marginBottom: 40, marginTop: 20, }}>Diện tích: {this.state.multiSliderAreaValue[0]} - {this.state.multiSliderAreaValue[1]} mét vuông</FormLabel>
-                                <MultiSlider
-                                    values={[this.state.multiSliderAreaValue[0], this.state.multiSliderAreaValue[1]]}
-                                    sliderLength={280}
-                                    onValuesChange={this._multiSliderAreaValuesChange}
-                                    min={0}
-                                    max={200}
-                                    step={1}
-                                    allowOverlap
-                                    snapped
-                                    selectedStyle={{
-                                        backgroundColor: '#73aa2a',
-                                    }}
-                                    unselectedStyle={{
-                                        backgroundColor: 'silver',
-                                    }}
-                                />
-
-
-
-
-                                <View style={{ flexDirection: 'row', marginTop: 20, }}>
+                        <View style={{ flex: 1, marginTop: 30, padding: 10, }}>
+                            <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+                                <View style={{ flexDirection: 'row', marginBottom: 30, marginLeft: 70, }}>
                                     <FormLabel>Loại bất động sản:</FormLabel>
                                     <ModalDropdown
-                                        style={{ paddingTop: 15, marginLeft: 15, }}
+                                        ref={el => this._dropdownFilter = el}
+                                        style={{ paddingTop: 15, marginLeft: 15, width: 150 }}
                                         dropdownStyle={{ padding: 10, }}
                                         textStyle={{}}
                                         options={['Nhà trọ', 'Khách sạn', 'Biệt thự', 'Vila', 'Đất thổ cư']}
                                         defaultIndex={0}
                                         defaultValue='Nhà trọ'
-                                        onSelect={(idx, value) => this._dropdown_onSelect(idx, value)}
+                                        onSelect={(idx, value) => this._dropdownFilter_onSelect(idx, value)}
                                     >
                                     </ModalDropdown>
                                 </View>
+
+                                <FormLabel style={{ marginBottom: 20 }}>Giá: {this.state.multiSliderPriceValue[0]} - {this.state.multiSliderPriceValue[1]} triệu đồng</FormLabel>
+                                <MultiSlider
+                                    values={[this.state.multiSliderPriceValue[0], this.state.multiSliderPriceValue[1]]}
+                                    sliderLength={250}
+                                    onValuesChange={this._multiSliderPriceValuesChange}
+                                    min={0}
+                                    max={10}
+                                    //step={1}
+
+                                    //snapped
+                                    selectedStyle={{
+                                        backgroundColor: '#73aa2a',
+                                    }}
+                                    unselectedStyle={{
+                                        backgroundColor: 'silver',
+                                    }}
+
+                                />
+
+                                <FormLabel style={{ marginBottom: 20, marginTop: 10, }}>Diện tích: {this.state.multiSliderAreaValue[0]} - {this.state.multiSliderAreaValue[1]} mét vuông</FormLabel>
+                                <MultiSlider
+                                    values={[this.state.multiSliderAreaValue[0], this.state.multiSliderAreaValue[1]]}
+                                    sliderLength={250}
+                                    onValuesChange={this._multiSliderAreaValuesChange}
+                                    min={0}
+                                    max={200}
+                                    // step={1}
+                                    //allowOverlap
+                                    //snapped
+                                    selectedStyle={{
+                                        backgroundColor: '#73aa2a',
+                                    }}
+                                    unselectedStyle={{
+                                        backgroundColor: 'silver',
+                                    }}
+                                />
+
+
+
+
+
                             </View>
 
                             <View style={{ marginTop: 140, }}>
@@ -659,14 +687,39 @@ export default class SearchScreen extends React.Component {
                                             this.setState({ modalSearchFilterVisible: false })
                                         }}
                                         title='Hủy' />
-                                    <Button
-                                        buttonStyle={{ backgroundColor: '#73aa2a', padding: 15, borderRadius: 10 }}
-                                        icon={{ name: 'md-checkmark', type: 'ionicon' }}
-                                        title='Đồng ý'
-                                        onPress={() => {
+                                    {this.state.txtFilterResult
+                                        ?
+                                        <Button
+                                            buttonStyle={{ backgroundColor: '#73aa2a', padding: 15, borderRadius: 10 }}
+                                            icon={{ name: 'md-checkmark', type: 'ionicon' }}
+                                            title='Xóa lọc'
+                                            onPress={() => {
+                                                this.setState({
+                                                    txtFilterResult: null,
+                                                    multiSliderPriceValue: [0, 10],
+                                                    multiSliderAreaValue: [0, 200],
+                                                })
 
-                                        }}
-                                    />
+                                                this.setState({ modalSearchFilterVisible: false })
+                                            }}
+                                        />
+                                        :
+                                        <Button
+                                            buttonStyle={{ backgroundColor: '#73aa2a', padding: 15, borderRadius: 10 }}
+                                            icon={{ name: 'md-checkmark', type: 'ionicon' }}
+                                            title='Lọc'
+                                            onPress={() => {
+                                                this.setState({
+                                                    txtFilterResult: this.state.selectedBDS + ', ' + this.state.multiSliderPriceValue[0] + '-' + this.state.multiSliderPriceValue[1] + ' triệu đồng, '
+                                                    + this.state.multiSliderAreaValue[0] + '-' + this.state.multiSliderAreaValue[1] + ' mét vuông',
+
+                                                })
+
+                                                this.setState({ modalSearchFilterVisible: false })
+                                            }}
+                                        />
+                                    }
+
                                 </View>
                             </View>
 
@@ -683,10 +736,7 @@ const styles = StyleSheet.create({
 
 
 
-    searhFilterSliderBox: {
-        flex: 1,
-        padding: 10,
-    },
+
 
     searchCardPriceBox: {
         flexDirection: 'row',
@@ -750,14 +800,7 @@ const styles = StyleSheet.create({
     searchRadiusBox: {
         flexDirection: 'row',
     },
-    searchFilterBox: {
-        flexDirection: 'row',
-        // marginBottom: 10,
-        marginTop: 10,
-        borderBottomWidth: 0.3,
-        paddingBottom: 10,
-        borderColor: '#9B9D9D',
-    },
+
     searchRoolResultBox: {
         flex: 1,
         // height: 400,

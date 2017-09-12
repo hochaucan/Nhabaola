@@ -836,21 +836,21 @@ export default class HomeScreen extends React.Component {
                   {/* console.log(data); */ }
                   console.log(details.geometry.location);
 
-                  {/* let currentMaker = {
+                  let currentMaker = {
                     latitude: details.geometry.location.lat,
                     longitude: details.geometry.location.lng,
                     latitudeDelta: LATITUDE_DELTA,
                     longitudeDelta: LONGITUDE_DELTA,
-                  } */}
-                  // this.map.animateToRegion(currentMaker, 1000);
+                  }
+                  this.map.animateToRegion(currentMaker, 1000);
 
-                  this.setState({
+                  {/* this.setState({
                     postRoomAddressMaker: {
                       latitude: details.geometry.location.lat,
                       longitude: details.geometry.location.lng,
                     }
                   })
-                  this.map.animateToCoordinate(this.state.postRoomAddressMaker, 1000);
+                  this.map.animateToCoordinate(this.state.postRoomAddressMaker, 1000); */}
 
                 }}
                 getDefaultValue={() => {
@@ -934,7 +934,7 @@ export default class HomeScreen extends React.Component {
                   ref={'price'}
                   type={'money'}
                   options={{ suffixUnit: '', precision: 0, unit: '', separator: ' ' }}
-                  style={{ flex: 1, paddingLeft: 25, paddingTop: 11, }}
+                  style={{ flex: 1, paddingLeft: 25, paddingTop: Platform.OS === 'ios' ? 11 : 7, }}
                   placeholder=''
                   underlineColorAndroid='#fff'
                 />
@@ -953,7 +953,7 @@ export default class HomeScreen extends React.Component {
                 <TextInputMask
                   ref={'acreage'}
                   type={'only-numbers'}
-                  style={{ flex: 1, paddingTop: 11, marginLeft: -11, }}
+                  style={{ flex: 1, paddingTop: Platform.OS === 'ios' ? 11 : 7, marginLeft: Platform.OS === 'ios' ? -11 : -5, }}
                   placeholder=''
                   underlineColorAndroid='#fff'
                 />
@@ -974,8 +974,8 @@ export default class HomeScreen extends React.Component {
               <View style={{ flexDirection: 'row', }}>
                 <FormLabel style={{}}>Loại BĐS:</FormLabel>
                 <ModalDropdown
-                  style={{ paddingTop: 15, marginLeft: 15, }}
-                  dropdownStyle={{ padding: 10, }}
+                  style={{ paddingTop: 15, marginLeft: -5, }}
+                  dropdownStyle={{ padding: 10, width: 150 }}
                   textStyle={{}}
                   options={['Nhà trọ', 'Khách sạn', 'Biệt thự', 'Vila', 'Đất thổ cư']}
                   defaultIndex={0}
