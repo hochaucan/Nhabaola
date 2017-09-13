@@ -11,6 +11,8 @@ import {
     Animated,
     Modal,
     FlatList,
+    Alert,
+    BackHandler,
 } from 'react-native';
 import { ExpoLinksView } from '@expo/samples';
 import { Constants, ImagePicker } from 'expo';
@@ -227,6 +229,26 @@ export default class ProfileScreen extends React.Component {
                             <Text>  Giúp đỡ</Text>
                         </Ionicons>
                     </TouchableOpacity>
+                    {Platform.OS === 'android'
+                        ?
+                        <TouchableOpacity style={styles.profileMenuItem}
+                            onPress={() => {
+                                Alert.alert(
+                                    'Thông báo',
+                                    'Bạn chắc chắn thoát ứng dụng?',
+                                    [
+                                        { text: 'OK', onPress: () => BackHandler.exitApp() },
+                                    ]
+                                );
+
+                            }}
+                        >
+                            <Ionicons style={styles.profileMenuItemText} name='md-exit'>
+                                <Text>  Thoát ứng dụng</Text>
+                            </Ionicons>
+                        </TouchableOpacity>
+                        :
+                        null}
                 </ScrollView>
 
 
