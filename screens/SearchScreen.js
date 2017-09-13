@@ -22,6 +22,9 @@ import { users } from '../components/examples/data';
 import { Button, FormLabel, FormInput, SocialIcon, } from 'react-native-elements'
 import MapView from 'react-native-maps';
 import MultiSlider from '@ptomasroos/react-native-multi-slider';
+import PopupDialog, { SlideAnimation, ScaleAnimation, DialogTitle, DialogButton } from 'react-native-popup-dialog';
+import { GooglePlacesAutocomplete, } from 'react-native-google-places-autocomplete'; // 1.2.12
+
 
 var { height, width } = Dimensions.get('window');
 
@@ -240,7 +243,10 @@ export default class SearchScreen extends React.Component {
             multiSliderPriceValue: [0, 10],
             multiSliderAreaValue: [0, 200],
             txtFilterResult: null,
-            selectedBDS: 'Nhà trọ',
+            selectedBDS: 'Tất cả',
+
+            // Searhing address
+            searchingMaker: null,
 
             watchLocation: null,
         }
@@ -417,13 +423,21 @@ export default class SearchScreen extends React.Component {
                     {this.state.location ?
                         <View>
                             <TouchableOpacity
-                                style={{ height: 35, position: 'absolute', top: height * 0.3, zIndex: 10, right: 15, backgroundColor: 'transparent' }}
+                                style={{ height: 35, position: 'absolute', top: height * 0.22, zIndex: 10, right: 15, backgroundColor: 'transparent' }}
+                                onPress={() => {
+                                    this.popupSearching.show();
+                                }}
+                            >
+                                <Ionicons style={{ fontSize: 40, color: '#a4d227', textAlign: 'right' }} name='ios-search-outline' />
+                            </TouchableOpacity>
+                            <TouchableOpacity
+                                style={{ height: 40, position: 'absolute', top: height * 0.3, zIndex: 10, right: 15, backgroundColor: 'transparent' }}
                                 onPress={() => {
                                     this._getLocationAsync();
                                     //this.map.animateToCoordinate(currentMaker, 1000);
                                 }}
                             >
-                                <Ionicons style={{ fontSize: 37, color: '#73aa2a', textAlign: 'right' }} name='ios-locate-outline' />
+                                <Ionicons style={{ fontSize: 37, color: '#a4d227', textAlign: 'right' }} name='ios-locate-outline' />
                             </TouchableOpacity>
                             <MapView
                                 ref={ref => { this.map = ref; }}
@@ -624,16 +638,16 @@ export default class SearchScreen extends React.Component {
                     >
                         <View style={{ flex: 1, marginTop: 30, padding: 10, }}>
                             <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-                                <View style={{ flexDirection: 'row', marginBottom: 30, marginLeft: 70, }}>
+                                <View style={{ flexDirection: 'row', marginBottom: 30, marginLeft: 30, }}>
                                     <FormLabel>Loại bất động sản:</FormLabel>
                                     <ModalDropdown
                                         ref={el => this._dropdownFilter = el}
-                                        style={{ paddingTop: 15, marginLeft: 15, width: 150 }}
+                                        style={{ paddingTop: 15, width: 100 }}
                                         dropdownStyle={{ padding: 10, }}
                                         textStyle={{}}
-                                        options={['Nhà trọ', 'Khách sạn', 'Biệt thự', 'Vila', 'Đất thổ cư']}
+                                        options={['Tất cả', 'Nhà trọ', 'Khách sạn', 'Biệt thự', 'Vila', 'Đất thổ cư']}
                                         defaultIndex={0}
-                                        defaultValue='Nhà trọ'
+                                        defaultValue='Tất cả'
                                         onSelect={(idx, value) => this._dropdownFilter_onSelect(idx, value)}
                                     >
                                     </ModalDropdown>
@@ -684,18 +698,12 @@ export default class SearchScreen extends React.Component {
 
                             <View style={{ marginTop: 140, }}>
                                 <View style={{ height: 100, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', paddingBottom: 50, }}>
-                                    <Button
-                                        buttonStyle={{ backgroundColor: '#9B9D9D', padding: 15, borderRadius: 10 }}
-                                        icon={{ name: 'ios-backspace', type: 'ionicon' }}
-                                        onPress={() => {
-                                            this.setState({ modalSearchFilterVisible: false })
-                                        }}
-                                        title='Hủy' />
+
                                     {this.state.txtFilterResult
                                         ?
                                         <Button
-                                            buttonStyle={{ backgroundColor: '#73aa2a', padding: 15, borderRadius: 10 }}
-                                            icon={{ name: 'md-checkmark', type: 'ionicon' }}
+                                            buttonStyle={{ backgroundColor: '#9B9D9D', padding: 15, borderRadius: 10 }}
+                                            icon={{ name: 'ios-backspace', type: 'ionicon' }}
                                             title='Xóa lọc'
                                             onPress={() => {
                                                 this.setState({
@@ -709,27 +717,127 @@ export default class SearchScreen extends React.Component {
                                         />
                                         :
                                         <Button
-                                            buttonStyle={{ backgroundColor: '#73aa2a', padding: 15, borderRadius: 10 }}
-                                            icon={{ name: 'md-checkmark', type: 'ionicon' }}
-                                            title='Lọc'
+                                            buttonStyle={{ backgroundColor: '#9B9D9D', padding: 15, borderRadius: 10 }}
+                                            icon={{ name: 'ios-backspace', type: 'ionicon' }}
                                             onPress={() => {
-                                                this.setState({
-                                                    txtFilterResult: this.state.selectedBDS + ', ' + this.state.multiSliderPriceValue[0] + '-' + this.state.multiSliderPriceValue[1] + ' triệu đồng, '
-                                                    + this.state.multiSliderAreaValue[0] + '-' + this.state.multiSliderAreaValue[1] + ' mét vuông',
-
-                                                })
-
                                                 this.setState({ modalSearchFilterVisible: false })
                                             }}
-                                        />
+                                            title='Hủy' />
                                     }
+                                    <Button
+                                        buttonStyle={{ backgroundColor: '#73aa2a', padding: 15, borderRadius: 10 }}
+                                        icon={{ name: 'md-checkmark', type: 'ionicon' }}
+                                        title='Lọc'
+                                        onPress={() => {
+                                            this.setState({
+                                                txtFilterResult: this.state.selectedBDS + ', ' + this.state.multiSliderPriceValue[0] + '-' + this.state.multiSliderPriceValue[1] + ' triệu đồng, '
+                                                + this.state.multiSliderAreaValue[0] + '-' + this.state.multiSliderAreaValue[1] + ' mét vuông',
+
+                                            })
+
+                                            this.setState({ modalSearchFilterVisible: false })
+                                        }}
+                                    />
+
 
                                 </View>
                             </View>
 
                         </View>
                     </Modal>
+
+
                 </ScrollView>
+
+                {/* Popup Searching */}
+                <PopupDialog
+                    ref={(popupSearching) => { this.popupSearching = popupSearching; }}
+                    dialogAnimation={new ScaleAnimation()}
+                    dialogStyle={{ marginBottom: 100, width: width * 0.9, height: height * 0.6, justifyContent: 'center', padding: 20 }}
+                >
+                    <GooglePlacesAutocomplete
+                        placeholder="Vui lòng nhập địa chỉ"
+                        minLength={1} // minimum length of text to search
+                        autoFocus={false}
+                        returnKeyType={'search'} // Can be left out for default return key https://facebook.github.io/react-native/docs/textinput.html#returnkeytype
+                        listViewDisplayed="auto" // true/false/undefined
+                        fetchDetails={true}
+                        renderDescription={row => row.description} // custom description render
+                        onPress={(data, details = null) => {
+                            // 'details' is provided when fetchDetails = true
+                            {/* console.log(data); */ }
+                            //console.log(details.geometry.location);
+
+                            currentMaker = {
+                                latitude: details.geometry.location.lat,
+                                longitude: details.geometry.location.lng,
+                            }
+                            this.map.animateToCoordinate(currentMaker, 1000)
+                            this.popupSearching.dismiss();
+                            {/* 
+                            let currentMaker = {
+                                latitude: details.geometry.location.lat,
+                                longitude: details.geometry.location.lng,
+                                latitudeDelta: LATITUDE_DELTA,
+                                longitudeDelta: LONGITUDE_DELTA,
+                            }
+                            this.map.animateToRegion(currentMaker, 1000); */}
+
+                            {/* this.setState({
+                    postRoomAddressMaker: {
+                      latitude: details.geometry.location.lat,
+                      longitude: details.geometry.location.lng,
+                    }
+                  })
+                  this.map.animateToCoordinate(this.state.postRoomAddressMaker, 1000); */}
+
+                        }}
+                        getDefaultValue={() => {
+                            return ''; // text input default value
+                        }}
+                        query={{
+                            // available options: https://developers.google.com/places/web-service/autocomplete
+                            key: 'AIzaSyC2QhtACfVZ2cr9HVvxQuzxd3HT36NNK3Q',
+                            language: 'vi', // language of the results
+                            //types: '(cities)', // default: 'geocode'
+                        }}
+                        styles={{
+                            description: {
+                                fontWeight: 'bold',
+                            },
+                            predefinedPlacesDescription: {
+                                color: '#1faadb',
+                            },
+                            textInputContainer: {
+                                backgroundColor: '#fff',
+                                height: 44,
+                                //borderTopColor: '#7e7e7e',
+                                borderBottomColor: '#b5b5b5',
+                                borderTopWidth: 0,
+                                borderBottomWidth: 0.5,
+                                flexDirection: 'row',
+                            },
+                        }}
+                        currentLocation={false} // Will add a 'Current location' button at the top of the predefined places list
+                        currentLocationLabel="Current location"
+                        nearbyPlacesAPI="GooglePlacesSearch" // Which API to use: GoogleReverseGeocoding or GooglePlacesSearch
+                        GoogleReverseGeocodingQuery={{
+                            // available options for GoogleReverseGeocoding API : https://developers.google.com/maps/documentation/geocoding/intro
+                        }}
+                        GooglePlacesSearchQuery={{
+                            // available options for GooglePlacesSearch API : https://developers.google.com/places/web-service/search
+                            rankby: 'distance',
+                            types: 'food',
+                        }}
+                        filterReverseGeocodingByTypes={[
+                            'locality',
+                            'administrative_area_level_3',
+                        ]} // filter the reverse geocoding results by types - ['locality', 'administrative_area_level_3'] if you want to display only cities
+                        //predefinedPlaces={[homePlace, workPlace]}
+                        debounce={200}
+                    />
+
+                </PopupDialog>
             </View >
         );
     }
