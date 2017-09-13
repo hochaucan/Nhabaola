@@ -202,19 +202,19 @@ function randomColor() {
     return `#${Math.floor(Math.random() * 16777215).toString(16)}`;
 }
 
-function createMarker(modifier = 1) {
+function createMarker(modifier = 1, lat = LATITUDE, long = LONGITUDE) {
     return {
-        latitude: LATITUDE - (SPACE * modifier),
-        longitude: LONGITUDE - (SPACE * modifier),
+        latitude: lat - (SPACE * modifier),
+        longitude: long - (SPACE * modifier),
     };
 }
 
 const MARKERS = [
-    createMarker(),
-    createMarker(2),
-    createMarker(3),
-    createMarker(4),
-    createMarker(5),
+    // createMarker(),
+    // createMarker(2, LATITUDE, LONGITUDE),
+    // createMarker(3),
+    // createMarker(4),
+    // createMarker(5),
 ];
 
 const DEFAULT_PADDING = { top: 40, right: 40, bottom: 40, left: 40 };
@@ -400,6 +400,15 @@ export default class SearchScreen extends React.Component {
                 latitude: this.state.location.coords.latitude,
                 longitude: this.state.location.coords.longitude
             }
+
+            MARKERS = [
+                createMarker(-4, this.state.location.coords.latitude, this.state.location.coords.longitude),
+                //currentMaker,
+                createMarker(1, this.state.location.coords.latitude, this.state.location.coords.longitude),
+                createMarker(2, this.state.location.coords.latitude, this.state.location.coords.longitude),
+                createMarker(5, this.state.location.coords.latitude, this.state.location.coords.longitude),
+
+            ]
 
             // this.setState({
             //     findingHouseMakers: [
