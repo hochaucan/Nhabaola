@@ -504,6 +504,18 @@ export default class SearchScreen extends React.Component {
                                     />
                                 </MapView.Marker>
 
+                                {this.state.searchingMaker
+                                    ?
+                                    <MapView.Marker
+                                        coordinate={this.state.searchingMaker}
+                                        title='Im here'
+                                        description='Home'
+                                    >
+
+                                    </MapView.Marker>
+                                    : null}
+
+
                                 {/* <MapView.Circle
                                 center={currentMaker}
                                 fillColor='#73aa2a'
@@ -788,11 +800,18 @@ export default class SearchScreen extends React.Component {
                             {/* console.log(data); */ }
                             //console.log(details.geometry.location);
 
-                            currentMaker = {
+                            this.setState({
+                                searchingMaker: {
+                                    latitude: details.geometry.location.lat,
+                                    longitude: details.geometry.location.lng,
+                                }
+                            })
+
+                            {/* currentMaker = {
                                 latitude: details.geometry.location.lat,
                                 longitude: details.geometry.location.lng,
-                            }
-                            this.map.animateToCoordinate(currentMaker, 1000)
+                            } */}
+                            this.map.animateToCoordinate(this.state.searchingMaker, 1000)
                             this.popupSearching.dismiss();
                             {/* 
                             let currentMaker = {
