@@ -10,12 +10,16 @@ import {
     View,
     TextInput,
     Button,
-
+    Share,
 } from 'react-native';
 import { ExpoLinksView } from '@expo/samples';
 import { Constants, MapView } from 'expo';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { Ionicons } from '@expo/vector-icons';
+import Swiper from 'react-native-swiper';
+import Communications from 'react-native-communications';
+import StarRating from 'react-native-star-rating';
+import PopupDialog, { SlideAnimation, ScaleAnimation, DialogTitle, DialogButton } from 'react-native-popup-dialog';
 
 var { height, width } = Dimensions.get('window');
 export default class RoomDetailScreen extends React.Component {
@@ -43,127 +47,227 @@ export default class RoomDetailScreen extends React.Component {
 
     };
 
+
+    constructor(props) {
+        super(props);
+        this.state = {
+            starCount: 3.5,
+        }
+    }
+
     _handleMapRegionChange = mapRegion => {
         this.setState({ mapRegion });
     };
 
+    _starRatingPress(rating) {
+        this.popupRating.dismiss();
+        this.setState({
+            starCount: rating
+        });
+
+        // console.log(rating);
+    }
+
     render() {
         const { picture, name, email, phone, login, dob, location } = this.props.navigation.state.params;
         return (
+            <View style={{ flex: 1 }}>
 
-            <ScrollView style={styles.container}>
 
-                <View style={styles.card}>
-                    <View style={styles.cardHeader}>
+                <View style={{
+                    backgroundColor: '#fff',
+                    flexDirection: 'row',
+                    paddingTop: 20,
+                    paddingLeft: 5,
+                    paddingBottom: 20,
+                    justifyContent: 'center',
+                }}>
+
+                    <TouchableOpacity
+                        style={{
+                            marginRight: 8,
+                            justifyContent: 'center',
+                            padding: 8,
+                        }}
+                        onPress={() => this.props.navigation.goBack()}>
+                        <Ionicons style={{
+                            fontSize: 28,
+                            color: '#73aa2a',
+                        }}
+                            name='md-arrow-back'
+                        ></Ionicons>
+                    </TouchableOpacity>
+
+                    <View style={styles.cardAvatarBox}>
                         <TouchableOpacity
-                            style={styles.backScreenBox}
-                            onPress={() => this.props.navigation.goBack()}>
-                            <Ionicons style={styles.backScreenIcon} name='md-arrow-back'></Ionicons>
+                            onPress={() => {
+                                //alert("item.title")
+                                {/* this.props.navigation.navigate('ProfileScreen'); */ }
+                            }}
+                        >
+                            <Image
+                                style={styles.cardAvatarImage}
+                                source={{ uri: picture.large }} />
                         </TouchableOpacity>
+                    </View>
+                    <View style={styles.cardAvatarTextBox}>
+                        <Text style={styles.cardAvatarName}>{name.first} {name.last}</Text>
+                        <TouchableOpacity style={styles.cardAvatarPhoneBox}
+                            onPress={() => { Communications.phonecall(phone, true) }}
+                        >
+                            <Ionicons style={styles.cardAvatarPhoneIcon} name='logo-whatsapp' />
+                            <Text style={styles.cardAvatarPhone}>: {phone}</Text>
+                        </TouchableOpacity>
+                    </View>
+                </View>
+                <ScrollView style={styles.container}>
 
+                    <View style={styles.card}>
 
-                        <View style={styles.cardAvatarBox}>
-                            <TouchableOpacity
-                                onPress={() => {
-                                    //alert("item.title")
-                                    {/* this.props.navigation.navigate('ProfileScreen'); */}
-                                }}
+                        <View
+                            style={styles.cardImageBox}
+                        >
+
+                            <Swiper
+                                horizontal={true}
+                                autoplay
+                                loop={false}
+                                dotColor='#9B9D9D'
+                                activeDotColor='#a4d227'
                             >
                                 <Image
-                                    style={styles.cardAvatarImage}
+                                    style={styles.cardImage}
                                     source={{ uri: picture.large }} />
-                            </TouchableOpacity>
+                                <Image
+                                    style={styles.cardImage}
+                                    source={{ uri: picture.large }} />
+
+                                <Image
+                                    style={styles.cardImage}
+                                    source={{ uri: picture.large }} />
+
+
+                            </Swiper>
+
+
+
+
                         </View>
-                        <View style={styles.cardAvatarTextBox}>
-                            <Text style={styles.cardAvatarName}>{name.first} {name.last}</Text>
-                            <TouchableOpacity style={styles.cardAvatarPhoneBox}>
-                                <Ionicons style={styles.cardAvatarPhoneIcon} name='logo-whatsapp' />
-                                <Text style={styles.cardAvatarPhone}>: {phone}</Text>
-                            </TouchableOpacity>
-                        </View>
-                    </View>
-                    <View
-                        style={styles.cardImageBox}
-                    >
-                        <Image
-                            style={styles.cardImage}
-                            source={{ uri: picture.large }} />
-                    </View>
-                    <View style={styles.cardDesBox}>
-                        <Text style={styles.cardDesText}>
-                            Although dimensions are available immediately, they may change (e.g due to device rotation) so any rendering logic or styles that depend on these constants should try to
+                        <View style={styles.cardDesBox}>
+                            <Text style={styles.cardDesText}>
+                                Although dimensions are available immediately, they may change (e.g due to device rotation) so any rendering logic or styles that depend on these constants should try to
                         </Text>
-                    </View>
-                    <View style={styles.cardBottom}>
-                        <View style={styles.cardBottomLeft}>
-                            <Text style={styles.cardBottomIconText}>5</Text>
-                            <TouchableOpacity>
-                                <Ionicons style={styles.cardBottomIcon} name='ios-star' />
-                            </TouchableOpacity>
-                            <Text style={styles.cardBottomIconText}>3</Text>
-                            <TouchableOpacity >
-                                <Ionicons style={styles.cardBottomIcon} name='ios-chatbubbles' />
-                            </TouchableOpacity>
                         </View>
-                        <View style={styles.cardBottomRight}>
-                            <TouchableOpacity >
-                                <Ionicons style={styles.cardBottomIcon} name='ios-thumbs-up' />
-                            </TouchableOpacity>
-                            <TouchableOpacity>
-                                <Ionicons style={styles.cardBottomIcon} name='md-share' />
-                            </TouchableOpacity>
-                            <TouchableOpacity>
-                                <Ionicons style={styles.cardBottomIconRightEnd} name='md-flag' />
-                            </TouchableOpacity>
+                        <View style={styles.cardBottom}>
+                            <View style={styles.cardBottomLeft}>
+                                <Text style={styles.cardBottomIconText}>5</Text>
+                                <TouchableOpacity
+                                    onPress={() => {
+                                        this.popupRating.show();
+                                    }}
+                                >
+                                    <Ionicons style={styles.cardBottomIcon} name='ios-star' />
+                                </TouchableOpacity>
+                                <Text style={styles.cardBottomIconText}>3</Text>
+                                <TouchableOpacity >
+                                    <Ionicons style={styles.cardBottomIcon} name='ios-chatbubbles' />
+                                </TouchableOpacity>
+                            </View>
+                            <View style={styles.cardBottomRight}>
+                                <TouchableOpacity >
+                                    <Ionicons style={styles.cardBottomIcon} name='ios-thumbs-up' />
+                                </TouchableOpacity>
+                                <TouchableOpacity
+                                    onPress={() => {
+                                        Share.share({
+                                            message: 'Ho Chau Can',
+                                            url: 'http://bam.tech',
+                                            title: 'Wow, did you see that?'
+                                        }, {
+                                                // Android only:
+                                                dialogTitle: 'Share BAM goodness',
+                                                // iOS only:
+                                                excludedActivityTypes: [
+                                                    'com.apple.UIKit.activity.PostToTwitter'
+                                                ]
+                                            })
+                                    }}
+                                >
+                                    <Ionicons style={styles.cardBottomIcon} name='md-share' />
+                                </TouchableOpacity>
+                                <TouchableOpacity>
+                                    <Ionicons style={styles.cardBottomIconRightEnd} name='md-flag' />
+                                </TouchableOpacity>
+                            </View>
                         </View>
+
                     </View>
 
-                </View>
 
 
-
-                {/* <View style={styles.cardMapBar}>
+                    {/* <View style={styles.cardMapBar}>
                     <Text style={styles.cardMapBarText} >Bản đồ</Text>
                 </View> */}
-                <View style={styles.cardMapViewBox}>
-                    <MapView
-                        style={styles.CardMapView}
-                        region={this.state.mapRegion}
-                        onRegionChange={this._handleMapRegionChange}
-                    />
-                </View>
+                    <View style={styles.cardMapViewBox}>
+                        <MapView
+                            style={styles.CardMapView}
+                            region={this.state.mapRegion}
+                            onRegionChange={this._handleMapRegionChange}
+                        />
+                    </View>
 
-                {/* <View style={styles.cardCommentBar}>
+                    {/* <View style={styles.cardCommentBar}>
                     <Text style={styles.cardCommentBarText}>Bình luận</Text>
                 </View> */}
-                <View style={styles.cardCommentBox}>
-                    <TextInput
-                        style={styles.cardCommentInput}
-                        placeholder='Bình luận'
-                        underlineColorAndroid='transparent'
-                    ></TextInput>
-                    <TouchableOpacity style={styles.cardCommentSubmit}
+                    <View style={{
+                        flex: 1,
+                        flexDirection: 'row',
+                        //height: 300,
+                        padding: 20,
+                        //marginTop: 5,
+                    }}>
+                        <TextInput
+                            style={{
+                                flex: 3,
+                                borderWidth: 1,
+                                borderColor: '#9B9D9D',
+                                height: 40,
+                                padding: 5,
+                                borderRadius: 5,
+                            }}
+                            placeholder='Bình luận'
+                            underlineColorAndroid='transparent'
+                        ></TextInput>
+                        <TouchableOpacity style={styles.cardCommentSubmit}
 
-                    >
-                        <Text style={styles.cardCommentSubmitText}>Gửi</Text>
-                    </TouchableOpacity>
-                </View>
-            </ScrollView>
+                        >
+                            <Text style={styles.cardCommentSubmitText}>Gửi</Text>
+                        </TouchableOpacity>
+                    </View>
+                </ScrollView>
+
+                {/* Popup Rating */}
+                <PopupDialog
+                    ref={(popupRating) => { this.popupRating = popupRating; }}
+                    dialogAnimation={new ScaleAnimation()}
+                    dialogStyle={{ marginBottom: 10, width: width * 0.9, height: 100, justifyContent: 'center', padding: 20 }}
+                >
+                    <StarRating
+                        disabled={false}
+                        maxStars={5}
+                        starColor={'#a4d227'}
+                        rating={this.state.starCount}
+                        selectedStar={(rating) => { this._starRatingPress(rating) }}
+                    />
+                </PopupDialog>
+            </View>
         );
     }
 }
 
 const styles = StyleSheet.create({
-    backScreenBox: {
-        justifyContent: 'center',
-        marginRight: 10,
-        marginLeft: -10,
-        width: 20,
-    },
-    backScreenIcon: {
-        fontSize: 28,
-        color: '#a4d227',
-    },
+
+
     cardCommentSubmitText: {
         color: '#fff',
     },
@@ -176,14 +280,7 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
     },
-    cardCommentInput: {
-        flex: 3,
-        borderWidth: 1,
-        borderColor: '#8B8E8E',
-        height: 40,
-        padding: 5,
-        borderRadius: 5,
-    },
+
     cardMapViewBox: {
         padding: 20,
     },
@@ -192,13 +289,7 @@ const styles = StyleSheet.create({
         height: 170,
         // marginTop: 20
     },
-    cardCommentBox: {
-        flex: 1,
-        flexDirection: 'row',
-        height: 300,
-        padding: 20,
-        marginTop: 5,
-    },
+
     cardMapBar: {
         height: 35,
         // backgroundColor: '#F2F2F2',
@@ -236,13 +327,7 @@ const styles = StyleSheet.create({
         padding: 0,
         flexDirection: 'column',
     },
-    cardHeader: {
-        // flex: 2,
-        flexDirection: 'row',
-        padding: 20,
-        // borderWidth: 1,
-        // borderColor: 'green',
-    },
+
     cardAvatarBox: {
         // flex: 1
     },

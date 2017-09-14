@@ -32,9 +32,8 @@ import MapView from 'react-native-maps';
 import Communications from 'react-native-communications';
 import ModalDropdown from 'react-native-modal-dropdown';
 import { TextInputMask } from 'react-native-masked-text';
-import {
-  GooglePlacesAutocomplete,
-} from 'react-native-google-places-autocomplete'; // 1.2.12
+import { GooglePlacesAutocomplete, } from 'react-native-google-places-autocomplete'; // 1.2.12
+import Swiper from 'react-native-swiper';
 
 const homePlace = {
   description: 'Home',

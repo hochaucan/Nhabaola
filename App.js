@@ -71,7 +71,7 @@ export default class App extends React.Component {
             />
           </View>
           <View style={styles.headerBar}>
-            <Text style={styles.headerBarTitle}> </Text>
+            {/* <Text style={styles.headerBarTitle}>{GLOBAL.BASE_URL} </Text> */}
           </View>
           <RootNavigation />
 

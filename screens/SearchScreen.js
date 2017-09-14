@@ -31,7 +31,7 @@ var { height, width } = Dimensions.get('window');
 const ASPECT_RATIO = width / height;
 const LATITUDE = 37.78825;
 const LONGITUDE = -122.4324;
-const LATITUDE_DELTA = 0.05;
+const LATITUDE_DELTA = 0.02;
 const LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO;
 const SPACE = 0.01;
 let id = 0;
@@ -432,22 +432,32 @@ export default class SearchScreen extends React.Component {
                     {this.state.location ?
                         <View>
                             <TouchableOpacity
-                                style={{ height: 35, position: 'absolute', top: height * 0.22, zIndex: 10, right: 15, backgroundColor: 'transparent' }}
+                                style={{ height: 40, position: 'absolute', top: height * 0.26, zIndex: 10, right: 15, backgroundColor: 'transparent' }}
                                 onPress={() => {
                                     this.popupSearching.show();
                                 }}
                             >
-                                <Ionicons style={{ fontSize: 40, color: '#a4d227', textAlign: 'right' }} name='ios-search-outline' />
+                                <View style={{
+                                    backgroundColor: '#a4d227', padding: 6, borderRadius: 10, width: 32,
+                                    height: 32, justifyContent: 'center',
+                                    alignItems: 'center', shadowColor: "#000000",
+                                }}>
+                                    <Ionicons style={{ fontSize: 25, color: '#fff', textAlign: 'center' }} name='ios-search-outline' />
+                                </View>
                             </TouchableOpacity>
                             <TouchableOpacity
-                                style={{ height: 40, position: 'absolute', top: height * 0.3, zIndex: 10, right: 15, backgroundColor: 'transparent' }}
+                                style={{ height: 40, position: 'absolute', top: height * 0.33, zIndex: 10, right: 15, backgroundColor: 'transparent' }}
                                 onPress={() => {
                                     this._getLocationAsync();
                                     //this.map.animateToCoordinate(currentMaker, 1000);
                                 }}
                             >
-                                <Ionicons style={{ fontSize: 37, color: '#a4d227', textAlign: 'right' }} name='ios-locate-outline' />
+                                <View style={{ backgroundColor: '#a4d227', padding: 6, borderRadius: 10, width: 32, height: 32, justifyContent: 'center', alignItems: 'center' }}>
+                                    <Ionicons style={{ fontSize: 25, color: '#fff', textAlign: 'center' }} name='ios-locate-outline' />
+                                </View>
                             </TouchableOpacity>
+
+
                             <MapView
                                 ref={ref => { this.map = ref; }}
 
@@ -460,6 +470,7 @@ export default class SearchScreen extends React.Component {
                                 showsUserLocation={false}
                                 showsMyLocationButton={false}
                                 followsUserLocation={false}
+                                loadingEnabled={true}
                                 onPress={(e) => this.onMapPress(e)}
                             /* customMapStyle={customStyle} */
                             >
@@ -485,7 +496,7 @@ export default class SearchScreen extends React.Component {
                                 >
                                     <Image
                                         source={require('../images/nbl-here-icon.png')}
-                                        style={{ height: height * 0.08, width: width * 0.08 }}
+                                        style={{ height: height * 0.07, width: width * 0.07 }}
                                         onLayout={() => {
                                             this.setState({ initialRenderCurrentMaker: false })
                                         }}
