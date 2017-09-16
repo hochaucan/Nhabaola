@@ -13,7 +13,7 @@ import {
     Modal,
     Slider,
     SliderIOS,
-
+    Alert,
 } from 'react-native';
 import { ExpoLinksView } from '@expo/samples';
 import { Constants, Location, Permissions } from 'expo';
@@ -238,6 +238,7 @@ export default class SearchScreen extends React.Component {
             markers: [],
             findingHouseMakers: [],
             initialRenderCurrentMaker: true,
+            currentMaker: null,
 
             // Searching Filter
             multiSliderPriceValue: [0, 10],
@@ -247,8 +248,6 @@ export default class SearchScreen extends React.Component {
 
             // Searhing address
             searchingMaker: null,
-
-            watchLocation: null,
         }
     }
 
@@ -357,21 +356,39 @@ export default class SearchScreen extends React.Component {
             });
         }
 
-        // let watchLocationTmp = await Location.watchPositionAsync({})
-        // this.setState({
-        //     watchLocation: JSON.stringify(watchLocationTmp),
-        // })
+        let provider = await Location.getProviderStatusAsync()
+        // console.log(provider.locationServicesEnabled)
 
-        let location = await Location.getCurrentPositionAsync({});
-        this.setState({ location });
+        if (provider.locationServicesEnabled === false) {
+            Alert.alert(
+                'Thông báo',
+                'Bạn vui lòng kích hoạt Location Service',
+            );
 
-        let region = {
-            latitude: location.coords.latitude,
-            longitude: location.coords.longitude,
-            latitudeDelta: LATITUDE_DELTA,
-            longitudeDelta: LONGITUDE_DELTA
+            return;
         }
-        this.setState({ mapRegion: region });
+
+        let currentLocation = await Location.getCurrentPositionAsync({});
+        this.setState({
+            location: {
+                latitude: currentLocation.coords.latitude,
+                longitude: currentLocation.coords.longitude,
+                latitudeDelta: LATITUDE_DELTA,
+                longitudeDelta: LONGITUDE_DELTA
+            },
+            currentMaker: {
+                latitude: currentLocation.coords.latitude,
+                longitude: currentLocation.coords.longitude,
+            },
+        });
+
+        // let region = {
+        //     latitude: location.coords.latitude,
+        //     longitude: location.coords.longitude,
+        //     latitudeDelta: LATITUDE_DELTA,
+        //     longitudeDelta: LONGITUDE_DELTA
+        // }
+        // this.setState({ mapRegion: region });
 
     };
 
@@ -390,35 +407,25 @@ export default class SearchScreen extends React.Component {
     }
 
     render() {
-        let text = 'Waiting..';
-        let currentMaker = null;
+        // let text = 'Waiting..';
+        // let currentMaker = null;
         if (this.state.errorMessage) {
             text = this.state.errorMessage;
         } else if (this.state.location) {
-            text = JSON.stringify(this.state.location.coords);
-            currentMaker = {
-                latitude: this.state.location.coords.latitude,
-                longitude: this.state.location.coords.longitude
-            }
+            // text = JSON.stringify(this.state.location.coords);
+            // currentMaker = {
+            //     latitude: this.state.location.latitude,
+            //     longitude: this.state.location.longitude
+            // }
 
             MARKERS = [
-                createMarker(-4, this.state.location.coords.latitude, this.state.location.coords.longitude),
+                createMarker(-4, this.state.location.latitude, this.state.location.longitude),
                 //currentMaker,
-                createMarker(1, this.state.location.coords.latitude, this.state.location.coords.longitude),
-                createMarker(2, this.state.location.coords.latitude, this.state.location.coords.longitude),
-                createMarker(5, this.state.location.coords.latitude, this.state.location.coords.longitude),
+                createMarker(1, this.state.location.latitude, this.state.location.longitude),
+                createMarker(2, this.state.location.latitude, this.state.location.longitude),
+                createMarker(5, this.state.location.latitude, this.state.location.longitude),
 
             ]
-
-            // this.setState({
-            //     findingHouseMakers: [
-            //         currentMaker,
-            //         this._createTempMarker(1, this.state.location.coords.latitude, this.state.location.coords.longitude),
-            //         this._createTempMarker(2, this.state.location.coords.latitude, this.state.location.coords.longitude),
-            //         this._createTempMarker(3, this.state.location.coords.latitude, this.state.location.coords.longitude),
-
-            //     ]
-            // })
         }
 
         return (
@@ -426,73 +433,60 @@ export default class SearchScreen extends React.Component {
                 <View style={{ height: height * 0.4, }}>
 
                     {/* <View><Text>{text}</Text></View> */}
-                    {/* <View><Text>{this.state.watchLocation}</Text></View> */}
 
 
-                    {this.state.location ?
-                        <View>
-                            <TouchableOpacity
-                                style={{ height: 40, position: 'absolute', top: height * 0.26, zIndex: 10, right: 15, backgroundColor: 'transparent' }}
-                                onPress={() => {
-                                    this.popupSearching.show();
-                                }}
-                            >
-                                <View style={{
-                                    backgroundColor: '#a4d227', padding: 6, borderRadius: 10, width: 32,
-                                    height: 32, justifyContent: 'center',
-                                    alignItems: 'center', shadowColor: "#000000",
-                                }}>
-                                    <Ionicons style={{ fontSize: 25, color: '#fff', textAlign: 'center' }} name='ios-search-outline' />
-                                </View>
-                            </TouchableOpacity>
-                            <TouchableOpacity
-                                style={{ height: 40, position: 'absolute', top: height * 0.33, zIndex: 10, right: 15, backgroundColor: 'transparent' }}
-                                onPress={() => {
-                                    this._getLocationAsync();
-                                    //this.map.animateToCoordinate(currentMaker, 1000);
-                                }}
-                            >
-                                <View style={{ backgroundColor: '#a4d227', padding: 6, borderRadius: 10, width: 32, height: 32, justifyContent: 'center', alignItems: 'center' }}>
-                                    <Ionicons style={{ fontSize: 25, color: '#fff', textAlign: 'center' }} name='ios-locate-outline' />
-                                </View>
-                            </TouchableOpacity>
+                    <View>
+                        <TouchableOpacity
+                            style={{ height: 40, position: 'absolute', top: height * 0.26, zIndex: 10, right: 15, backgroundColor: 'transparent' }}
+                            onPress={() => {
+                                this.popupSearching.show();
+                            }}
+                        >
+                            <View style={{
+                                backgroundColor: '#a4d227', padding: 6, borderRadius: 10, width: 32,
+                                height: 32, justifyContent: 'center',
+                                alignItems: 'center', shadowColor: "#000000",
+                            }}>
+                                <Ionicons style={{ fontSize: 25, color: '#fff', textAlign: 'center' }} name='ios-search-outline' />
+                            </View>
+                        </TouchableOpacity>
+                        <TouchableOpacity
+                            style={{ height: 40, position: 'absolute', top: height * 0.33, zIndex: 10, right: 15, backgroundColor: 'transparent' }}
+                            onPress={() => {
+                                this._getLocationAsync();
+                                //this.map.animateToCoordinate(currentMaker, 1000);
+                            }}
+                        >
+                            <View style={{ backgroundColor: '#a4d227', padding: 6, borderRadius: 10, width: 32, height: 32, justifyContent: 'center', alignItems: 'center' }}>
+                                <Ionicons style={{ fontSize: 25, color: '#fff', textAlign: 'center' }} name='ios-locate-outline' />
+                            </View>
+                        </TouchableOpacity>
 
 
-                            <MapView
-                                ref={ref => { this.map = ref; }}
+                        <MapView
+                            ref={ref => { this.map = ref; }}
 
-                                /* style={{ paddingBottom: this.state.hackHeight, alignSelf: 'stretch', }} */
-                                style={{ alignSelf: 'stretch', height: height * 0.4, }}
+                            /* style={{ paddingBottom: this.state.hackHeight, alignSelf: 'stretch', }} */
+                            style={{ alignSelf: 'stretch', height: height * 0.4, }}
 
-                                region={this.state.mapRegion}
-                                onRegionChange={this._handleMapRegionChange}
-                                provider='google'
-                                showsUserLocation={false}
-                                showsMyLocationButton={false}
-                                followsUserLocation={false}
-                                loadingEnabled={true}
-                                onPress={(e) => this.onMapPress(e)}
-                            /* customMapStyle={customStyle} */
-                            >
+                            region={this.state.location ? this.state.location : this.state.mapRegion}
+                            /* onRegionChange={this._handleMapRegionChange} */
+                            provider='google'
+                            showsUserLocation={false}
+                            showsMyLocationButton={false}
+                            followsUserLocation={false}
+                            loadingEnabled={true}
+                            onPress={(e) => this.onMapPress(e)}
+                        /* customMapStyle={customStyle} */
+                        >
 
-                                {/* <MapView.Marker
-                        coordinate={{
-                            latitude: (this.state.lastLat + 0.00050) || -36.82339,
-                            longitude: (this.state.lastLong + 0.00050) || -73.03569,
-                        }}>
-                        <View>
-                            <Text style={{ color: '#000' }}>
-                                {this.state.lastLong} / {this.state.lastLat}
-                            </Text>
-                        </View>
-                    </MapView.Marker> */}
-
+                            {this.state.location
+                                ?
                                 <MapView.Marker
-                                    coordinate={currentMaker}
-                                    title='Im here'
-                                    description='Home'
+                                    coordinate={this.state.currentMaker}
+                                    title='Vị trí của bạn'
+                                /* description='Home' */
                                 /* image={require('../images/nbl-here-icon.png')} */
-
                                 >
                                     <Image
                                         source={require('../images/nbl-here-icon.png')}
@@ -503,29 +497,28 @@ export default class SearchScreen extends React.Component {
                                         key={`${this.state.initialRenderCurrentMaker}`}
                                     />
                                 </MapView.Marker>
+                                :
+                                null}
 
-                                {this.state.searchingMaker
-                                    ?
-                                    <MapView.Marker
-                                        coordinate={this.state.searchingMaker}
-                                        title='Im here'
-                                        description='Home'
-                                    >
+                            {this.state.searchingMaker
+                                ?
+                                <MapView.Marker
+                                    coordinate={this.state.searchingMaker}
+                                >
+                                    <Image
+                                        source={require('../images/nbl-here-icon.png')}
+                                        style={{ height: height * 0.07, width: width * 0.07 }}
+                                        onLayout={() => {
+                                            this.setState({ initialRenderCurrentMaker: false })
+                                        }}
+                                        key={`${this.state.initialRenderCurrentMaker}`}
+                                    />
+                                </MapView.Marker>
+                                : null}
 
-                                    </MapView.Marker>
-                                    : null}
 
-
-                                {/* <MapView.Circle
-                                center={currentMaker}
-                                fillColor='#73aa2a'
-                                radius={this.state.location.coords.accuracy}
-                                strokeColor='#a4d227'
-                                strokeWidth={2}
-                            /> */}
-
-                                {/* Tap to show maker on map */}
-                                {/* {this.state.markers.map(marker => (
+                            {/* Tap to show maker on map */}
+                            {/* {this.state.markers.map(marker => (
                                 <MapView.Marker
                                     key={marker.key}
                                     coordinate={marker.coordinate}
@@ -533,37 +526,27 @@ export default class SearchScreen extends React.Component {
                                 />
                             ))} */}
 
-                                {/* Fix all makers on Map */}
-                                {MARKERS.map((marker, i) => (
-                                    <MapView.Marker
-                                        key={i}
-                                        coordinate={marker}
-                                    /* image={require('../images/nbl-house_icon.png')} */
-                                    >
-                                        <Image
-                                            source={require('../images/nbl-house_icon3.png')}
-                                            style={{ height: height * 0.05, width: width * 0.08 }}
-                                            onLayout={() => {
-                                                this.setState({ initialRenderCurrentMaker: false })
-                                            }}
-                                            key={`${this.state.initialRenderCurrentMaker}`}
-                                        />
-                                    </MapView.Marker>
-                                ))}
-
-                                {/* Fix all finding house makers on Map */}
-                                {/* {findingHouseMakers.map((marker, i) => (
+                            {/* Fix all makers on Map */}
+                            {MARKERS.map((marker, i) => (
                                 <MapView.Marker
                                     key={i}
                                     coordinate={marker}
-                                    image={require('../images/nbl-house_icon.png')}
-                                />
-                            ))} */}
+                                /* image={require('../images/nbl-house_icon.png')} */
+                                >
+                                    <Image
+                                        source={require('../images/nbl-house_icon3.png')}
+                                        style={{ height: height * 0.05, width: width * 0.08 }}
+                                        onLayout={() => {
+                                            this.setState({ initialRenderCurrentMaker: false })
+                                        }}
+                                        key={`${this.state.initialRenderCurrentMaker}`}
+                                    />
+                                </MapView.Marker>
+                            ))}
 
-                            </MapView>
-                        </View>
-                        : null
-                    }
+                        </MapView>
+                    </View>
+
 
 
                 </View>

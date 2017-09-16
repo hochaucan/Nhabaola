@@ -9,6 +9,8 @@ import {
   Animated,
   Dimensions,
   Easing,
+  NetInfo,
+  Alert,
 } from 'react-native';
 import { AppLoading, Asset, Font } from 'expo';
 import { Ionicons } from '@expo/vector-icons';
@@ -19,6 +21,22 @@ import FeedStack from './components/examples/NavigatorDemo'
 var GLOBAL = require('./components/Global');
 var { height, width } = Dimensions.get('window');
 
+
+function handleFirstConnectivityChange(reach) {
+  // console.log('First change: ' + reach);
+
+  if (reach === 'none' || reach === 'NONE') {
+    Alert.alert(
+      'Thông báo',
+      'Không thể kết nối internet!',
+    );
+  }
+  NetInfo.removeEventListener(
+    'change',
+    handleFirstConnectivityChange
+  );
+}
+
 export default class App extends React.Component {
 
   state = {
@@ -27,7 +45,21 @@ export default class App extends React.Component {
 
   };
 
+
+
+
+
   componentWillMount() {
+    // NetInfo.fetch().then((reach) => {
+    //   console.log('Initial: ' + reach);
+    // });
+    NetInfo.addEventListener(
+      'change',
+      handleFirstConnectivityChange
+    );
+
+
+
     this._loadAssetsAsync();
 
     Animated.timing(                  // Animate over time
@@ -38,6 +70,10 @@ export default class App extends React.Component {
         easing: Easing.bounce,         // Make it take a while
       }
     ).start();
+  }
+
+  componentDidMount() {
+
   }
 
   render() {
