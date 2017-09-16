@@ -396,7 +396,7 @@ export default class ProfileScreen extends React.Component {
                     visible={this.state.modalHelp}
                     onRequestClose={() => { alert("Modal has been closed.") }}
                 >
-                    <View style={{ flexDirection: 'row', padding: 20, marginTop: 20, }}>
+                    <View style={{ flexDirection: 'row', padding: 20, marginTop: Platform.OS === 'ios' ? 20 : 0, }}>
                         <TouchableOpacity
                             style={{}}
                             onPress={() => this.setState({ modalHelp: false })}>
