@@ -376,19 +376,17 @@ export default class SearchScreen extends React.Component {
                 latitudeDelta: LATITUDE_DELTA,
                 longitudeDelta: LONGITUDE_DELTA
             },
+            mapRegion: {
+                latitude: currentLocation.coords.latitude,
+                longitude: currentLocation.coords.longitude,
+                latitudeDelta: LATITUDE_DELTA,
+                longitudeDelta: LONGITUDE_DELTA
+            },
             currentMaker: {
                 latitude: currentLocation.coords.latitude,
                 longitude: currentLocation.coords.longitude,
             },
         });
-
-        // let region = {
-        //     latitude: location.coords.latitude,
-        //     longitude: location.coords.longitude,
-        //     latitudeDelta: LATITUDE_DELTA,
-        //     longitudeDelta: LONGITUDE_DELTA
-        // }
-        // this.setState({ mapRegion: region });
 
     };
 
@@ -436,89 +434,92 @@ export default class SearchScreen extends React.Component {
 
 
                     <View>
+                        {/* Search Address */}
                         <TouchableOpacity
-                            style={{ height: 40, position: 'absolute', top: height * 0.26, zIndex: 10, right: 15, backgroundColor: 'transparent' }}
+                            style={{ height: 40, position: 'absolute', top: height * 0.20, zIndex: 10, right: 15, backgroundColor: 'transparent' }}
                             onPress={() => {
                                 this.popupSearching.show();
                             }}
                         >
                             <View style={{
-                                backgroundColor: '#a4d227', padding: 6, borderRadius: 10, width: 32,
+                                backgroundColor: '#a4d227', padding: 5, borderRadius: 10, width: 32,
                                 height: 32, justifyContent: 'center',
                                 alignItems: 'center', shadowColor: "#000000",
                             }}>
                                 <Ionicons style={{ fontSize: 25, color: '#fff', textAlign: 'center' }} name='ios-search-outline' />
                             </View>
                         </TouchableOpacity>
+                        {/* Get current location */}
                         <TouchableOpacity
-                            style={{ height: 40, position: 'absolute', top: height * 0.33, zIndex: 10, right: 15, backgroundColor: 'transparent' }}
+                            style={{ height: 40, position: 'absolute', top: height * 0.28, zIndex: 10, right: 15, backgroundColor: 'transparent' }}
                             onPress={() => {
                                 this._getLocationAsync();
                                 //this.map.animateToCoordinate(currentMaker, 1000);
                             }}
                         >
-                            <View style={{ backgroundColor: '#a4d227', padding: 6, borderRadius: 10, width: 32, height: 32, justifyContent: 'center', alignItems: 'center' }}>
-                                <Ionicons style={{ fontSize: 25, color: '#fff', textAlign: 'center' }} name='ios-locate-outline' />
+                            <View style={{ backgroundColor: '#a4d227', padding: 5, borderRadius: 10, width: 32, height: 32, justifyContent: 'center', alignItems: 'center' }}>
+                                <Ionicons style={{ fontSize: 25, color: '#fff', textAlign: 'center', }} name='ios-locate-outline' />
                             </View>
                         </TouchableOpacity>
 
+                        {this.state.location
+                            ?
+                            <MapView
+                                ref={ref => { this.map = ref; }}
 
-                        <MapView
-                            ref={ref => { this.map = ref; }}
+                                /* style={{ paddingBottom: this.state.hackHeight, alignSelf: 'stretch', }} */
+                                style={{ alignSelf: 'stretch', height: height * 0.4, }}
+                                //region={this.state.location ? this.state.location : this.state.mapRegion}
+                                region={this.state.mapRegion}
+                                onRegionChange={this._handleMapRegionChange}
+                                provider='google'
+                                showsUserLocation={false}
+                                showsMyLocationButton={false}
+                                followsUserLocation={false}
+                                loadingEnabled={true}
+                            // onPress={(e) => this.onMapPress(e)}
+                            /* customMapStyle={customStyle} */
+                            >
 
-                            /* style={{ paddingBottom: this.state.hackHeight, alignSelf: 'stretch', }} */
-                            style={{ alignSelf: 'stretch', height: height * 0.4, }}
+                                {this.state.location
+                                    ?
+                                    <MapView.Marker
+                                        coordinate={this.state.currentMaker}
+                                        title='Vị trí của bạn'
+                                    /* description='Home' */
+                                    /* image={require('../images/nbl-here-icon.png')} */
+                                    >
+                                        <Image
+                                            source={require('../images/nbl-here-icon.png')}
+                                            style={{ height: height * 0.07, width: width * 0.07 }}
+                                            onLayout={() => {
+                                                this.setState({ initialRenderCurrentMaker: false })
+                                            }}
+                                            key={`${this.state.initialRenderCurrentMaker}`}
+                                        />
+                                    </MapView.Marker>
+                                    :
+                                    null}
 
-                            region={this.state.location ? this.state.location : this.state.mapRegion}
-                            /* onRegionChange={this._handleMapRegionChange} */
-                            provider='google'
-                            showsUserLocation={false}
-                            showsMyLocationButton={false}
-                            followsUserLocation={false}
-                            loadingEnabled={true}
-                            onPress={(e) => this.onMapPress(e)}
-                        /* customMapStyle={customStyle} */
-                        >
-
-                            {this.state.location
-                                ?
-                                <MapView.Marker
-                                    coordinate={this.state.currentMaker}
-                                    title='Vị trí của bạn'
-                                /* description='Home' */
-                                /* image={require('../images/nbl-here-icon.png')} */
-                                >
-                                    <Image
-                                        source={require('../images/nbl-here-icon.png')}
-                                        style={{ height: height * 0.07, width: width * 0.07 }}
-                                        onLayout={() => {
-                                            this.setState({ initialRenderCurrentMaker: false })
-                                        }}
-                                        key={`${this.state.initialRenderCurrentMaker}`}
-                                    />
-                                </MapView.Marker>
-                                :
-                                null}
-
-                            {this.state.searchingMaker
-                                ?
-                                <MapView.Marker
-                                    coordinate={this.state.searchingMaker}
-                                >
-                                    <Image
-                                        source={require('../images/nbl-here-icon.png')}
-                                        style={{ height: height * 0.07, width: width * 0.07 }}
-                                        onLayout={() => {
-                                            this.setState({ initialRenderCurrentMaker: false })
-                                        }}
-                                        key={`${this.state.initialRenderCurrentMaker}`}
-                                    />
-                                </MapView.Marker>
-                                : null}
+                                {this.state.searchingMaker
+                                    ?
+                                    <MapView.Marker
+                                        coordinate={this.state.searchingMaker}
+                                    >
+                                        <Image
+                                            source={require('../assets/images/nbl-search_maker.png')}
+                                            style={{ height: height * 0.07, width: width * 0.09 }}
+                                            onLayout={() => {
+                                                this.setState({ initialRenderCurrentMaker: false })
+                                            }}
+                                            key={`${this.state.initialRenderCurrentMaker}`}
+                                        />
+                                    </MapView.Marker>
+                                    : null}
 
 
-                            {/* Tap to show maker on map */}
-                            {/* {this.state.markers.map(marker => (
+                                {/* Tap to show maker on map */}
+                                {/* {this.state.markers.map(marker => (
                                 <MapView.Marker
                                     key={marker.key}
                                     coordinate={marker.coordinate}
@@ -526,34 +527,123 @@ export default class SearchScreen extends React.Component {
                                 />
                             ))} */}
 
-                            {/* Fix all makers on Map */}
-                            {MARKERS.map((marker, i) => (
-                                <MapView.Marker
-                                    key={i}
-                                    coordinate={marker}
-                                /* image={require('../images/nbl-house_icon.png')} */
-                                >
-                                    <Image
-                                        source={require('../images/nbl-house_icon3.png')}
-                                        style={{ height: height * 0.05, width: width * 0.08 }}
-                                        onLayout={() => {
-                                            this.setState({ initialRenderCurrentMaker: false })
-                                        }}
-                                        key={`${this.state.initialRenderCurrentMaker}`}
-                                    />
-                                </MapView.Marker>
-                            ))}
+                                {/* Fix all makers on Map */}
+                                {MARKERS.map((marker, i) => (
+                                    <MapView.Marker
+                                        key={i}
+                                        coordinate={marker}
+                                    /* image={require('../images/nbl-house_icon.png')} */
+                                    >
+                                        <Image
+                                            source={require('../assets/images/nbl-house_icon.png')}
+                                            style={{ height: height * 0.05, width: width * 0.08 }}
+                                            onLayout={() => {
+                                                this.setState({ initialRenderCurrentMaker: false })
+                                            }}
+                                            key={`${this.state.initialRenderCurrentMaker}`}
+                                        />
+                                    </MapView.Marker>
+                                ))}
 
-                        </MapView>
+                            </MapView>
+
+                            :
+
+                            <MapView
+                                ref={ref => { this.map = ref; }}
+
+                                /* style={{ paddingBottom: this.state.hackHeight, alignSelf: 'stretch', }} */
+                                style={{ alignSelf: 'stretch', height: height * 0.4, }}
+                                //region={this.state.location ? this.state.location : this.state.mapRegion}
+                                region={this.state.mapRegion}
+                                onRegionChange={this._handleMapRegionChange}
+                                provider='google'
+                                showsUserLocation={false}
+                                showsMyLocationButton={false}
+                                followsUserLocation={false}
+                                loadingEnabled={true}
+                            // onPress={(e) => this.onMapPress(e)}
+                            /* customMapStyle={customStyle} */
+                            >
+
+                                {this.state.location
+                                    ?
+                                    <MapView.Marker
+                                        coordinate={this.state.currentMaker}
+                                        title='Vị trí của bạn'
+                                    /* description='Home' */
+                                    /* image={require('../images/nbl-here-icon.png')} */
+                                    >
+                                        <Image
+                                            source={require('../images/nbl-here-icon.png')}
+                                            style={{ height: height * 0.07, width: width * 0.07 }}
+                                            onLayout={() => {
+                                                this.setState({ initialRenderCurrentMaker: false })
+                                            }}
+                                            key={`${this.state.initialRenderCurrentMaker}`}
+                                        />
+                                    </MapView.Marker>
+                                    :
+                                    null}
+
+                                {this.state.searchingMaker
+                                    ?
+                                    <MapView.Marker
+                                        coordinate={this.state.searchingMaker}
+                                    >
+                                        <Image
+                                            source={require('../assets/images/nbl-search_maker.png')}
+                                            style={{ height: height * 0.07, width: width * 0.09 }}
+                                            onLayout={() => {
+                                                this.setState({ initialRenderCurrentMaker: false })
+                                            }}
+                                            key={`${this.state.initialRenderCurrentMaker}`}
+                                        />
+                                    </MapView.Marker>
+                                    : null}
+
+
+                                {/* Tap to show maker on map */}
+                                {/* {this.state.markers.map(marker => (
+                                <MapView.Marker
+                                    key={marker.key}
+                                    coordinate={marker.coordinate}
+                                    pinColor={marker.color}
+                                />
+                            ))} */}
+
+                                {/* Fix all makers on Map */}
+                                {MARKERS.map((marker, i) => (
+                                    <MapView.Marker
+                                        key={i}
+                                        coordinate={marker}
+                                    /* image={require('../images/nbl-house_icon.png')} */
+                                    >
+                                        <Image
+                                            source={require('../assets/images/nbl-house_icon.png')}
+                                            style={{ height: height * 0.05, width: width * 0.08 }}
+                                            onLayout={() => {
+                                                this.setState({ initialRenderCurrentMaker: false })
+                                            }}
+                                            key={`${this.state.initialRenderCurrentMaker}`}
+                                        />
+                                    </MapView.Marker>
+                                ))}
+
+                            </MapView>
+
+                        }
                     </View>
 
 
 
                 </View>
 
-                <ScrollView style={styles.container}>
-                    {/* <Text style={styles.paragraph}>{text}</Text> */}
-
+                <ScrollView style={{
+                    height: height * 0.5,
+                    backgroundColor: '#fff',
+                    marginTop: -25,
+                }}>
 
                     <View style={styles.searchRoolResultBox}>
                         <View style={styles.searchRadiusBox}>
@@ -795,6 +885,7 @@ export default class SearchScreen extends React.Component {
                                 longitude: details.geometry.location.lng,
                             } */}
                             this.map.animateToCoordinate(this.state.searchingMaker, 1000)
+                            this.map.animateToCoordinate(this.state.searchingMaker, 1000)
                             this.popupSearching.dismiss();
                             {/* 
                             let currentMaker = {
@@ -951,9 +1042,5 @@ const styles = StyleSheet.create({
         // height: height * 0.3,
         height: 100,
     },
-    container: {
-        height: height * 0.5,
-        // paddingTop: 15,
-        backgroundColor: '#fff',
-    },
+
 });

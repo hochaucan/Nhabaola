@@ -326,7 +326,7 @@ export default class ProfileScreen extends React.Component {
                     onRequestClose={() => { alert("Modal has been closed.") }}
                 >
                     <ScrollView>
-                        <View style={{ flexDirection: 'row', padding: 20, justifyContent: 'center', alignItems: 'center' }}>
+                        <View style={{ flexDirection: 'row', padding: 20, marginTop: 20, justifyContent: 'center', alignItems: 'center' }}>
                             <TouchableOpacity
                                 style={{}}
                                 onPress={() => this._pickPostRoomImage('updateAccountImage')}
@@ -396,7 +396,7 @@ export default class ProfileScreen extends React.Component {
                     visible={this.state.modalHelp}
                     onRequestClose={() => { alert("Modal has been closed.") }}
                 >
-                    <View style={{ flexDirection: 'row', padding: 20, }}>
+                    <View style={{ flexDirection: 'row', padding: 20, marginTop: 20, }}>
                         <TouchableOpacity
                             style={{}}
                             onPress={() => this.setState({ modalHelp: false })}>
