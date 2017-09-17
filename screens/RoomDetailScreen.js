@@ -20,6 +20,8 @@ import Swiper from 'react-native-swiper';
 import Communications from 'react-native-communications';
 import StarRating from 'react-native-star-rating';
 import PopupDialog, { SlideAnimation, ScaleAnimation, DialogTitle, DialogButton } from 'react-native-popup-dialog';
+import KeyboardSpacer from 'react-native-keyboard-spacer';
+
 
 var { height, width } = Dimensions.get('window');
 export default class RoomDetailScreen extends React.Component {
@@ -244,7 +246,10 @@ export default class RoomDetailScreen extends React.Component {
                             <Text style={styles.cardCommentSubmitText}>Gửi</Text>
                         </TouchableOpacity>
                     </View>
+
                 </ScrollView>
+                {/* The view that will animate to match the keyboards height */}
+                <KeyboardSpacer />
 
                 {/* Popup Rating */}
                 <PopupDialog
