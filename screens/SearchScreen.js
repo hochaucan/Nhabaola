@@ -445,7 +445,7 @@ export default class SearchScreen extends React.Component {
                     {/* {this.state.location ? */}
                     <View>
                         <TouchableOpacity
-                            style={{ height: 40, position: 'absolute', top: height * 0.26, zIndex: 10, right: 15, backgroundColor: 'transparent' }}
+                            style={{ height: 40, position: 'absolute', top: height * 0.20, zIndex: 10, right: 15, backgroundColor: 'transparent' }}
                             onPress={() => {
                                 this.popupSearching.show();
                             }}
@@ -459,7 +459,7 @@ export default class SearchScreen extends React.Component {
                             </View>
                         </TouchableOpacity>
                         <TouchableOpacity
-                            style={{ height: 40, position: 'absolute', top: height * 0.33, zIndex: 10, right: 15, backgroundColor: 'transparent' }}
+                            style={{ height: 40, position: 'absolute', top: height * 0.28, zIndex: 10, right: 15, backgroundColor: 'transparent' }}
                             onPress={() => {
                                 this._getLocationAsync();
                                 //this.map.animateToCoordinate(currentMaker, 1000);
@@ -988,7 +988,7 @@ const styles = StyleSheet.create({
     },
     container: {
         height: height * 0.5,
-        // paddingTop: 15,
         backgroundColor: '#fff',
+        marginTop: -25,
     },
 });
