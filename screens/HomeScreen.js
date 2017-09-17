@@ -19,7 +19,7 @@ import {
   ToastAndroid,
   Picker,
 } from 'react-native';
-import { WebBrowser, ImagePicker, Facebook } from 'expo';
+import { WebBrowser, ImagePicker, Facebook, Google } from 'expo';
 import { MonoText } from '../components/StyledText';
 import ActionButton from 'react-native-action-button';
 import Icon from 'react-native-vector-icons/Ionicons';
@@ -194,10 +194,50 @@ export default class HomeScreen extends React.Component {
 
   };
 
+  _handleGoogleLogin = async () => {
+    try {
+      const { type, user } = await Google.logInAsync({
+        androidStandaloneAppClientId: '297432470822-scsfjomce7e9b1u068mrvnbv68okgj2n.apps.googleusercontent.com',
+        iosStandaloneAppClientId: '297432470822-3eeghi19b5vc25qs29vv1mb8dvbulc2o.apps.googleusercontent.com',
+        androidClientId: '603386649315-9rbv8vmv2vvftetfbvlrbufcps1fajqf.apps.googleusercontent.com',
+        iosClientId: '603386649315-vp4revvrcgrcjme51ebuhbkbspl048l9.apps.googleusercontent.com',
+        scopes: ['profile', 'email']
+      });
+
+      switch (type) {
+        case 'success': {
+          Alert.alert(
+            'Logged in!',
+            `Hi ${user.name}!`,
+          );
+          break;
+        }
+        case 'cancel': {
+          Alert.alert(
+            'Cancelled!',
+            'Login was cancelled!',
+          );
+          break;
+        }
+        default: {
+          Alert.alert(
+            'Oops!',
+            'Login failed!',
+          );
+        }
+      }
+    } catch (e) {
+      Alert.alert(
+        'Oops!',
+        'Login failed!',
+      );
+    }
+  };
+
   _handleFacebookLogin = async () => {
     try {
       const { type, token } = await Facebook.logInWithReadPermissionsAsync(
-        '485931318448821', // Replace with your own app id in standalone app
+        '1201211719949057', // Replace with your own app id in standalone app 485931318448821
         { permissions: ['public_profile'] }
       );
 
@@ -562,7 +602,7 @@ export default class HomeScreen extends React.Component {
               <SocialIcon
                 type='youtube'
                 raised={false}
-                onPress={this._handleFacebookLogin}
+                onPress={this._handleGoogleLogin}
               />
               <SocialIcon
                 type='twitter'

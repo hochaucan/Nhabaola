@@ -451,7 +451,7 @@ export default class SearchScreen extends React.Component {
                             }}
                         >
                             <View style={{
-                                backgroundColor: '#a4d227', padding: 6, borderRadius: 10, width: 32,
+                                backgroundColor: '#a4d227', padding: 5, borderRadius: 10, width: 32,
                                 height: 32, justifyContent: 'center',
                                 alignItems: 'center', shadowColor: "#000000",
                             }}>
@@ -465,7 +465,7 @@ export default class SearchScreen extends React.Component {
                                 //this.map.animateToCoordinate(currentMaker, 1000);
                             }}
                         >
-                            <View style={{ backgroundColor: '#a4d227', padding: 6, borderRadius: 10, width: 32, height: 32, justifyContent: 'center', alignItems: 'center' }}>
+                            <View style={{ backgroundColor: '#a4d227', padding: 5, borderRadius: 10, width: 32, height: 32, justifyContent: 'center', alignItems: 'center' }}>
                                 <Ionicons style={{ fontSize: 25, color: '#fff', textAlign: 'center' }} name='ios-locate-outline' />
                             </View>
                         </TouchableOpacity>
