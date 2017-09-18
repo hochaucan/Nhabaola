@@ -34,6 +34,8 @@ import ModalDropdown from 'react-native-modal-dropdown';
 import { TextInputMask } from 'react-native-masked-text';
 import { GooglePlacesAutocomplete, } from 'react-native-google-places-autocomplete'; // 1.2.12
 import Swiper from 'react-native-swiper';
+//import FO_Category_GetAllData from '../api/FO_Category_GetAllData';
+
 
 const homePlace = {
   description: 'Home',
@@ -66,6 +68,7 @@ export default class HomeScreen extends React.Component {
       reportCheck: false,
       starCount: 3.5,
       mapRegion: { latitude: 10.7777935, longitude: 106.7068674, latitudeDelta: 0.03, longitudeDelta: 0.03 },
+      roomCategory: [],
 
       // Post Room
       postRoomImage1: null,
@@ -114,7 +117,8 @@ export default class HomeScreen extends React.Component {
   }
 
   componentDidMount() {
-    // Animation for Login
+    //FO_Category_GetAllData();
+    this._getCategory();
 
   }
 
@@ -305,6 +309,48 @@ export default class HomeScreen extends React.Component {
     //alert(`idx=${idx}, value='${value}'`);
     //console.debug(`idx=${idx}, value='${value}'`);
 
+  }
+
+
+  _getCategory() {
+    fetch("http://nhabaola.vn/api/Category/FO_Category_GetAllData", {
+      method: 'POST',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        "PageIndex": "0",
+        "PageCount": "5",
+        "SessionKey": "Olala_SessionKey",
+        "UserLogon": "100"
+      }),
+    })
+      .then((response) => response.json())
+      .then((responseJson) => {
+        // this.setState({
+        //     result: responseJson
+        // })
+        //return JSON.stringify(responseJson)
+        //console.log(responseJson.obj)
+        this.setState({
+          roomCategory: JSON.stringify(responseJson.obj)
+        })
+
+        console.log(this.state.roomCategory)
+        // {
+        //   this.state.roomCategory.map((item) => {
+        //     console.log(item.CatName)
+        //   })
+        // }
+
+        // {
+        //   this.state.response.map((y) => {
+        //     return (<Text>{y.prnt_usernamez}</Text>);
+        //   })
+        // }
+      }).
+      catch((error) => { console.log(error) });
   }
 
   render() {
