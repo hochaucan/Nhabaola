@@ -118,8 +118,12 @@ export default class HomeScreen extends React.Component {
 
   componentDidMount() {
     //FO_Category_GetAllData();
-    this._getCategory();
 
+
+  }
+
+  componentWillMount() {
+    this._getCategory();
   }
 
   _onScroll = (event) => {
@@ -328,21 +332,13 @@ export default class HomeScreen extends React.Component {
     })
       .then((response) => response.json())
       .then((responseJson) => {
-        // this.setState({
-        //     result: responseJson
-        // })
-        //return JSON.stringify(responseJson)
-        //console.log(responseJson.obj)
+
         this.setState({
-          roomCategory: JSON.stringify(responseJson.obj)
+          //roomCategory: JSON.stringify(responseJson.obj)
+          roomCategory: responseJson.obj.map((y) => { return y.CatName })
         })
 
         console.log(this.state.roomCategory)
-        // {
-        //   this.state.roomCategory.map((item) => {
-        //     console.log(item.CatName)
-        //   })
-        // }
 
         // {
         //   this.state.response.map((y) => {
@@ -1062,7 +1058,8 @@ export default class HomeScreen extends React.Component {
                   style={{ paddingTop: 15, marginLeft: -5, }}
                   dropdownStyle={{ padding: 10, width: 150 }}
                   textStyle={{}}
-                  options={['Nhà trọ', 'Khách sạn', 'Biệt thự', 'Vila', 'Đất thổ cư']}
+                  //options={['Nhà trọ', 'Khách sạn', 'Biệt thự', 'Vila', 'Đất thổ cư']}
+                  options={this.state.roomCategory.sort()}
                   defaultIndex={0}
                   defaultValue='Nhà trọ'
                   onSelect={(idx, value) => this._dropdown_onSelect(idx, value)}
