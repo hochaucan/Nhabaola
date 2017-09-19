@@ -115,6 +115,7 @@ export default class HomeScreen extends React.Component {
       registerConfirmPassword: null,
       registerConfirmCellPhone: null,
       registerAccountImage: null,
+      registerFullName: null,
     }
 
   }
@@ -309,6 +310,10 @@ export default class HomeScreen extends React.Component {
         ToastAndroid.showWithGravity('Xác nhận mật khẩu không khớp với mật khẩu', ToastAndroid.SHORT, ToastAndroid.CENTER);
         return;
       }
+      if (this.state.registerFullName === null) {
+        ToastAndroid.showWithGravity('Vui lòng nhập Họ Tên', ToastAndroid.SHORT, ToastAndroid.CENTER);
+        return;
+      }
       if (this.state.registerConfirmCellPhone === null) {
         ToastAndroid.showWithGravity('Vui lòng nhập mã xác nhận Số Điện Thoại', ToastAndroid.SHORT, ToastAndroid.CENTER);
         return;
@@ -327,6 +332,10 @@ export default class HomeScreen extends React.Component {
         Alert.alert('Oops!', 'Xác nhận mật khẩu không khớp với mật khẩu');
         return;
       }
+      if (this.state.registerFullName === null) {
+        Alert.alert('Oops!', 'Vui lòng nhập Họ Tên');
+        return;
+      }
       if (this.state.registerConfirmCellPhone === null) {
         Alert.alert('Oops!', 'Vui lòng nhập mã xác nhận Số Điện Thoại');
         return;
@@ -337,13 +346,13 @@ export default class HomeScreen extends React.Component {
     await this.setState({
       objectRegisterAccount: {
         UserName: this.state.registerCellPhone,
-        FullName: "Nguyen Van A",
-        Email: "Email@gmail.com",
-        Sex: "Nam",
+        FullName: this.state.registerFullName,
+        Email: "",
+        Sex: "",
         YearOfBirth: "2017-10-09",
         Address: "5 Hello 10 Hi 15 Hehe",
         ContactPhone: this.state.registerCellPhone,
-        Password: "Passwordvinaphuc",
+        Password: this.state.registerPassword,
         RegistryDate: "2017-10-09",
         IsActive: "true",
         CreatedDate: "2017-10-09",
@@ -659,7 +668,7 @@ export default class HomeScreen extends React.Component {
           <View>
 
             <Animated.View style={{ position: 'relative', left: this.state.animation.usernamePostionLeft, flexDirection: 'row', padding: 10, }}>
-              <Ionicons style={{ flex: 1, fontSize: 22, paddingTop: 12, textAlign: 'center', }} name='ios-person-outline' />
+              <Ionicons style={{ flex: 1, fontSize: 22, paddingTop: 12, textAlign: 'center', }} name='ios-person' />
               <FormInput
                 containerStyle={{ flex: 15 }}
                 placeholder='Số điện thoại'
@@ -668,7 +677,7 @@ export default class HomeScreen extends React.Component {
               />
             </Animated.View>
             <Animated.View style={{ position: 'relative', left: this.state.animation.passwordPositionLeft, flexDirection: 'row', padding: 10, paddingTop: 0, }}>
-              <Ionicons style={{ flex: 1, fontSize: 22, paddingTop: 12, textAlign: 'center', }} name='ios-lock-outline' />
+              <Ionicons style={{ flex: 1, fontSize: 22, paddingTop: 12, textAlign: 'center', }} name='ios-lock' />
               <FormInput
                 containerStyle={{ flex: 15 }}
                 placeholder='Mật khẩu'
@@ -828,9 +837,9 @@ export default class HomeScreen extends React.Component {
             </View>
             <View>
               <Animated.View style={{ position: 'relative', left: this.state.animation.usernamePostionLeft, flexDirection: 'row', padding: 10, }}>
-                <Ionicons style={{ flex: 2, fontSize: 22, paddingTop: 12, textAlign: 'center', }} name='ios-person-outline' />
+                <Ionicons style={{ flex: 2, fontSize: 22, paddingTop: 12, textAlign: 'center', }} name='md-call' />
                 <FormInput
-                  containerStyle={{ flex: 15, }}
+                  containerStyle={{ flex: 15, marginLeft: 6 }}
                   placeholder='Số điện thoại'
                   autoCapitalize='sentences'
                   keyboardType='numeric'
@@ -853,7 +862,7 @@ export default class HomeScreen extends React.Component {
               </FormValidationMessage> */}
               </Animated.View>
               <Animated.View style={{ position: 'relative', left: this.state.animation.passwordPositionLeft, flexDirection: 'row', padding: 10, paddingTop: 0, }}>
-                <Ionicons style={{ flex: 1, fontSize: 22, paddingTop: 12, textAlign: 'center', }} name='ios-lock-outline' />
+                <Ionicons style={{ flex: 1, fontSize: 22, paddingTop: 12, textAlign: 'center', }} name='ios-lock' />
                 <FormInput
                   containerStyle={{ flex: 15 }}
                   placeholder='Mật khẩu'
@@ -864,14 +873,24 @@ export default class HomeScreen extends React.Component {
                 />
               </Animated.View>
               <Animated.View style={{ position: 'relative', left: this.state.animation.passwordPositionLeft, flexDirection: 'row', padding: 10, paddingTop: 0, }}>
-                <Ionicons style={{ flex: 1, fontSize: 22, paddingTop: 12, textAlign: 'center', }} name='ios-lock-outline' />
+                {/* <Ionicons style={{ flex: 1, fontSize: 22, paddingTop: 12, textAlign: 'center', }} name='ios-lock-outline' /> */}
                 <FormInput
-                  containerStyle={{ flex: 15 }}
+                  containerStyle={{ flex: 15, paddingLeft: 22 }}
                   placeholder='Xác nhận mật khẩu'
                   secureTextEntry={true}
                   underlineColorAndroid={'#fff'}
                   value={this.state.registerConfirmPassword}
                   onChangeText={(registerConfirmPassword) => { this.setState({ registerConfirmPassword }) }}
+                />
+              </Animated.View>
+              <Animated.View style={{ position: 'relative', left: this.state.animation.passwordPositionLeft, flexDirection: 'row', padding: 10, paddingTop: 0, }}>
+                <Ionicons style={{ flex: 1, fontSize: 22, paddingTop: 12, textAlign: 'center', }} name='ios-person' />
+                <FormInput
+                  containerStyle={{ flex: 15 }}
+                  placeholder='Họ và tên'
+                  underlineColorAndroid={'#fff'}
+                  value={this.state.registerFullName}
+                  onChangeText={(registerFullName) => { this.setState({ registerFullName }) }}
                 />
 
               </Animated.View>
@@ -879,6 +898,7 @@ export default class HomeScreen extends React.Component {
 
                 <FormInput
                   containerStyle={{ flex: 1, borderWidth: 0.6, borderColor: '#9B9D9D', borderRadius: 10, padding: 5, marginTop: 10, }}
+                  inputStyle={{ textAlign: 'center', }}
                   placeholder='Mã xác nhận số điện thoại (4 số)'
                   secureTextEntry={true}
                   underlineColorAndroid={'#fff'}
