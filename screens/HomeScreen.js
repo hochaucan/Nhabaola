@@ -95,9 +95,20 @@ export default class HomeScreen extends React.Component {
       // Register Account
       modalRegisterAccount: false,
       objectRegisterAccount: {
-        cellPhone: null,
-        password: null,
-        confirmPassword: null,
+        UserName: "UserName",
+        FullName: "Nguyen Van A",
+        Email: "Email@gmail.com",
+        Sex: "Nam",
+        YearOfBirth: "2017-10-09",
+        Address: "5 Hello 10 Hi 15 Hehe",
+        ContactPhone: "0919999888",
+        Password: "Passwordvinaphuc",
+        RegistryDate: "2017-10-09",
+        IsActive: "true",
+        CreatedDate: "2017-10-09",
+        CreatedBy: "10",
+        UpdatedBy: "Olala_SessionKey",
+        UpdatedDate: "2017-10-09"
       },
       registerCellPhone: null,
       registerPassword: null,
@@ -282,7 +293,9 @@ export default class HomeScreen extends React.Component {
     }
   };
 
-  _registerAccount = () => {
+  _registerAccountAsync = async () => {
+
+    //Form validation
     if (Platform.OS === 'android') {
       if (this.state.registerCellPhone === null) {
         ToastAndroid.showWithGravity('Vui lòng nhập Số Điện Thoại', ToastAndroid.SHORT, ToastAndroid.CENTER);
@@ -296,16 +309,90 @@ export default class HomeScreen extends React.Component {
         ToastAndroid.showWithGravity('Xác nhận mật khẩu không khớp với mật khẩu', ToastAndroid.SHORT, ToastAndroid.CENTER);
         return;
       }
-      if (this.state.registerPassword != this.state.registerConfirmPassword) {
+      if (this.state.registerConfirmCellPhone === null) {
         ToastAndroid.showWithGravity('Vui lòng nhập mã xác nhận Số Điện Thoại', ToastAndroid.SHORT, ToastAndroid.CENTER);
         return;
       }
-    } else {
+    }
+    else {
       if (this.state.registerCellPhone === null) {
         Alert.alert('Oops!', 'Vui lòng nhập Số Điện Thoại');
         return;
       }
+      if (this.state.registerPassword === null) {
+        Alert.alert('Oops!', 'Vui lòng nhập mật khẩu');
+        return;
+      }
+      if (this.state.registerPassword != this.state.registerConfirmPassword) {
+        Alert.alert('Oops!', 'Xác nhận mật khẩu không khớp với mật khẩu');
+        return;
+      }
+      if (this.state.registerConfirmCellPhone === null) {
+        Alert.alert('Oops!', 'Vui lòng nhập mã xác nhận Số Điện Thoại');
+        return;
+      }
     }
+
+    //Set account object
+    await this.setState({
+      objectRegisterAccount: {
+        UserName: this.state.registerCellPhone,
+        FullName: "Nguyen Van A",
+        Email: "Email@gmail.com",
+        Sex: "Nam",
+        YearOfBirth: "2017-10-09",
+        Address: "5 Hello 10 Hi 15 Hehe",
+        ContactPhone: this.state.registerCellPhone,
+        Password: "Passwordvinaphuc",
+        RegistryDate: "2017-10-09",
+        IsActive: "true",
+        CreatedDate: "2017-10-09",
+        CreatedBy: "10",
+        UpdatedBy: "Olala_SessionKey",
+        UpdatedDate: "2017-10-09"
+      }
+    })
+    console.log(JSON.stringify(this.state.objectRegisterAccount))
+    //Post to register account
+    try {
+      await fetch("http://nhabaola.vn/api/Account/FO_Account_Add", {
+        method: 'POST',
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(this.state.objectRegisterAccount)
+
+
+        // body: JSON.stringify({
+        //   "UserName": "UserName",
+        //   "FullName": "Nguyen Van A",
+        //   "Email": "Email@gmail.com",
+        //   "Sex": "Nam",
+        //   "YearOfBirth": "2017-10-09",
+        //   "Address": "5 Hello 10 Hi 15 Hehe",
+        //   "ContactPhone": "0919999888",
+        //   "Password": "Passwordvinaphuc",
+        //   "RegistryDate": "2017-10-09",
+        //   "IsActive": "true",
+        //   "CreatedDate": "2017-10-09",
+        //   "CreatedBy": "10",
+        //   "UpdatedBy": "Olala_SessionKey",
+        //   "UpdatedDate": "2017-10-09"
+        // }),
+      })
+        .then((response) => response.json())
+        .then((responseJson) => {
+          this.setState({
+            modalRegisterAccount: false, //Close register account modal
+          })
+        }).
+        catch((error) => { console.log(error) });
+    } catch (error) {
+      console.log(error)
+    }
+
+
   }
 
   _dropdown_onSelect(idx, value) {
@@ -353,6 +440,8 @@ export default class HomeScreen extends React.Component {
     }
 
   }
+
+
 
   render() {
     let { image } = this.state;
@@ -721,7 +810,9 @@ export default class HomeScreen extends React.Component {
           animationType={"slide"}
           transparent={false}
           visible={this.state.modalRegisterAccount}
-          onRequestClose={() => { alert("Modal has been closed.") }}
+          onRequestClose={() => {
+            //alert("Modal has been closed.")
+          }}
         >
           <ScrollView>
             <View style={{ flexDirection: 'row', padding: 20, justifyContent: 'center', alignItems: 'center' }}>
@@ -821,7 +912,7 @@ export default class HomeScreen extends React.Component {
                 icon={{ name: 'md-checkmark', type: 'ionicon' }}
                 title='Đăng ký'
                 onPress={() => {
-                  this._registerAccount();
+                  this._registerAccountAsync();
                 }}
               />
             </View>
