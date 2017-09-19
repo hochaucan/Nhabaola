@@ -34,6 +34,7 @@ import ModalDropdown from 'react-native-modal-dropdown';
 import { TextInputMask } from 'react-native-masked-text';
 import { GooglePlacesAutocomplete, } from 'react-native-google-places-autocomplete'; // 1.2.12
 import Swiper from 'react-native-swiper';
+import RadioForm, { RadioButton, RadioButtonInput, RadioButtonLabel } from 'react-native-simple-radio-button';
 //import FO_Category_GetAllData from '../api/FO_Category_GetAllData';
 
 
@@ -52,6 +53,11 @@ const LATITUDE = 37.78825;
 const LONGITUDE = -122.4324;
 const LATITUDE_DELTA = 0.05;
 const LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO;
+
+var radio_props = [
+  { label: 'param1', value: 0 },
+  { label: 'param2', value: 1 }
+];
 
 export default class HomeScreen extends React.Component {
   static navigationOptions = {
@@ -116,6 +122,9 @@ export default class HomeScreen extends React.Component {
       registerConfirmCellPhone: null,
       registerAccountImage: null,
       registerFullName: null,
+
+      //Pick image
+      imageFrom: 0, //0: From image library, 1: image from Camera
     }
 
   }
@@ -184,11 +193,22 @@ export default class HomeScreen extends React.Component {
     // console.log(rating);
   }
 
-  _pickPostRoomImage = async (imageNo) => {
-    let result = await ImagePicker.launchImageLibraryAsync({
-      allowsEditing: true,
-      aspect: [4, 3],
-    });
+  //_pickPostRoomImage
+  _pickImage = async (imageNo) => {
+    let result = null;
+
+    if (this.state.imageFrom == 'library') {
+      result = await ImagePicker.launchImageLibraryAsync({
+        allowsEditing: true,
+        aspect: [4, 3],
+      });
+    }
+    else {
+      result = await ImagePicker.launchCameraAsync({
+        allowsEditing: true,
+        aspect: [4, 3],
+      });
+    }
 
     // console.log(result);
     if (!result.cancelled) {
@@ -814,20 +834,47 @@ export default class HomeScreen extends React.Component {
           />
         </PopupDialog>
 
+        {/* Popup select image library or camera */}
+        <PopupDialog
+          ref={(popupSelectedImage) => { this.popupSelectedImage = popupSelectedImage; }}
+          dialogAnimation={new ScaleAnimation()}
+          dialogStyle={{ marginBottom: 10, width: width * 0.9, height: 250, justifyContent: 'center', padding: 20 }}
+        >
+          <RadioForm
+            radio_props={radio_props}
+            initial={0}
+            buttonColor={'#a4d227'}
+            onPress={(value) => {
+
+              this.setState({ imageFrom: value })
+
+              console.log(this.state.imageFrom)
+              this.popupSelectedImage.dismiss()
+              this._pickImage('registerAccountImage')
+              this.setState({ modalRegisterAccount: true })
+            }}
+          />
+        </PopupDialog>
+
         {/* Modal Register Account */}
         <Modal
           animationType={"slide"}
           transparent={false}
           visible={this.state.modalRegisterAccount}
           onRequestClose={() => {
-            //alert("Modal has been closed.")
+            alert("Modal has been closed.")
           }}
         >
           <ScrollView>
             <View style={{ flexDirection: 'row', padding: 20, justifyContent: 'center', alignItems: 'center' }}>
               <TouchableOpacity
                 style={{}}
-                onPress={() => this._pickPostRoomImage('registerAccountImage')}
+                onPress={() => {
+                  //this._pickPostRoomImage('registerAccountImage')
+                  this.setState({ modalRegisterAccount: false })
+                  this.popupSelectedImage.show()
+                }
+                }
               >
                 <Ionicons style={{ opacity: 0.7, fontSize: 100, color: '#73aa2a', flex: 1, textAlign: 'center', }} name='ios-contact' />
                 {this.state.registerAccountImage && <Image source={{ uri: this.state.registerAccountImage }} style={{ width: 80, height: 80, borderRadius: 100, marginTop: -90, marginLeft: 1, marginBottom: 10, }} />}
@@ -836,6 +883,7 @@ export default class HomeScreen extends React.Component {
 
             </View>
             <View>
+
               <Animated.View style={{ position: 'relative', left: this.state.animation.usernamePostionLeft, flexDirection: 'row', padding: 10, }}>
                 <Ionicons style={{ flex: 2, fontSize: 22, paddingTop: 12, textAlign: 'center', }} name='md-call' />
                 <FormInput
@@ -921,6 +969,8 @@ export default class HomeScreen extends React.Component {
                     registerCellPhone: null,
                     registerPassword: null,
                     registerConfirmPassword: null,
+                    registerAccountImage: null,
+                    registerFullName: null,
                   })
 
                 }}
@@ -1216,7 +1266,7 @@ export default class HomeScreen extends React.Component {
             </View>
           </ScrollView>
         </Modal>
-      </View>
+      </View >
     );
   }
 
