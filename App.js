@@ -120,8 +120,9 @@ export default class App extends React.Component {
     try {
       await Promise.all([
         Asset.loadAsync([
-          require('./assets/images/robot-dev.png'),
-          require('./assets/images/robot-prod.png'),
+          //require('./assets/images/robot-dev.png'),
+          require('./assets/images/nbl-house_icon.png'),
+          require('./assets/images/nbl-header_logo.png'),
         ]),
         Font.loadAsync([
           // This is the font that we are using for our tab bar

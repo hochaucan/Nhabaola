@@ -123,7 +123,7 @@ export default class HomeScreen extends React.Component {
   }
 
   componentWillMount() {
-    this._getCategory();
+    this._getCategoryAsync();
   }
 
   _onScroll = (event) => {
@@ -316,37 +316,42 @@ export default class HomeScreen extends React.Component {
   }
 
 
-  _getCategory() {
-    fetch("http://nhabaola.vn/api/Category/FO_Category_GetAllData", {
-      method: 'POST',
-      headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        "PageIndex": "0",
-        "PageCount": "5",
-        "SessionKey": "Olala_SessionKey",
-        "UserLogon": "100"
-      }),
-    })
-      .then((response) => response.json())
-      .then((responseJson) => {
+  async _getCategoryAsync() {
+    try {
+      await fetch("http://nhabaola.vn/api/Category/FO_Category_GetAllData", {
+        method: 'POST',
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          "PageIndex": "0",
+          "PageCount": "5",
+          "SessionKey": "Olala_SessionKey",
+          "UserLogon": "100"
+        }),
+      })
+        .then((response) => response.json())
+        .then((responseJson) => {
 
-        this.setState({
-          //roomCategory: JSON.stringify(responseJson.obj)
-          roomCategory: responseJson.obj.map((y) => { return y.CatName })
-        })
+          this.setState({
+            //roomCategory: JSON.stringify(responseJson.obj)
+            roomCategory: responseJson.obj.map((y) => { return y.CatName })
+          })
 
-        console.log(this.state.roomCategory)
+          //console.log(this.state.roomCategory)
 
-        // {
-        //   this.state.response.map((y) => {
-        //     return (<Text>{y.prnt_usernamez}</Text>);
-        //   })
-        // }
-      }).
-      catch((error) => { console.log(error) });
+          // {
+          //   this.state.response.map((y) => {
+          //     return (<Text>{y.prnt_usernamez}</Text>);
+          //   })
+          // }
+        }).
+        catch((error) => { console.log(error) });
+    } catch (error) {
+      console.log(error)
+    }
+
   }
 
   render() {
