@@ -15,7 +15,8 @@
     },
     "loading": {
       "icon": "./assets/icons/loading-icon.png",
-      "hideExponentText": false
+      "hideExponentText": true
+      //"backgroundImage": "./assets/images/nbl-app_bg.png"
     },
     "packagerOpts": {
       "assetExts": [

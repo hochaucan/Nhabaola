@@ -832,39 +832,6 @@ export default class HomeScreen extends React.Component {
           />
         </PopupDialog>
 
-        {/* Popup select image library or camera */}
-        <PopupDialog
-          ref={(popupSelectedImage) => { this.popupSelectedImage = popupSelectedImage; }}
-          dialogAnimation={new ScaleAnimation()}
-          dialogStyle={{ marginBottom: 10, width: width * 0.9, height: 130, justifyContent: 'center', padding: 20 }}
-          dismissOnTouchOutside={false}
-        >
-          <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'center', alignContent: 'center' }}>
-            <TouchableOpacity
-              style={{ justifyContent: 'center', alignContent: 'center', paddingRight: 30 }}
-              onPress={async () => {
-                this.popupSelectedImage.dismiss();
-                this._pickImage('library', 'registerAccountImage')
-                this.setState({ modalRegisterAccount: true })
-              }}
-            >
-              <Ionicons style={{ fontSize: 40, borderRadius: 10, backgroundColor: '#a4d227', color: '#fff', textAlign: 'center', padding: 10 }} name='ios-folder-open' >
-              </Ionicons>
-              <Text style={{ textAlign: 'center' }}>Thư viện ảnh</Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={{ justifyContent: 'center', alignContent: 'center', }}
-              onPress={async () => {
-                this.popupSelectedImage.dismiss();
-                this._pickImage('camera', 'registerAccountImage')
-                this.setState({ modalRegisterAccount: true })
-              }}
-            >
-              <Ionicons style={{ fontSize: 40, borderRadius: 10, backgroundColor: '#a4d227', color: '#fff', textAlign: 'center', padding: 10 }} name='md-camera' />
-              <Text style={{ textAlign: 'center' }}>     Camera     </Text>
-            </TouchableOpacity>
-          </View>
-        </PopupDialog>
 
         {/* Modal Register Account */}
         <Modal
@@ -879,15 +846,15 @@ export default class HomeScreen extends React.Component {
             <View style={{ flexDirection: 'row', padding: 20, justifyContent: 'center', alignItems: 'center' }}>
               <TouchableOpacity
                 style={{}}
-                onPress={() => {
+                onPress={async () => {
                   //this._pickPostRoomImage('registerAccountImage')
-                  this.setState({ modalRegisterAccount: false })
+                  await this.setState({ modalRegisterAccount: false })
                   this.popupSelectedImage.show()
                 }
                 }
               >
                 <Ionicons style={{ opacity: 0.7, fontSize: 100, color: '#73aa2a', flex: 1, textAlign: 'center', }} name='ios-contact' />
-                {this.state.registerAccountImage && <Image source={{ uri: this.state.registerAccountImage }} style={{ width: 80, height: 80, borderRadius: 100, marginTop: -90, marginLeft: 1, marginBottom: 10, }} />}
+                {this.state.registerAccountImage && <Image source={{ uri: this.state.registerAccountImage }} style={{ width: 80, height: 80, borderRadius: Platform.OS === 'ios' ? 20 : 100, marginTop: -90, marginLeft: 1, marginBottom: 10, }} />}
                 <Text style={{}}>Hình đại diện</Text>
               </TouchableOpacity>
 
@@ -897,7 +864,7 @@ export default class HomeScreen extends React.Component {
               <Animated.View style={{ position: 'relative', left: this.state.animation.usernamePostionLeft, flexDirection: 'row', padding: 10, }}>
                 <Ionicons style={{ flex: 2, fontSize: 22, paddingTop: 12, textAlign: 'center', }} name='md-call' />
                 <FormInput
-                  containerStyle={{ flex: 15, marginLeft: 10 }}
+                  containerStyle={{ flex: 15, marginLeft: Platform.OS === 'ios' ? 20 : 10 }}
                   placeholder='Số điện thoại'
                   autoCapitalize='sentences'
                   keyboardType='numeric'
@@ -933,7 +900,7 @@ export default class HomeScreen extends React.Component {
               <Animated.View style={{ position: 'relative', left: this.state.animation.passwordPositionLeft, flexDirection: 'row', padding: 10, paddingTop: 0, }}>
                 {/* <Ionicons style={{ flex: 1, fontSize: 22, paddingTop: 12, textAlign: 'center', }} name='ios-lock-outline' /> */}
                 <FormInput
-                  containerStyle={{ flex: 15, paddingLeft: 22 }}
+                  containerStyle={{ flex: 15, marginLeft: 38 }}
                   placeholder='Xác nhận mật khẩu'
                   secureTextEntry={true}
                   underlineColorAndroid={'#73aa2a'}
@@ -944,7 +911,7 @@ export default class HomeScreen extends React.Component {
               <Animated.View style={{ position: 'relative', left: this.state.animation.passwordPositionLeft, flexDirection: 'row', padding: 10, paddingTop: 0, }}>
                 <Ionicons style={{ flex: 1, fontSize: 22, paddingTop: 12, textAlign: 'center', }} name='ios-person' />
                 <FormInput
-                  containerStyle={{ flex: 15 }}
+                  containerStyle={{ flex: 15, marginLeft: Platform.OS === 'ios' ? 22 : 20 }}
                   placeholder='Họ và tên'
                   underlineColorAndroid={'#73aa2a'}
                   value={this.state.registerFullName}
@@ -956,7 +923,7 @@ export default class HomeScreen extends React.Component {
 
                 <FormInput
                   containerStyle={{ flex: 1, borderWidth: 0.6, borderColor: '#9B9D9D', borderRadius: 10, padding: 5, marginTop: 10, }}
-                  inputStyle={{ textAlign: 'center', }}
+                  inputStyle={{}}
                   placeholder='Mã xác nhận số điện thoại (4 số)'
                   secureTextEntry={true}
                   underlineColorAndroid={'#fff'}
@@ -1276,6 +1243,40 @@ export default class HomeScreen extends React.Component {
             </View>
           </ScrollView>
         </Modal>
+
+        {/* Popup select image library or camera */}
+        <PopupDialog
+          ref={(popupSelectedImage) => { this.popupSelectedImage = popupSelectedImage; }}
+          dialogAnimation={new ScaleAnimation()}
+          dialogStyle={{ marginBottom: 10, width: width * 0.9, height: 130, justifyContent: 'center', padding: 20 }}
+          dismissOnTouchOutside={false}
+        >
+          <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'center', alignContent: 'center' }}>
+            <TouchableOpacity
+              style={{ justifyContent: 'center', alignContent: 'center', paddingRight: 30 }}
+              onPress={async () => {
+                this.popupSelectedImage.dismiss();
+                this._pickImage('library', 'registerAccountImage')
+                this.setState({ modalRegisterAccount: true })
+              }}
+            >
+              <Ionicons style={{ fontSize: 40, borderRadius: 10, backgroundColor: '#a4d227', color: '#fff', textAlign: 'center', padding: 10 }} name='ios-folder-open' >
+              </Ionicons>
+              <Text style={{ textAlign: 'center', marginTop: 5 }}>Thư viện ảnh</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={{ justifyContent: 'center', alignContent: 'center', }}
+              onPress={async () => {
+                this.popupSelectedImage.dismiss();
+                this._pickImage('camera', 'registerAccountImage')
+                this.setState({ modalRegisterAccount: true })
+              }}
+            >
+              <Ionicons style={{ fontSize: 40, borderRadius: 10, backgroundColor: '#a4d227', color: '#fff', textAlign: 'center', padding: 10 }} name='md-camera' />
+              <Text style={{ textAlign: 'center', marginTop: 5 }}>Camera</Text>
+            </TouchableOpacity>
+          </View>
+        </PopupDialog>
       </View >
     );
   }
