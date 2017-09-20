@@ -34,7 +34,6 @@ import ModalDropdown from 'react-native-modal-dropdown';
 import { TextInputMask } from 'react-native-masked-text';
 import { GooglePlacesAutocomplete, } from 'react-native-google-places-autocomplete'; // 1.2.12
 import Swiper from 'react-native-swiper';
-import RadioForm, { RadioButton, RadioButtonInput, RadioButtonLabel } from 'react-native-simple-radio-button';
 //import FO_Category_GetAllData from '../api/FO_Category_GetAllData';
 
 
@@ -53,11 +52,6 @@ const LATITUDE = 37.78825;
 const LONGITUDE = -122.4324;
 const LATITUDE_DELTA = 0.05;
 const LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO;
-
-var radio_props = [
-  { label: 'param1', value: 0 },
-  { label: 'param2', value: 1 }
-];
 
 export default class HomeScreen extends React.Component {
   static navigationOptions = {
@@ -124,7 +118,7 @@ export default class HomeScreen extends React.Component {
       registerFullName: null,
 
       //Pick image
-      imageFrom: 0, //0: From image library, 1: image from Camera
+      imageFrom: 'library', //0: From image library, 1: image from Camera
     }
 
   }
@@ -197,7 +191,7 @@ export default class HomeScreen extends React.Component {
   _pickImage = async (imageNo) => {
     let result = null;
 
-    if (this.state.imageFrom == 'library') {
+    if (this.state.imageFrom === 'library') {
       result = await ImagePicker.launchImageLibraryAsync({
         allowsEditing: true,
         aspect: [4, 3],
@@ -838,22 +832,36 @@ export default class HomeScreen extends React.Component {
         <PopupDialog
           ref={(popupSelectedImage) => { this.popupSelectedImage = popupSelectedImage; }}
           dialogAnimation={new ScaleAnimation()}
-          dialogStyle={{ marginBottom: 10, width: width * 0.9, height: 250, justifyContent: 'center', padding: 20 }}
+          dialogStyle={{ marginBottom: 10, width: width * 0.9, height: 130, justifyContent: 'center', padding: 20 }}
+          dismissOnTouchOutside={false}
         >
-          <RadioForm
-            radio_props={radio_props}
-            initial={0}
-            buttonColor={'#a4d227'}
-            onPress={(value) => {
-
-              this.setState({ imageFrom: value })
-
-              console.log(this.state.imageFrom)
-              this.popupSelectedImage.dismiss()
-              this._pickImage('registerAccountImage')
-              this.setState({ modalRegisterAccount: true })
-            }}
-          />
+          <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'center', alignContent: 'center' }}>
+            <TouchableOpacity
+              style={{ justifyContent: 'center', alignContent: 'center', paddingRight: 30 }}
+              onPress={async () => {
+                this.popupSelectedImage.dismiss();
+                await this.setState({ imageFrom: 'library' })
+                this._pickImage('registerAccountImage')
+                this.setState({ modalRegisterAccount: true })
+              }}
+            >
+              <Ionicons style={{ fontSize: 40, borderRadius: 10, backgroundColor: '#a4d227', color: '#fff', textAlign: 'center', padding: 10 }} name='ios-folder-open' >
+              </Ionicons>
+              <Text style={{ textAlign: 'center' }}>Thư viện ảnh</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={{ justifyContent: 'center', alignContent: 'center', }}
+              onPress={async () => {
+                this.popupSelectedImage.dismiss();
+                await this.setState({ imageFrom: 'camera' })
+                this._pickImage('registerAccountImage')
+                this.setState({ modalRegisterAccount: true })
+              }}
+            >
+              <Ionicons style={{ fontSize: 40, borderRadius: 10, backgroundColor: '#a4d227', color: '#fff', textAlign: 'center', padding: 10 }} name='md-camera' />
+              <Text style={{ textAlign: 'center' }}>     Camera     </Text>
+            </TouchableOpacity>
+          </View>
         </PopupDialog>
 
         {/* Modal Register Account */}
@@ -862,7 +870,7 @@ export default class HomeScreen extends React.Component {
           transparent={false}
           visible={this.state.modalRegisterAccount}
           onRequestClose={() => {
-            alert("Modal has been closed.")
+            //alert("Modal has been closed.")
           }}
         >
           <ScrollView>
