@@ -18,6 +18,7 @@ import {
   Animated,
   ToastAndroid,
   Picker,
+  ActivityIndicator,
 } from 'react-native';
 import { WebBrowser, ImagePicker, Facebook, Google } from 'expo';
 import { MonoText } from '../components/StyledText';
@@ -34,6 +35,7 @@ import ModalDropdown from 'react-native-modal-dropdown';
 import { TextInputMask } from 'react-native-masked-text';
 import { GooglePlacesAutocomplete, } from 'react-native-google-places-autocomplete'; // 1.2.12
 import Swiper from 'react-native-swiper';
+import KeyboardSpacer from 'react-native-keyboard-spacer';
 //import FO_Category_GetAllData from '../api/FO_Category_GetAllData';
 
 
@@ -69,6 +71,7 @@ export default class HomeScreen extends React.Component {
       starCount: 3.5,
       mapRegion: { latitude: 10.7777935, longitude: 106.7068674, latitudeDelta: 0.03, longitudeDelta: 0.03 },
       roomCategory: [],
+      loadingIndicator: false,
 
       // Post Room
       postRoomImage1: null,
@@ -354,8 +357,12 @@ export default class HomeScreen extends React.Component {
       }
     }
 
+    await this.setState({ modalRegisterAccount: false, })
+    this.popupLoadingIndicator.show();
+
     //Set account object
     await this.setState({
+
       objectRegisterAccount: {
         UserName: this.state.registerCellPhone,
         FullName: this.state.registerFullName,
@@ -371,9 +378,10 @@ export default class HomeScreen extends React.Component {
         CreatedBy: "10",
         UpdatedBy: "Olala_SessionKey",
         UpdatedDate: "2017-10-09"
-      }
+      },
+
     })
-    console.log(JSON.stringify(this.state.objectRegisterAccount))
+    // console.log(JSON.stringify(this.state.objectRegisterAccount))
     //Post to register account
     try {
       await fetch("http://nhabaola.vn/api/Account/FO_Account_Add", {
@@ -404,6 +412,7 @@ export default class HomeScreen extends React.Component {
       })
         .then((response) => response.json())
         .then((responseJson) => {
+
           this.setState({
             modalRegisterAccount: false, //Close register account modal
             modalRegisterAccount: false,
@@ -412,7 +421,10 @@ export default class HomeScreen extends React.Component {
             registerConfirmPassword: null,
             registerAccountImage: null,
             registerFullName: null,
+            registerConfirmCellPhone: null,
           })
+
+          this.popupLoadingIndicator.dismiss();
         }).
         catch((error) => { console.log(error) });
     } catch (error) {
@@ -474,7 +486,6 @@ export default class HomeScreen extends React.Component {
     let { image } = this.state;
     return (
       <View style={styles.container}>
-
 
         <FlatList
           //onScroll={this._onScroll}
@@ -833,6 +844,8 @@ export default class HomeScreen extends React.Component {
         </PopupDialog>
 
 
+
+
         {/* Modal Register Account */}
         <Modal
           animationType={"slide"}
@@ -843,6 +856,8 @@ export default class HomeScreen extends React.Component {
           }}
         >
           <ScrollView>
+
+
             <View style={{ flexDirection: 'row', padding: 20, justifyContent: 'center', alignItems: 'center' }}>
               <TouchableOpacity
                 style={{}}
@@ -940,6 +955,8 @@ export default class HomeScreen extends React.Component {
                   onChangeText={(registerConfirmCellPhone) => { this.setState({ registerConfirmCellPhone }) }}
                 />
               </Animated.View>
+              {/* The view that will animate to match the keyboards height */}
+              {Platform.OS === 'ios' ? <KeyboardSpacer /> : null}
             </View>
 
             <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center', marginTop: 20, }}>
@@ -956,6 +973,7 @@ export default class HomeScreen extends React.Component {
                     registerConfirmPassword: null,
                     registerAccountImage: null,
                     registerFullName: null,
+                    registerConfirmCellPhone: null,
                   })
 
                 }}
@@ -1284,6 +1302,22 @@ export default class HomeScreen extends React.Component {
               <Text style={{ textAlign: 'center', marginTop: 5 }}>Camera</Text>
             </TouchableOpacity>
           </View>
+        </PopupDialog>
+
+
+        {/* Popup Loading Indicator */}
+        <PopupDialog
+          ref={(popupLoadingIndicator) => { this.popupLoadingIndicator = popupLoadingIndicator; }}
+          dialogAnimation={new ScaleAnimation()}
+          dialogStyle={{ marginBottom: 100, width: 80, height: 80, justifyContent: 'center', padding: 20 }}
+          dismissOnTouchOutside={false}
+        >
+          <ActivityIndicator
+            style={{}}
+            animating={true}
+            size="large"
+            color="#73aa2a"
+          />
         </PopupDialog>
       </View >
     );
