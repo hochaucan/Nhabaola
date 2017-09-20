@@ -117,8 +117,6 @@ export default class HomeScreen extends React.Component {
       registerAccountImage: null,
       registerFullName: null,
 
-      //Pick image
-      imageFrom: 'library', //0: From image library, 1: image from Camera
     }
 
   }
@@ -188,10 +186,10 @@ export default class HomeScreen extends React.Component {
   }
 
   //_pickPostRoomImage
-  _pickImage = async (imageNo) => {
+  _pickImage = async (source, imageNo) => {
     let result = null;
 
-    if (this.state.imageFrom === 'library') {
+    if (source === 'library') {
       result = await ImagePicker.launchImageLibraryAsync({
         allowsEditing: true,
         aspect: [4, 3],
@@ -408,6 +406,12 @@ export default class HomeScreen extends React.Component {
         .then((responseJson) => {
           this.setState({
             modalRegisterAccount: false, //Close register account modal
+            modalRegisterAccount: false,
+            registerCellPhone: null,
+            registerPassword: null,
+            registerConfirmPassword: null,
+            registerAccountImage: null,
+            registerFullName: null,
           })
         }).
         catch((error) => { console.log(error) });
@@ -840,8 +844,7 @@ export default class HomeScreen extends React.Component {
               style={{ justifyContent: 'center', alignContent: 'center', paddingRight: 30 }}
               onPress={async () => {
                 this.popupSelectedImage.dismiss();
-                await this.setState({ imageFrom: 'library' })
-                this._pickImage('registerAccountImage')
+                this._pickImage('library', 'registerAccountImage')
                 this.setState({ modalRegisterAccount: true })
               }}
             >
@@ -853,8 +856,7 @@ export default class HomeScreen extends React.Component {
               style={{ justifyContent: 'center', alignContent: 'center', }}
               onPress={async () => {
                 this.popupSelectedImage.dismiss();
-                await this.setState({ imageFrom: 'camera' })
-                this._pickImage('registerAccountImage')
+                this._pickImage('camera', 'registerAccountImage')
                 this.setState({ modalRegisterAccount: true })
               }}
             >
@@ -895,11 +897,11 @@ export default class HomeScreen extends React.Component {
               <Animated.View style={{ position: 'relative', left: this.state.animation.usernamePostionLeft, flexDirection: 'row', padding: 10, }}>
                 <Ionicons style={{ flex: 2, fontSize: 22, paddingTop: 12, textAlign: 'center', }} name='md-call' />
                 <FormInput
-                  containerStyle={{ flex: 15, marginLeft: 6 }}
+                  containerStyle={{ flex: 15, marginLeft: 10 }}
                   placeholder='Số điện thoại'
                   autoCapitalize='sentences'
                   keyboardType='numeric'
-                  underlineColorAndroid={'#fff'}
+                  underlineColorAndroid={'#73aa2a'}
                   onChangeText={(registerCellPhone) => this.setState({ registerCellPhone })}
                   value={this.state.registerCellPhone}
                 />
@@ -923,7 +925,7 @@ export default class HomeScreen extends React.Component {
                   containerStyle={{ flex: 15 }}
                   placeholder='Mật khẩu'
                   secureTextEntry={true}
-                  underlineColorAndroid={'#fff'}
+                  underlineColorAndroid={'#73aa2a'}
                   value={this.state.registerPassword}
                   onChangeText={(registerPassword) => { this.setState({ registerPassword }) }}
                 />
@@ -934,7 +936,7 @@ export default class HomeScreen extends React.Component {
                   containerStyle={{ flex: 15, paddingLeft: 22 }}
                   placeholder='Xác nhận mật khẩu'
                   secureTextEntry={true}
-                  underlineColorAndroid={'#fff'}
+                  underlineColorAndroid={'#73aa2a'}
                   value={this.state.registerConfirmPassword}
                   onChangeText={(registerConfirmPassword) => { this.setState({ registerConfirmPassword }) }}
                 />
@@ -944,7 +946,7 @@ export default class HomeScreen extends React.Component {
                 <FormInput
                   containerStyle={{ flex: 15 }}
                   placeholder='Họ và tên'
-                  underlineColorAndroid={'#fff'}
+                  underlineColorAndroid={'#73aa2a'}
                   value={this.state.registerFullName}
                   onChangeText={(registerFullName) => { this.setState({ registerFullName }) }}
                 />
