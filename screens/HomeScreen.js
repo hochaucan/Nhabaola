@@ -854,7 +854,11 @@ export default class HomeScreen extends React.Component {
                 }
               >
                 <Ionicons style={{ opacity: 0.7, fontSize: 100, color: '#73aa2a', flex: 1, textAlign: 'center', }} name='ios-contact' />
-                {this.state.registerAccountImage && <Image source={{ uri: this.state.registerAccountImage }} style={{ width: 80, height: 80, borderRadius: Platform.OS === 'ios' ? 20 : 100, marginTop: -90, marginLeft: 1, marginBottom: 10, }} />}
+                {this.state.registerAccountImage
+                  && <Image source={{ uri: this.state.registerAccountImage }}
+                    style={{ width: 80, height: 80, borderRadius: Platform.OS === 'ios' ? 25 : 100, marginTop: Platform.OS === 'ios' ? -99 : -90, marginLeft: Platform.OS === 'ios' ? 7 : 1, marginBottom: 10, }}
+                  />
+                }
                 <Text style={{}}>Hình đại diện</Text>
               </TouchableOpacity>
 
@@ -865,6 +869,7 @@ export default class HomeScreen extends React.Component {
                 <Ionicons style={{ flex: 2, fontSize: 22, paddingTop: 12, textAlign: 'center', }} name='md-call' />
                 <FormInput
                   containerStyle={{ flex: 15, marginLeft: Platform.OS === 'ios' ? 20 : 10 }}
+                  inputStyle={{ paddingLeft: Platform.OS === 'android' ? 4 : 0 }}
                   placeholder='Số điện thoại'
                   autoCapitalize='sentences'
                   keyboardType='numeric'
@@ -890,6 +895,7 @@ export default class HomeScreen extends React.Component {
                 <Ionicons style={{ flex: 1, fontSize: 22, paddingTop: 12, textAlign: 'center', }} name='ios-lock' />
                 <FormInput
                   containerStyle={{ flex: 15 }}
+                  inputStyle={{ paddingLeft: Platform.OS === 'android' ? 4 : 0 }}
                   placeholder='Mật khẩu'
                   secureTextEntry={true}
                   underlineColorAndroid={'#73aa2a'}
@@ -900,7 +906,8 @@ export default class HomeScreen extends React.Component {
               <Animated.View style={{ position: 'relative', left: this.state.animation.passwordPositionLeft, flexDirection: 'row', padding: 10, paddingTop: 0, }}>
                 {/* <Ionicons style={{ flex: 1, fontSize: 22, paddingTop: 12, textAlign: 'center', }} name='ios-lock-outline' /> */}
                 <FormInput
-                  containerStyle={{ flex: 15, marginLeft: 38 }}
+                  containerStyle={{ flex: 15, marginLeft: 36 }}
+                  inputStyle={{ paddingLeft: Platform.OS === 'android' ? 4 : 0 }}
                   placeholder='Xác nhận mật khẩu'
                   secureTextEntry={true}
                   underlineColorAndroid={'#73aa2a'}
@@ -911,7 +918,8 @@ export default class HomeScreen extends React.Component {
               <Animated.View style={{ position: 'relative', left: this.state.animation.passwordPositionLeft, flexDirection: 'row', padding: 10, paddingTop: 0, }}>
                 <Ionicons style={{ flex: 1, fontSize: 22, paddingTop: 12, textAlign: 'center', }} name='ios-person' />
                 <FormInput
-                  containerStyle={{ flex: 15, marginLeft: Platform.OS === 'ios' ? 22 : 20 }}
+                  containerStyle={{ flex: 15, marginLeft: Platform.OS === 'ios' ? 22 : 18 }}
+                  inputStyle={{ paddingLeft: Platform.OS === 'android' ? 4 : 0 }}
                   placeholder='Họ và tên'
                   underlineColorAndroid={'#73aa2a'}
                   value={this.state.registerFullName}
@@ -1257,7 +1265,7 @@ export default class HomeScreen extends React.Component {
               onPress={async () => {
                 this.popupSelectedImage.dismiss();
                 this._pickImage('library', 'registerAccountImage')
-                this.setState({ modalRegisterAccount: true })
+                await this.setState({ modalRegisterAccount: true })
               }}
             >
               <Ionicons style={{ fontSize: 40, borderRadius: 10, backgroundColor: '#a4d227', color: '#fff', textAlign: 'center', padding: 10 }} name='ios-folder-open' >
@@ -1269,7 +1277,7 @@ export default class HomeScreen extends React.Component {
               onPress={async () => {
                 this.popupSelectedImage.dismiss();
                 this._pickImage('camera', 'registerAccountImage')
-                this.setState({ modalRegisterAccount: true })
+                await this.setState({ modalRegisterAccount: true })
               }}
             >
               <Ionicons style={{ fontSize: 40, borderRadius: 10, backgroundColor: '#a4d227', color: '#fff', textAlign: 'center', padding: 10 }} name='md-camera' />
