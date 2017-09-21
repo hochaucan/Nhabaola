@@ -19,6 +19,7 @@ import {
   ToastAndroid,
   Picker,
   ActivityIndicator,
+  AsyncStorage,
 } from 'react-native';
 import { WebBrowser, ImagePicker, Facebook, Google } from 'expo';
 import { MonoText } from '../components/StyledText';
@@ -126,6 +127,24 @@ export default class HomeScreen extends React.Component {
   // 2. Define a variable that will keep track of the current scroll position
   _listViewOffset = 0
 
+  _saveStorageAsync = async (key, obj) => {
+    try {
+      await AsyncStorage.setItem(key, obj)
+      //alert("Save OK")
+
+    } catch (e) {
+      console.log(e);
+    }
+  }
+  _getStorageAsync = async (key) => {
+    try {
+      var v = await AsyncStorage.getItem(key);
+      alert(v)
+    } catch (e) {
+      console.log(e);
+    }
+  }
+
   refresh() {
     this.setState({
       refresh: false,
@@ -188,8 +207,7 @@ export default class HomeScreen extends React.Component {
     // console.log(rating);
   }
 
-  //_pickPostRoomImage
-  _pickImage = async (source, imageNo) => {
+  _pickImageAsync = async (source, imageNo) => {
     let result = null;
 
     if (source === 'library') {
@@ -441,7 +459,6 @@ export default class HomeScreen extends React.Component {
 
   }
 
-
   async _getCategoryAsync() {
     try {
       await fetch("http://nhabaola.vn/api/Category/FO_Category_GetAllData", {
@@ -460,12 +477,17 @@ export default class HomeScreen extends React.Component {
         .then((response) => response.json())
         .then((responseJson) => {
 
-          this.setState({
-            //roomCategory: JSON.stringify(responseJson.obj)
-            roomCategory: responseJson.obj.map((y) => { return y.CatName })
-          })
+          this._saveStorageAsync('roomCategory', 'JSON.stringify(responseJson.obj)')
 
-          //console.log(this.state.roomCategory)
+
+          //this.setState({
+          //roomCategory: JSON.stringify(responseJson.obj)
+          // roomCategory: responseJson.obj.map((y) => { return y.CatName })
+          //roomCategory: this._getCategoryAsync('roomCategory')
+          //})
+
+          this._getStorageAsync('roomCategory')
+          //console.log(JSON.stringify(responseJson.obj))
 
           // {
           //   this.state.response.map((y) => {
@@ -1009,7 +1031,7 @@ export default class HomeScreen extends React.Component {
 
               <TouchableOpacity
                 style={{}}
-                onPress={() => this._pickPostRoomImage('1')}
+                onPress={() => this._pickImageAsync('1')}
               >
                 <Ionicons style={{ opacity: 0.5, fontSize: 133, color: '#73aa2a', flex: 1, textAlign: 'center', }} name='ios-image-outline' />
                 {this.state.postRoomImage1 && <Image source={{ uri: this.state.postRoomImage1 }} style={{ width: 100, height: 100 }} />}
@@ -1017,14 +1039,14 @@ export default class HomeScreen extends React.Component {
 
               <TouchableOpacity
                 style={{}}
-                onPress={() => this._pickPostRoomImage('2')}
+                onPress={() => this._pickImageAsync('2')}
               >
                 <Ionicons style={{ opacity: 0.5, fontSize: 133, color: '#73aa2a', flex: 1, textAlign: 'center', }} name='ios-image-outline' />
                 {this.state.postRoomImage2 && <Image source={{ uri: this.state.postRoomImage2 }} style={{ width: 100, height: 100 }} />}
               </TouchableOpacity>
               <TouchableOpacity
                 style={{}}
-                onPress={() => this._pickPostRoomImage('3')}
+                onPress={() => this._pickImageAsync('3')}
               >
                 <Ionicons style={{ opacity: 0.5, fontSize: 133, color: '#73aa2a', flex: 1, textAlign: 'center', }} name='ios-image-outline' />
                 {this.state.postRoomImage3 && <Image source={{ uri: this.state.postRoomImage3 }} style={{ width: 100, height: 100 }} />}
@@ -1039,7 +1061,7 @@ export default class HomeScreen extends React.Component {
 
               <TouchableOpacity
                 style={{}}
-                onPress={() => this._pickPostRoomImage('4')}
+                onPress={() => this._pickImageAsync('4')}
               >
                 <Ionicons style={{ opacity: 0.5, fontSize: 133, color: '#73aa2a', flex: 1, textAlign: 'center', }} name='ios-image-outline' />
                 {this.state.postRoomImage4 && <Image source={{ uri: this.state.postRoomImage4 }} style={{ width: 100, height: 100 }} />}
@@ -1047,14 +1069,14 @@ export default class HomeScreen extends React.Component {
 
               <TouchableOpacity
                 style={{}}
-                onPress={() => this._pickPostRoomImage('5')}
+                onPress={() => this._pickImageAsync('5')}
               >
                 <Ionicons style={{ opacity: 0.5, fontSize: 133, color: '#73aa2a', flex: 1, textAlign: 'center', }} name='ios-image-outline' />
                 {this.state.postRoomImage5 && <Image source={{ uri: this.state.postRoomImage5 }} style={{ width: 100, height: 100 }} />}
               </TouchableOpacity>
               <TouchableOpacity
                 style={{}}
-                onPress={() => this._pickPostRoomImage('6')}
+                onPress={() => this._pickImageAsync('6')}
               >
                 <Ionicons style={{ opacity: 0.5, fontSize: 133, color: '#73aa2a', flex: 1, textAlign: 'center', }} name='ios-image-outline' />
                 {this.state.postRoomImage6 && <Image source={{ uri: this.state.postRoomImage6 }} style={{ width: 100, height: 100 }} />}
@@ -1227,8 +1249,8 @@ export default class HomeScreen extends React.Component {
                   style={{ paddingTop: 15, marginLeft: -5, }}
                   dropdownStyle={{ padding: 10, width: 150 }}
                   textStyle={{}}
-                  //options={['Nhà trọ', 'Khách sạn', 'Biệt thự', 'Vila', 'Đất thổ cư']}
-                  options={this.state.roomCategory.sort()}
+                  options={['Nhà trọ', 'Khách sạn', 'Biệt thự', 'Vila', 'Đất thổ cư']}
+                  // options={this.state.roomCategory.sort()}
                   defaultIndex={0}
                   defaultValue='Nhà trọ'
                   onSelect={(idx, value) => this._dropdown_onSelect(idx, value)}
@@ -1282,7 +1304,7 @@ export default class HomeScreen extends React.Component {
               style={{ justifyContent: 'center', alignContent: 'center', paddingRight: 30 }}
               onPress={async () => {
                 this.popupSelectedImage.dismiss();
-                this._pickImage('library', 'registerAccountImage')
+                this._pickImageAsync('library', 'registerAccountImage')
                 await this.setState({ modalRegisterAccount: true })
               }}
             >
@@ -1294,7 +1316,7 @@ export default class HomeScreen extends React.Component {
               style={{ justifyContent: 'center', alignContent: 'center', }}
               onPress={async () => {
                 this.popupSelectedImage.dismiss();
-                this._pickImage('camera', 'registerAccountImage')
+                this._pickImageAsync('camera', 'registerAccountImage')
                 await this.setState({ modalRegisterAccount: true })
               }}
             >
