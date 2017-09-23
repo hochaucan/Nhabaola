@@ -70,7 +70,7 @@ export default class HomeScreen extends React.Component {
       reportCheck: false,
       starCount: 3.5,
       mapRegion: { latitude: 10.7777935, longitude: 106.7068674, latitudeDelta: 0.03, longitudeDelta: 0.03 },
-      roomCategory: [],
+      roomCategory: null,
       loadingIndicator: false,
 
       // Post Room
@@ -154,10 +154,15 @@ export default class HomeScreen extends React.Component {
     //FO_Category_GetAllData();
     //this._postImage();
 
+    // this._getStorageAsync('FO_Category_GetAllData')
+
   }
 
   componentWillMount() {
     this._getCategoryAsync();
+    //FO_Category_GetAllData();
+
+
 
 
 
@@ -456,7 +461,7 @@ export default class HomeScreen extends React.Component {
 
 
   _postImage = async () => {
-var can = 'http://uploads.im/api?upload=http://www.google.com/images/srpr/nav_logo66.png'
+    var can = 'http://uploads.im/api?upload=http://www.google.com/images/srpr/nav_logo66.png'
     // console.log(JSON.stringify(this.state.objectRegisterAccount))
     //Post to register account
     try {
@@ -476,14 +481,7 @@ var can = 'http://uploads.im/api?upload=http://www.google.com/images/srpr/nav_lo
 
   }
 
-  _dropdown_onSelect(idx, value) {
-    // BUG: alert in a modal will auto dismiss and causes crash after reload and touch. @sohobloo 2016-12-1
-    //alert(`idx=${idx}, value='${value}'`);
-    //console.debug(`idx=${idx}, value='${value}'`);
-
-  }
-
-  async _getCategoryAsync() {
+  _getCategoryAsync = async () => {
     try {
       await fetch("http://nhabaola.vn/api/Category/FO_Category_GetAllData", {
         method: 'POST',
@@ -501,17 +499,18 @@ var can = 'http://uploads.im/api?upload=http://www.google.com/images/srpr/nav_lo
         .then((response) => response.json())
         .then((responseJson) => {
 
-          //this._saveStorageAsync('roomCategory', 'JSON.stringify(responseJson.obj)')
+          this._saveStorageAsync('roomCategory', JSON.stringify(responseJson.obj))
 
 
-          //this.setState({
-          //roomCategory: JSON.stringify(responseJson.obj)
-          // roomCategory: responseJson.obj.map((y) => { return y.CatName })
-          //roomCategory: this._getCategoryAsync('roomCategory')
-          //})
+          this.setState({
+            //roomCategory: JSON.stringify(responseJson.obj)
+            // roomCategory: responseJson.obj.map((y) => { return y.CatName })
+            //roomCategory: JSON.parse(this._getCategoryAsync('roomCategory'))
+            roomCategory: responseJson.obj
+          })
 
           //this._getStorageAsync('roomCategory')
-          //console.log(responseJson.obj)
+          // this._getStorageAsync('roomCategory')
 
           // {
           //   this.state.response.map((y) => {
@@ -1043,7 +1042,7 @@ var can = 'http://uploads.im/api?upload=http://www.google.com/images/srpr/nav_lo
           animationType={"slide"}
           transparent={false}
           visible={this.state.modalVisible}
-          onRequestClose={() => { alert("Modal has been closed.") }}
+          onRequestClose={() => { }}
         >
           <ScrollView style={{ paddingTop: 10, marginTop: 20, }}>
             <FormLabel>Hình ảnh</FormLabel>
@@ -1269,14 +1268,37 @@ var can = 'http://uploads.im/api?upload=http://www.google.com/images/srpr/nav_lo
               </View>
               <View style={{ flexDirection: 'row', }}>
                 <FormLabel style={{}}>Loại BĐS:</FormLabel>
-             
 
 
 
 
 
+                <Picker
+                  style={{ flex: 1 }}
+                  mode='dropdown'
+                  selectedValue={this.state.language}
+                  onValueChange={(itemValue, itemIndex) => this.setState({ language: itemValue })}>
 
-             
+                  {this.state.roomCategory.map((y, i) => {
+                    return (
+
+                      <Picker.Item key={i} label={y.CatName} value="2" />
+                      //y.CatName 
+
+                    )
+                  })}
+
+                  {/* <Picker.Item label="2 km" value="2" />
+                  <Picker.Item label="4 km" value="4" />
+                  <Picker.Item label="6 km" value="6" />
+                  <Picker.Item label="8 km" value="8" />
+                  <Picker.Item label="10 km" value="10" /> */}
+                </Picker>
+
+
+
+
+
               </View>
               <FormLabel style={{ marginTop: 10, }}>Chi tiết:</FormLabel>
               <FormInput
@@ -1305,7 +1327,7 @@ var can = 'http://uploads.im/api?upload=http://www.google.com/images/srpr/nav_lo
                   icon={{ name: 'md-cloud-upload', type: 'ionicon' }}
                   title='Đăng tin'
                   onPress={() => {
-
+                    alert(this.state.roomCategory)
                   }}
                 />
               </View>
