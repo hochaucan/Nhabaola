@@ -70,7 +70,7 @@ export default class HomeScreen extends React.Component {
       reportCheck: false,
       starCount: 3.5,
       mapRegion: { latitude: 10.7777935, longitude: 106.7068674, latitudeDelta: 0.03, longitudeDelta: 0.03 },
-      roomCategory: null,
+      roomCategory: [],
       loadingIndicator: false,
 
       // Post Room
@@ -84,6 +84,7 @@ export default class HomeScreen extends React.Component {
         latitude: null,
         longitude: null,
       },
+      selectedCategory: '0',
 
       // Login
       username: '',
@@ -499,7 +500,7 @@ export default class HomeScreen extends React.Component {
         .then((response) => response.json())
         .then((responseJson) => {
 
-          this._saveStorageAsync('roomCategory', JSON.stringify(responseJson.obj))
+          this._saveStorageAsync('FO_Category_GetAllData', JSON.stringify(responseJson.obj))
 
 
           this.setState({
@@ -668,7 +669,11 @@ export default class HomeScreen extends React.Component {
             }}>
               <Icon name="ios-contact" style={styles.actionButtonIcon} />
             </ActionButton.Item>
-            <ActionButton.Item buttonColor='#a4d227' title="Đăng tin" onPress={() => this._setModalVisible(true)}>
+            <ActionButton.Item buttonColor='#a4d227' title="Đăng tin" onPress={() => {
+              //this._setModalVisible(true)
+              //this.props.navigation.navigate('PostedRoomScreen');
+              this.props.navigation.navigate('PostRoomScreen', { key: 'CanHo' }); 
+            }}>
               <Icon name="md-cloud-upload" style={styles.actionButtonIcon} />
             </ActionButton.Item>
             <ActionButton.Item buttonColor='#a4d227' title="Nạp ví tiền" onPress={() => { }}>
@@ -1231,7 +1236,7 @@ export default class HomeScreen extends React.Component {
                   options={{ suffixUnit: '', precision: 0, unit: '', separator: ' ' }}
                   style={{ flex: 1, paddingLeft: 25, paddingTop: Platform.OS === 'ios' ? 11 : 7, }}
                   placeholder=''
-                  underlineColorAndroid='#fff'
+                  underlineColorAndroid='#73aa2a'
                 />
                 <FormLabel>(đồng)</FormLabel>
                 {/* <FormInput
@@ -1250,59 +1255,31 @@ export default class HomeScreen extends React.Component {
                   type={'only-numbers'}
                   style={{ flex: 1, paddingTop: Platform.OS === 'ios' ? 11 : 7, marginLeft: Platform.OS === 'ios' ? -11 : -5, }}
                   placeholder=''
-                  underlineColorAndroid='#fff'
+                  underlineColorAndroid='#73aa2a'
                 />
 
-                {/* <FormInput
-                  containerStyle={{ flex: 1, }}
-                  placeholder=''
-                  autoCapitalize='sentences'
-                  maxLength={300}
-                  underlineColorAndroid='#fff'
-                  keyboardType='numeric'
-                  onFocus={() => {
-
-                  }}
-                /> */}
                 <FormLabel>(mét vuông)</FormLabel>
               </View>
               <View style={{ flexDirection: 'row', }}>
                 <FormLabel style={{}}>Loại BĐS:</FormLabel>
 
-
-
-
-
                 <Picker
-                  style={{ flex: 1 }}
+                  style={{ flex: 1, marginTop: -4 }}
                   mode='dropdown'
-                  selectedValue={this.state.language}
-                  onValueChange={(itemValue, itemIndex) => this.setState({ language: itemValue })}>
-
+                  selectedValue={this.state.selectedCategory}
+                  onValueChange={(itemValue, itemIndex) => this.setState({ selectedCategory: itemValue })}>
+                  <Picker.Item label='-- Chọn loại BĐS --' value='0' />
                   {this.state.roomCategory.map((y, i) => {
                     return (
-
-                      <Picker.Item key={i} label={y.CatName} value="2" />
-                      //y.CatName 
-
+                      <Picker.Item key={i} label={y.CatName} value={y.ID} />
                     )
                   })}
-
-                  {/* <Picker.Item label="2 km" value="2" />
-                  <Picker.Item label="4 km" value="4" />
-                  <Picker.Item label="6 km" value="6" />
-                  <Picker.Item label="8 km" value="8" />
-                  <Picker.Item label="10 km" value="10" /> */}
                 </Picker>
-
-
-
-
 
               </View>
               <FormLabel style={{ marginTop: 10, }}>Chi tiết:</FormLabel>
               <FormInput
-                containerStyle={{ paddingLeft: 8, borderWidth: 0.5, borderColor: '#9B9D9D', borderRadius: 10, height: 140, }}
+                containerStyle={{ paddingLeft: 8, borderWidth: 0.5, borderColor: '#73aa2a', borderRadius: 10, height: 140, }}
                 placeholder='Vui lòng nhập thông tin chi tiết'
                 multiline={true}
                 autoCapitalize='sentences'

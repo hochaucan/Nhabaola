@@ -12,7 +12,7 @@ import MainTabNavigator from './MainTabNavigator';
 import registerForPushNotificationsAsync from '../api/registerForPushNotificationsAsync';
 // import ScreenStack from './ScreenNavigator';
 
-
+import PostRoomScreen from '../screens/PostRoomScreen';
 import RoomDetailScreen from '../screens/RoomDetailScreen';
 import ProfileScreen from '../screens/ProfileScreen';
 import PostedRoomHIstoryScreen from '../screens/PostedRoomHIstoryScreen';
@@ -41,6 +41,9 @@ const RootStackNavigator = StackNavigator(
     },
     PostedRoomHIstoryScreen: {
       screen: PostedRoomHIstoryScreen,
+    },
+    PostRoomScreen: {
+      screen: PostRoomScreen,
     },
   },
   {
