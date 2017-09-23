@@ -71,6 +71,7 @@ export default class HomeScreen extends React.Component {
       starCount: 3.5,
       mapRegion: { latitude: 10.7777935, longitude: 106.7068674, latitudeDelta: 0.03, longitudeDelta: 0.03 },
       roomCategory: [],
+      roomBox: [],
       loadingIndicator: false,
 
       // Post Room
@@ -161,12 +162,7 @@ export default class HomeScreen extends React.Component {
 
   componentWillMount() {
     this._getCategoryAsync();
-    //FO_Category_GetAllData();
-
-
-
-
-
+    this._getRoomBoxAsync();
   }
 
   _onScroll = (event) => {
@@ -526,6 +522,39 @@ export default class HomeScreen extends React.Component {
 
   }
 
+  _getRoomBoxAsync = async () => {
+    try {
+      await fetch("http://nhabaola.vn/api/RoomBox/FO_RoomBox_GetAllData", {
+        method: 'POST',
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          "PageIndex": "0",
+          "PageCount": "5",
+          "SessionKey": "Olala_SessionKey",
+          "UserLogon": "100"
+        }),
+      })
+        .then((response) => response.json())
+        .then((responseJson) => {
+
+          this._saveStorageAsync('FO_RoomBox_GetAllData', JSON.stringify(responseJson.obj))
+          this.setState({
+            roomBox: responseJson.obj
+          })
+
+          console.log(responseJson.obj)
+
+        }).
+        catch((error) => { console.log(error) });
+    } catch (error) {
+      console.log(error)
+    }
+
+  }
+
 
 
   render() {
@@ -672,7 +701,7 @@ export default class HomeScreen extends React.Component {
             <ActionButton.Item buttonColor='#a4d227' title="Đăng tin" onPress={() => {
               //this._setModalVisible(true)
               //this.props.navigation.navigate('PostedRoomScreen');
-              this.props.navigation.navigate('PostRoomScreen', { key: 'CanHo' }); 
+              this.props.navigation.navigate('PostRoomScreen', { key: 'CanHo' });
             }}>
               <Icon name="md-cloud-upload" style={styles.actionButtonIcon} />
             </ActionButton.Item>
