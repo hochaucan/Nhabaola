@@ -21,7 +21,6 @@ import FlatListDemo from '../components/examples/FlatListDemo';
 import FloatingButtonDemo from '../components/examples/FloatingButtonDemo';
 import PostDemo from '../components/examples/PostDemo';
 import AsyncStorageDemo from '../components/examples/AsyncStorageDemo';
-import Demo from '../components/examples/DropdownDemo';
 import MyLocationMapMarker from '../components/examples/MyLocationMapMakerDemo';
 import {
   GooglePlacesAutocomplete,

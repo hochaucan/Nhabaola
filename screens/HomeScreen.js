@@ -32,7 +32,6 @@ import { CheckBox, Rating, Button, FormLabel, FormInput, SocialIcon, FormValidat
 import StarRating from 'react-native-star-rating';
 import MapView from 'react-native-maps';
 import Communications from 'react-native-communications';
-import ModalDropdown from 'react-native-modal-dropdown';
 import { TextInputMask } from 'react-native-masked-text';
 import { GooglePlacesAutocomplete, } from 'react-native-google-places-autocomplete'; // 1.2.12
 import Swiper from 'react-native-swiper';
@@ -1270,17 +1269,14 @@ var can = 'http://uploads.im/api?upload=http://www.google.com/images/srpr/nav_lo
               </View>
               <View style={{ flexDirection: 'row', }}>
                 <FormLabel style={{}}>Loại BĐS:</FormLabel>
-                <ModalDropdown
-                  style={{ paddingTop: 15, marginLeft: -5, }}
-                  dropdownStyle={{ padding: 10, width: 150 }}
-                  textStyle={{}}
-                  options={['Nhà trọ', 'Khách sạn', 'Biệt thự', 'Vila', 'Đất thổ cư']}
-                  // options={this.state.roomCategory.sort()}
-                  defaultIndex={0}
-                  defaultValue='Nhà trọ'
-                  onSelect={(idx, value) => this._dropdown_onSelect(idx, value)}
-                >
-                </ModalDropdown>
+             
+
+
+
+
+
+
+             
               </View>
               <FormLabel style={{ marginTop: 10, }}>Chi tiết:</FormLabel>
               <FormInput

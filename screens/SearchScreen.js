@@ -18,7 +18,7 @@ import {
 } from 'react-native';
 import { ExpoLinksView } from '@expo/samples';
 import { Constants, Location, Permissions } from 'expo';
-import { Ionicons } from '@expo/vector-icons'; import ModalDropdown from 'react-native-modal-dropdown';
+import { Ionicons } from '@expo/vector-icons';
 import { users } from '../components/examples/data';
 import { Button, FormLabel, FormInput, SocialIcon, } from 'react-native-elements'
 import MapView from 'react-native-maps';
@@ -620,6 +620,7 @@ export default class SearchScreen extends React.Component {
                                 </Picker>
                             }
                             <TouchableOpacity
+                                style={{ flex: 1, }}
                                 onPress={() => {
                                     this.fitAllMarkers()
                                     //this._fitAllFindingHouseMakers();
@@ -692,17 +693,12 @@ export default class SearchScreen extends React.Component {
                             <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
                                 <View style={{ flexDirection: 'row', marginBottom: 30, marginLeft: 30, }}>
                                     <FormLabel>Loại bất động sản:</FormLabel>
-                                    <ModalDropdown
-                                        ref={el => this._dropdownFilter = el}
-                                        style={{ paddingTop: 15, width: 100 }}
-                                        dropdownStyle={{ padding: 10, }}
-                                        textStyle={{}}
-                                        options={['Tất cả', 'Nhà trọ', 'Khách sạn', 'Biệt thự', 'Vila', 'Đất thổ cư']}
-                                        defaultIndex={0}
-                                        defaultValue='Tất cả'
-                                        onSelect={(idx, value) => this._dropdownFilter_onSelect(idx, value)}
-                                    >
-                                    </ModalDropdown>
+
+
+
+
+
+
                                 </View>
 
                                 <FormLabel style={{ marginBottom: 20 }}>Giá: {this.state.multiSliderPriceValue[0]} - {this.state.multiSliderPriceValue[1]} triệu đồng</FormLabel>
@@ -900,23 +896,35 @@ export default class SearchScreen extends React.Component {
 
                 {/* Popup Radius Ios*/}
                 <Modal
-                    style={{ height: height * 0.5 }}
+                    style={{}}
                     animationType={"slide"}
-                    transparent={false}
+                    transparent={true}
                     visible={this.state.modalRadius}
                     onRequestClose={() => {
                         //alert("Modal has been closed.")
                     }}
                 >
+
+                    {/* <TouchableOpacity
+                        style={{ backgroundColor: '#fff', paddingTop: height * 0.4 }}
+                        onPress={() => { this.setState({ modalRadius: false }) }}
+                    >
+                        <Text style={{ textAlign: 'right' }}>Chọn</Text>
+                    </TouchableOpacity> */}
                     <Picker
                         style={{
                             flex: 1,
+                            marginTop: height * 0.59,
+                            backgroundColor: '#fff',
                         }}
-                        itemStyle={{}}
+                        itemStyle={{ color: '#73aa2a' }}
                         mode='dropdown'
                         selectedValue={this.state.radius}
                         onValueChange={(itemValue, itemIndex) => {
-                            this.setState({ radius: itemValue })
+                            this.setState({
+                                radius: itemValue,
+                                modalRadius: false,
+                            })
                         }}>
                         <Picker.Item label="2 km" value="2" />
                         <Picker.Item label="4 km" value="4" />
@@ -924,6 +932,7 @@ export default class SearchScreen extends React.Component {
                         <Picker.Item label="8 km" value="8" />
                         <Picker.Item label="10 km" value="10" />
                     </Picker>
+
                 </Modal>
 
                 {/* Popup Loading Indicator */}
