@@ -14,7 +14,7 @@ import {
     Slider,
     SliderIOS,
     Alert,
-
+    ActivityIndicator,
 } from 'react-native';
 import { ExpoLinksView } from '@expo/samples';
 import { Constants, Location, Permissions } from 'expo';
@@ -234,7 +234,8 @@ export default class SearchScreen extends React.Component {
             modalSearchFilterVisible: false,
             age: 18,
             hackHeight: height,
-            location: null,
+            radius: '2',
+            modalRadius: false,
             errorMessage: null,
             markers: [],
             findingHouseMakers: [],
@@ -587,23 +588,24 @@ export default class SearchScreen extends React.Component {
                 </View>
 
                 <ScrollView style={styles.container}>
-                    {/* <Text style={styles.paragraph}>{text}</Text> */}
-
 
                     <View style={styles.searchRoolResultBox}>
                         <View style={styles.searchRadiusBox}>
                             <Text >Bán kính: </Text>
                             {Platform.OS === 'ios' ?
-                                <ModalDropdown
-                                    style={styles.ModalDropdown}
-                                    dropdownStyle={styles.dropdownStyle}
-                                    textStyle={styles.dropdowntextStyle}
-                                    options={['2 km', '4 km', '6 km', '8 km', '10 km']}
-                                    defaultIndex={0}
-                                    defaultValue='2 km'
-                                    onSelect={(idx, value) => this._dropdown_onSelect(idx, value)}
+
+                                <TouchableOpacity
+                                    onPress={() => {
+                                        this.setState({
+                                            modalRadius: true
+                                        })
+                                    }}
                                 >
-                                </ModalDropdown>
+
+                                    <Text>{this.state.radius} km</Text>
+                                </TouchableOpacity>
+
+
                                 :
                                 <Picker
                                     style={styles.searchRadiusPicker}
@@ -894,6 +896,49 @@ export default class SearchScreen extends React.Component {
                         debounce={200}
                     />
 
+                </PopupDialog>
+
+                {/* Popup Radius Ios*/}
+                <Modal
+                    style={{ height: height * 0.5 }}
+                    animationType={"slide"}
+                    transparent={false}
+                    visible={this.state.modalRadius}
+                    onRequestClose={() => {
+                        //alert("Modal has been closed.")
+                    }}
+                >
+                    <Picker
+                        style={{
+                            flex: 1,
+                        }}
+                        itemStyle={{}}
+                        mode='dropdown'
+                        selectedValue={this.state.radius}
+                        onValueChange={(itemValue, itemIndex) => {
+                            this.setState({ radius: itemValue })
+                        }}>
+                        <Picker.Item label="2 km" value="2" />
+                        <Picker.Item label="4 km" value="4" />
+                        <Picker.Item label="6 km" value="6" />
+                        <Picker.Item label="8 km" value="8" />
+                        <Picker.Item label="10 km" value="10" />
+                    </Picker>
+                </Modal>
+
+                {/* Popup Loading Indicator */}
+                <PopupDialog
+                    ref={(popupLoadingIndicator) => { this.popupLoadingIndicator = popupLoadingIndicator; }}
+                    dialogAnimation={new ScaleAnimation()}
+                    dialogStyle={{ marginBottom: 100, width: 80, height: 80, justifyContent: 'center', padding: 20 }}
+                    dismissOnTouchOutside={false}
+                >
+                    <ActivityIndicator
+                        style={{}}
+                        animating={true}
+                        size="large"
+                        color="#73aa2a"
+                    />
                 </PopupDialog>
             </View >
         );

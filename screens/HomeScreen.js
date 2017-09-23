@@ -153,12 +153,15 @@ export default class HomeScreen extends React.Component {
 
   componentDidMount() {
     //FO_Category_GetAllData();
-
+    //this._postImage();
 
   }
 
   componentWillMount() {
     this._getCategoryAsync();
+
+
+
   }
 
   _onScroll = (event) => {
@@ -452,6 +455,28 @@ export default class HomeScreen extends React.Component {
 
   }
 
+
+  _postImage = async () => {
+var can = 'http://uploads.im/api?upload=http://www.google.com/images/srpr/nav_logo66.png'
+    // console.log(JSON.stringify(this.state.objectRegisterAccount))
+    //Post to register account
+    try {
+      await fetch(can)
+        .then((response) => response.json())
+        .then((responseJson) => {
+
+          //alert(JSON.stringify(responseJson))
+          console.log(responseJson)
+
+        })
+        .catch((e) => { console.log(e) });
+    } catch (error) {
+      console.log(error)
+    }
+
+
+  }
+
   _dropdown_onSelect(idx, value) {
     // BUG: alert in a modal will auto dismiss and causes crash after reload and touch. @sohobloo 2016-12-1
     //alert(`idx=${idx}, value='${value}'`);
@@ -477,7 +502,7 @@ export default class HomeScreen extends React.Component {
         .then((response) => response.json())
         .then((responseJson) => {
 
-          this._saveStorageAsync('roomCategory', 'JSON.stringify(responseJson.obj)')
+          //this._saveStorageAsync('roomCategory', 'JSON.stringify(responseJson.obj)')
 
 
           //this.setState({
@@ -486,8 +511,8 @@ export default class HomeScreen extends React.Component {
           //roomCategory: this._getCategoryAsync('roomCategory')
           //})
 
-          this._getStorageAsync('roomCategory')
-          //console.log(JSON.stringify(responseJson.obj))
+          //this._getStorageAsync('roomCategory')
+          //console.log(responseJson.obj)
 
           // {
           //   this.state.response.map((y) => {
