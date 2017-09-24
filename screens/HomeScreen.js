@@ -162,7 +162,7 @@ export default class HomeScreen extends React.Component {
 
   componentWillMount() {
     this._getCategoryAsync();
-    this._getRoomBoxAsync();
+   // this._getRoomBoxAsync();
   }
 
   _onScroll = (event) => {
