@@ -14,6 +14,7 @@ import {
     ActivityIndicator,
     ToastAndroid,
     Alert,
+    Modal,
 }
     from 'react-native';
 import { Constants, Location, Permissions, ImagePicker } from 'expo';
@@ -70,6 +71,8 @@ export default class PostRoomScreen extends React.Component {
             acreage: '',
             price: '',
             detailInfo: '',
+            modalBDS: false,
+            // selectedBDS: '0',
         }
     }
 
@@ -307,9 +310,9 @@ export default class PostRoomScreen extends React.Component {
 
                         <TouchableOpacity
                             style={{}}
-                            onPress={() => {
+                            onPress={async () => {
+                                await this.setState({ selectedImages: '1' })
                                 this.popupSelectedImage.show();
-                                this.setState({ selectedImages: '1' })
                             }}
                         >
                             <Ionicons style={{ opacity: 0.5, fontSize: 133, color: '#73aa2a', flex: 1, textAlign: 'center', }} name='ios-image-outline' />
@@ -318,9 +321,9 @@ export default class PostRoomScreen extends React.Component {
 
                         <TouchableOpacity
                             style={{}}
-                            onPress={() => {
+                            onPress={async () => {
+                                await this.setState({ selectedImages: '2' })
                                 this.popupSelectedImage.show();
-                                this.setState({ selectedImages: '2' })
                             }}
                         >
                             <Ionicons style={{ opacity: 0.5, fontSize: 133, color: '#73aa2a', flex: 1, textAlign: 'center', }} name='ios-image-outline' />
@@ -328,9 +331,9 @@ export default class PostRoomScreen extends React.Component {
                         </TouchableOpacity>
                         <TouchableOpacity
                             style={{}}
-                            onPress={() => {
+                            onPress={async () => {
+                                await this.setState({ selectedImages: '3' })
                                 this.popupSelectedImage.show();
-                                this.setState({ selectedImages: '3' })
                             }}
                         >
                             <Ionicons style={{ opacity: 0.5, fontSize: 133, color: '#73aa2a', flex: 1, textAlign: 'center', }} name='ios-image-outline' />
@@ -346,9 +349,9 @@ export default class PostRoomScreen extends React.Component {
 
                         <TouchableOpacity
                             style={{}}
-                            onPress={() => {
+                            onPress={async () => {
+                                await this.setState({ selectedImages: '4' })
                                 this.popupSelectedImage.show();
-                                this.setState({ selectedImages: '4' })
                             }}
                         >
                             <Ionicons style={{ opacity: 0.5, fontSize: 133, color: '#73aa2a', flex: 1, textAlign: 'center', }} name='ios-image-outline' />
@@ -357,9 +360,9 @@ export default class PostRoomScreen extends React.Component {
 
                         <TouchableOpacity
                             style={{}}
-                            onPress={() => {
+                            onPress={async () => {
+                                await this.setState({ selectedImages: '5' })
                                 this.popupSelectedImage.show();
-                                this.setState({ selectedImages: '5' })
                             }}
                         >
                             <Ionicons style={{ opacity: 0.5, fontSize: 133, color: '#73aa2a', flex: 1, textAlign: 'center', }} name='ios-image-outline' />
@@ -367,9 +370,9 @@ export default class PostRoomScreen extends React.Component {
                         </TouchableOpacity>
                         <TouchableOpacity
                             style={{}}
-                            onPress={() => {
+                            onPress={async () => {
+                                await this.setState({ selectedImages: '6' })
                                 this.popupSelectedImage.show();
-                                this.setState({ selectedImages: '6' })
                             }}
                         >
                             <Ionicons style={{ opacity: 0.5, fontSize: 133, color: '#73aa2a', flex: 1, textAlign: 'center', }} name='ios-image-outline' />
@@ -435,35 +438,27 @@ export default class PostRoomScreen extends React.Component {
 
                     </View>
                     {/* <FormLabel style={{ borderBottomWidth: 0.7, borderColor: '#a4d227' }}>Thông tin chi tiết</FormLabel> */}
-                    <View style={{ height: 200, paddingTop: 20, }}>
+                    <View style={{ height: 200, marginTop: -20 }}>
                         <View style={{ flexDirection: 'row', }}>
                             <FormLabel style={{}}>Giá:</FormLabel>
                             <TextInputMask
                                 ref={'price'}
                                 type={'money'}
                                 options={{ suffixUnit: '', precision: 0, unit: '', separator: ' ' }}
-                                style={{ flex: 1, padding: 5, marginLeft: 30 }}
+                                style={{ flex: 1, padding: 5, marginLeft: 30, borderBottomWidth: Platform.OS === 'ios' ? 0.5 : 0, borderColor: '#73aa2a' }}
                                 placeholder=''
                                 underlineColorAndroid='#73aa2a'
                                 value={this.state.price}
                                 onChangeText={(price) => this.setState({ price })}
                             />
                             <FormLabel>(đồng)</FormLabel>
-                            {/* <FormInput
-                  containerStyle={{ flex: 1, paddingLeft: 29 }}
-                  placeholder='Vui lòng nhập giá (triệu)'
-                  autoCapitalize='sentences'
-                  maxLength={300}
-                  underlineColorAndroid='#fff'
-                  keyboardType='numeric'
-                /> */}
                         </View>
                         <View style={{ flexDirection: 'row', }}>
                             <FormLabel style={{}}>Diện tích:</FormLabel>
                             <TextInputMask
                                 ref={'acreage'}
                                 type={'only-numbers'}
-                                style={{ flex: 1, padding: 5 }}
+                                style={{ flex: 1, padding: 5, borderBottomWidth: Platform.OS === 'ios' ? 0.5 : 0, borderColor: '#73aa2a' }}
                                 placeholder=''
                                 underlineColorAndroid='#73aa2a'
                                 value={this.state.acreage}
@@ -474,20 +469,49 @@ export default class PostRoomScreen extends React.Component {
                         </View>
                         <View style={{ flexDirection: 'row', }}>
                             <FormLabel style={{}}>Loại BĐS:</FormLabel>
+                            {Platform.OS === 'ios' ?
+                                <TouchableOpacity
+                                    style={{ marginTop: 12 }}
+                                    onPress={() => {
+                                        this.setState({
+                                            modalBDS: true
+                                        })
+                                    }}
+                                >
+                                    {this.state.selectedCategory === '0'
+                                        ?
+                                        <Text> -- Chọn loại BĐS --</Text>
+                                        :
+                                        this.state.roomCategory.map((y, i) => {
+                                            return (
+                                                y.ID === this.state.selectedCategory ?
+                                                    <Text key={i}> {y.CatName}</Text>
+                                                    : null
 
-                            <Picker
-                                style={{ flex: 1, marginTop: -4 }}
-                                mode='dropdown'
-                                selectedValue={this.state.selectedCategory}
-                                onValueChange={(itemValue, itemIndex) => this.setState({ selectedCategory: itemValue })}>
-                                <Picker.Item label='-- Chọn loại BĐS --' value='0' />
-                                {this.state.roomCategory.map((y, i) => {
-                                    return (
-                                        <Picker.Item key={i} label={y.CatName} value={y.ID} />
-                                    )
-                                })}
-                            </Picker>
+                                                //<Picker.Item key={i} label={y.CatName} value={y.ID} />
+                                            )
+                                        })
 
+                                    }
+                                </TouchableOpacity>
+                                :
+                                <Picker // Android
+                                    style={{ flex: 1, marginTop: -4 }}
+                                    mode='dropdown'
+                                    selectedValue={this.state.selectedCategory}
+                                    onValueChange={(itemValue, itemIndex) => this.setState({ selectedCategory: itemValue })}>
+                                    <Picker.Item label='-- Chọn loại BĐS --' value='0' />
+
+
+
+                                    {this.state.roomCategory.map((y, i) => {
+                                        return (
+                                            <Picker.Item key={i} label={y.CatName} value={y.ID} />
+                                        )
+                                    })}
+
+                                </Picker>
+                            }
                         </View>
                         <FormLabel style={{ marginTop: 10, }}>Chi tiết:</FormLabel>
                         <FormInput
@@ -528,40 +552,6 @@ export default class PostRoomScreen extends React.Component {
                 {/* The view that will animate to match the keyboards height */}
                 <KeyboardSpacer />
 
-
-
-                {/* Popup select image library or camera */}
-                <PopupDialog
-                    ref={(popupSelectedImage) => { this.popupSelectedImage = popupSelectedImage; }}
-                    dialogAnimation={new ScaleAnimation()}
-                    dialogStyle={{ marginBottom: 10, width: width * 0.9, height: 130, justifyContent: 'center', padding: 20 }}
-                    dismissOnTouchOutside={false}
-                >
-                    <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'center', alignContent: 'center' }}>
-                        <TouchableOpacity
-                            style={{ flex: 1, justifyContent: 'center', alignContent: 'center' }}
-                            onPress={async () => {
-                                this.popupSelectedImage.dismiss();
-                                this._pickImageAsync('library', this.state.selectedImages)
-                            }}
-                        >
-                            <Ionicons style={{ fontSize: 40, borderRadius: 10, backgroundColor: '#a4d227', color: '#fff', textAlign: 'center', padding: 10 }} name='ios-folder-open' >
-                            </Ionicons>
-                            <Text style={{ textAlign: 'center', marginTop: 5 }}>Thư viện ảnh</Text>
-                        </TouchableOpacity>
-                        <View style={{ flex: 1 }}></View>
-                        <TouchableOpacity
-                            style={{ flex: 1, justifyContent: 'center', alignContent: 'center', }}
-                            onPress={async () => {
-                                this.popupSelectedImage.dismiss();
-                                this._pickImageAsync('camera', this.state.selectedImages)
-                            }}
-                        >
-                            <Ionicons style={{ fontSize: 40, borderRadius: 10, backgroundColor: '#a4d227', color: '#fff', textAlign: 'center', padding: 10 }} name='md-camera' />
-                            <Text style={{ textAlign: 'center', marginTop: 5 }}>Camera</Text>
-                        </TouchableOpacity>
-                    </View>
-                </PopupDialog>
 
                 {/* Popup Loading Indicator */}
                 <PopupDialog
@@ -681,6 +671,76 @@ export default class PostRoomScreen extends React.Component {
                     />
 
                 </PopupDialog>
+
+
+
+                {/* Popup select image library or camera */}
+                <PopupDialog
+                    ref={(popupSelectedImage) => { this.popupSelectedImage = popupSelectedImage; }}
+                    dialogAnimation={new ScaleAnimation()}
+                    dialogStyle={{ marginBottom: 10, width: width * 0.9, height: 130, justifyContent: 'center', padding: 20 }}
+                    dismissOnTouchOutside={true}
+                >
+                    <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'center', alignContent: 'center' }}>
+                        <TouchableOpacity
+                            style={{ flex: 2, justifyContent: 'center', alignContent: 'center' }}
+                            onPress={async () => {
+                                this.popupSelectedImage.dismiss();
+                                this._pickImageAsync('library', this.state.selectedImages)
+                            }}
+                        >
+                            <Ionicons style={{ fontSize: 40, borderRadius: 10, backgroundColor: '#a4d227', color: '#fff', textAlign: 'center', padding: 10 }} name='ios-folder-open' >
+                            </Ionicons>
+                            <Text style={{ textAlign: 'center', marginTop: 5 }}>Thư viện ảnh</Text>
+                        </TouchableOpacity>
+                        <View style={{ flex: 1 }}></View>
+                        <TouchableOpacity
+                            style={{ flex: 2, justifyContent: 'center', alignContent: 'center', }}
+                            onPress={async () => {
+                                this.popupSelectedImage.dismiss();
+                                this._pickImageAsync('camera', this.state.selectedImages)
+                            }}
+                        >
+                            <Ionicons style={{ fontSize: 40, borderRadius: 10, backgroundColor: '#a4d227', color: '#fff', textAlign: 'center', padding: 10 }} name='md-camera' />
+                            <Text style={{ textAlign: 'center', marginTop: 5 }}>Camera</Text>
+                        </TouchableOpacity>
+                    </View>
+                </PopupDialog>
+
+                {/* Modal BDS Ios*/}
+                <Modal
+                    style={{}}
+                    animationType={"slide"}
+                    transparent={true}
+                    visible={this.state.modalBDS}
+                    onRequestClose={() => {
+                        //alert("Modal has been closed.")
+                    }}
+                >
+
+                    <Picker // Android
+                        style={{
+                            flex: 1,
+                            marginTop: height * 0.58,
+                            backgroundColor: '#fff',
+                        }}
+                        mode='dropdown'
+                        selectedValue={this.state.selectedCategory}
+                        onValueChange={(itemValue, itemIndex) =>
+                            this.setState({
+                                selectedCategory: itemValue,
+                                modalBDS: false,
+                            })}>
+                        {/* <Picker.Item label='-- Chọn loại BĐS --' value='0' /> */}
+                        {this.state.roomCategory.map((y, i) => {
+                            return (
+                                <Picker.Item key={i} label={y.CatName} value={y.ID} />
+                            )
+                        })}
+
+                    </Picker>
+                </Modal>
+
             </View>
 
         );

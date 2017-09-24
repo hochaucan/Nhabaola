@@ -894,7 +894,7 @@ export default class SearchScreen extends React.Component {
 
                 </PopupDialog>
 
-                {/* Popup Radius Ios*/}
+                {/* Modal Radius Ios*/}
                 <Modal
                     style={{}}
                     animationType={"slide"}
