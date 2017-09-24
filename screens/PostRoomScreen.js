@@ -13,6 +13,7 @@ import {
     Picker,
     ActivityIndicator,
     ToastAndroid,
+    Alert,
 }
     from 'react-native';
 import { Constants, Location, Permissions, ImagePicker } from 'expo';
