@@ -225,7 +225,9 @@ export default class PostRoomScreen extends React.Component {
         //Loading
         this.popupLoadingIndicator.show();
 
-        await this._postImage('http://www.google.com/images/srpr/nav_logo66.png');
+        //await this._postImage('http://www.google.com/images/srpr/nav_logo66.png');
+        //console.log(this.state.postRoomImage1)
+        await this._postImage(this.state.postRoomImage1);
 
         try {
             await fetch("http://nhabaola.vn/api/RoomBox/FO_RoomBox_Add", {
@@ -274,8 +276,9 @@ export default class PostRoomScreen extends React.Component {
 
 
     _postImage = async (file) => {
+       // var tmp = file.replace('file://', '');
         var postLink = 'http://uploads.im/api?upload=' + file
-        console.log(postLink)
+        //console.log(postLink)
 
 
         //Post to register account
@@ -285,7 +288,7 @@ export default class PostRoomScreen extends React.Component {
                 .then((responseJson) => {
 
                     this.setState({ imageUrl1: responseJson.data.img_url })
-                    //console.log(responseJson.data.img_url)
+                    console.log(responseJson.data.img_url)
 
                 })
                 .catch((e) => { console.log(e) });
@@ -575,7 +578,7 @@ export default class PostRoomScreen extends React.Component {
                     dialogStyle={{ marginBottom: 100, width: width * 0.9, height: height * 0.6, justifyContent: 'center', padding: 20 }}
                 >
                     <GooglePlacesAutocomplete
-                        placeholder="Vui lòng nhập địa chỉ"
+                        placeholder="Tìm kiếm địa chỉ"
                         minLength={1} // minimum length of text to search
                         autoFocus={false}
                         returnKeyType={'search'} // Can be left out for default return key https://facebook.github.io/react-native/docs/textinput.html#returnkeytype
