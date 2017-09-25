@@ -25,6 +25,7 @@ import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplet
 import { TextInputMask } from 'react-native-masked-text';
 import KeyboardSpacer from 'react-native-keyboard-spacer';
 import PopupDialog, { SlideAnimation, ScaleAnimation, DialogTitle, DialogButton } from 'react-native-popup-dialog';
+import uploadImageAsync from '../api/uploadImageAsync'
 
 var { height, width } = Dimensions.get('window');
 const ASPECT_RATIO = width / height;
@@ -32,6 +33,40 @@ const LATITUDE = 37.78825;
 const LONGITUDE = -122.4324;
 const LATITUDE_DELTA = 0.02;
 const LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO;
+
+// async function uploadImageAsync(uri) {
+//     let apiUrl = 'https://file-upload-example-backend-dkhqoilqqn.now.sh/upload';
+
+//     // Note:
+//     // Uncomment this if you want to experiment with local server
+//     //
+//     // if (Constants.isDevice) {
+//     //   apiUrl = `https://your-ngrok-subdomain.ngrok.io/upload`;
+//     // } else {
+//     //   apiUrl = `http://localhost:3000/upload`
+//     // }
+
+//     let uriParts = uri.split('.');
+//     let fileType = uri[uri.length - 1];
+
+//     let formData = new FormData();
+//     formData.append('photo', {
+//         uri,
+//         name: `photo.${fileType}`,
+//         type: `image/${fileType}`,
+//     });
+
+//     let options = {
+//         method: 'POST',
+//         body: formData,
+//         headers: {
+//             Accept: 'application/json',
+//             'Content-Type': 'multipart/form-data',
+//         },
+//     };
+
+//     return fetch(apiUrl, options);
+// }
 
 export default class PostRoomScreen extends React.Component {
     static navigationOptions = {
@@ -131,6 +166,8 @@ export default class PostRoomScreen extends React.Component {
                 case '1':
                     console.log(result);
                     this.setState({ postRoomImage1: result.uri });
+
+
                     break;
                 case '2':
                     this.setState({ postRoomImage2: result.uri });
@@ -227,7 +264,13 @@ export default class PostRoomScreen extends React.Component {
 
         //await this._postImage('http://www.google.com/images/srpr/nav_logo66.png');
         //console.log(this.state.postRoomImage1)
-        await this._postImage(this.state.postRoomImage1);
+        //await this._postImage(this.state.postRoomImage1);
+
+        let uploadResponse = await uploadImageAsync(this.state.postRoomImage1);
+        let uploadResult = await uploadResponse.json();
+        // this.setState({ image: uploadResult.location });
+        //alert(uploadResult.location)
+
 
         try {
             await fetch("http://nhabaola.vn/api/RoomBox/FO_RoomBox_Add", {
@@ -238,7 +281,7 @@ export default class PostRoomScreen extends React.Component {
                 },
 
                 body: JSON.stringify({
-                    "Title": this.state.imageUrl1,
+                    "Title": uploadResult.location,//this.state.imageUrl1,
                     "CategoryID": this.state.selectedCategory,
                     "Address": this.state.selectedAddress,
                     "Longitude": this.state.searchingMaker.longitude,
@@ -252,6 +295,7 @@ export default class PostRoomScreen extends React.Component {
                     "FromDate": "2017-09-30",
                     "ToDate": "2017-10-09",
                     "IsTop": "true",
+                    "IsPinned": "true",
                     "IsHighlight": "false",
                     "HighlightFromDate": "2017-09-30",
                     "HighlightToDate": "2017-10-09",
@@ -274,9 +318,10 @@ export default class PostRoomScreen extends React.Component {
 
     }
 
+    
 
     _postImage = async (file) => {
-       // var tmp = file.replace('file://', '');
+        // var tmp = file.replace('file://', '');
         var postLink = 'http://uploads.im/api?upload=' + file
         //console.log(postLink)
 
@@ -441,7 +486,7 @@ export default class PostRoomScreen extends React.Component {
 
                     </View>
                     {/* <FormLabel style={{ borderBottomWidth: 0.7, borderColor: '#a4d227' }}>Thông tin chi tiết</FormLabel> */}
-                    <View style={{ height: 200, marginTop: -20 }}>
+                    <View style={{ height: 200, }}>
                         <View style={{ flexDirection: 'row', }}>
                             <FormLabel style={{}}>Giá:</FormLabel>
                             <TextInputMask

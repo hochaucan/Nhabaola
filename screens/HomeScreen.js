@@ -36,7 +36,7 @@ import { TextInputMask } from 'react-native-masked-text';
 import { GooglePlacesAutocomplete, } from 'react-native-google-places-autocomplete'; // 1.2.12
 import Swiper from 'react-native-swiper';
 import KeyboardSpacer from 'react-native-keyboard-spacer';
-//import FO_Category_GetAllData from '../api/FO_Category_GetAllData';
+import uploadImageAsync from '../api/uploadImageAsync'
 
 
 const homePlace = {
@@ -100,6 +100,7 @@ export default class HomeScreen extends React.Component {
       // Register Account
       modalRegisterAccount: false,
       objectRegisterAccount: {
+        Avarta: "",
         UserName: "UserName",
         FullName: "Nguyen Van A",
         Email: "Email@gmail.com",
@@ -162,7 +163,7 @@ export default class HomeScreen extends React.Component {
 
   componentWillMount() {
     this._getCategoryAsync();
-   // this._getRoomBoxAsync();
+    this._getRoomBoxAsync();
   }
 
   _onScroll = (event) => {
@@ -382,10 +383,16 @@ export default class HomeScreen extends React.Component {
     await this.setState({ modalRegisterAccount: false, })
     this.popupLoadingIndicator.show();
 
+
+
+    let uploadResponse = await uploadImageAsync(this.state.registerAccountImage);
+    let uploadResult = await uploadResponse.json();
+
     //Set account object
     await this.setState({
 
       objectRegisterAccount: {
+        Avarta: uploadResult.location,
         UserName: this.state.registerCellPhone,
         FullName: this.state.registerFullName,
         Email: "",
@@ -539,13 +546,12 @@ export default class HomeScreen extends React.Component {
       })
         .then((response) => response.json())
         .then((responseJson) => {
+          //alert(JSON.stringify(responseJson.obj))
 
           this._saveStorageAsync('FO_RoomBox_GetAllData', JSON.stringify(responseJson.obj))
           this.setState({
             roomBox: responseJson.obj
           })
-
-          console.log(responseJson.obj)
 
         }).
         catch((error) => { console.log(error) });

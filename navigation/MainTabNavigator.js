@@ -11,10 +11,12 @@ import Colors from '../constants/Colors';
 import HomeScreen from '../screens/HomeScreen';
 import LinksScreen from '../screens/LinksScreen';
 import SettingsScreen from '../screens/SettingsScreen';
-import Testing from '../screens/Testing';
+import Testing2 from '../screens/Testing';
+import Testing from '../components/examples/uploadFileDemo';
 import ProfileScreen from '../screens/ProfileScreen';
 import SearchScreen from '../screens/SearchScreen';
 import RegisterRoomScreen from '../screens/RegisterRoomScreen';
+
 
 export default TabNavigator(
   {
@@ -66,7 +68,7 @@ export default TabNavigator(
               : 'md-person';
             break;
           default:
-          
+
             StatusBar.setBarStyle('light-content');
             if (Platform.OS === 'ios') {
               // StatusBar.setTranslucent(false);
