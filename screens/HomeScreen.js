@@ -88,8 +88,8 @@ export default class HomeScreen extends React.Component {
       selectedCategory: '0',
 
       // Login
-      username: '',
-      password: '',
+      loginUsername: '',
+      loginPassword: '',
       animation: {
         usernamePostionLeft: new Animated.Value(795),
         passwordPositionLeft: new Animated.Value(905),
@@ -251,6 +251,41 @@ export default class HomeScreen extends React.Component {
     }
 
   };
+
+  // Login by Phone
+  _login = async () => {
+
+    // Validate form
+
+
+
+    try {
+      await fetch("http://nhabaola.vn/api/Account/FO_Account_Login", {
+        method: 'POST',
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
+        },
+        //body: JSON.stringify(this.state.objectRegisterAccount)
+
+
+        body: JSON.stringify({
+          "UserName": this.state.loginUsername,
+          "Password": this.state.loginPassword
+        }),
+      })
+        .then((response) => response.json())
+        .then((responseJson) => {
+
+          alert(JSON.stringify(responseJson));
+
+          //this.popupLoadingIndicator.dismiss();
+        }).
+        catch((error) => { console.log(error) });
+    } catch (error) {
+      console.log(error)
+    }
+  }
 
   _handleGoogleLogin = async () => {
     try {
@@ -788,6 +823,8 @@ export default class HomeScreen extends React.Component {
                 placeholder='Số điện thoại'
                 autoCapitalize='sentences'
                 keyboardType='phone-pad'
+                value={this.state.loginUsername}
+                onChangeText={(loginUsername) => this.setState({ loginUsername })}
               />
             </Animated.View>
             <Animated.View style={{ position: 'relative', left: this.state.animation.passwordPositionLeft, flexDirection: 'row', padding: 10, paddingTop: 0, }}>
@@ -796,7 +833,8 @@ export default class HomeScreen extends React.Component {
                 containerStyle={{ flex: 15 }}
                 placeholder='Mật khẩu'
                 secureTextEntry={true}
-
+                value={this.state.loginPassword}
+                onChangeText={(loginPassword) => this.setState({ loginPassword })}
               />
             </Animated.View>
             <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center', marginTop: 10, }}>
@@ -812,7 +850,11 @@ export default class HomeScreen extends React.Component {
                 buttonStyle={{ backgroundColor: '#73aa2a', padding: 10, borderRadius: 5, }}
                 raised={false}
                 icon={{ name: 'md-checkmark', type: 'ionicon' }}
-                title='Đăng nhập' />
+                title='Đăng nhập'
+                onPress={() => {
+                  this._login()
+                }}
+              />
             </View>
 
 
