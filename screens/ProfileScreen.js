@@ -13,6 +13,8 @@ import {
     FlatList,
     Alert,
     BackHandler,
+    AsyncStorage,
+
 } from 'react-native';
 import { ExpoLinksView } from '@expo/samples';
 import { Constants, ImagePicker } from 'expo';
@@ -21,6 +23,7 @@ import PopupDialog, { SlideAnimation, ScaleAnimation, DialogTitle, DialogButton 
 import { CheckBox, Rating, Button, FormLabel, FormInput, SocialIcon, FormValidationMessage } from 'react-native-elements'
 import { users } from '../components/examples/data';
 import Accordion from 'react-native-collapsible/Accordion';
+import saveStorageAsync from '../components/saveStorageAsync';
 
 
 var { height, width } = Dimensions.get('window');
@@ -78,7 +81,44 @@ export default class ProfileScreen extends React.Component {
 
             // Update Account
             updateAccountImage: null,
+            profile: null,
         }
+
+
+    }
+
+    componentWillMount() {
+        this._getProfileFromStorageAsync();
+    }
+
+    componentDidMount() {
+        
+    }
+
+    componentDidUpdate () {
+        this._getProfileFromStorageAsync();
+    }
+
+    _getProfileFromStorageAsync = async () => {
+        try {
+            var value = await AsyncStorage.getItem('FO_Account_Login');
+
+            if (value !== null) {
+                this.setState({
+                    profile: JSON.parse(value)
+                })
+            }
+            else {
+                this.setState({
+                    profile: null,
+                })
+            }
+
+        } catch (e) {
+            console.log(e);
+        }
+
+        // alert(JSON.stringify(this.state.profile))
     }
 
 
@@ -140,23 +180,40 @@ export default class ProfileScreen extends React.Component {
                             <TouchableOpacity
                                 onPress={() => {
                                     {/* this.props.navigation.navigate('ProfileScreen'); */ }
+
+
                                 }}
                             >
-                                {this.state.updateAccountImage
-                                    ? <Image source={{ uri: this.state.updateAccountImage }} style={{ width: 60, height: 60, borderRadius: 100, }} />
+                                {this.state.profile
+                                    ? <Image source={{ uri: this.state.profile.Avarta }} style={{ width: 60, height: 60, borderRadius: 100, }} />
                                     : <Image style={{ borderRadius: Platform.OS === 'ios' ? 23 : 50, height: 60, width: 60, }} source={require('../images/nha-bao-la.jpg')} />
                                 }
 
                             </TouchableOpacity>
                         </View>
-                        <View style={{ flex: 4, paddingLeft: 20, marginTop: 10 }}>
-                            <Text style={styles.cardAvatarName}>Nguyễn Văn Bảo</Text>
-                            <Text style={styles.cardAvatarAddress}>Đăng ký ngày 23 tháng 8 năm 2017</Text>
-                            <TouchableOpacity style={styles.cardAvatarPhoneBox}>
-                                <Ionicons style={styles.cardAvatarPhoneIcon} name='logo-whatsapp' />
-                                <Text style={styles.cardAvatarPhone}>: 0973730111</Text>
-                            </TouchableOpacity>
-                        </View>
+                        {this.state.profile
+                            ?
+                            <View style={{ flex: 4, paddingLeft: 20, marginTop: 10 }}>
+                                <Text style={styles.cardAvatarName}>{this.state.profile.FullName}</Text>
+                                <Text style={styles.cardAvatarAddress}>{this.state.profile.RegistryDate}</Text>
+                                <TouchableOpacity style={styles.cardAvatarPhoneBox}>
+                                    <Ionicons style={styles.cardAvatarPhoneIcon} name='logo-whatsapp' />
+                                    <Text style={styles.cardAvatarPhone}>: {this.state.profile.ContactPhone}</Text>
+                                </TouchableOpacity>
+                            </View>
+                            :
+                            <View style={{ flex: 4, paddingLeft: 20, marginTop: 10 }}>
+
+                                <TouchableOpacity
+                                    style={{}}
+                                    onPress={() => {
+
+                                    }}
+                                >
+                                    <Text style={styles.cardAvatarName}>Đăng nhập</Text>
+                                </TouchableOpacity>
+                            </View>
+                        }
                     </View>
                 </View>
                 <ScrollView style={styles.profileMenuBox}>
@@ -229,26 +286,34 @@ export default class ProfileScreen extends React.Component {
                             <Text>  Giúp đỡ</Text>
                         </Ionicons>
                     </TouchableOpacity>
-                    {Platform.OS === 'android'
-                        ?
+
+                    {this.state.profile ?
                         <TouchableOpacity style={styles.profileMenuItem}
                             onPress={() => {
                                 Alert.alert(
                                     'Thông báo',
-                                    'Bạn chắc chắn thoát ứng dụng?',
+                                    'Bạn chắc chắn Đăng xuất?',
                                     [
-                                        { text: 'OK', onPress: () => BackHandler.exitApp() },
+                                        {
+                                            text: 'OK', onPress: () => {
+                                                //BackHandler.exitApp()
+                                                saveStorageAsync('FO_Account_Login', '')
+                                                saveStorageAsync('SessionKey', '')
+                                                this.setState({ profile: null })
+                                                // this.props.navigation.navigate('HomeScreen')
+                                                this.props.navigation.goBack();
+                                            }
+                                        },
                                     ]
                                 );
 
                             }}
                         >
                             <Ionicons style={styles.profileMenuItemText} name='md-exit'>
-                                <Text>  Thoát ứng dụng</Text>
+                                <Text>  Đăng xuất</Text>
                             </Ionicons>
                         </TouchableOpacity>
-                        :
-                        null}
+                        : null}
                 </ScrollView>
 
 
@@ -674,12 +739,14 @@ const styles = StyleSheet.create({
         padding: 10,
         // borderBottomWidth: 0.7,
         // borderColor: '#a4d227',
+        alignItems: 'center'
     },
 
 
 
     cardAvatarName: {
         fontSize: 15,
+        color: '#73aa2a'
     },
     cardAvatarAddress: {
         color: '#7E7E7E',
@@ -690,6 +757,7 @@ const styles = StyleSheet.create({
         flex: 1,
         flexDirection: 'row',
         paddingTop: 5,
+        alignItems: 'center',
     },
     cardAvatarPhoneIcon: {
         color: '#7E7E7E',

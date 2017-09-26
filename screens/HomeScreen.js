@@ -36,8 +36,8 @@ import { TextInputMask } from 'react-native-masked-text';
 import { GooglePlacesAutocomplete, } from 'react-native-google-places-autocomplete'; // 1.2.12
 import Swiper from 'react-native-swiper';
 import KeyboardSpacer from 'react-native-keyboard-spacer';
-import uploadImageAsync from '../api/uploadImageAsync'
-
+import uploadImageAsync from '../api/uploadImageAsync';
+import saveStorageAsync from '../components/saveStorageAsync';
 
 const homePlace = {
   description: 'Home',
@@ -62,6 +62,7 @@ export default class HomeScreen extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
+      sessionKey: null,
       dataUsers: users,
       refresh: false,
       txt: 'test threshole',
@@ -88,6 +89,7 @@ export default class HomeScreen extends React.Component {
       selectedCategory: '0',
 
       // Login
+      profile: null,
       loginUsername: '',
       loginPassword: '',
       animation: {
@@ -161,9 +163,16 @@ export default class HomeScreen extends React.Component {
 
   }
 
+  componentDidUpdate() {
+    this._getProfileFromStorageAsync();
+    //this._getRoomBoxAsync();
+  }
+
   componentWillMount() {
     this._getCategoryAsync();
     this._getRoomBoxAsync();
+    this._getProfileFromStorageAsync();
+    this._getSessionKeyFromStorageAsync();
   }
 
   _onScroll = (event) => {
@@ -191,8 +200,49 @@ export default class HomeScreen extends React.Component {
     //alert(currentOffset)
   }
 
-  _moveToRoomDetail = (user) => {
-    this.props.navigation.navigate('RoomDetailScreen', { ...user });
+  _getProfileFromStorageAsync = async () => {
+    try {
+      var value = await AsyncStorage.getItem('FO_Account_Login');
+
+      if (value !== null) {
+        this.setState({
+          profile: JSON.parse(value)
+        })
+      }
+      else {
+        this.setState({
+          profile: null,
+        })
+      }
+
+    } catch (e) {
+      console.log(e);
+    }
+  }
+
+  _getSessionKeyFromStorageAsync = async () => {
+    try {
+      var value = await AsyncStorage.getItem('SessionKey');
+
+      if (value !== null) {
+        this.setState({
+          sessionKey: JSON.parse(value)
+        })
+      }
+      else {
+        this.setState({
+          sessionKey: null,
+        })
+      }
+
+    } catch (e) {
+      console.log(e);
+    }
+  }
+
+
+  _moveToRoomDetail = (roombox) => {
+    this.props.navigation.navigate('RoomDetailScreen', { ...roombox });
   };
 
   _setModalVisible(visible) {
@@ -253,11 +303,31 @@ export default class HomeScreen extends React.Component {
   };
 
   // Login by Phone
-  _login = async () => {
+  _loginAsync = async () => {
 
-    // Validate form
+    //Form validation
+    if (Platform.OS === 'android') {
+      if (this.state.loginUsername === '') {
+        ToastAndroid.showWithGravity('Vui lòng nhập tài khoản', ToastAndroid.SHORT, ToastAndroid.BOTTOM);
+        return;
+      }
+      if (this.state.loginPassword === '') {
+        ToastAndroid.showWithGravity('Vui lòng nhập mật khẩu', ToastAndroid.SHORT, ToastAndroid.BOTTOM);
+        return;
+      }
+    }
+    else {
+      if (this.state.loginUsername === '') {
+        Alert.alert('Oops!', 'Vui lòng nhập tài khoản');
+        return;
+      }
+      if (this.state.loginPassword === '') {
+        Alert.alert('Oops!', 'Vui lòng nhập mật khẩu');
+        return;
+      }
+    }
 
-
+    this.popupLoadingIndicator.show()
 
     try {
       await fetch("http://nhabaola.vn/api/Account/FO_Account_Login", {
@@ -277,9 +347,38 @@ export default class HomeScreen extends React.Component {
         .then((response) => response.json())
         .then((responseJson) => {
 
-          alert(JSON.stringify(responseJson));
+          //alert(JSON.stringify(responseJson.obj.UpdatedBy))
 
-          //this.popupLoadingIndicator.dismiss();
+          if (responseJson.obj.UpdatedBy != "") {
+            this.popupLogin.dismiss();
+            saveStorageAsync('FO_Account_Login', JSON.stringify(responseJson.obj))
+            saveStorageAsync('SessionKey', JSON.stringify(responseJson.obj.UpdatedBy))
+            this.setState({
+              loginUsername: '',
+              loginPassword: '',
+              profile: responseJson.obj,
+              sessionKey: responseJson.obj.UpdatedBy
+            })
+
+          }
+          else {
+            if (Platform.OS === 'android') {
+              ToastAndroid.showWithGravity('Tài khoản hoặc mật khẩu không đúng', ToastAndroid.SHORT, ToastAndroid.BOTTOM);
+            }
+            else {
+              Alert.alert('Oops!', 'Tài khoản hoặc mật khẩu không đúng');
+            }
+
+            saveStorageAsync('FO_Account_Login', '')
+            saveStorageAsync('SessionKey', '')
+            this.setState({ profile: null, sessionKey: null })
+          }
+
+          //this._getStorageAsync('SessionKey')
+          // var tmp = getStorageAsync('SessionKey')
+          // alert(JSON.stringify(tmp))
+
+          this.popupLoadingIndicator.dismiss();
         }).
         catch((error) => { console.log(error) });
     } catch (error) {
@@ -565,6 +664,7 @@ export default class HomeScreen extends React.Component {
   }
 
   _getRoomBoxAsync = async () => {
+    this.setState({ refresh: true })
     try {
       await fetch("http://nhabaola.vn/api/RoomBox/FO_RoomBox_GetAllData", {
         method: 'POST',
@@ -585,8 +685,11 @@ export default class HomeScreen extends React.Component {
 
           this._saveStorageAsync('FO_RoomBox_GetAllData', JSON.stringify(responseJson.obj))
           this.setState({
-            roomBox: responseJson.obj
+            roomBox: responseJson.obj,
+            refresh: false,
           })
+
+          // this.setState({ refresh: false })
 
         }).
         catch((error) => { console.log(error) });
@@ -605,7 +708,7 @@ export default class HomeScreen extends React.Component {
 
         <FlatList
           //onScroll={this._onScroll}
-          ref='homepage'
+          // ref='homepage'
           refreshing={this.state.refresh}
           onRefresh={() => { this.refresh() }}
 
@@ -616,7 +719,7 @@ export default class HomeScreen extends React.Component {
             });
           }}
 
-          data={this.state.dataUsers}
+          data={this.state.roomBox}//{this.state.dataUsers}
           renderItem={({ item }) =>
             <View style={styles.card}>
               <View style={styles.cardHeader}>
@@ -629,29 +732,34 @@ export default class HomeScreen extends React.Component {
                   >
                     <Image
                       style={styles.cardAvatarImage}
-                      source={{ uri: item.picture.large }} />
+                      source={{ uri: item.AccountAvarta }} />
                   </TouchableOpacity>
                 </View>
                 <View style={styles.cardAvatarTextBox}>
-                  <Text style={styles.cardAvatarName}>{item.name.first} {item.name.last}</Text>
+                  <Text style={styles.cardAvatarName}>{item.AccountName}</Text>
                   <TouchableOpacity style={styles.cardAvatarPhoneBox}
-                    onPress={() => { Communications.phonecall(item.phone, true) }}
+                    onPress={() => { Communications.phonecall(item.AccountPhone, true) }}
                   >
                     <Ionicons style={styles.cardAvatarPhoneIcon} name='logo-whatsapp' />
-                    <Text style={styles.cardAvatarPhone}>: {item.phone}</Text>
+                    <Text style={styles.cardAvatarPhone}>: {item.AccountPhone}</Text>
                   </TouchableOpacity>
                 </View>
               </View>
               <TouchableWithoutFeedback
                 style={styles.cardImageBox}
-                onPress={() => this._moveToRoomDetail(item)}
+                onPress={() => {
+                  this._moveToRoomDetail(item)
+                }
+                }
               >
                 {/* <Image
                   style={styles.cardImage}
                   source={{ uri: item.picture.large }} /> */}
                 <Image
                   style={styles.cardImage}
-                  source={require('../images/1.jpg')} />
+                  //source={require('../images/1.jpg')}
+                  source={{ uri: item.Title }}
+                />
               </TouchableWithoutFeedback>
               <View style={styles.cardDesBox}>
                 <Text style={styles.cardDesText}>
@@ -680,7 +788,7 @@ export default class HomeScreen extends React.Component {
                   <TouchableOpacity
                     onPress={() => {
                       Share.share({
-                        message: item.name.first,
+                        message: item.AccountName,
                         url: 'http://bam.tech',
                         title: 'Wow, did you see that?'
                       }, {
@@ -705,7 +813,7 @@ export default class HomeScreen extends React.Component {
               </View>
             </View>
           }
-          keyExtractor={item => item.email}
+          keyExtractor={item => item.ID}
 
         /* horizontal={false}
         numColumns={3} */
@@ -714,35 +822,38 @@ export default class HomeScreen extends React.Component {
         {/* Action Button */}
         {this.state.isActionButtonVisible ?
           <ActionButton buttonColor="#73aa2a">
-            <ActionButton.Item buttonColor='#a4d227' title="Đăng nhập" onPress={() => {
-              this.popupLogin.show()
-              const timing = Animated.timing;
-              Animated.parallel([
-                timing(this.state.animation.usernamePostionLeft, {
-                  toValue: 0,
-                  duration: 900
-                }),
-                timing(this.state.animation.passwordPositionLeft, {
-                  toValue: 0,
-                  duration: 1100
-                }),
-                timing(this.state.animation.loginPositionTop, {
-                  toValue: 0,
-                  duration: 700
-                }),
-                timing(this.state.animation.statusPositionTop, {
-                  toValue: 0,
-                  duration: 700
-                })
 
-              ]).start()
-            }}>
-              <Icon name="ios-contact" style={styles.actionButtonIcon} />
-            </ActionButton.Item>
+            {this.state.profile === null &&
+              <ActionButton.Item buttonColor='#a4d227' title="Đăng nhập" onPress={() => {
+                this.popupLogin.show()
+                const timing = Animated.timing;
+                Animated.parallel([
+                  timing(this.state.animation.usernamePostionLeft, {
+                    toValue: 0,
+                    duration: 900
+                  }),
+                  timing(this.state.animation.passwordPositionLeft, {
+                    toValue: 0,
+                    duration: 1100
+                  }),
+                  timing(this.state.animation.loginPositionTop, {
+                    toValue: 0,
+                    duration: 700
+                  }),
+                  timing(this.state.animation.statusPositionTop, {
+                    toValue: 0,
+                    duration: 700
+                  })
+
+                ]).start()
+              }}>
+                <Icon name="ios-contact" style={styles.actionButtonIcon} />
+              </ActionButton.Item>
+            }
             <ActionButton.Item buttonColor='#a4d227' title="Đăng tin" onPress={() => {
-              //this._setModalVisible(true)
-              //this.props.navigation.navigate('PostedRoomScreen');
-              this.props.navigation.navigate('PostRoomScreen', { key: 'CanHo' });
+              this.state.profile ?
+                this.props.navigation.navigate('PostRoomScreen', { key: 'CanHo' })
+                : this.popupLogin.show();
             }}>
               <Icon name="md-cloud-upload" style={styles.actionButtonIcon} />
             </ActionButton.Item>
@@ -852,7 +963,7 @@ export default class HomeScreen extends React.Component {
                 icon={{ name: 'md-checkmark', type: 'ionicon' }}
                 title='Đăng nhập'
                 onPress={() => {
-                  this._login()
+                  this._loginAsync()
                 }}
               />
             </View>

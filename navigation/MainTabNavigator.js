@@ -66,6 +66,7 @@ export default TabNavigator(
             iconName = Platform.OS === 'ios'
               ? `ios-person${focused ? '' : '-outline'}`
               : 'md-person';
+
             break;
           default:
 
