@@ -180,10 +180,16 @@ export default class ProfileScreen extends React.Component {
 
     };
 
+    // componentWillReceiveProps(nextProps) {
+    //     alert("nextProps.items")
+    // }
+
     render() {
         return (
             <View style={styles.container}>
                 <View style={styles.card}>
+                    {/* <Text>{JSON.stringify(this.props.navigation.state.params)}</Text> */}
+
                     <View style={styles.cardHeader}>
 
                         <View style={{ marginTop: 10, }}>

@@ -20,6 +20,7 @@ import {
   Picker,
   ActivityIndicator,
   AsyncStorage,
+  Keyboard,
 } from 'react-native';
 import { WebBrowser, ImagePicker, Facebook, Google } from 'expo';
 import { MonoText } from '../components/StyledText';
@@ -38,6 +39,7 @@ import Swiper from 'react-native-swiper';
 import KeyboardSpacer from 'react-native-keyboard-spacer';
 import uploadImageAsync from '../api/uploadImageAsync';
 import saveStorageAsync from '../components/saveStorageAsync';
+
 
 const homePlace = {
   description: 'Home',
@@ -162,10 +164,12 @@ export default class HomeScreen extends React.Component {
   }
 
   componentDidMount() {
-   
+
 
   }
-
+  componentWillReceiveProps() {
+    // alert("can")
+  }
   // componentDidUpdate() {
   //   this._getProfileFromStorageAsync();
   //   //this._getRoomBoxAsync();
@@ -332,13 +336,13 @@ export default class HomeScreen extends React.Component {
           //alert(JSON.stringify(responseJson.obj.UpdatedBy))
 
           if (responseJson.obj.UpdatedBy != "") {
-            this.popupLogin.dismiss();
+
             saveStorageAsync('FO_Account_Login', JSON.stringify(responseJson.obj))
             saveStorageAsync('SessionKey', JSON.stringify(responseJson.obj.UpdatedBy))
             // saveStorageAsync('loginUsername', this.state.loginUsername)
             // saveStorageAsync('loginPassword', this.state.loginPassword)
 
-           // alert(JSON.stringify(responseJson.obj))
+            // alert(JSON.stringify(responseJson.obj))
 
             this.setState({
               profile: responseJson.obj,
@@ -363,7 +367,7 @@ export default class HomeScreen extends React.Component {
           // var tmp = getStorageAsync('SessionKey')
           // alert(JSON.stringify(tmp))
 
-         // this.popupLoadingIndicator.dismiss();
+          // this.popupLoadingIndicator.dismiss();
         }).
         catch((error) => { console.log(error) });
     } catch (error) {
@@ -755,7 +759,7 @@ export default class HomeScreen extends React.Component {
         .then((responseJson) => {
           //alert(JSON.stringify(responseJson.obj))
 
-          this._saveStorageAsync('FO_RoomBox_GetAllData', JSON.stringify(responseJson.obj))
+          //this._saveStorageAsync('FO_RoomBox_GetAllData', JSON.stringify(responseJson.obj))
           this.setState({
             roomBox: responseJson.obj,
             refresh: false,
@@ -772,6 +776,19 @@ export default class HomeScreen extends React.Component {
   }
 
 
+  _sendProps() {
+    // this.props.navigator.push({
+    //   name: 'ProfileScreen'
+    // })
+
+    this.props.navigation.navigate('ProfileScreen', {
+      passProfile: {
+        name: 'Can HO',
+        age: '16'
+      }
+    });
+  }
+
 
   render() {
     let { image } = this.state;
@@ -784,10 +801,11 @@ export default class HomeScreen extends React.Component {
           refreshing={this.state.refresh}
           onRefresh={() => { this._refreshRoomBox() }}
 
-          onEndReachedThreshold={-0.2}
+          onEndReachedThreshold={0.2}
           onEndReached={() => {
+            alert("refreshing")
             {/* this.setState({
-              txt: 'Can Ho'
+              refresh: true
             }); */}
           }}
 
@@ -820,7 +838,9 @@ export default class HomeScreen extends React.Component {
               <TouchableWithoutFeedback
                 style={styles.cardImageBox}
                 onPress={() => {
-                  this._moveToRoomDetail(item)
+                  //this._sendProps();
+                  //this._moveToRoomDetail(item)
+                  this.props.navigation.navigate('RoomDetailScreen', { item });
                 }
                 }
               >
@@ -835,7 +855,8 @@ export default class HomeScreen extends React.Component {
               </TouchableWithoutFeedback>
               <View style={styles.cardDesBox}>
                 <Text style={styles.cardDesText}>
-                  Although dimensions are available immediately, they may change (e.g due to device rotation) so any rendering logic or styles that depend on these constants should try to
+                  {/* Although dimensions are available immediately, they may change (e.g due to device rotation) so any rendering logic or styles that depend on these constants should try to */}
+                  {item.Description}
                 </Text>
               </View>
               <View style={styles.cardBottom}>
@@ -923,9 +944,16 @@ export default class HomeScreen extends React.Component {
               </ActionButton.Item>
             }
             <ActionButton.Item buttonColor='#a4d227' title="Đăng tin" onPress={() => {
-              this.state.profile ?
+              this.state.profile
+                ?
                 this.props.navigation.navigate('PostRoomScreen', { key: 'CanHo' })
-                : this.popupLogin.show();
+                :
+                Platform.OS === 'android'
+                  ? ToastAndroid.showWithGravity('Vui lòng đăng nhập', ToastAndroid.SHORT, ToastAndroid.CENTER)
+                  : Alert.alert("Vui lòng đăng nhập")
+
+
+              //this.popupLogin.show();
             }}>
               <Icon name="md-cloud-upload" style={styles.actionButtonIcon} />
             </ActionButton.Item>
@@ -1035,6 +1063,7 @@ export default class HomeScreen extends React.Component {
                 icon={{ name: 'md-checkmark', type: 'ionicon' }}
                 title='Đăng nhập'
                 onPress={() => {
+                  Keyboard.dismiss();
                   this._loginAsync()
                 }}
               />

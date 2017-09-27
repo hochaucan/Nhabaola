@@ -71,7 +71,8 @@ export default class RoomDetailScreen extends React.Component {
     }
 
     render() {
-        const { picture, name, email, phone, login, dob, location } = this.props.navigation.state.params;
+        //const { picture, name, email, phone, login, dob, location } = this.props.navigation.state.params;
+        const { item } = this.props.navigation.state.params;
         return (
             <View style={{ flex: 1 }}>
 
@@ -109,16 +110,16 @@ export default class RoomDetailScreen extends React.Component {
                         >
                             <Image
                                 style={styles.cardAvatarImage}
-                                source={{ uri: picture.large }} />
+                                source={{ uri: item.AccountAvarta }} />
                         </TouchableOpacity>
                     </View>
                     <View style={styles.cardAvatarTextBox}>
-                        <Text style={styles.cardAvatarName}>{name.first} {name.last}</Text>
+                        <Text style={styles.cardAvatarName}>{item.AccountName}</Text>
                         <TouchableOpacity style={styles.cardAvatarPhoneBox}
-                            onPress={() => { Communications.phonecall(phone, true) }}
+                            onPress={() => { Communications.phonecall(item.AccountPhone, true) }}
                         >
                             <Ionicons style={styles.cardAvatarPhoneIcon} name='logo-whatsapp' />
-                            <Text style={styles.cardAvatarPhone}>: {phone}</Text>
+                            <Text style={styles.cardAvatarPhone}>: {item.AccountPhone}</Text>
                         </TouchableOpacity>
                     </View>
                 </View>
@@ -139,14 +140,14 @@ export default class RoomDetailScreen extends React.Component {
                             >
                                 <Image
                                     style={styles.cardImage}
-                                    source={{ uri: picture.large }} />
+                                    source={{ uri: item.Title }} />
                                 <Image
                                     style={styles.cardImage}
-                                    source={{ uri: picture.large }} />
+                                    source={{ uri: item.Title }} />
 
                                 <Image
                                     style={styles.cardImage}
-                                    source={{ uri: picture.large }} />
+                                    source={{ uri: item.Title }} />
 
 
                             </Swiper>
@@ -157,8 +158,9 @@ export default class RoomDetailScreen extends React.Component {
                         </View>
                         <View style={styles.cardDesBox}>
                             <Text style={styles.cardDesText}>
-                                Although dimensions are available immediately, they may change (e.g due to device rotation) so any rendering logic or styles that depend on these constants should try to
-                        </Text>
+                                {/* Although dimensions are available immediately, they may change (e.g due to device rotation) so any rendering logic or styles that depend on these constants should try to */}
+                                {item.Description}
+                            </Text>
                         </View>
                         <View style={styles.cardBottom}>
                             <View style={styles.cardBottomLeft}>

@@ -82,7 +82,7 @@ export default class PostRoomScreen extends React.Component {
     componentWillMount() {
         this._getSessionKeyFromStorageAsync();
         this._getProfileFromStorageAsync();
-        this._getCategoryFromStorageAsync ();
+        this._getCategoryFromStorageAsync();
     }
 
     componentDidMount() {
@@ -202,6 +202,8 @@ export default class PostRoomScreen extends React.Component {
     };
 
     _postRoomAsync = async () => {
+        //alert(this.state.price.replace('.','').replace('.','').replace('.','').replace('.',''))
+        // return
 
         //Form validation
         if (Platform.OS === 'android') {
@@ -296,19 +298,20 @@ export default class PostRoomScreen extends React.Component {
                     "Address": this.state.selectedAddress,
                     "Longitude": this.state.searchingMaker.longitude,
                     "Latitude": this.state.searchingMaker.latitude,
-                    "Price": this.state.price,
+                    "Description": this.state.detailInfo,
+                    "Price": this.state.price.replace('.', '').replace('.', '').replace('.', '').replace('.', ''),
                     "Acreage": this.state.acreage,
                     "Toilet": "",
                     "Bedroom": "",
                     "AirConditioner": "",
                     "ContactPhone": "",
-                    "FromDate": "2017-09-30",
-                    "ToDate": "2017-10-09",
+                    "FromDate": "2017-10-30",
+                    "ToDate": "2017-12-09",
                     "IsTop": "true",
                     "IsPinned": "true",
                     "IsHighlight": "false",
-                    "HighlightFromDate": "2017-09-30",
-                    "HighlightToDate": "2017-10-09",
+                    "HighlightFromDate": "2017-10-30",
+                    "HighlightToDate": "2017-12-09",
                     "IsActive": "true",
                     "CreatedBy": this.state.profile.ID,
                     "UpdatedBy": this.state.SessionKey,
@@ -319,6 +322,7 @@ export default class PostRoomScreen extends React.Component {
 
                     this.popupLoadingIndicator.dismiss();
                     this.props.navigation.goBack();
+                    //this.props.navigation.navigate("HomeScreen", { tmp: 'Can' })
                 }).
                 catch((error) => { console.log(error) });
         } catch (error) {
@@ -508,6 +512,7 @@ export default class PostRoomScreen extends React.Component {
                                 underlineColorAndroid='#73aa2a'
                                 value={this.state.price}
                                 onChangeText={(price) => this.setState({ price })}
+                                blurOnSubmit={true}
                             />
                             <FormLabel>(đồng)</FormLabel>
                         </View>
@@ -519,6 +524,7 @@ export default class PostRoomScreen extends React.Component {
                                 style={{ flex: 1, padding: 5, borderBottomWidth: Platform.OS === 'ios' ? 0.5 : 0, borderColor: '#73aa2a' }}
                                 placeholder=''
                                 underlineColorAndroid='#73aa2a'
+                                blurOnSubmit={true}
                                 value={this.state.acreage}
                                 onChangeText={(acreage) => this.setState({ acreage })}
                             />
@@ -580,6 +586,7 @@ export default class PostRoomScreen extends React.Component {
                             maxLength={300}
                             clearButtonMode='always'
                             underlineColorAndroid='#fff'
+                            blurOnSubmit={true}
                             value={this.state.detailInfo}
                             onChangeText={(detailInfo) => this.setState({ detailInfo })}
                         />

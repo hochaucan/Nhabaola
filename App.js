@@ -62,6 +62,10 @@ export default class App extends React.Component {
 
     this._loadAssetsAsync();
 
+
+  }
+
+  componentDidMount() {
     Animated.timing(                  // Animate over time
       this.state.topLogo,            // The animated value to drive
       {
@@ -70,10 +74,6 @@ export default class App extends React.Component {
         easing: Easing.bounce,         // Make it take a while
       }
     ).start();
-  }
-
-  componentDidMount() {
-
   }
 
   render() {
