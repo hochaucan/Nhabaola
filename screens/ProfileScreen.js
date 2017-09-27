@@ -61,6 +61,7 @@ export default class ProfileScreen extends React.Component {
 
     constructor(props) {
         super(props);
+
         this.state = {
             // Login
             username: '',
@@ -87,17 +88,26 @@ export default class ProfileScreen extends React.Component {
 
     }
 
+
     componentWillMount() {
         this._getProfileFromStorageAsync();
+
     }
 
     componentDidMount() {
-        
+        //alert(JSON.stringify(this.props.navigation.state))
     }
 
-    componentDidUpdate () {
-        this._getProfileFromStorageAsync();
-    }
+    // componentDidUpdate() {
+    //     //this._getProfileFromStorageAsync();
+    //     //alert("can")
+    // }
+
+    // shouldComponentUpdate() {
+
+    //     alert("can")
+    //     return true
+    // }
 
     _getProfileFromStorageAsync = async () => {
         try {
@@ -299,6 +309,8 @@ export default class ProfileScreen extends React.Component {
                                                 //BackHandler.exitApp()
                                                 saveStorageAsync('FO_Account_Login', '')
                                                 saveStorageAsync('SessionKey', '')
+                                                saveStorageAsync('loginUsername', '')
+                                                saveStorageAsync('loginPassword', '')
                                                 this.setState({ profile: null })
                                                 // this.props.navigation.navigate('HomeScreen')
                                                 this.props.navigation.goBack();

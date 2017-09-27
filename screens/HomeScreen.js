@@ -87,11 +87,15 @@ export default class HomeScreen extends React.Component {
         longitude: null,
       },
       selectedCategory: '0',
+      roomPageIndex: 0,
+      roomPageCount: 5,
 
       // Login
       profile: null,
       loginUsername: '',
       loginPassword: '',
+      reAutoLoginUsername: '',
+      reAutoLoginPassword: '',
       animation: {
         usernamePostionLeft: new Animated.Value(795),
         passwordPositionLeft: new Animated.Value(905),
@@ -149,24 +153,23 @@ export default class HomeScreen extends React.Component {
     }
   }
 
-  refresh() {
-    this.setState({
-      refresh: false,
-    })
+  _refreshRoomBox() {
+    this._getRoomBoxAsync();
+    // alert("can")
+    // this.setState({
+    //   refresh: false,
+    // })
   }
 
   componentDidMount() {
-    //FO_Category_GetAllData();
-    //this._postImage();
-
-    // this._getStorageAsync('FO_Category_GetAllData')
+   
 
   }
 
-  componentDidUpdate() {
-    this._getProfileFromStorageAsync();
-    //this._getRoomBoxAsync();
-  }
+  // componentDidUpdate() {
+  //   this._getProfileFromStorageAsync();
+  //   //this._getRoomBoxAsync();
+  // }
 
   componentWillMount() {
     this._getCategoryAsync();
@@ -202,14 +205,21 @@ export default class HomeScreen extends React.Component {
 
   _getProfileFromStorageAsync = async () => {
     try {
-      var value = await AsyncStorage.getItem('FO_Account_Login');
+      //var _profile = await AsyncStorage.getItem('FO_Account_Login');
+      var _username = await AsyncStorage.getItem('loginUsername');
+      var _password = await AsyncStorage.getItem('loginPassword');
 
-      if (value !== null) {
-        this.setState({
-          profile: JSON.parse(value)
+      //alert(_password)
+
+      if (_username !== null && _password !== null) {
+        await this.setState({
+          reAutoLoginUsername: _username,
+          reAutoLoginPassword: _password,
         })
+
+        this._reAutoLoginAsync();
       }
-      else {
+      else { // Login false
         this.setState({
           profile: null,
         })
@@ -302,6 +312,65 @@ export default class HomeScreen extends React.Component {
 
   };
 
+  _reAutoLoginAsync = async () => {
+    try {
+      await fetch("http://nhabaola.vn/api/Account/FO_Account_Login", {
+        method: 'POST',
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
+        },
+        //body: JSON.stringify(this.state.objectRegisterAccount)
+        body: JSON.stringify({
+          "UserName": this.state.reAutoLoginUsername,
+          "Password": this.state.reAutoLoginPassword
+        }),
+      })
+        .then((response) => response.json())
+        .then((responseJson) => {
+
+          //alert(JSON.stringify(responseJson.obj.UpdatedBy))
+
+          if (responseJson.obj.UpdatedBy != "") {
+            this.popupLogin.dismiss();
+            saveStorageAsync('FO_Account_Login', JSON.stringify(responseJson.obj))
+            saveStorageAsync('SessionKey', JSON.stringify(responseJson.obj.UpdatedBy))
+            // saveStorageAsync('loginUsername', this.state.loginUsername)
+            // saveStorageAsync('loginPassword', this.state.loginPassword)
+
+           // alert(JSON.stringify(responseJson.obj))
+
+            this.setState({
+              profile: responseJson.obj,
+              sessionKey: responseJson.obj.UpdatedBy
+            })
+
+          }
+          else {
+            if (Platform.OS === 'android') {
+              ToastAndroid.showWithGravity('Tài khoản hoặc mật khẩu đã thay đổi', ToastAndroid.SHORT, ToastAndroid.BOTTOM);
+            }
+            else {
+              Alert.alert('Oops!', 'Tài khoản hoặc mật khẩu đã thay đổi');
+            }
+
+            saveStorageAsync('FO_Account_Login', '')
+            saveStorageAsync('SessionKey', '')
+            this.setState({ profile: null, sessionKey: null })
+          }
+
+          //this._getStorageAsync('SessionKey')
+          // var tmp = getStorageAsync('SessionKey')
+          // alert(JSON.stringify(tmp))
+
+         // this.popupLoadingIndicator.dismiss();
+        }).
+        catch((error) => { console.log(error) });
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
   // Login by Phone
   _loginAsync = async () => {
 
@@ -353,6 +422,8 @@ export default class HomeScreen extends React.Component {
             this.popupLogin.dismiss();
             saveStorageAsync('FO_Account_Login', JSON.stringify(responseJson.obj))
             saveStorageAsync('SessionKey', JSON.stringify(responseJson.obj.UpdatedBy))
+            saveStorageAsync('loginUsername', this.state.loginUsername)
+            saveStorageAsync('loginPassword', this.state.loginPassword)
             this.setState({
               loginUsername: '',
               loginPassword: '',
@@ -361,7 +432,7 @@ export default class HomeScreen extends React.Component {
             })
 
           }
-          else {
+          else { // Login False
             if (Platform.OS === 'android') {
               ToastAndroid.showWithGravity('Tài khoản hoặc mật khẩu không đúng', ToastAndroid.SHORT, ToastAndroid.BOTTOM);
             }
@@ -371,6 +442,8 @@ export default class HomeScreen extends React.Component {
 
             saveStorageAsync('FO_Account_Login', '')
             saveStorageAsync('SessionKey', '')
+            saveStorageAsync('loginUsername', '')
+            saveStorageAsync('loginPassword', '')
             this.setState({ profile: null, sessionKey: null })
           }
 
@@ -597,7 +670,6 @@ export default class HomeScreen extends React.Component {
 
   }
 
-
   _postImage = async () => {
     var can = 'http://uploads.im/api?upload=http://www.google.com/images/srpr/nav_logo66.png'
     // console.log(JSON.stringify(this.state.objectRegisterAccount))
@@ -673,8 +745,8 @@ export default class HomeScreen extends React.Component {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          "PageIndex": "0",
-          "PageCount": "5",
+          "PageIndex": this.state.roomPageIndex,
+          "PageCount": this.state.roomPageCount,
           "SessionKey": "Olala_SessionKey",
           "UserLogon": "100"
         }),
@@ -710,13 +782,13 @@ export default class HomeScreen extends React.Component {
           //onScroll={this._onScroll}
           // ref='homepage'
           refreshing={this.state.refresh}
-          onRefresh={() => { this.refresh() }}
+          onRefresh={() => { this._refreshRoomBox() }}
 
           onEndReachedThreshold={-0.2}
           onEndReached={() => {
-            this.setState({
+            {/* this.setState({
               txt: 'Can Ho'
-            });
+            }); */}
           }}
 
           data={this.state.roomBox}//{this.state.dataUsers}

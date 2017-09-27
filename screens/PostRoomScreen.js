@@ -34,39 +34,6 @@ const LONGITUDE = -122.4324;
 const LATITUDE_DELTA = 0.02;
 const LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO;
 
-// async function uploadImageAsync(uri) {
-//     let apiUrl = 'https://file-upload-example-backend-dkhqoilqqn.now.sh/upload';
-
-//     // Note:
-//     // Uncomment this if you want to experiment with local server
-//     //
-//     // if (Constants.isDevice) {
-//     //   apiUrl = `https://your-ngrok-subdomain.ngrok.io/upload`;
-//     // } else {
-//     //   apiUrl = `http://localhost:3000/upload`
-//     // }
-
-//     let uriParts = uri.split('.');
-//     let fileType = uri[uri.length - 1];
-
-//     let formData = new FormData();
-//     formData.append('photo', {
-//         uri,
-//         name: `photo.${fileType}`,
-//         type: `image/${fileType}`,
-//     });
-
-//     let options = {
-//         method: 'POST',
-//         body: formData,
-//         headers: {
-//             Accept: 'application/json',
-//             'Content-Type': 'multipart/form-data',
-//         },
-//     };
-
-//     return fetch(apiUrl, options);
-// }
 
 export default class PostRoomScreen extends React.Component {
     static navigationOptions = {
@@ -107,16 +74,59 @@ export default class PostRoomScreen extends React.Component {
             price: '',
             detailInfo: '',
             modalBDS: false,
-            // selectedBDS: '0',
+            SessionKey: null,
+            profile: null,
         }
     }
 
     componentWillMount() {
-        this._getCategoryFromStorageAsync();
+        this._getSessionKeyFromStorageAsync();
+        this._getProfileFromStorageAsync();
+        this._getCategoryFromStorageAsync ();
     }
 
     componentDidMount() {
 
+    }
+
+    _getSessionKeyFromStorageAsync = async () => {
+        try {
+            var value = await AsyncStorage.getItem('SessionKey');
+
+            if (value !== null) {
+                this.setState({
+                    SessionKey: JSON.parse(value)
+                })
+            }
+            else {
+                this.setState({
+                    SessionKey: null,
+                })
+            }
+
+        } catch (e) {
+            console.log(e);
+        }
+    }
+
+    _getProfileFromStorageAsync = async () => {
+        try {
+            var value = await AsyncStorage.getItem('FO_Account_Login');
+
+            if (value !== null) {
+                this.setState({
+                    profile: JSON.parse(value)
+                })
+            }
+            else {
+                this.setState({
+                    profile: null,
+                })
+            }
+
+        } catch (e) {
+            console.log(e);
+        }
     }
 
     _getCategoryFromStorageAsync = async () => {
@@ -300,8 +310,8 @@ export default class PostRoomScreen extends React.Component {
                     "HighlightFromDate": "2017-09-30",
                     "HighlightToDate": "2017-10-09",
                     "IsActive": "true",
-                    "CreatedBy": "10",
-                    "UpdatedBy": "Olala_SessionKey"
+                    "CreatedBy": this.state.profile.ID,
+                    "UpdatedBy": this.state.SessionKey,
                 }),
             })
                 .then((response) => response.json())
@@ -318,7 +328,7 @@ export default class PostRoomScreen extends React.Component {
 
     }
 
-    
+
 
     _postImage = async (file) => {
         // var tmp = file.replace('file://', '');
