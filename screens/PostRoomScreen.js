@@ -26,6 +26,7 @@ import { TextInputMask } from 'react-native-masked-text';
 import KeyboardSpacer from 'react-native-keyboard-spacer';
 import PopupDialog, { SlideAnimation, ScaleAnimation, DialogTitle, DialogButton } from 'react-native-popup-dialog';
 import uploadImageAsync from '../api/uploadImageAsync'
+import HomeScreen from './HomeScreen';
 
 var { height, width } = Dimensions.get('window');
 const ASPECT_RATIO = width / height;
@@ -322,6 +323,7 @@ export default class PostRoomScreen extends React.Component {
 
                     this.popupLoadingIndicator.dismiss();
                     this.props.navigation.goBack();
+                    HomeScreen.refreshRoomBoxAfterPost();
                     //this.props.navigation.navigate("HomeScreen", { tmp: 'Can' })
                 }).
                 catch((error) => { console.log(error) });
@@ -579,11 +581,12 @@ export default class PostRoomScreen extends React.Component {
                         </View>
                         <FormLabel style={{ marginTop: 10, }}>Chi tiết:</FormLabel>
                         <FormInput
-                            containerStyle={{ paddingLeft: 8, borderWidth: 0.5, borderColor: '#73aa2a', borderRadius: 10, height: 140, }}
+                            containerStyle={{ borderWidth: 0.5, borderColor: '#73aa2a', borderRadius: 10, }}
+                            inputStyle={{ padding: 10 }}
                             placeholder='Vui lòng nhập thông tin chi tiết'
                             multiline={true}
                             autoCapitalize='sentences'
-                            maxLength={300}
+                            //maxLength={300}
                             clearButtonMode='always'
                             underlineColorAndroid='#fff'
                             blurOnSubmit={true}
@@ -608,6 +611,7 @@ export default class PostRoomScreen extends React.Component {
                                 onPress={() => {
                                     //this.popupLoadingIndicator.show();
                                     this._postRoomAsync();
+                                    //HomeScreen.refreshRoomBoxAfterPost();
 
                                 }}
                             />

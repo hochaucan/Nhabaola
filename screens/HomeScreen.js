@@ -57,6 +57,9 @@ const LONGITUDE = -122.4324;
 const LATITUDE_DELTA = 0.05;
 const LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO;
 
+
+const roomBox2 = [];
+
 export default class HomeScreen extends React.Component {
   static navigationOptions = {
     header: null,
@@ -89,7 +92,7 @@ export default class HomeScreen extends React.Component {
         longitude: null,
       },
       selectedCategory: '0',
-      roomPageIndex: 0,
+      roomPageIndex: 5,
       roomPageCount: 5,
 
       // Login
@@ -137,6 +140,43 @@ export default class HomeScreen extends React.Component {
   // 2. Define a variable that will keep track of the current scroll position
   _listViewOffset = 0
 
+
+
+  static refreshRoomBoxAfterPost = async () => {
+    // alert("can")
+    //this.setState({ refresh: true })
+    try {
+      await fetch("http://nhabaola.vn/api/RoomBox/FO_RoomBox_GetAllData", {
+        method: 'POST',
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          "PageIndex": "0",
+          "PageCount": "1",
+          "SessionKey": "Olala_SessionKey",
+          "UserLogon": "100"
+        }),
+      })
+        .then((response) => response.json())
+        .then((responseJson) => {
+          // alert(JSON.stringify(roomBox2))
+          responseJson.obj.map((y) => {
+            // roomBox2.push(y);
+            roomBox2.unshift(y);
+          })
+          //this._saveStorageAsync('FO_RoomBox_GetAllData', JSON.stringify(responseJson.obj))
+          //  alert("can")
+
+
+        }).
+        catch((error) => { console.log(error) });
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
   _saveStorageAsync = async (key, obj) => {
     try {
       await AsyncStorage.setItem(key, obj)
@@ -156,7 +196,7 @@ export default class HomeScreen extends React.Component {
   }
 
   _refreshRoomBox() {
-    this._getRoomBoxAsync();
+    this._getRoomBoxAsync(true);
     // alert("can")
     // this.setState({
     //   refresh: false,
@@ -177,7 +217,7 @@ export default class HomeScreen extends React.Component {
 
   componentWillMount() {
     this._getCategoryAsync();
-    this._getRoomBoxAsync();
+    this._getRoomBoxAsync(true);
     this._getProfileFromStorageAsync();
     this._getSessionKeyFromStorageAsync();
   }
@@ -739,8 +779,15 @@ export default class HomeScreen extends React.Component {
 
   }
 
-  _getRoomBoxAsync = async () => {
+  _getRoomBoxAsync = async (isNew) => {
     this.setState({ refresh: true })
+
+    if (!isNew) {
+      this.setState({
+        roomPageIndex: this.state.roomPageIndex + this.state.roomPageCount,
+      })
+    }
+
     try {
       await fetch("http://nhabaola.vn/api/RoomBox/FO_RoomBox_GetAllData", {
         method: 'POST',
@@ -749,7 +796,7 @@ export default class HomeScreen extends React.Component {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          "PageIndex": this.state.roomPageIndex,
+          "PageIndex": isNew ? "0" : this.state.roomPageIndex,
           "PageCount": this.state.roomPageCount,
           "SessionKey": "Olala_SessionKey",
           "UserLogon": "100"
@@ -760,6 +807,20 @@ export default class HomeScreen extends React.Component {
           //alert(JSON.stringify(responseJson.obj))
 
           //this._saveStorageAsync('FO_RoomBox_GetAllData', JSON.stringify(responseJson.obj))
+          // responseJson.obj.map((y) => { return y.CatName })
+
+          if (isNew) {
+            responseJson.obj.map((y) => {
+              roomBox2.unshift(y);
+            })
+          } else {
+            responseJson.obj.map((y) => {
+              roomBox2.push(y);
+            })
+          }
+
+          //roomBox2.push(responseJson.obj);
+
           this.setState({
             roomBox: responseJson.obj,
             refresh: false,
@@ -803,13 +864,16 @@ export default class HomeScreen extends React.Component {
 
           onEndReachedThreshold={0.2}
           onEndReached={() => {
-            alert("refreshing")
+            //alert("refreshing")
+
+            this._getRoomBoxAsync(false);
             {/* this.setState({
               refresh: true
             }); */}
           }}
 
-          data={this.state.roomBox}//{this.state.dataUsers}
+          data={roomBox2}//{this.state.dataUsers}
+          extraData={this.state}
           renderItem={({ item }) =>
             <View style={styles.card}>
               <View style={styles.cardHeader}>
@@ -826,7 +890,7 @@ export default class HomeScreen extends React.Component {
                   </TouchableOpacity>
                 </View>
                 <View style={styles.cardAvatarTextBox}>
-                  <Text style={styles.cardAvatarName}>{item.AccountName}</Text>
+                  <Text style={styles.cardAvatarName}>{item.AccountName} {item.ID}</Text>
                   <TouchableOpacity style={styles.cardAvatarPhoneBox}
                     onPress={() => { Communications.phonecall(item.AccountPhone, true) }}
                   >

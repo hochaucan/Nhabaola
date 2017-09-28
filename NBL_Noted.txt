@@ -42,6 +42,12 @@ FontFamily: arciform
 Account Expo: hochaucan / can111!!!
 
 
+Phòng ngủ có thể hoàn toàn thay đổi chỉ với giấy dán tường hay một vài chiếc ghế tựa. Trang Apartment Therapy đã gợi ý một số mẹo nhỏ giúp bạn làm mới phòng ngủ.
+
+
+Cong Thuc Tinh PageIndex
+PageIndex = (Page -1)*PageCount
+
 
 GMAP Key: AIzaSyBIhOGDA4Cvocj02AYdnxYK5oGeg6VwetM 
 
