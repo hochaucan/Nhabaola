@@ -73,6 +73,7 @@ export default class RoomDetailScreen extends React.Component {
     render() {
         //const { picture, name, email, phone, login, dob, location } = this.props.navigation.state.params;
         const { item } = this.props.navigation.state.params;
+        var images = item.Images.replace('|', '').split('|');
         return (
             <View style={{ flex: 1 }}>
 
@@ -138,7 +139,20 @@ export default class RoomDetailScreen extends React.Component {
                                 dotColor='#9B9D9D'
                                 activeDotColor='#a4d227'
                             >
-                                <Image
+
+                                {images.map((y, i) => {
+                                    return (
+                                        <Image
+                                            key={i}
+                                            style={styles.cardImage}
+                                            source={{ uri: y }} />
+                                    )
+
+                                })}
+
+
+
+                                {/* <Image
                                     style={styles.cardImage}
                                     source={{ uri: item.Title }} />
                                 <Image
@@ -147,7 +161,7 @@ export default class RoomDetailScreen extends React.Component {
 
                                 <Image
                                     style={styles.cardImage}
-                                    source={{ uri: item.Title }} />
+                                    source={{ uri: item.Title }} /> */}
 
 
                             </Swiper>

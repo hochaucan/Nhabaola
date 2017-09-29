@@ -39,6 +39,7 @@ import Swiper from 'react-native-swiper';
 import KeyboardSpacer from 'react-native-keyboard-spacer';
 import uploadImageAsync from '../api/uploadImageAsync';
 import saveStorageAsync from '../components/saveStorageAsync';
+import ProfileScreen from './ProfileScreen';
 
 
 const homePlace = {
@@ -58,7 +59,7 @@ const LATITUDE_DELTA = 0.05;
 const LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO;
 
 
-const roomBox2 = [];
+const roomBox = [];
 
 export default class HomeScreen extends React.Component {
   static navigationOptions = {
@@ -77,7 +78,7 @@ export default class HomeScreen extends React.Component {
       starCount: 3.5,
       mapRegion: { latitude: 10.7777935, longitude: 106.7068674, latitudeDelta: 0.03, longitudeDelta: 0.03 },
       roomCategory: [],
-      roomBox: [],
+      //roomBox: [],
       loadingIndicator: false,
 
       // Post Room
@@ -161,13 +162,17 @@ export default class HomeScreen extends React.Component {
       })
         .then((response) => response.json())
         .then((responseJson) => {
-          // alert(JSON.stringify(roomBox2))
+          // alert(JSON.stringify(roomBox))
+
+          // roomBox.unshift(responseJson.obj)
+
           responseJson.obj.map((y) => {
-            // roomBox2.push(y);
-            roomBox2.unshift(y);
+            roomBox.unshift(y);
           })
           //this._saveStorageAsync('FO_RoomBox_GetAllData', JSON.stringify(responseJson.obj))
-          //  alert("can")
+
+
+          //alert("can")
 
 
         }).
@@ -475,6 +480,8 @@ export default class HomeScreen extends React.Component {
               sessionKey: responseJson.obj.UpdatedBy
             })
 
+            ProfileScreen._updateProfileAfterLogin(responseJson.obj);
+
           }
           else { // Login False
             if (Platform.OS === 'android') {
@@ -780,12 +787,16 @@ export default class HomeScreen extends React.Component {
   }
 
   _getRoomBoxAsync = async (isNew) => {
-    this.setState({ refresh: true })
+    await this.setState({ refresh: true })
 
     if (!isNew) {
       this.setState({
         roomPageIndex: this.state.roomPageIndex + this.state.roomPageCount,
       })
+    }
+    else {
+      roomBox = [];
+      this.setState({ roomPageIndex: 5 })
     }
 
     try {
@@ -809,24 +820,28 @@ export default class HomeScreen extends React.Component {
           //this._saveStorageAsync('FO_RoomBox_GetAllData', JSON.stringify(responseJson.obj))
           // responseJson.obj.map((y) => { return y.CatName })
 
-          if (isNew) {
-            responseJson.obj.map((y) => {
-              roomBox2.unshift(y);
-            })
-          } else {
-            responseJson.obj.map((y) => {
-              roomBox2.push(y);
-            })
-          }
 
-          //roomBox2.push(responseJson.obj);
-
-          this.setState({
-            roomBox: responseJson.obj,
-            refresh: false,
+          responseJson.obj.map((y) => {
+            roomBox.push(y);
           })
+          // if (isNew) {
+          //   responseJson.obj.map((y) => {
+          //     roomBox.unshift(y);
+          //   })
+          // } else {
+          //   responseJson.obj.map((y) => {
+          //     roomBox.push(y);
+          //   })
+          // }
 
-          // this.setState({ refresh: false })
+          //roomBox.push(responseJson.obj);
+
+          // this.setState({
+          //   roomBox: responseJson.obj,
+          //   refresh: false,
+          // })
+
+          this.setState({ refresh: false })
 
         }).
         catch((error) => { console.log(error) });
@@ -872,7 +887,7 @@ export default class HomeScreen extends React.Component {
             }); */}
           }}
 
-          data={roomBox2}//{this.state.dataUsers}
+          data={roomBox}//{this.state.dataUsers}
           extraData={this.state}
           renderItem={({ item }) =>
             <View style={styles.card}>
@@ -922,6 +937,7 @@ export default class HomeScreen extends React.Component {
                   {/* Although dimensions are available immediately, they may change (e.g due to device rotation) so any rendering logic or styles that depend on these constants should try to */}
                   {item.Description}
                 </Text>
+                {/* <Text>{item.Images.split('|')[2]}</Text> */}
               </View>
               <View style={styles.cardBottom}>
                 <View style={styles.cardBottomLeft}>

@@ -54,12 +54,13 @@ export default class PostRoomScreen extends React.Component {
             postRoomImage4: null,
             postRoomImage5: null,
             postRoomImage6: null,
-            imageUrl1: '',
-            imageUrl2: '',
-            imageUrl3: '',
-            imageUrl4: '',
-            imageUrl5: '',
-            imageUrl6: '',
+            imageUrl: '',
+            // imageUrl1: '',
+            // imageUrl2: '',
+            // imageUrl3: '',
+            // imageUrl4: '',
+            // imageUrl5: '',
+            // imageUrl6: '',
             postRoomAddressMaker: {
                 latitude: null,
                 longitude: null,
@@ -209,13 +210,13 @@ export default class PostRoomScreen extends React.Component {
         //Form validation
         if (Platform.OS === 'android') {
             if (this.state.postRoomImage1 === null
-                && this.state.postRoomImage2 === null
-                && this.state.postRoomImage3 === null
-                && this.state.postRoomImage4 === null
-                && this.state.postRoomImage5 === null
-                && this.state.postRoomImage6 === null
+                // && this.state.postRoomImage2 === null
+                // && this.state.postRoomImage3 === null
+                // && this.state.postRoomImage4 === null
+                // && this.state.postRoomImage5 === null
+                // && this.state.postRoomImage6 === null
             ) {
-                ToastAndroid.showWithGravity('Vui lòng chọn ít nhất 1 hình ảnh', ToastAndroid.SHORT, ToastAndroid.CENTER);
+                ToastAndroid.showWithGravity('Vui lòng chọn hình đại diện', ToastAndroid.SHORT, ToastAndroid.CENTER);
                 return;
             }
             if (this.state.searchingMaker.latitude === null) {
@@ -279,11 +280,44 @@ export default class PostRoomScreen extends React.Component {
         //console.log(this.state.postRoomImage1)
         //await this._postImage(this.state.postRoomImage1);
 
-        let uploadResponse = await uploadImageAsync(this.state.postRoomImage1);
-        let uploadResult = await uploadResponse.json();
-        // this.setState({ image: uploadResult.location });
-        //alert(uploadResult.location)
+        if (this.state.postRoomImage1 != null) {
+            let uploadResponse = await uploadImageAsync(this.state.postRoomImage1);
+            let uploadResult = await uploadResponse.json();
+            this.setState({ imageUrl: this.state.imageUrl + '|' + uploadResult.location })
+        }
+        if (this.state.postRoomImage2 != null) {
+            let uploadResponse = await uploadImageAsync(this.state.postRoomImage2);
+            let uploadResult = await uploadResponse.json();
+            this.setState({ imageUrl: this.state.imageUrl + '|' + uploadResult.location })
+        }
+        if (this.state.postRoomImage3 != null) {
+            let uploadResponse = await uploadImageAsync(this.state.postRoomImage3);
+            let uploadResult = await uploadResponse.json();
+            this.setState({ imageUrl: this.state.imageUrl + '|' + uploadResult.location })
+        }
 
+        if (this.state.postRoomImage4 != null) {
+            let uploadResponse = await uploadImageAsync(this.state.postRoomImage4);
+            let uploadResult = await uploadResponse.json();
+            this.setState({ imageUrl: this.state.imageUrl + '|' + uploadResult.location })
+        }
+        if (this.state.postRoomImage5 != null) {
+            let uploadResponse = await uploadImageAsync(this.state.postRoomImage5);
+            let uploadResult = await uploadResponse.json();
+            this.setState({ imageUrl: this.state.imageUrl + '|' + uploadResult.location })
+        }
+        if (this.state.postRoomImage6 != null) {
+            let uploadResponse = await uploadImageAsync(this.state.postRoomImage6);
+            let uploadResult = await uploadResponse.json();
+            this.setState({ imageUrl: this.state.imageUrl + '|' + uploadResult.location })
+        }
+
+
+        // this.setState({ image: uploadResult.location });
+
+        //alert(this.state.imageUrl)
+
+        //return
 
         try {
             await fetch("http://nhabaola.vn/api/RoomBox/FO_RoomBox_Add", {
@@ -294,7 +328,8 @@ export default class PostRoomScreen extends React.Component {
                 },
 
                 body: JSON.stringify({
-                    "Title": uploadResult.location,//this.state.imageUrl1,
+                    "Title": this.state.imageUrl.split('|')[1],
+                    "Images": this.state.imageUrl,
                     "CategoryID": this.state.selectedCategory,
                     "Address": this.state.selectedAddress,
                     "Longitude": this.state.searchingMaker.longitude,
@@ -379,8 +414,9 @@ export default class PostRoomScreen extends React.Component {
                                 this.popupSelectedImage.show();
                             }}
                         >
-                            <Ionicons style={{ opacity: 0.5, fontSize: 133, color: '#73aa2a', flex: 1, textAlign: 'center', }} name='ios-image-outline' />
+                            <Ionicons style={{ opacity: 0.7, fontSize: 120, color: '#73aa2a', flex: 1, textAlign: 'center', }} name='ios-image-outline' />
                             {this.state.postRoomImage1 && <Image source={{ uri: this.state.postRoomImage1 }} style={{ width: 100, height: 100 }} />}
+                            <Text style={{ color: '#73aa2a', fontSize: 12, textAlign: 'center', paddingTop: 5, }}>Hình đại diện</Text>
                         </TouchableOpacity>
 
                         <TouchableOpacity
@@ -390,7 +426,7 @@ export default class PostRoomScreen extends React.Component {
                                 this.popupSelectedImage.show();
                             }}
                         >
-                            <Ionicons style={{ opacity: 0.5, fontSize: 133, color: '#73aa2a', flex: 1, textAlign: 'center', }} name='ios-image-outline' />
+                            <Ionicons style={{ opacity: 0.4, fontSize: 120, color: '#73aa2a', flex: 1, textAlign: 'center', }} name='ios-image-outline' />
                             {this.state.postRoomImage2 && <Image source={{ uri: this.state.postRoomImage2 }} style={{ width: 100, height: 100 }} />}
                         </TouchableOpacity>
                         <TouchableOpacity
@@ -400,7 +436,7 @@ export default class PostRoomScreen extends React.Component {
                                 this.popupSelectedImage.show();
                             }}
                         >
-                            <Ionicons style={{ opacity: 0.5, fontSize: 133, color: '#73aa2a', flex: 1, textAlign: 'center', }} name='ios-image-outline' />
+                            <Ionicons style={{ opacity: 0.4, fontSize: 120, color: '#73aa2a', flex: 1, textAlign: 'center', }} name='ios-image-outline' />
                             {this.state.postRoomImage3 && <Image source={{ uri: this.state.postRoomImage3 }} style={{ width: 100, height: 100 }} />}
                         </TouchableOpacity>
 
@@ -418,7 +454,7 @@ export default class PostRoomScreen extends React.Component {
                                 this.popupSelectedImage.show();
                             }}
                         >
-                            <Ionicons style={{ opacity: 0.5, fontSize: 133, color: '#73aa2a', flex: 1, textAlign: 'center', }} name='ios-image-outline' />
+                            <Ionicons style={{ opacity: 0.4, fontSize: 120, color: '#73aa2a', flex: 1, textAlign: 'center', }} name='ios-image-outline' />
                             {this.state.postRoomImage4 && <Image source={{ uri: this.state.postRoomImage4 }} style={{ width: 100, height: 100 }} />}
                         </TouchableOpacity>
 
@@ -429,7 +465,7 @@ export default class PostRoomScreen extends React.Component {
                                 this.popupSelectedImage.show();
                             }}
                         >
-                            <Ionicons style={{ opacity: 0.5, fontSize: 133, color: '#73aa2a', flex: 1, textAlign: 'center', }} name='ios-image-outline' />
+                            <Ionicons style={{ opacity: 0.4, fontSize: 120, color: '#73aa2a', flex: 1, textAlign: 'center', }} name='ios-image-outline' />
                             {this.state.postRoomImage5 && <Image source={{ uri: this.state.postRoomImage5 }} style={{ width: 100, height: 100 }} />}
                         </TouchableOpacity>
                         <TouchableOpacity
@@ -439,7 +475,7 @@ export default class PostRoomScreen extends React.Component {
                                 this.popupSelectedImage.show();
                             }}
                         >
-                            <Ionicons style={{ opacity: 0.5, fontSize: 133, color: '#73aa2a', flex: 1, textAlign: 'center', }} name='ios-image-outline' />
+                            <Ionicons style={{ opacity: 0.4, fontSize: 120, color: '#73aa2a', flex: 1, textAlign: 'center', }} name='ios-image-outline' />
                             {this.state.postRoomImage6 && <Image source={{ uri: this.state.postRoomImage6 }} style={{ width: 100, height: 100 }} />}
                         </TouchableOpacity>
 
@@ -582,7 +618,7 @@ export default class PostRoomScreen extends React.Component {
                         <FormLabel style={{ marginTop: 10, }}>Chi tiết:</FormLabel>
                         <FormInput
                             containerStyle={{ borderWidth: 0.5, borderColor: '#73aa2a', borderRadius: 10, }}
-                            inputStyle={{ padding: 10 }}
+                            inputStyle={{ padding: 10, height: 140 }}
                             placeholder='Vui lòng nhập thông tin chi tiết'
                             multiline={true}
                             autoCapitalize='sentences'
