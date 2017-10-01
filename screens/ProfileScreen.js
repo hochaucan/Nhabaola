@@ -51,7 +51,7 @@ const SECTIONS = [
     },
 ];
 
-const profile = null;
+//const profile = null;
 
 export default class ProfileScreen extends React.Component {
 
@@ -83,7 +83,7 @@ export default class ProfileScreen extends React.Component {
 
             // Update Account
             updateAccountImage: null,
-            // profile: null,
+            profile: null,
         }
 
 
@@ -109,9 +109,13 @@ export default class ProfileScreen extends React.Component {
     //     alert("can")
     //     return true
     // }
+    componentWillUpdate() {
+        //this._getProfileFromStorageAsync();
+    }
+
     static _updateProfileAfterLogin(_profile) {
 
-        alert(_profile)
+        //alert(_profile)
         //profile = _profile;
     }
 
@@ -120,14 +124,14 @@ export default class ProfileScreen extends React.Component {
             var value = await AsyncStorage.getItem('FO_Account_Login');
 
             if (value !== null) {
-                // this.setState({
-                profile = JSON.parse(value)
-                //   })
+                this.setState({
+                    profile: JSON.parse(value)
+                })
             }
             else {
-                //   this.setState({
-                profile = null
-                //})
+                this.setState({
+                    profile: null
+                })
             }
 
         } catch (e) {
@@ -207,21 +211,21 @@ export default class ProfileScreen extends React.Component {
 
                                 }}
                             >
-                                {profile === null
+                                {this.state.profile === null
                                     ? <Image style={{ borderRadius: Platform.OS === 'ios' ? 23 : 50, height: 60, width: 60, }} source={require('../images/nha-bao-la.jpg')} />
-                                    : <Image source={{ uri: profile.Avarta }} style={{ width: 60, height: 60, borderRadius: 100, }} />
+                                    : <Image source={{ uri: this.state.profile.Avarta }} style={{ width: 60, height: 60, borderRadius: 100, }} />
                                 }
 
                             </TouchableOpacity>
                         </View>
-                        {profile
+                        {this.state.profile
                             ?
                             <View style={{ flex: 4, paddingLeft: 20, marginTop: 10 }}>
-                                <Text style={styles.cardAvatarName}>{profile.FullName}</Text>
-                                <Text style={styles.cardAvatarAddress}>{profile.RegistryDate}</Text>
+                                <Text style={styles.cardAvatarName}>{this.state.profile.FullName}</Text>
+                                <Text style={styles.cardAvatarAddress}>{this.state.profile.RegistryDate}</Text>
                                 <TouchableOpacity style={styles.cardAvatarPhoneBox}>
                                     <Ionicons style={styles.cardAvatarPhoneIcon} name='logo-whatsapp' />
-                                    <Text style={styles.cardAvatarPhone}>: {profile.ContactPhone}</Text>
+                                    <Text style={styles.cardAvatarPhone}>: {this.state.profile.ContactPhone}</Text>
                                 </TouchableOpacity>
                             </View>
                             :
@@ -310,7 +314,7 @@ export default class ProfileScreen extends React.Component {
                         </Ionicons>
                     </TouchableOpacity>
 
-                    {profile ?
+                    {this.state.profile ?
                         <TouchableOpacity style={styles.profileMenuItem}
                             onPress={() => {
                                 Alert.alert(
