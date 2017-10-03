@@ -25,7 +25,7 @@ import MapView from 'react-native-maps';
 import MultiSlider from '@ptomasroos/react-native-multi-slider';
 import PopupDialog, { SlideAnimation, ScaleAnimation, DialogTitle, DialogButton } from 'react-native-popup-dialog';
 import { GooglePlacesAutocomplete, } from 'react-native-google-places-autocomplete'; // 1.2.12
-
+import { TextInputMask, TextMask } from 'react-native-masked-text';
 
 var { height, width } = Dimensions.get('window');
 
@@ -219,6 +219,7 @@ const MARKERS = [
 ];
 
 const DEFAULT_PADDING = { top: 40, right: 40, bottom: 40, left: 40 };
+const roomBox = [];
 
 export default class SearchScreen extends React.Component {
 
@@ -249,8 +250,11 @@ export default class SearchScreen extends React.Component {
 
             // Searhing address
             searchingMaker: null,
-
             watchLocation: null,
+
+            refreshFlatlist: false,
+            roomPageIndex: 5,
+            roomPageCount: 5,
         }
     }
 
@@ -326,6 +330,7 @@ export default class SearchScreen extends React.Component {
     }
     componentWillMount() {
         this._getLocationAsync();
+        this._getRoomByFilter(true);
 
         // if (Platform.OS === 'android' && !Constants.isDevice) {
         //     this.setState({
@@ -335,8 +340,8 @@ export default class SearchScreen extends React.Component {
         //     this._getLocationAsync();
         // }
 
-        setTimeout(() => this.setState({ hackHeight: height + 1 }), 500);
-        setTimeout(() => this.setState({ hackHeight: height * 0.5 }), 1000);
+        // setTimeout(() => this.setState({ hackHeight: height + 1 }), 500);
+        // setTimeout(() => this.setState({ hackHeight: height * 0.5 }), 1000);
     }
 
     componentDidMount() {
@@ -401,6 +406,77 @@ export default class SearchScreen extends React.Component {
         this.setState({
             selectedBDS: value,
         })
+    }
+
+    _getRoomByFilter = async (isNew) => {
+        await this.setState({ refreshFlatlist: true })
+
+        // if (!isNew) {
+        //     this.setState({
+        //         roomPageIndex: this.state.roomPageIndex + this.state.roomPageCount,
+        //     })
+        // }
+        // else {
+        //     roomBox = [];
+        //     this.setState({ roomPageIndex: 5 })
+        // }
+
+        try {
+            await fetch("http://nhabaola.vn/api/RoomBox/FO_RoomBox_GetDataByFindingBox", {
+                method: 'POST',
+                headers: {
+                    Accept: 'application/json',
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    "Longitude": "106.6104477",
+                    "Latitude": "10.7143264",
+                    "Radius": "900",
+                    "RoomPriceMin": "0",
+                    "RoomPriceMax": "50000000",
+                    "AcreageMin": "0",
+                    "AcreageMax": "10000",
+                    "SortOptionKey": "SortDistance",
+                    "PageIndex": "0",//isNew ? "0" : this.state.roomPageIndex,
+                    "PageCount": "100"//this.state.roomPageCount,
+                }),
+            })
+                .then((response) => response.json())
+                .then((responseJson) => {
+                    //alert(JSON.stringify(responseJson.obj))
+
+                    //this._saveStorageAsync('FO_RoomBox_GetAllData', JSON.stringify(responseJson.obj))
+                    // responseJson.obj.map((y) => { return y.CatName })
+
+
+                    responseJson.obj.map((y) => {
+                        roomBox.push(y);
+                    })
+                    // if (isNew) {
+                    //   responseJson.obj.map((y) => {
+                    //     roomBox.unshift(y);
+                    //   })
+                    // } else {
+                    //   responseJson.obj.map((y) => {
+                    //     roomBox.push(y);
+                    //   })
+                    // }
+
+                    //roomBox.push(responseJson.obj);
+
+                    // this.setState({
+                    //   roomBox: responseJson.obj,
+                    //   refresh: false,
+                    // })
+
+                    this.setState({ refresh: false })
+
+                }).
+                catch((error) => { console.log(error) });
+        } catch (error) {
+            console.log(error)
+        }
+
     }
 
     render() {
@@ -610,8 +686,12 @@ export default class SearchScreen extends React.Component {
                                 <Picker
                                     style={styles.searchRadiusPicker}
                                     mode='dropdown'
-                                    selectedValue={this.state.language}
-                                    onValueChange={(itemValue, itemIndex) => this.setState({ language: itemValue })}>
+                                    selectedValue={this.state.radius}
+                                    onValueChange={async (itemValue, itemIndex) => {
+                                        await this.setState({ radius: itemValue })
+                                        //alert(this.state.radius)
+                                        this._getRoomByFilter(true);
+                                    }}>
                                     <Picker.Item label="2 km" value="2" />
                                     <Picker.Item label="4 km" value="4" />
                                     <Picker.Item label="6 km" value="6" />
@@ -654,7 +734,19 @@ export default class SearchScreen extends React.Component {
                         <FlatList
                             //onScroll={this._onScroll}
                             ref='searchresult'
-                            data={this.state.searchResultData}
+
+                            refreshing={this.state.refreshFlatlist}
+                            // onRefresh={() => { this._refreshRoomBox() }}
+
+                            onEndReachedThreshold={0.2}
+                            onEndReached={() => {
+                                //alert("refreshing")
+                                this._getRoomByFilter(false);
+
+                            }}
+
+
+                            data={roomBox}
                             renderItem={({ item }) =>
                                 <TouchableOpacity
                                     style={styles.searchCardImage}
@@ -663,21 +755,27 @@ export default class SearchScreen extends React.Component {
                                     <View style={styles.searchCard}>
                                         <Image
                                             style={styles.searchCardImage}
-                                            source={{ uri: item.picture.large }} />
+                                            source={{ uri: item.Title }} />
 
                                         <View style={styles.searchCardTextBox}>
-                                            <Text style={styles.searchCardAddress}>{item.location.street} {item.location.city}</Text>
-                                            <Text style={styles.searchCardPostDate}>Ngày đăng: {item.registered}</Text>
+                                            <Text style={styles.searchCardAddress}>{item.Address}</Text>
+                                            <Text style={styles.searchCardPostDate}>Ngày đăng: {item.CreatedDate}</Text>
                                             <View style={styles.searchCardPriceBox}>
-                                                <Text style={styles.searchCardPrice}>Giá: 2.000.000 đ</Text>
-                                                <Ionicons style={styles.searCardDistanceIcon} name='md-pin' >  3 km</Ionicons>
+                                                {/* <Text style={styles.searchCardPrice}>Giá: {item.Price} đ</Text> */}
+                                                <TextMask
+                                                    style={{ flex: 2, }}
+                                                    value={item.Price}
+                                                    type={'money'}
+                                                    options={{ suffixUnit: ' đ', precision: 0, unit: ' ', separator: ' ' }}
+                                                />
+                                                <Ionicons style={styles.searCardDistanceIcon} name='md-pin' >  {item.Distance} km</Ionicons>
                                                 {/* <Text>3 km</Text> */}
                                             </View>
                                         </View>
                                     </View>
                                 </TouchableOpacity>
                             }
-                            keyExtractor={item => item.email}
+                            keyExtractor={item => item.ID}
                         />
 
                     </View>
@@ -994,7 +1092,8 @@ const styles = StyleSheet.create({
         width: 100,
     },
     searchCardImage: {
-        flex: 3
+        flex: 3,
+        borderRadius: 5,
     },
     searchCardAddress: {
         flex: 2,

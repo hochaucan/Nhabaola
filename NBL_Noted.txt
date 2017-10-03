@@ -151,7 +151,41 @@ https://localhost/callback
 
 
 
+class Screen extends Component {
+    constructor(props){
+        super(props);
+        this.state = {login: false}
+    }
+    toggleLogin = () => this.setState(prevState => ({ login: !prevState.login })
 
+    render(){
+        return (
+            <View>
+              {this.state.login ? <LoginScreen toggleLogin={this.toggleLogin} /> :
+                <LogoutScreen toggleLogin={this.toggleLogin} />}
+            </View>
+        );
+    }
+}
+class LoginScreen extends Component {
+
+    render() {
+        return (
+            <Button title='Login' onPress={this.props.toggleLogin}/>
+        );
+    }
+
+}
+
+class LogoutScreen extends Component {
+
+    render() {
+        return (
+            <Button title='Logout' onPress={this.props.toggleLogin} />
+        );
+    }
+
+}
 
 
 
