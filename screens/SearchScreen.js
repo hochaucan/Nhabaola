@@ -15,6 +15,7 @@ import {
     SliderIOS,
     Alert,
     ActivityIndicator,
+    AsyncStorage,
 } from 'react-native';
 import { ExpoLinksView } from '@expo/samples';
 import { Constants, Location, Permissions } from 'expo';
@@ -243,10 +244,10 @@ export default class SearchScreen extends React.Component {
             initialRenderCurrentMaker: true,
 
             // Searching Filter
-            multiSliderPriceValue: [0, 10],
-            multiSliderAreaValue: [0, 200],
+            multiSliderPriceValue: [1, 10],
+            multiSliderAreaValue: [20, 200],
             txtFilterResult: null,
-            selectedBDS: 'Tất cả',
+            selectedBDS: 'Tất cả BĐS',
 
             // Searhing address
             searchingMaker: null,
@@ -255,6 +256,8 @@ export default class SearchScreen extends React.Component {
             refreshFlatlist: false,
             roomPageIndex: 5,
             roomPageCount: 5,
+            roomCategory: [],
+            selectedCategory: '0',
         }
     }
 
@@ -312,9 +315,9 @@ export default class SearchScreen extends React.Component {
         this.setState({ mapRegion });
     };
 
-    _moveToRoomDetail = (user) => {
-        this.props.navigation.navigate('RoomDetailScreen', { ...user });
-    };
+    // _moveToRoomDetail = (user) => {
+    //     this.props.navigation.navigate('RoomDetailScreen', { ...user });
+    // };
 
 
     _dropdown_onSelect(idx, value) {
@@ -330,7 +333,8 @@ export default class SearchScreen extends React.Component {
     }
     componentWillMount() {
         this._getLocationAsync();
-        this._getRoomByFilter(true);
+        this._getRoomByFilter();
+        this._getCategoryFromStorageAsync();
 
         // if (Platform.OS === 'android' && !Constants.isDevice) {
         //     this.setState({
@@ -408,7 +412,7 @@ export default class SearchScreen extends React.Component {
         })
     }
 
-    _getRoomByFilter = async (isNew) => {
+    _getRoomByFilter = async () => {
         await this.setState({ refreshFlatlist: true })
 
         // if (!isNew) {
@@ -421,6 +425,9 @@ export default class SearchScreen extends React.Component {
         //     this.setState({ roomPageIndex: 5 })
         // }
 
+        //alert(this.state.multiSliderPriceValue[1] + '000000')
+
+        roomBox = [];
         try {
             await fetch("http://nhabaola.vn/api/RoomBox/FO_RoomBox_GetDataByFindingBox", {
                 method: 'POST',
@@ -431,11 +438,11 @@ export default class SearchScreen extends React.Component {
                 body: JSON.stringify({
                     "Longitude": "106.6104477",
                     "Latitude": "10.7143264",
-                    "Radius": "900",
-                    "RoomPriceMin": "0",
-                    "RoomPriceMax": "50000000",
-                    "AcreageMin": "0",
-                    "AcreageMax": "10000",
+                    "Radius": this.state.radius,
+                    "RoomPriceMin": this.state.multiSliderPriceValue[0] + '000000',
+                    "RoomPriceMax": this.state.multiSliderPriceValue[1] + '000000',
+                    "AcreageMin": this.state.multiSliderAreaValue[0],
+                    "AcreageMax": this.state.multiSliderAreaValue[1],
                     "SortOptionKey": "SortDistance",
                     "PageIndex": "0",//isNew ? "0" : this.state.roomPageIndex,
                     "PageCount": "100"//this.state.roomPageCount,
@@ -452,6 +459,8 @@ export default class SearchScreen extends React.Component {
                     responseJson.obj.map((y) => {
                         roomBox.push(y);
                     })
+
+                    //alert(JSON.stringify(roomBox))
                     // if (isNew) {
                     //   responseJson.obj.map((y) => {
                     //     roomBox.unshift(y);
@@ -477,6 +486,21 @@ export default class SearchScreen extends React.Component {
             console.log(error)
         }
 
+    }
+
+    _getCategoryFromStorageAsync = async () => {
+        try {
+            var value = await AsyncStorage.getItem('FO_Category_GetAllData');
+
+            if (value !== null) {
+                this.setState({
+                    roomCategory: JSON.parse(value)
+                })
+            }
+
+        } catch (e) {
+            console.log(e);
+        }
     }
 
     render() {
@@ -690,13 +714,19 @@ export default class SearchScreen extends React.Component {
                                     onValueChange={async (itemValue, itemIndex) => {
                                         await this.setState({ radius: itemValue })
                                         //alert(this.state.radius)
-                                        this._getRoomByFilter(true);
+                                        this._getRoomByFilter();
                                     }}>
                                     <Picker.Item label="2 km" value="2" />
                                     <Picker.Item label="4 km" value="4" />
                                     <Picker.Item label="6 km" value="6" />
                                     <Picker.Item label="8 km" value="8" />
                                     <Picker.Item label="10 km" value="10" />
+                                    <Picker.Item label="12 km" value="12" />
+                                    <Picker.Item label="14 km" value="14" />
+                                    <Picker.Item label="16 km" value="16" />
+                                    <Picker.Item label="18 km" value="18" />
+                                    <Picker.Item label="20 km" value="20" />
+                                    <Picker.Item label="30 km" value="30" />
                                 </Picker>
                             }
                             <TouchableOpacity
@@ -741,7 +771,7 @@ export default class SearchScreen extends React.Component {
                             onEndReachedThreshold={0.2}
                             onEndReached={() => {
                                 //alert("refreshing")
-                                this._getRoomByFilter(false);
+                                // this._getRoomByFilter(false);
 
                             }}
 
@@ -750,7 +780,9 @@ export default class SearchScreen extends React.Component {
                             renderItem={({ item }) =>
                                 <TouchableOpacity
                                     style={styles.searchCardImage}
-                                    onPress={() => this._moveToRoomDetail(item)}
+                                    onPress={() => {
+                                        this.props.navigation.navigate('RoomDetailScreen', { item });
+                                    }}
                                 >
                                     <View style={styles.searchCard}>
                                         <Image
@@ -763,11 +795,14 @@ export default class SearchScreen extends React.Component {
                                             <View style={styles.searchCardPriceBox}>
                                                 {/* <Text style={styles.searchCardPrice}>Giá: {item.Price} đ</Text> */}
                                                 <TextMask
-                                                    style={{ flex: 2, }}
+                                                    style={{ flex: 1, }}
                                                     value={item.Price}
                                                     type={'money'}
                                                     options={{ suffixUnit: ' đ', precision: 0, unit: ' ', separator: ' ' }}
                                                 />
+                                                <View style={{ flex: 1, flexDirection: 'row', alignItems: 'center', justifyContent: 'center' }}>
+                                                    <Text>{item.Acreage} m</Text><Text style={{ fontSize: 8, marginBottom: 5 }}>2</Text>
+                                                </View>
                                                 <Ionicons style={styles.searCardDistanceIcon} name='md-pin' >  {item.Distance} km</Ionicons>
                                                 {/* <Text>3 km</Text> */}
                                             </View>
@@ -789,11 +824,25 @@ export default class SearchScreen extends React.Component {
                     >
                         <View style={{ flex: 1, marginTop: 30, padding: 10, }}>
                             <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-                                <View style={{ flexDirection: 'row', marginBottom: 30, marginLeft: 30, }}>
+                                <View style={{ flexDirection: 'row', marginBottom: 30, }}>
                                     <FormLabel>Loại bất động sản:</FormLabel>
 
 
+                                    <Picker // Android
+                                        style={{ flex: 1, marginTop: -4, }}
+                                        mode='dropdown'
+                                        selectedValue={this.state.selectedCategory}
+                                        onValueChange={(itemValue, itemIndex) => this.setState({ selectedCategory: itemValue })}>
+                                        <Picker.Item label='-- Chọn loại BĐS --' value='0' />
 
+
+                                        {this.state.roomCategory.map((y, i) => {
+                                            return (
+                                                <Picker.Item key={i} label={y.CatName} value={y.ID} />
+                                            )
+                                        })}
+
+                                    </Picker>
 
 
 
@@ -802,9 +851,9 @@ export default class SearchScreen extends React.Component {
                                 <FormLabel style={{ marginBottom: 20 }}>Giá: {this.state.multiSliderPriceValue[0]} - {this.state.multiSliderPriceValue[1]} triệu đồng</FormLabel>
                                 <MultiSlider
                                     values={[this.state.multiSliderPriceValue[0], this.state.multiSliderPriceValue[1]]}
-                                    sliderLength={250}
+                                    // sliderLength={250}
                                     onValuesChange={this._multiSliderPriceValuesChange}
-                                    min={0}
+                                    min={1}
                                     max={10}
                                     //step={1}
 
@@ -821,9 +870,9 @@ export default class SearchScreen extends React.Component {
                                 <FormLabel style={{ marginBottom: 20, marginTop: 10, }}>Diện tích: {this.state.multiSliderAreaValue[0]} - {this.state.multiSliderAreaValue[1]} mét vuông</FormLabel>
                                 <MultiSlider
                                     values={[this.state.multiSliderAreaValue[0], this.state.multiSliderAreaValue[1]]}
-                                    sliderLength={250}
+                                    //  sliderLength={250}
                                     onValuesChange={this._multiSliderAreaValuesChange}
-                                    min={0}
+                                    min={20}
                                     max={200}
                                     // step={1}
                                     //allowOverlap
@@ -854,11 +903,11 @@ export default class SearchScreen extends React.Component {
                                             onPress={() => {
                                                 this.setState({
                                                     txtFilterResult: null,
-                                                    multiSliderPriceValue: [0, 10],
-                                                    multiSliderAreaValue: [0, 200],
+                                                    multiSliderPriceValue: [1, 10],
+                                                    multiSliderAreaValue: [20, 200],
                                                 })
-
-                                                this.setState({ modalSearchFilterVisible: false })
+                                                this._getRoomByFilter();
+                                                this.setState({ modalSearchFilterVisible: false });
                                             }}
                                         />
                                         :
@@ -880,6 +929,8 @@ export default class SearchScreen extends React.Component {
                                                 + this.state.multiSliderAreaValue[0] + '-' + this.state.multiSliderAreaValue[1] + ' mét vuông',
 
                                             })
+
+                                            this._getRoomByFilter();
 
                                             this.setState({ modalSearchFilterVisible: false })
                                         }}
@@ -1065,7 +1116,8 @@ const styles = StyleSheet.create({
     searCardDistanceIcon: {
         flex: 1,
         // fontSize: 14,
-        paddingTop: 3,
+        paddingTop: 4,
+        //textAlign: 'left',
     },
     searchCardPrice: {
         flex: 2,

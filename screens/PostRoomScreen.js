@@ -29,6 +29,7 @@ import uploadImageAsync from '../api/uploadImageAsync'
 import HomeScreen from './HomeScreen';
 
 var { height, width } = Dimensions.get('window');
+
 const ASPECT_RATIO = width / height;
 const LATITUDE = 37.78825;
 const LONGITUDE = -122.4324;
