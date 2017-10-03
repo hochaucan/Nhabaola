@@ -40,7 +40,6 @@ import KeyboardSpacer from 'react-native-keyboard-spacer';
 import uploadImageAsync from '../api/uploadImageAsync';
 import saveStorageAsync from '../components/saveStorageAsync';
 import ProfileScreen from './ProfileScreen';
-import PostRoomScreen from './PostRoomScreen'
 
 
 const homePlace = {
@@ -60,7 +59,7 @@ const LATITUDE_DELTA = 0.05;
 const LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO;
 
 
-//const roomBox = [];
+const roomBox = [];
 
 export default class HomeScreen extends React.Component {
   static navigationOptions = {
@@ -79,7 +78,7 @@ export default class HomeScreen extends React.Component {
       starCount: 3.5,
       mapRegion: { latitude: 10.7777935, longitude: 106.7068674, latitudeDelta: 0.03, longitudeDelta: 0.03 },
       roomCategory: [],
-      roomBox: [],
+      //roomBox: [],
       loadingIndicator: false,
 
       // Post Room
@@ -135,6 +134,7 @@ export default class HomeScreen extends React.Component {
       registerConfirmCellPhone: null,
       registerAccountImage: null,
       registerFullName: null,
+
     }
 
   }
@@ -167,10 +167,7 @@ export default class HomeScreen extends React.Component {
           // roomBox.unshift(responseJson.obj)
 
           responseJson.obj.map((y) => {
-            this.setState({
-              roomBox: this.state.roomBox.unshift(y),
-            })
-
+            roomBox.unshift(y);
           })
           //this._saveStorageAsync('FO_RoomBox_GetAllData', JSON.stringify(responseJson.obj))
 
@@ -798,11 +795,8 @@ export default class HomeScreen extends React.Component {
       })
     }
     else {
-      // roomBox = [];
-      this.setState({
-        roomBox: [],
-        roomPageIndex: 5
-      })
+      roomBox = [];
+      this.setState({ roomPageIndex: 5 })
     }
 
     try {
@@ -828,11 +822,7 @@ export default class HomeScreen extends React.Component {
 
 
           responseJson.obj.map((y) => {
-            this.setState({
-              roombox: this.state.roomBox.push(y)
-            })
-
-            // roomBox.push(y);
+            roomBox.push(y);
           })
           // if (isNew) {
           //   responseJson.obj.map((y) => {
@@ -897,7 +887,7 @@ export default class HomeScreen extends React.Component {
             }); */}
           }}
 
-          data={this.state.roomBox}//{this.state.dataUsers}
+          data={roomBox}//{this.state.dataUsers}
           extraData={this.state}
           renderItem={({ item }) =>
             <View style={styles.card}>
