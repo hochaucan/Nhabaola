@@ -33,7 +33,7 @@ import { CheckBox, Rating, Button, FormLabel, FormInput, SocialIcon, FormValidat
 import StarRating from 'react-native-star-rating';
 import MapView from 'react-native-maps';
 import Communications from 'react-native-communications';
-import { TextInputMask } from 'react-native-masked-text';
+import { TextInputMask, TextMask } from 'react-native-masked-text';
 import { GooglePlacesAutocomplete, } from 'react-native-google-places-autocomplete'; // 1.2.12
 import Swiper from 'react-native-swiper';
 import KeyboardSpacer from 'react-native-keyboard-spacer';
@@ -905,7 +905,7 @@ export default class HomeScreen extends React.Component {
                   </TouchableOpacity>
                 </View>
                 <View style={styles.cardAvatarTextBox}>
-                  <Text style={styles.cardAvatarName}>{item.AccountName} {item.ID}</Text>
+                  <Text style={styles.cardAvatarName}>{item.AccountName}</Text>
                   <TouchableOpacity style={styles.cardAvatarPhoneBox}
                     onPress={() => { Communications.phonecall(item.AccountPhone, true) }}
                   >
@@ -914,6 +914,7 @@ export default class HomeScreen extends React.Component {
                   </TouchableOpacity>
                 </View>
               </View>
+
               <TouchableWithoutFeedback
                 style={styles.cardImageBox}
                 onPress={() => {
@@ -923,9 +924,7 @@ export default class HomeScreen extends React.Component {
                 }
                 }
               >
-                {/* <Image
-                  style={styles.cardImage}
-                  source={{ uri: item.picture.large }} /> */}
+
                 <Image
                   style={styles.cardImage}
                   //source={require('../images/1.jpg')}
@@ -933,10 +932,26 @@ export default class HomeScreen extends React.Component {
                 />
               </TouchableWithoutFeedback>
               <View style={styles.cardDesBox}>
-                <Text style={styles.cardDesText}>
-                  {/* Although dimensions are available immediately, they may change (e.g due to device rotation) so any rendering logic or styles that depend on these constants should try to */}
+                <View style={{ flexDirection: 'row' }}>
+                  {/* <Text style={{ flex: 1 }}>Giá:</Text> */}
+                  <TextMask
+                    style={{ flex: 1, }}
+                    value={item.Price}
+                    type={'money'}
+                    options={{ suffixUnit: ' đ', precision: 0, unit: 'Giá:   ', separator: ' ' }}
+                  />
+                  {/* <Text style={{ flex: 1 }}>Diện tích:</Text> */}
+                  <Text style={{ flex: 1, textAlign: 'right' }}>Diện tích:   {item.Acreage} m</Text><Text style={{ fontSize: 8, marginBottom: 5 }}>2</Text>
+
+                </View>
+
+
+                <Text style={{}}>Địa chỉ:   {item.Address}</Text>
+                <Text style={{ marginTop: 10, color: '#9B9D9D' }}>{item.Description}</Text>
+
+                {/* <Text style={styles.cardDesText}>
                   {item.Description}
-                </Text>
+                </Text> */}
                 {/* <Text>{item.Images.split('|')[2]}</Text> */}
               </View>
               <View style={styles.cardBottom}>

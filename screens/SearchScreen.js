@@ -333,7 +333,7 @@ export default class SearchScreen extends React.Component {
     }
     componentWillMount() {
         this._getLocationAsync();
-        this._getRoomByFilter();
+        // this._getRoomByFilter();
         this._getCategoryFromStorageAsync();
 
         // if (Platform.OS === 'android' && !Constants.isDevice) {
@@ -349,6 +349,7 @@ export default class SearchScreen extends React.Component {
     }
 
     componentDidMount() {
+
         //mapRegion: { latitude: LATITUDE, longitude: LONGITUDE, latitudeDelta: LATITUDE_DELTA, longitudeDelta: LONGITUDE_DELTA },
         // let mapRegion = {
         //     latitude: this.state.location.coords.latitude,
@@ -394,8 +395,8 @@ export default class SearchScreen extends React.Component {
             latitudeDelta: LATITUDE_DELTA,
             longitudeDelta: LONGITUDE_DELTA
         }
-        this.setState({ mapRegion: region });
-
+        await this.setState({ mapRegion: region });
+        this._getRoomByFilter();
     };
 
     _getCurrentPositionAsync() {
@@ -415,17 +416,7 @@ export default class SearchScreen extends React.Component {
     _getRoomByFilter = async () => {
         await this.setState({ refreshFlatlist: true })
 
-        // if (!isNew) {
-        //     this.setState({
-        //         roomPageIndex: this.state.roomPageIndex + this.state.roomPageCount,
-        //     })
-        // }
-        // else {
-        //     roomBox = [];
-        //     this.setState({ roomPageIndex: 5 })
-        // }
-
-        //alert(this.state.multiSliderPriceValue[1] + '000000')
+        // alert(JSON.stringify(this.state.mapRegion))
 
         roomBox = [];
         try {
@@ -436,8 +427,8 @@ export default class SearchScreen extends React.Component {
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify({
-                    "Longitude": "106.6104477",
-                    "Latitude": "10.7143264",
+                    "Longitude": this.state.mapRegion.longitude, //"106.6104477",
+                    "Latitude": this.state.mapRegion.latitude, //"10.7143264",
                     "Radius": this.state.radius,
                     "RoomPriceMin": this.state.multiSliderPriceValue[0] + '000000',
                     "RoomPriceMax": this.state.multiSliderPriceValue[1] + '000000',
@@ -516,6 +507,15 @@ export default class SearchScreen extends React.Component {
             }
 
             MARKERS = [
+
+                // roomBox.map((y) => {
+                //     return {
+                //         latitude: y.Latitude,
+                //         longitude: y.Longitude,
+                //         //createMarker(-4, y.Latitude, y.Longitude),
+                //     }
+                // })
+
                 createMarker(-4, this.state.location.coords.latitude, this.state.location.coords.longitude),
                 //currentMaker,
                 createMarker(1, this.state.location.coords.latitude, this.state.location.coords.longitude),
@@ -523,6 +523,8 @@ export default class SearchScreen extends React.Component {
                 createMarker(5, this.state.location.coords.latitude, this.state.location.coords.longitude),
 
             ]
+
+            //alert(JSON.stringify(MARKERS))
 
             // this.setState({
             //     findingHouseMakers: [
