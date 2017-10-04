@@ -11,6 +11,7 @@ import {
     TextInput,
     Button,
     Share,
+    FlatList,
 } from 'react-native';
 import { ExpoLinksView } from '@expo/samples';
 import { Constants, MapView } from 'expo';
@@ -21,9 +22,16 @@ import Communications from 'react-native-communications';
 import StarRating from 'react-native-star-rating';
 import PopupDialog, { SlideAnimation, ScaleAnimation, DialogTitle, DialogButton } from 'react-native-popup-dialog';
 import KeyboardSpacer from 'react-native-keyboard-spacer';
-
+import { TextInputMask, TextMask } from 'react-native-masked-text';
 
 var { height, width } = Dimensions.get('window');
+
+const ASPECT_RATIO = width / height;
+const LATITUDE = 37.78825;
+const LONGITUDE = -122.4324;
+const LATITUDE_DELTA = 0.02;
+const LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO;
+
 export default class RoomDetailScreen extends React.Component {
     // static navigationOptions = ({ navigation }) => ({
 
@@ -44,18 +52,29 @@ export default class RoomDetailScreen extends React.Component {
 
     };
 
-    state = {
-        mapRegion: { latitude: 37.78825, longitude: -122.4324, latitudeDelta: 0.0922, longitudeDelta: 0.0421 },
+    // state = {
+    //     mapRegion: { latitude: 37.78825, longitude: -122.4324, latitudeDelta: 0.05, longitudeDelta: 0.0421 },
 
-    };
+    // };
 
 
     constructor(props) {
         super(props);
         this.state = {
+            mapRegion: { latitude: LATITUDE, longitude: LONGITUDE, latitudeDelta: LATITUDE_DELTA, longitudeDelta: LONGITUDE_DELTA },
             starCount: 3.5,
+            comments: [],
         }
     }
+
+    componentWillMount() {
+        this._getCommentsAsync();
+    }
+
+    componentDidMount() {
+
+    }
+
 
     _handleMapRegionChange = mapRegion => {
         this.setState({ mapRegion });
@@ -70,10 +89,61 @@ export default class RoomDetailScreen extends React.Component {
         // console.log(rating);
     }
 
+    _getCommentsAsync = async () => {
+        try {
+            await fetch("http://nhabaola.vn//api/Comment/FO_Comment_GetAllData", {
+                method: 'POST',
+                headers: {
+                    Accept: 'application/json',
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    "PageIndex": "0",
+                    "PageCount": "200",
+                }),
+            })
+                .then((response) => response.json())
+                .then((responseJson) => {
+
+                    //this._saveStorageAsync('FO_Category_GetAllData', JSON.stringify(responseJson.obj))
+                    this.setState({
+                        comments: responseJson.obj
+                    })
+
+                    // {
+                    //   this.state.response.map((y) => {
+                    //     return (<Text>{y.prnt_usernamez}</Text>);
+                    //   })
+                    // }
+                }).
+                catch((error) => { console.log(error) });
+        } catch (error) {
+            console.log(error)
+        }
+
+    }
+
     render() {
         //const { picture, name, email, phone, login, dob, location } = this.props.navigation.state.params;
         const { item } = this.props.navigation.state.params;
         var images = item.Images.replace('|', '').split('|');
+
+
+        const roomLocation = {
+            latitude: parseFloat(item.Latitude),
+            longitude: parseFloat(item.Longitude),
+            latitudeDelta: LATITUDE_DELTA,
+            longitudeDelta: LONGITUDE_DELTA
+        }
+
+
+        let roomMaker = {
+            latitude: parseFloat(item.Latitude),
+            longitude: parseFloat(item.Longitude),
+        }
+
+        //alert(JSON.stringify(parseFloat(item.Longitude)))
+
         return (
             <View style={{ flex: 1 }}>
 
@@ -149,30 +219,26 @@ export default class RoomDetailScreen extends React.Component {
                                     )
 
                                 })}
-
-
-
-                                {/* <Image
-                                    style={styles.cardImage}
-                                    source={{ uri: item.Title }} />
-                                <Image
-                                    style={styles.cardImage}
-                                    source={{ uri: item.Title }} />
-
-                                <Image
-                                    style={styles.cardImage}
-                                    source={{ uri: item.Title }} /> */}
-
-
                             </Swiper>
 
 
 
+                            <View style={{ flexDirection: 'row', paddingLeft: 20, paddingRight: 20, paddingTop: 5, paddingBottom: 5, marginTop: -50, backgroundColor: '#000', opacity: 0.5 }}>
+                                <TextMask
+                                    style={{ flex: 1, color: '#fff' }}
+                                    value={item.Price}
+                                    type={'money'}
+                                    options={{ suffixUnit: ' đ', precision: 0, unit: 'Giá:   ', separator: ' ' }}
+                                />
+                                <Text style={{ flex: 1, textAlign: 'right', color: '#fff' }}>Diện tích:   {item.Acreage} m</Text><Text style={{ fontSize: 8, marginBottom: 5, color: '#fff' }}>2</Text>
 
+                            </View>
                         </View>
                         <View style={styles.cardDesBox}>
+
+
                             <Text style={styles.cardDesText}>
-                                {/* Although dimensions are available immediately, they may change (e.g due to device rotation) so any rendering logic or styles that depend on these constants should try to */}
+
                                 {item.Description}
                             </Text>
                         </View>
@@ -198,12 +264,12 @@ export default class RoomDetailScreen extends React.Component {
                                 <TouchableOpacity
                                     onPress={() => {
                                         Share.share({
-                                            message: 'Ho Chau Can',
-                                            url: 'http://bam.tech',
-                                            title: 'Wow, did you see that?'
+                                            message: item.Description,
+                                            url: item.Title,
+                                            title: 'Chia sẻ Nhà Bao La'
                                         }, {
                                                 // Android only:
-                                                dialogTitle: 'Share BAM goodness',
+                                                dialogTitle: 'Nhà Bao La',
                                                 // iOS only:
                                                 excludedActivityTypes: [
                                                     'com.apple.UIKit.activity.PostToTwitter'
@@ -223,15 +289,23 @@ export default class RoomDetailScreen extends React.Component {
 
 
 
-                    {/* <View style={styles.cardMapBar}>
-                    <Text style={styles.cardMapBarText} >Bản đồ</Text>
-                </View> */}
                     <View style={styles.cardMapViewBox}>
+                        <Text style={{ marginBottom: 5 }}>Địa chỉ:  {item.Address}</Text>
+
                         <MapView
                             style={styles.CardMapView}
-                            region={this.state.mapRegion}
+                            region={roomLocation}
                             onRegionChange={this._handleMapRegionChange}
-                        />
+                        >
+
+                            <MapView.Marker
+                                coordinate={roomMaker}
+                                title='Im here'
+                                description='Home'
+                            >
+
+                            </MapView.Marker>
+                        </MapView>
                     </View>
 
                     {/* <View style={styles.cardCommentBar}>
@@ -241,14 +315,14 @@ export default class RoomDetailScreen extends React.Component {
                         flex: 1,
                         flexDirection: 'row',
                         //height: 300,
-                        padding: 20,
+                        paddingTop: 20, paddingRight: 20, paddingLeft: 20,
                         //marginTop: 5,
                     }}>
                         <TextInput
                             style={{
                                 flex: 3,
-                                borderWidth: 1,
-                                borderColor: '#9B9D9D',
+                                borderWidth: 0.8,
+                                borderColor: '#a4d227',
                                 height: 40,
                                 padding: 5,
                                 borderRadius: 5,
@@ -257,12 +331,53 @@ export default class RoomDetailScreen extends React.Component {
                             underlineColorAndroid='transparent'
                         ></TextInput>
                         <TouchableOpacity style={styles.cardCommentSubmit}
-
+                            onPress={async () => {
+                                // await this._getCommentsAsync();
+                                alert(JSON.stringify(this.state.comments))
+                            }}
                         >
                             <Text style={styles.cardCommentSubmitText}>Gửi</Text>
                         </TouchableOpacity>
                     </View>
+                    {/* COMMENTS */}
+                    <View style={{ marginBottom: 20, marginTop: 20 }}>
+                        <FlatList
+                            style={{ paddingLeft: 20, paddingRight: 20, paddingBottom: 20, }}
+                            //onScroll={this._onScroll}
+                            ref='comments'
 
+                            // refreshing={this.state.refreshFlatlist}
+                            // onRefresh={() => { this._refreshRoomBox() }}
+
+                            //onEndReachedThreshold={0.2}
+                            //onEndReached={() => {
+                            //alert("refreshing")
+                            // this._getRoomByFilter(false);
+
+                            //}}
+
+
+                            data={this.state.comments}
+                            renderItem={({ item }) =>
+                                <View style={{ flexDirection: 'row', marginBottom: 13 }}>
+                                    <View style={{ flex: 2 }}>
+                                        <Image
+                                            style={{ width: 40, height: 40, borderRadius: 100, }}
+                                            //source={{ uri: item.UserID }} 
+                                            source={require('../images/app-icon.png')}
+                                        />
+                                    </View>
+                                    <View style={{ flex: 8 }}>
+                                        <Text style={{}}>Tên: {item.UserID}</Text>
+                                        <Text style={{ color: '#9B9D9D' }}>{item.CreatedDate}</Text>
+                                        <Text>{item.Content}</Text>
+                                    </View>
+
+                                </View>
+                            }
+                            keyExtractor={item => item.ID}
+                        />
+                    </View>
                 </ScrollView>
                 {/* The view that will animate to match the keyboards height */}
                 <KeyboardSpacer />

@@ -930,19 +930,18 @@ export default class HomeScreen extends React.Component {
                   source={{ uri: item.Title }}
                 />
               </TouchableWithoutFeedback>
-              <View style={styles.cardDesBox}>
-                <View style={{ flexDirection: 'row' }}>
-                  {/* <Text style={{ flex: 1 }}>Giá:</Text> */}
-                  <TextMask
-                    style={{ flex: 1, }}
-                    value={item.Price}
-                    type={'money'}
-                    options={{ suffixUnit: ' đ', precision: 0, unit: 'Giá:   ', separator: ' ' }}
-                  />
-                  {/* <Text style={{ flex: 1 }}>Diện tích:</Text> */}
-                  <Text style={{ flex: 1, textAlign: 'right' }}>Diện tích:   {item.Acreage} m</Text><Text style={{ fontSize: 8, marginBottom: 5 }}>2</Text>
+              <View style={{ flexDirection: 'row', paddingLeft: 20, paddingRight: 20, paddingTop: 5, paddingBottom: 5, marginTop: -50, backgroundColor: '#000', opacity: 0.5 }}>
+                <TextMask
+                  style={{ flex: 1, color: '#fff' }}
+                  value={item.Price}
+                  type={'money'}
+                  options={{ suffixUnit: ' đ', precision: 0, unit: 'Giá:   ', separator: ' ' }}
+                />
+                <Text style={{ flex: 1, textAlign: 'right', color: '#fff' }}>Diện tích:   {item.Acreage} m</Text><Text style={{ fontSize: 8, marginBottom: 5, color: '#fff' }}>2</Text>
 
-                </View>
+              </View>
+              <View style={styles.cardDesBox}>
+
 
 
                 <Text style={{}}>Địa chỉ:   {item.Address}</Text>
