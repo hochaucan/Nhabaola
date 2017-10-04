@@ -808,9 +808,8 @@ export default class HomeScreen extends React.Component {
         },
         body: JSON.stringify({
           "PageIndex": isNew ? "0" : this.state.roomPageIndex,
-          "PageCount": this.state.roomPageCount,
-          "SessionKey": "Olala_SessionKey",
-          "UserLogon": "100"
+          "PageCount": this.state.roomPageCount
+
         }),
       })
         .then((response) => response.json())

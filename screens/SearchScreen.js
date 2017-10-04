@@ -220,7 +220,7 @@ const MARKERS = [
 ];
 
 const DEFAULT_PADDING = { top: 40, right: 40, bottom: 40, left: 40 };
-const roomBox = [];
+//const roomBox = [];
 
 export default class SearchScreen extends React.Component {
 
@@ -258,6 +258,7 @@ export default class SearchScreen extends React.Component {
             roomPageCount: 5,
             roomCategory: [],
             selectedCategory: '0',
+            roomBox: [],
         }
     }
 
@@ -311,8 +312,15 @@ export default class SearchScreen extends React.Component {
         this.setState({ modalVisible: visible });
     }
 
-    _handleMapRegionChange = mapRegion => {
-        this.setState({ mapRegion });
+    _handleMapRegionChange = async (mapRegion) => {
+        await this.setState({
+            mapRegion,
+            roomBox: [],
+        });
+        this._getRoomByFilter();
+
+        // if (this.state.isStableRegion === true) { this._getRoomByFilter(); }
+        //alert(JSON.stringify(mapRegion))
     };
 
     // _moveToRoomDetail = (user) => {
@@ -414,11 +422,14 @@ export default class SearchScreen extends React.Component {
     }
 
     _getRoomByFilter = async () => {
-        await this.setState({ refreshFlatlist: true })
+        await this.setState({
+            refreshFlatlist: true,
+            roomBox: [],
+        })
 
         // alert(JSON.stringify(this.state.mapRegion))
 
-        roomBox = [];
+        //roomBox = [];
         try {
             await fetch("http://nhabaola.vn/api/RoomBox/FO_RoomBox_GetDataByFindingBox", {
                 method: 'POST',
@@ -448,9 +459,12 @@ export default class SearchScreen extends React.Component {
 
 
                     responseJson.obj.map((y) => {
-                        roomBox.push(y);
+                        this.setState({
+                            roomBox: this.state.roomBox.push(y)
+                        })
                     })
 
+                    //roomBox.push(y);
                     //alert(JSON.stringify(roomBox))
                     // if (isNew) {
                     //   responseJson.obj.map((y) => {
@@ -581,7 +595,8 @@ export default class SearchScreen extends React.Component {
                             style={{ alignSelf: 'stretch', height: height * 0.4, }}
 
                             region={this.state.mapRegion}
-                            onRegionChange={this._handleMapRegionChange}
+                            // onRegionChange={this._handleMapRegionChange}
+                            onRegionChangeComplete={this._handleMapRegionChange}
                             provider='google'
                             showsUserLocation={false}
                             showsMyLocationButton={false}
@@ -778,7 +793,7 @@ export default class SearchScreen extends React.Component {
                             }}
 
 
-                            data={roomBox}
+                            data={this.state.roomBox}
                             renderItem={({ item }) =>
                                 <TouchableOpacity
                                     style={styles.searchCardImage}
