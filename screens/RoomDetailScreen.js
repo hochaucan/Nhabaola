@@ -359,7 +359,13 @@ export default class RoomDetailScreen extends React.Component {
 
                             data={this.state.comments}
                             renderItem={({ item }) =>
-                                <View style={{ flexDirection: 'row', marginBottom: 13 }}>
+                                <View style={{
+                                    flexDirection: 'row',
+                                    paddingTop: 10,
+                                    paddingBottom: 10,
+                                    borderBottomWidth: 0.3,
+                                    borderColor: '#9B9D9D',
+                                }}>
                                     <View style={{ flex: 2 }}>
                                         <Image
                                             style={{ width: 40, height: 40, borderRadius: 100, }}
@@ -369,7 +375,7 @@ export default class RoomDetailScreen extends React.Component {
                                     </View>
                                     <View style={{ flex: 8 }}>
                                         <Text style={{}}>Tên: {item.UserID}</Text>
-                                        <Text style={{ color: '#9B9D9D' }}>{item.CreatedDate}</Text>
+                                        <Text style={{ color: '#9B9D9D', fontSize: 10 }}>{item.CreatedDate}</Text>
                                         <Text>{item.Content}</Text>
                                     </View>
 
