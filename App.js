@@ -122,7 +122,8 @@ export default class App extends React.Component {
         Asset.loadAsync([
           require('./assets/images/nbl-house_icon.png'),
           require('./assets/images/nbl-header_logo.png'),
-          //require('./assets/images/nbl-app_bg.png'),
+          require('./assets/images/nbl-here-icon.png'),
+          
         ]),
         Font.loadAsync([
           // This is the font that we are using for our tab bar

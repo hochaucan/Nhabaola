@@ -660,7 +660,7 @@ export default class SearchScreen extends React.Component {
 
                                 >
                                     <Image
-                                        source={require('../images/nbl-here-icon.png')}
+                                        source={require('../assets/images/nbl-here-icon.png')}
                                         style={{ height: height * 0.07, width: width * 0.07 }}
                                         onLayout={() => {
                                             this.setState({ initialRenderCurrentMaker: false })
