@@ -27,6 +27,7 @@ import KeyboardSpacer from 'react-native-keyboard-spacer';
 import PopupDialog, { SlideAnimation, ScaleAnimation, DialogTitle, DialogButton } from 'react-native-popup-dialog';
 import uploadImageAsync from '../api/uploadImageAsync'
 import HomeScreen from './HomeScreen';
+import DatePicker from 'react-native-datepicker'
 
 var { height, width } = Dimensions.get('window');
 
@@ -36,6 +37,18 @@ const LONGITUDE = -122.4324;
 const LATITUDE_DELTA = 0.02;
 const LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO;
 
+var today = new Date();
+var dd = today.getDate();
+var mm = today.getMonth() + 1;
+var yyyy = today.getFullYear();
+var minDate = yyyy + '-' + mm + '-' + dd
+
+var newdate = new Date(today);
+newdate.setDate(newdate.getDate() + 1);
+var dd2 = newdate.getDate();
+var mm2 = newdate.getMonth() + 1;
+var yyyy2 = newdate.getFullYear();
+var topDate = yyyy2 + '-' + mm2 + '-' + dd2
 
 export default class PostRoomScreen extends React.Component {
     static navigationOptions = {
@@ -79,6 +92,8 @@ export default class PostRoomScreen extends React.Component {
             modalBDS: false,
             SessionKey: null,
             profile: null,
+            fromDate: minDate,
+            toDate: topDate
         }
     }
 
@@ -89,7 +104,7 @@ export default class PostRoomScreen extends React.Component {
     }
 
     componentDidMount() {
-
+        //alert(topDate)
     }
 
     _getSessionKeyFromStorageAsync = async () => {
@@ -205,7 +220,7 @@ export default class PostRoomScreen extends React.Component {
     };
 
     _postRoomAsync = async () => {
-        //alert(this.state.price.replace('.','').replace('.','').replace('.','').replace('.',''))
+        // alert(this.state.fromDate + '    ' + this.state.toDate)
         // return
 
         //Form validation
@@ -342,8 +357,8 @@ export default class PostRoomScreen extends React.Component {
                     "Bedroom": "",
                     "AirConditioner": "",
                     "ContactPhone": "",
-                    "FromDate": "2017-10-30",
-                    "ToDate": "2017-12-09",
+                    "FromDate": this.state.fromDate,
+                    "ToDate": this.state.toDate,
                     "IsTop": "true",
                     "IsPinned": "true",
                     "IsHighlight": "false",
@@ -352,6 +367,29 @@ export default class PostRoomScreen extends React.Component {
                     "IsActive": "true",
                     "CreatedBy": this.state.profile.ID,
                     "UpdatedBy": this.state.SessionKey,
+
+                    // "Title": "Title",
+                    // "Description": "Description",
+                    // "CategoryID": "1",
+                    // "Address": "Address",
+                    // "Longitude": "106.7004238",
+                    // "Latitude": "10.7756587",
+                    // "Price": "5000000",
+                    // "Acreage": "10",
+                    // "Toilet": "5",
+                    // "Bedroom": "2",
+                    // "AirConditioner": "3",
+                    // "ContactPhone": "0919880980",
+                    // "FromDate": "2017-10-06",
+                    // "ToDate": "2017-10-30",
+                    // "IsTop": "true",
+                    // "IsHighlight": "true",
+                    // "HighlightFromDate": "2017-10-06",
+                    // "HighlightToDate": "2017-10-09",
+                    // "IsActive": "true",
+                    // "IsPinned": "true",
+                    // "CreatedBy": "11",
+                    // "UpdatedBy": "4ef12660657bafce3226d1ae2228ada1"
                 }),
             })
                 .then((response) => response.json())
@@ -407,7 +445,7 @@ export default class PostRoomScreen extends React.Component {
                         paddingLeft: 20, flexDirection: 'row', justifyContent: 'space-between',
 
                     }}>
-
+                        {/* <Ionicons style={{ opacity: 0.7, fontSize: 20, color: '#73aa2a', flex: 1, textAlign: 'center', }} name='ios-close-circle-outline' /> */}
                         <TouchableOpacity
                             style={{}}
                             onPress={async () => {
@@ -416,7 +454,7 @@ export default class PostRoomScreen extends React.Component {
                             }}
                         >
                             <Ionicons style={{ opacity: 0.7, fontSize: 120, color: '#73aa2a', flex: 1, textAlign: 'center', }} name='ios-image-outline' />
-                            {this.state.postRoomImage1 && <Image source={{ uri: this.state.postRoomImage1 }} style={{ width: 100, height: 100 }} />}
+                            {this.state.postRoomImage1 && <Image source={{ uri: this.state.postRoomImage1 }} style={{ width: 90, height: 90 }} />}
                             <Text style={{ color: '#73aa2a', fontSize: 12, textAlign: 'center', paddingTop: 5, }}>Hình đại diện</Text>
                         </TouchableOpacity>
 
@@ -428,7 +466,7 @@ export default class PostRoomScreen extends React.Component {
                             }}
                         >
                             <Ionicons style={{ opacity: 0.4, fontSize: 120, color: '#73aa2a', flex: 1, textAlign: 'center', }} name='ios-image-outline' />
-                            {this.state.postRoomImage2 && <Image source={{ uri: this.state.postRoomImage2 }} style={{ width: 100, height: 100 }} />}
+                            {this.state.postRoomImage2 && <Image source={{ uri: this.state.postRoomImage2 }} style={{ width: 90, height: 90, marginBottom: 21 }} />}
                         </TouchableOpacity>
                         <TouchableOpacity
                             style={{}}
@@ -438,7 +476,7 @@ export default class PostRoomScreen extends React.Component {
                             }}
                         >
                             <Ionicons style={{ opacity: 0.4, fontSize: 120, color: '#73aa2a', flex: 1, textAlign: 'center', }} name='ios-image-outline' />
-                            {this.state.postRoomImage3 && <Image source={{ uri: this.state.postRoomImage3 }} style={{ width: 100, height: 100 }} />}
+                            {this.state.postRoomImage3 && <Image source={{ uri: this.state.postRoomImage3 }} style={{ width: 90, height: 90, marginBottom: 21 }} />}
                         </TouchableOpacity>
 
                     </View>
@@ -456,7 +494,7 @@ export default class PostRoomScreen extends React.Component {
                             }}
                         >
                             <Ionicons style={{ opacity: 0.4, fontSize: 120, color: '#73aa2a', flex: 1, textAlign: 'center', }} name='ios-image-outline' />
-                            {this.state.postRoomImage4 && <Image source={{ uri: this.state.postRoomImage4 }} style={{ width: 100, height: 100 }} />}
+                            {this.state.postRoomImage4 && <Image source={{ uri: this.state.postRoomImage4 }} style={{ width: 90, height: 90, marginBottom: 21 }} />}
                         </TouchableOpacity>
 
                         <TouchableOpacity
@@ -467,7 +505,7 @@ export default class PostRoomScreen extends React.Component {
                             }}
                         >
                             <Ionicons style={{ opacity: 0.4, fontSize: 120, color: '#73aa2a', flex: 1, textAlign: 'center', }} name='ios-image-outline' />
-                            {this.state.postRoomImage5 && <Image source={{ uri: this.state.postRoomImage5 }} style={{ width: 100, height: 100 }} />}
+                            {this.state.postRoomImage5 && <Image source={{ uri: this.state.postRoomImage5 }} style={{ width: 90, height: 90, marginBottom: 21 }} />}
                         </TouchableOpacity>
                         <TouchableOpacity
                             style={{}}
@@ -477,7 +515,7 @@ export default class PostRoomScreen extends React.Component {
                             }}
                         >
                             <Ionicons style={{ opacity: 0.4, fontSize: 120, color: '#73aa2a', flex: 1, textAlign: 'center', }} name='ios-image-outline' />
-                            {this.state.postRoomImage6 && <Image source={{ uri: this.state.postRoomImage6 }} style={{ width: 100, height: 100 }} />}
+                            {this.state.postRoomImage6 && <Image source={{ uri: this.state.postRoomImage6 }} style={{ width: 90, height: 90, marginBottom: 21 }} />}
                         </TouchableOpacity>
 
                     </View>
@@ -570,6 +608,7 @@ export default class PostRoomScreen extends React.Component {
 
                             <FormLabel>(mét vuông)</FormLabel>
                         </View>
+
                         <View style={{ flexDirection: 'row', }}>
                             <FormLabel style={{}}>Loại BĐS:</FormLabel>
                             {Platform.OS === 'ios' ?
@@ -616,6 +655,69 @@ export default class PostRoomScreen extends React.Component {
                                 </Picker>
                             }
                         </View>
+
+                        <View style={{ flexDirection: 'row', marginTop: 8 }}>
+                            <FormLabel labelStyle={{}}>Hiệu lực:</FormLabel>
+                            <Text style={{ paddingTop: 10 }}>Từ</Text>
+                            <DatePicker
+                                style={{ marginLeft: 8 }}
+                                date={this.state.fromDate}
+                                mode="date"
+                                placeholder="select date"
+                                format="YYYY-MM-DD"
+                                minDate={minDate}
+                                //maxDate="2016-06-01"
+                                confirmBtnText="Chọn"
+                                cancelBtnText="Hủy"
+                                showIcon={true}
+                                customStyles={{
+                                    dateIcon: {
+                                        position: 'absolute',
+                                        left: 0,
+                                        top: 4,
+                                        marginLeft: 0,
+                                    },
+                                    dateInput: {
+                                        marginLeft: 36
+                                    }
+                                    // ... You can check the source to find the other keys.
+                                }}
+                                onDateChange={(fromDate) => { this.setState({ fromDate }) }}
+                            />
+
+                        </View>
+
+                        <View style={{ flexDirection: 'row', marginTop: 10 }}>
+                            <FormLabel labelStyle={{ color: '#fff' }}>Hiệu lực:</FormLabel>
+
+                            <Text style={{ paddingTop: 10 }}>Đến</Text>
+                            <DatePicker
+                                style={{}}
+                                date={this.state.toDate}
+                                mode="date"
+                                placeholder="select date"
+                                format="YYYY-MM-DD"
+                                minDate={topDate}
+                                //maxDate="2016-06-01"
+                                confirmBtnText="Confirm"
+                                cancelBtnText="Cancel"
+                                showIcon={true}
+                                customStyles={{
+                                    dateIcon: {
+                                        position: 'absolute',
+                                        left: 0,
+                                        top: 4,
+                                        marginLeft: 0
+                                    },
+                                    dateInput: {
+                                        marginLeft: 36
+                                    }
+                                    // ... You can check the source to find the other keys.
+                                }}
+                                onDateChange={(toDate) => { this.setState({ toDate }) }}
+                            />
+                        </View>
+
                         <FormLabel style={{ marginTop: 10, }}>Chi tiết:</FormLabel>
                         <FormInput
                             containerStyle={{ borderWidth: 0.5, borderColor: '#73aa2a', borderRadius: 10, }}
@@ -632,7 +734,7 @@ export default class PostRoomScreen extends React.Component {
                         />
 
                     </View>
-                    <View style={{ marginTop: 140, }}>
+                    <View style={{ marginTop: 220, }}>
                         <View style={{ height: 100, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', paddingBottom: 50, }}>
                             <Button
                                 buttonStyle={{ backgroundColor: '#9B9D9D', padding: 15, borderRadius: 10 }}
