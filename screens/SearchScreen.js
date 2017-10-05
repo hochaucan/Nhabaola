@@ -262,7 +262,8 @@ export default class SearchScreen extends React.Component {
             houseCoords: {
                 latitude: null,
                 longitude: null,
-            }
+            },
+            isSearching: false,
         }
     }
 
@@ -318,6 +319,8 @@ export default class SearchScreen extends React.Component {
 
     _handleMapRegionChange = mapRegion => {
         this.setState({ mapRegion });
+        //this.fitAllMarkers();
+
         //alert(JSON.stringify(this.state.mapRegion))
         //  this.setState({ countMapLoad: this.state.countMapLoad + 1 })
         //alert(this.state.countMapLoad)
@@ -433,12 +436,26 @@ export default class SearchScreen extends React.Component {
 
         roomBox = await [];
         MARKERS = await [];
-        await this.setState({
-            houseCoords: {
-                latitude: parseFloat(this.state.location.coords.latitude),
-                longitude: parseFloat(this.state.location.coords.longitude),
-            }
-        })
+
+        if (this.state.isSearching) {
+            await this.setState({
+                houseCoords: {
+                    latitude: parseFloat(this.state.searchingMaker.latitude),
+                    longitude: parseFloat(this.state.searchingMaker.longitude),
+                }
+            })
+
+        }
+        else {
+
+            await this.setState({
+                houseCoords: {
+                    latitude: parseFloat(this.state.location.coords.latitude),
+                    longitude: parseFloat(this.state.location.coords.longitude),
+                }
+            })
+        }
+
         MARKERS.push(this.state.houseCoords);
 
         try {
@@ -449,16 +466,17 @@ export default class SearchScreen extends React.Component {
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify({
-                    "Longitude": this.state.location.coords.longitude, //"106.6104477",
-                    "Latitude": this.state.location.coords.latitude, //"10.7143264",
+
+                    "Latitude": this.state.isSearching === true ? this.state.searchingMaker.latitude : this.state.location.coords.latitude, //"10.7143264",
+                    "Longitude": this.state.isSearching === true ? this.state.searchingMaker.longitude : this.state.location.coords.longitude,//"106.6104477",
                     "Radius": this.state.radius,
                     "RoomPriceMin": this.state.multiSliderPriceValue[0] + '000000',
                     "RoomPriceMax": this.state.multiSliderPriceValue[1] + '000000',
                     "AcreageMin": this.state.multiSliderAreaValue[0],
                     "AcreageMax": this.state.multiSliderAreaValue[1],
                     "SortOptionKey": "SortDistance",
-                    "PageIndex": "0",//isNew ? "0" : this.state.roomPageIndex,
-                    "PageCount": "100"//this.state.roomPageCount,
+                    "PageIndex": "0",
+                    "PageCount": "100"
                 }),
             })
                 .then((response) => response.json())
@@ -468,6 +486,7 @@ export default class SearchScreen extends React.Component {
                     //this._saveStorageAsync('FO_RoomBox_GetAllData', JSON.stringify(responseJson.obj))
                     // responseJson.obj.map((y) => { return y.CatName })
 
+                    //alert(JSON.stringify(responseJson.obj))
 
                     responseJson.obj.map((y) => {
                         roomBox.push(y);
@@ -586,7 +605,9 @@ export default class SearchScreen extends React.Component {
                         </TouchableOpacity>
                         <TouchableOpacity
                             style={{ height: 40, position: 'absolute', top: height * 0.28, zIndex: 10, right: 15, backgroundColor: 'transparent' }}
-                            onPress={() => {
+                            onPress={async () => {
+
+                                await this.setState({ isSearching: false })
                                 this._getLocationAsync();
                                 //this.fitAllMarkers();
                                 //this.map.animateToCoordinate(currentMaker, 1000);
@@ -606,7 +627,7 @@ export default class SearchScreen extends React.Component {
 
                             region={this.state.mapRegion}
                             //onRegionChange={this._handleMapRegionChange}
-                            onRegionChangeComplete={this._handleMapRegionChange}
+                            onRegionChangeComplete={(mapRegion) => { this.setState({ mapRegion }) }}
                             provider='google'
                             showsUserLocation={false}
                             showsMyLocationButton={false}
@@ -945,6 +966,7 @@ export default class SearchScreen extends React.Component {
                                                 })
                                                 this._getRoomByFilter();
                                                 this.setState({ modalSearchFilterVisible: false });
+                                                this.fitAllMarkers();
                                             }}
                                         />
                                         :
@@ -970,6 +992,7 @@ export default class SearchScreen extends React.Component {
                                             this._getRoomByFilter();
 
                                             this.setState({ modalSearchFilterVisible: false })
+                                            this.fitAllMarkers();
                                         }}
                                     />
 
@@ -1006,7 +1029,8 @@ export default class SearchScreen extends React.Component {
                                 searchingMaker: {
                                     latitude: details.geometry.location.lat,
                                     longitude: details.geometry.location.lng,
-                                }
+                                },
+                                isSearching: true,
                             })
 
                             {/* currentMaker = {
@@ -1014,6 +1038,7 @@ export default class SearchScreen extends React.Component {
                                 longitude: details.geometry.location.lng,
                             } */}
                             this.map.animateToCoordinate(this.state.searchingMaker, 1000)
+                            this._getRoomByFilter()
                             this.popupSearching.dismiss();
                             {/* 
                             let currentMaker = {
