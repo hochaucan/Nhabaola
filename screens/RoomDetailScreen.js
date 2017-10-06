@@ -12,6 +12,7 @@ import {
     Button,
     Share,
     FlatList,
+    AsyncStorage,
 } from 'react-native';
 import { ExpoLinksView } from '@expo/samples';
 import { Constants, MapView } from 'expo';
@@ -64,17 +65,42 @@ export default class RoomDetailScreen extends React.Component {
             mapRegion: { latitude: LATITUDE, longitude: LONGITUDE, latitudeDelta: LATITUDE_DELTA, longitudeDelta: LONGITUDE_DELTA },
             starCount: 3.5,
             comments: [],
+            rombox: null,
+            profile: null,
         }
     }
 
     componentWillMount() {
         this._getCommentsAsync();
+        this._getProfileFromStorageAsync();
     }
 
     componentDidMount() {
 
     }
 
+    _getProfileFromStorageAsync = async () => {
+        try {
+            var value = await AsyncStorage.getItem('FO_Account_Login');
+
+            if (value !== null) {
+                this.setState({
+                    profile: JSON.parse(value)
+                })
+            }
+            else {
+                this.setState({
+                    profile: null
+                })
+            }
+
+        } catch (e) {
+            console.log(e);
+        }
+
+        //alert(JSON.stringify(profile))
+        //alert(profile)
+    }
 
     _handleMapRegionChange = mapRegion => {
         this.setState({ mapRegion });
@@ -89,7 +115,12 @@ export default class RoomDetailScreen extends React.Component {
         // console.log(rating);
     }
 
+    _postCommentsAsync = async () => {
+
+    }
+
     _getCommentsAsync = async () => {
+        //alert(JSON.stringify(this.state.profile))
         try {
             await fetch("http://nhabaola.vn//api/Comment/FO_Comment_GetAllData", {
                 method: 'POST',
@@ -98,8 +129,9 @@ export default class RoomDetailScreen extends React.Component {
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify({
-                    "PageIndex": "0",
-                    "PageCount": "200",
+                    "RoomBoxId": "16",//this.rombox.ID,
+                    "CreatedBy": "9",
+                    "UpdatedBy": "cbbd9fc377b8cab57c8461fb553b628c"
                 }),
             })
                 .then((response) => response.json())
@@ -127,7 +159,7 @@ export default class RoomDetailScreen extends React.Component {
         //const { picture, name, email, phone, login, dob, location } = this.props.navigation.state.params;
         const { item } = this.props.navigation.state.params;
         var images = item.Images.replace('|', '').split('|');
-
+        // this.setState({ rombox: item })
 
         const roomLocation = {
             latitude: parseFloat(item.Latitude),
