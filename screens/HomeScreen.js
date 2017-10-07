@@ -134,7 +134,7 @@ export default class HomeScreen extends React.Component {
       registerConfirmCellPhone: null,
       registerAccountImage: null,
       registerFullName: null,
-
+      wallet: '0',
     }
 
   }
@@ -202,19 +202,15 @@ export default class HomeScreen extends React.Component {
 
   _refreshRoomBox() {
     this._getRoomBoxAsync(true);
-    // alert("can")
-    // this.setState({
-    //   refresh: false,
-    // })
   }
 
   componentDidMount() {
 
 
   }
-  componentWillReceiveProps() {
-    // alert("can")
-  }
+  // componentWillReceiveProps() {
+  //   // alert("can")
+  // }
   // componentDidUpdate() {
   //   this._getProfileFromStorageAsync();
   //   //this._getRoomBoxAsync();
@@ -298,7 +294,6 @@ export default class HomeScreen extends React.Component {
       console.log(e);
     }
   }
-
 
   _moveToRoomDetail = (roombox) => {
     this.props.navigation.navigate('RoomDetailScreen', { ...roombox });
@@ -394,6 +389,8 @@ export default class HomeScreen extends React.Component {
               sessionKey: responseJson.obj.UpdatedBy
             })
 
+
+
           }
           else {
             if (Platform.OS === 'android') {
@@ -417,6 +414,11 @@ export default class HomeScreen extends React.Component {
         catch((error) => { console.log(error) });
     } catch (error) {
       console.log(error)
+    }
+
+
+    if (this.state.profile !== null) {
+      this._getWalletAsync();
     }
   }
 
@@ -850,6 +852,49 @@ export default class HomeScreen extends React.Component {
 
   }
 
+  _getWalletAsync = async () => {
+    //  await this.setState({ refresh: true })  
+
+    // alert(this.state.wallet)
+
+    try {
+      await fetch("http://nhabaola.vn/api/Wallet/FO_Wallet_GetDataByUserID", {
+        method: 'POST',
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          "UserID": this.state.profile.ID,
+          "CreatedBy": this.state.profile.ID,
+          "UpdatedBy": "d2c15b360fdec844db460521d22fdc38"
+        }),
+      })
+        .then((response) => response.json())
+        .then((responseJson) => {
+          // alert(JSON.stringify(responseJson.obj))
+
+          if (responseJson.obj !== null) {
+            this.setState({
+              wallet: responseJson.obj[0].CurrentAmount,
+            })
+          }
+
+          //alert(JSON.stringify(this.state.wallet[0].CurrentAmount))
+          //this._saveStorageAsync('FO_RoomBox_GetAllData', JSON.stringify(responseJson.obj))
+          // responseJson.obj.map((y) => { return y.CatName })
+
+
+          //   this.setState({ refresh: false })
+
+        }).
+        catch((error) => { console.log(error) });
+    } catch (error) {
+      console.log(error)
+    }
+
+  }
+
 
   _sendProps() {
     // this.props.navigator.push({
@@ -1050,7 +1095,9 @@ export default class HomeScreen extends React.Component {
             }}>
               <Icon name="md-cloud-upload" style={styles.actionButtonIcon} />
             </ActionButton.Item>
-            <ActionButton.Item buttonColor='#a4d227' title="Nạp ví tiền" onPress={() => { }}>
+            <ActionButton.Item buttonColor='#a4d227' title={this.state.wallet + " đ"} onPress={() => {
+
+            }}>
               <Icon name="logo-usd" style={styles.actionButtonIcon} />
             </ActionButton.Item>
             {/* <ActionButton.Item buttonColor='#1abc9c' title="All Tasks" onPress={() => { }}>
