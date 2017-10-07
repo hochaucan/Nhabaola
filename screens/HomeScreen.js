@@ -65,6 +65,8 @@ export default class HomeScreen extends React.Component {
   static navigationOptions = {
     header: null,
   };
+
+  
   constructor(props) {
     super(props);
     this.state = {
@@ -156,8 +158,6 @@ export default class HomeScreen extends React.Component {
         body: JSON.stringify({
           "PageIndex": "0",
           "PageCount": "1",
-          "SessionKey": "Olala_SessionKey",
-          "UserLogon": "100"
         }),
       })
         .then((response) => response.json())
@@ -867,7 +867,7 @@ export default class HomeScreen extends React.Component {
         body: JSON.stringify({
           "UserID": this.state.profile.ID,
           "CreatedBy": this.state.profile.ID,
-          "UpdatedBy": "d2c15b360fdec844db460521d22fdc38"
+          "UpdatedBy": this.state.profile.UpdatedBy,
         }),
       })
         .then((response) => response.json())

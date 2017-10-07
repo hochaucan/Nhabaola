@@ -261,7 +261,7 @@ export default class ProfileScreen extends React.Component {
                     </TouchableOpacity>
                     <TouchableOpacity style={styles.profileMenuItem}>
                         <Ionicons style={styles.profileMenuItemText} name='logo-usd'>
-                            <Text style={{ color: '#73aa2a' }}>  Ví tiền:  500.000 đ</Text>
+                            <Text style={{}}>  Ví tiền:  500.000 đ</Text>
                         </Ionicons>
                     </TouchableOpacity>
                     <View style={styles.profileMenuItemSeparator}></View>
