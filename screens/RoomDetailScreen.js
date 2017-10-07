@@ -13,6 +13,7 @@ import {
     Share,
     FlatList,
     AsyncStorage,
+    ToastAndroid,
 } from 'react-native';
 import { ExpoLinksView } from '@expo/samples';
 import { Constants, MapView } from 'expo';
@@ -65,24 +66,35 @@ export default class RoomDetailScreen extends React.Component {
             mapRegion: { latitude: LATITUDE, longitude: LONGITUDE, latitudeDelta: LATITUDE_DELTA, longitudeDelta: LONGITUDE_DELTA },
             starCount: 3.5,
             comments: [],
-            rombox: null,
+            roomBox: null,
             profile: null,
+            commentContent: null,
         }
     }
 
     componentWillMount() {
-        this._getCommentsAsync();
-        this._getProfileFromStorageAsync();
+        this._getRoomBoxDetailAsync();
     }
 
     componentDidMount() {
 
     }
 
+    _getRoomBoxDetailAsync = async () => {
+        await this.setState({
+            roomBox: this.props.navigation.state.params.item
+        })
+        await this._getProfileFromStorageAsync();
+        this._getCommentsAsync();
+
+        // alert(JSON.stringify(this.state.roomBox))
+    }
+
+
     _getProfileFromStorageAsync = async () => {
         try {
             var value = await AsyncStorage.getItem('FO_Account_Login');
-
+            //alert(value)
             if (value !== null) {
                 this.setState({
                     profile: JSON.parse(value)
@@ -98,7 +110,7 @@ export default class RoomDetailScreen extends React.Component {
             console.log(e);
         }
 
-        //alert(JSON.stringify(profile))
+        // alert(JSON.stringify(this.state.profile))
         //alert(profile)
     }
 
@@ -117,7 +129,63 @@ export default class RoomDetailScreen extends React.Component {
 
     _postCommentsAsync = async () => {
 
+        //Form validation
+        if (Platform.OS === 'android') {
+
+            if (this.state.commentContent === null) {
+                ToastAndroid.showWithGravity('Vui lòng nhập nội dung Bình Luận', ToastAndroid.SHORT, ToastAndroid.CENTER);
+                return;
+            }
+        }
+        else { // iOS
+
+            if (this.state.commentContent === null) {
+                Alert.alert('Vui lòng nhập nội dung Bình Luận');
+                return;
+            }
+        }
+
+        //Loading
+        // this.popupLoadingIndicator.show();
+
+
+
+        try {
+            await fetch("http://nhabaola.vn/api/Comment/FO_Comment_Add", {
+                method: 'POST',
+                headers: {
+                    Accept: 'application/json',
+                    'Content-Type': 'application/json',
+                },
+
+                body: JSON.stringify({
+                    "Content": this.state.commentContent,
+                    "RoomBoxID": this.state.roomBox.ID,
+                    "UserID": this.state.profile.ID,
+                    "CreatedBy": this.state.profile.ID,
+                    "UpdatedBy": this.state.profile.UpdatedBy,
+                }),
+            })
+                .then((response) => response.json())
+                .then((responseJson) => {
+
+                    this.setState({
+                        comments: []
+                    })
+                    this._getCommentsAsync();
+                    // alert("success")
+                    //this.state.comments.push()
+                    //this.popupLoadingIndicator.dismiss();
+
+                }).
+                catch((error) => { console.log(error) });
+        } catch (error) {
+            console.log(error)
+        }
+
+
     }
+
 
     _getCommentsAsync = async () => {
         //alert(JSON.stringify(this.state.profile))
@@ -129,9 +197,9 @@ export default class RoomDetailScreen extends React.Component {
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify({
-                    "RoomBoxId": "16",//this.rombox.ID,
-                    "CreatedBy": "9",
-                    "UpdatedBy": "cbbd9fc377b8cab57c8461fb553b628c"
+                    "RoomBoxId": this.state.roomBox.ID,
+                    "CreatedBy": this.state.profile.ID,
+                    "UpdatedBy": this.state.profile.UpdatedBy,
                 }),
             })
                 .then((response) => response.json())
@@ -141,12 +209,8 @@ export default class RoomDetailScreen extends React.Component {
                     this.setState({
                         comments: responseJson.obj
                     })
+                    //alert(JSON.stringify(responseJson.obj))
 
-                    // {
-                    //   this.state.response.map((y) => {
-                    //     return (<Text>{y.prnt_usernamez}</Text>);
-                    //   })
-                    // }
                 }).
                 catch((error) => { console.log(error) });
         } catch (error) {
@@ -157,21 +221,21 @@ export default class RoomDetailScreen extends React.Component {
 
     render() {
         //const { picture, name, email, phone, login, dob, location } = this.props.navigation.state.params;
-        const { item } = this.props.navigation.state.params;
-        var images = item.Images.replace('|', '').split('|');
-        // this.setState({ rombox: item })
+        //const { item } = this.props.navigation.state.params;
+        var images = this.state.roomBox.Images.replace('|', '').split('|');
+        //alert(JSON.stringify(this.state.roomBox.Images))
 
         const roomLocation = {
-            latitude: parseFloat(item.Latitude),
-            longitude: parseFloat(item.Longitude),
+            latitude: parseFloat(this.state.roomBox.Latitude),
+            longitude: parseFloat(this.state.roomBox.Longitude),
             latitudeDelta: LATITUDE_DELTA,
             longitudeDelta: LONGITUDE_DELTA
         }
 
 
         let roomMaker = {
-            latitude: parseFloat(item.Latitude),
-            longitude: parseFloat(item.Longitude),
+            latitude: parseFloat(this.state.roomBox.Latitude),
+            longitude: parseFloat(this.state.roomBox.Longitude),
         }
 
         //alert(JSON.stringify(parseFloat(item.Longitude)))
@@ -213,16 +277,16 @@ export default class RoomDetailScreen extends React.Component {
                         >
                             <Image
                                 style={styles.cardAvatarImage}
-                                source={{ uri: item.AccountAvarta }} />
+                                source={{ uri: this.state.roomBox.AccountAvarta }} />
                         </TouchableOpacity>
                     </View>
                     <View style={styles.cardAvatarTextBox}>
-                        <Text style={styles.cardAvatarName}>{item.AccountName}</Text>
+                        <Text style={styles.cardAvatarName}>{this.state.roomBox.AccountName}</Text>
                         <TouchableOpacity style={styles.cardAvatarPhoneBox}
-                            onPress={() => { Communications.phonecall(item.AccountPhone, true) }}
+                            onPress={() => { Communications.phonecall(this.state.roomBox.AccountPhone, true) }}
                         >
                             <Ionicons style={styles.cardAvatarPhoneIcon} name='logo-whatsapp' />
-                            <Text style={styles.cardAvatarPhone}>: {item.AccountPhone}</Text>
+                            <Text style={styles.cardAvatarPhone}>: {this.state.roomBox.AccountPhone}</Text>
                         </TouchableOpacity>
                     </View>
                 </View>
@@ -258,11 +322,11 @@ export default class RoomDetailScreen extends React.Component {
                             <View style={{ flexDirection: 'row', paddingLeft: 20, paddingRight: 20, paddingTop: 5, paddingBottom: 5, marginTop: -50, backgroundColor: '#000', opacity: 0.5 }}>
                                 <TextMask
                                     style={{ flex: 1, color: '#fff' }}
-                                    value={item.Price}
+                                    value={this.state.roomBox.Price}
                                     type={'money'}
                                     options={{ suffixUnit: ' đ', precision: 0, unit: 'Giá:   ', separator: ' ' }}
                                 />
-                                <Text style={{ flex: 1, textAlign: 'right', color: '#fff' }}>Diện tích:   {item.Acreage} m</Text><Text style={{ fontSize: 8, marginBottom: 5, color: '#fff' }}>2</Text>
+                                <Text style={{ flex: 1, textAlign: 'right', color: '#fff' }}>Diện tích:   {this.state.roomBox.Acreage} m</Text><Text style={{ fontSize: 8, marginBottom: 5, color: '#fff' }}>2</Text>
 
                             </View>
                         </View>
@@ -271,7 +335,7 @@ export default class RoomDetailScreen extends React.Component {
 
                             <Text style={styles.cardDesText}>
 
-                                {item.Description}
+                                {this.state.roomBox.Description}
                             </Text>
                         </View>
                         <View style={styles.cardBottom}>
@@ -296,8 +360,8 @@ export default class RoomDetailScreen extends React.Component {
                                 <TouchableOpacity
                                     onPress={() => {
                                         Share.share({
-                                            message: item.Description,
-                                            url: item.Title,
+                                            message: this.state.roomBox.Description,
+                                            url: this.state.roomBox.Title,
                                             title: 'Chia sẻ Nhà Bao La'
                                         }, {
                                                 // Android only:
@@ -322,7 +386,7 @@ export default class RoomDetailScreen extends React.Component {
 
 
                     <View style={styles.cardMapViewBox}>
-                        <Text style={{ marginBottom: 5 }}>Địa chỉ:  {item.Address}</Text>
+                        <Text style={{ marginBottom: 5 }}>Địa chỉ:  {this.state.roomBox.Address}</Text>
 
                         <MapView
                             style={styles.CardMapView}
@@ -361,11 +425,12 @@ export default class RoomDetailScreen extends React.Component {
                             }}
                             placeholder='Bình luận'
                             underlineColorAndroid='transparent'
+                            value={this.state.commentContent}
+                            onChangeText={(commentContent) => this.setState({ commentContent })}
                         ></TextInput>
                         <TouchableOpacity style={styles.cardCommentSubmit}
                             onPress={async () => {
-                                // await this._getCommentsAsync();
-                                alert(JSON.stringify(this.state.comments))
+                                this._postCommentsAsync();
                             }}
                         >
                             <Text style={styles.cardCommentSubmitText}>Gửi</Text>
