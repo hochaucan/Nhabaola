@@ -974,7 +974,7 @@ export default class HomeScreen extends React.Component {
                 <Image
                   style={styles.cardImage}
                   //source={require('../images/1.jpg')}
-                  source={{ uri: item.Title }}
+                  source={item.Title !== "" ? { uri: item.Title } : require("../images/nha-bao-la.jpg")}
                 />
               </TouchableWithoutFeedback>
               <View style={{ flexDirection: 'row', paddingLeft: 20, paddingRight: 20, paddingTop: 5, paddingBottom: 5, marginTop: -50, backgroundColor: '#000', opacity: 0.5 }}>
@@ -1098,10 +1098,18 @@ export default class HomeScreen extends React.Component {
               <Icon name="md-cloud-upload" style={styles.actionButtonIcon} />
             </ActionButton.Item>
             <ActionButton.Item buttonColor='#a4d227' title={this.state.wallet + " đ"} onPress={() => {
-             
+
             }}>
               <Icon name="logo-usd" style={styles.actionButtonIcon} />
             </ActionButton.Item>
+
+            {this.state.profile !== null &&
+              <ActionButton.Item buttonColor='#a4d227' title="Trang Cá Nhân" onPress={() => {
+                this.props.navigation.navigate("ProfileScreen");
+              }}>
+                <Icon name="ios-person" style={styles.actionButtonIcon} />
+              </ActionButton.Item>
+            }
             {/* <ActionButton.Item buttonColor='#1abc9c' title="All Tasks" onPress={() => { }}>
               <Icon name="md-done-all" style={styles.actionButtonIcon} />
             </ActionButton.Item> */}
@@ -1163,7 +1171,7 @@ export default class HomeScreen extends React.Component {
           dialogAnimation={new ScaleAnimation()}
           dialogTitle={<DialogTitle title="Đăng nhập" titleStyle={{}} titleTextStyle={{ color: '#73aa2a' }} />}
           dismissOnTouchOutside={false}
-          dialogStyle={{ marginBottom: 150, width: width * 0.9, height: Platform.OS === 'ios' ? height * 0.7 : height * 0.64 }}
+          dialogStyle={{ marginBottom: 150, width: width * 0.9, height: Platform.OS === 'ios' ? height * 0.7 : height * 0.45 }}
 
 
         >
@@ -1234,7 +1242,7 @@ export default class HomeScreen extends React.Component {
             </View>
 
 
-            <FormLabel
+            {/* <FormLabel
               containerStyle={{
                 alignItems: 'center', justifyContent: 'center',
                 height: 50,
@@ -1264,7 +1272,7 @@ export default class HomeScreen extends React.Component {
                 raised={false}
                 onPress={this._handleFacebookLogin}
               />
-            </Animated.View>
+            </Animated.View> */}
           </View>
         </PopupDialog>
 

@@ -56,8 +56,8 @@ const SECTIONS = [
 export default class ProfileScreen extends React.Component {
 
     static navigationOptions = {
-        // title: 'Links',
-        header: null,
+        title: 'Trang cá nhân',
+        //header: null,
     };
 
     constructor(props) {
@@ -329,8 +329,8 @@ export default class ProfileScreen extends React.Component {
                                                 saveStorageAsync('loginUsername', '')
                                                 saveStorageAsync('loginPassword', '')
                                                 this.setState({ profile: null })
-                                                // this.props.navigation.navigate('HomeScreen')
-                                                this.props.navigation.goBack();
+                                                //this.props.navigation.goBack();
+                                                this.props.navigation.navigate("Home")
                                             }
                                         },
                                     ]

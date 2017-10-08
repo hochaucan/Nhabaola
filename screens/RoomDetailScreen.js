@@ -224,6 +224,7 @@ export default class RoomDetailScreen extends React.Component {
         //const { item } = this.props.navigation.state.params;
         var images = this.state.roomBox.Images.replace('|', '').split('|');
         //alert(JSON.stringify(this.state.roomBox.Images))
+        //alert(images)
 
         const roomLocation = {
             latitude: parseFloat(this.state.roomBox.Latitude),
@@ -306,15 +307,21 @@ export default class RoomDetailScreen extends React.Component {
                                 activeDotColor='#a4d227'
                             >
 
-                                {images.map((y, i) => {
-                                    return (
-                                        <Image
-                                            key={i}
-                                            style={styles.cardImage}
-                                            source={{ uri: y }} />
-                                    )
+                                {
+                                    this.state.roomBox.Images !== "" ?
 
-                                })}
+                                        images.map((y, i) => {
+                                            return (
+                                                <Image
+                                                    key={i}
+                                                    style={styles.cardImage}
+                                                    source={{ uri: y }} />
+                                            )
+
+                                        })
+                                        :
+                                        <Image source={require("../images/nha-bao-la.jpg")} />
+                                }
                             </Swiper>
 
 

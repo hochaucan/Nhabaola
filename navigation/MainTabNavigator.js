@@ -29,12 +29,12 @@ export default TabNavigator(
     Search: {
       screen: SearchScreen,
     },
-    Notifications: {
-      screen: RegisterRoomScreen,
-    },
-    Profiles: {
-      screen: ProfileScreen,
-    }
+    // Notifications: {
+    //   screen: RegisterRoomScreen,
+    // },
+    // Profiles: {
+    //   screen: ProfileScreen,
+    // }
   },
   {
     navigationOptions: ({ navigation }) => ({
