@@ -396,8 +396,9 @@ export default class PostRoomScreen extends React.Component {
                 .then((responseJson) => {
 
                     this.popupLoadingIndicator.dismiss();
-                    this.props.navigation.goBack();
-                    HomeScreen.refreshRoomBoxAfterPost();
+                    this.props.navigation.navigate('Home');
+                    //this.props.navigation.goBack();
+                    //HomeScreen.refreshRoomBoxAfterPost();
                     //this.props.navigation.navigate("HomeScreen", { tmp: 'Can' })
                 }).
                 catch((error) => { console.log(error) });
@@ -748,9 +749,9 @@ export default class PostRoomScreen extends React.Component {
                                 icon={{ name: 'md-cloud-upload', type: 'ionicon' }}
                                 title='Đăng tin'
                                 onPress={() => {
-                                    //this.popupLoadingIndicator.show();
+
                                     this._postRoomAsync();
-                                    //HomeScreen.refreshRoomBoxAfterPost();
+
 
                                 }}
                             />

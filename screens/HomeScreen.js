@@ -66,7 +66,7 @@ export default class HomeScreen extends React.Component {
     header: null,
   };
 
-  
+
   constructor(props) {
     super(props);
     this.state = {
@@ -469,7 +469,7 @@ export default class HomeScreen extends React.Component {
 
           //alert(JSON.stringify(responseJson.obj.UpdatedBy))
 
-          if (responseJson.obj.UpdatedBy != "") {
+          if (responseJson.obj.UpdatedBy != "") { // Login successful
             this.popupLogin.dismiss();
             saveStorageAsync('FO_Account_Login', JSON.stringify(responseJson.obj))
             saveStorageAsync('SessionKey', JSON.stringify(responseJson.obj.UpdatedBy))
@@ -482,7 +482,9 @@ export default class HomeScreen extends React.Component {
               sessionKey: responseJson.obj.UpdatedBy
             })
 
+            this._getWalletAsync();
             ProfileScreen._updateProfileAfterLogin(responseJson.obj);
+
 
           }
           else { // Login False
@@ -1096,7 +1098,7 @@ export default class HomeScreen extends React.Component {
               <Icon name="md-cloud-upload" style={styles.actionButtonIcon} />
             </ActionButton.Item>
             <ActionButton.Item buttonColor='#a4d227' title={this.state.wallet + " đ"} onPress={() => {
-
+             
             }}>
               <Icon name="logo-usd" style={styles.actionButtonIcon} />
             </ActionButton.Item>
