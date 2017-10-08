@@ -11,94 +11,273 @@ import {
     Animated,
     Modal,
     FlatList,
+    AsyncStorage,
+    ToastAndroid,
+    Alert,
 } from 'react-native';
 import { ExpoLinksView } from '@expo/samples';
 import { Constants } from 'expo';
 import { Ionicons } from '@expo/vector-icons';
 import PopupDialog, { SlideAnimation, ScaleAnimation, DialogTitle, DialogButton } from 'react-native-popup-dialog';
 import { CheckBox, Rating, Button, FormLabel, FormInput, SocialIcon, FormValidationMessage } from 'react-native-elements'
-import { users } from '../components/examples/data';
+// import { users } from '../components/examples/data';
+import { TextInputMask, TextMask } from 'react-native-masked-text';
 
 var { height, width } = Dimensions.get('window');
+const roomBox = [];
 export default class PostedRoomHIstoryScreen extends React.Component {
     static navigationOptions = {
-        // title: 'Links',
-        header: null,
+        title: 'Tin Bạn Đã Đăng',
+        //header: null,
     };
 
     constructor(props) {
         super(props);
         this.state = {
             // Posted Room History
-            postedRoomHistoryData: users,
+            postedRoomHistoryData: [],//users,
+            refresh: false,
+            roomPageIndex: 10,
+            roomPageCount: 10,
+            profile: null,
         }
     }
-    _moveToRoomDetail = (user) => {
-        this.props.navigation.navigate('RoomDetailScreen', { ...user });
-    };
+
+    componentWillMount() {
+        roomBox = [];
+        this._getRoomBoxByUserAsync(true);
+        this._getProfileFromStorageAsync();
+    }
+
+
+
+    componentWillUnmount() {
+
+    }
+
+    componentDidMount() {
+        //alert(JSON.stringify(this.props.navigation.state))
+    }
+
+    // _moveToRoomDetail = (user) => {
+    //     this.props.navigation.navigate('RoomDetailScreen', { ...user });
+    // };
+
+    _getProfileFromStorageAsync = async () => {
+        try {
+            var value = await AsyncStorage.getItem('FO_Account_Login');
+
+            if (value !== null) {
+                this.setState({
+                    profile: JSON.parse(value)
+                })
+            }
+            else {
+                this.setState({
+                    profile: null
+                })
+            }
+
+        } catch (e) {
+            console.log(e);
+        }
+
+        //alert(JSON.stringify(profile))
+        //alert(profile)
+    }
+
+    _getRoomBoxByUserAsync = async (isNew) => {
+        await this.setState({ refresh: true })
+
+        if (!isNew) {
+            this.setState({
+                roomPageIndex: this.state.roomPageIndex + this.state.roomPageCount,
+            })
+        }
+        else {
+            roomBox = [];
+            this.setState({ roomPageIndex: 10 })
+        }
+
+        try {
+            await fetch("http://nhabaola.vn/api/RoomBox/FO_RoomBox_GetDataPostedByUserId", {
+                method: 'POST',
+                headers: {
+                    Accept: 'application/json',
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    "UserName": "11",
+                    "SessionKey": "olala_phucnt",
+                    "PageIndex": isNew ? "0" : this.state.roomPageIndex,
+                    "PageCount": this.state.roomPageCount
+                }),
+            })
+                .then((response) => response.json())
+                .then((responseJson) => {
+
+                    // this.setState({
+
+                    //     postedRoomHistoryData: responseJson.obj
+                    // })
+
+                    responseJson.obj.map((y) => {
+                        roomBox.push(y);
+
+                    })
+                    this.setState({ refresh: false })
+                    // alert(JSON.stringify(roomBox))
+
+                }).
+                catch((error) => { console.log(error) });
+        } catch (error) {
+            console.log(error)
+        }
+
+    }
+
+    _refreshRoomBox() {
+        this._getRoomBoxByUserAsync(true);
+    }
+
+    _deleteRoomBoxAsync = async (id) => {
+        //await this.setState({ refresh: true })
+        //alert(this.state.profile)
+
+        try {
+            await fetch("http://nhabaola.vn/api/RoomBox/FO_RoomBox_Del", {
+                method: 'POST',
+                headers: {
+                    Accept: 'application/json',
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    "ID": id,
+                    "CreatedBy": this.state.profile.ID,
+                    "UpdatedBy": this.state.profile.UpdatedBy//"437683ebe7416f0086c4c62be025fac1",
+                }),
+            })
+                .then((response) => response.json())
+                .then((responseJson) => {
+
+                    if (JSON.stringify(responseJson.ErrorCode) === "12") {
+                        if (Platform.OS === 'android') {
+                            ToastAndroid.showWithGravity('Xóa thành công!', ToastAndroid.SHORT, ToastAndroid.CENTER);
+                        }
+                        else {
+                            Alert.alert('Xóa thành công!');
+                        }
+                        this._getRoomBoxByUserAsync(true);
+                    }
+                    //this.setState({ refresh: false })
+                    //alert(JSON.stringify(responseJson))
+
+                }).
+                catch((error) => { console.log(error) });
+        } catch (error) {
+            console.log(error)
+        }
+
+    }
+
     render() {
         return (
             <View style={styles.container}>
 
-                <View style={{ flexDirection: 'row', padding: 20, }}>
+                {/* <View style={{ flexDirection: 'row', padding: 20, }}>
                     <TouchableOpacity
                         style={{}}
                         onPress={() => this.props.navigation.goBack()}>
                         <Ionicons style={{ fontSize: 28, color: '#a4d227', }} name='md-arrow-back'></Ionicons>
                     </TouchableOpacity>
                     <Text style={{ marginLeft: 20, color: '#73aa2a', fontSize: 20, justifyContent: 'center' }}>Tin Bạn Đã Đăng</Text>
-                </View>
-                <ScrollView>
-                    <View style={styles.searchRoolResultBox}>
-                        <FlatList
-                            //onScroll={this._onScroll}
-                            ref='refPostedRoomHistory'
-                            data={this.state.postedRoomHistoryData}
-                            renderItem={({ item }) =>
+                </View> */}
+
+                <View style={styles.searchRoolResultBox}>
+                    <FlatList
+                        //onScroll={this._onScroll}
+                        ref='refPostedRoomHistory'
+                        refreshing={this.state.refresh}
+                        onRefresh={() => { this._refreshRoomBox() }}
+
+                        onEndReachedThreshold={0.2}
+                        onEndReached={() => {
+                            this._getRoomBoxByUserAsync(false);
+                        }}
+                        data={roomBox}
+                        renderItem={({ item }) =>
+                            <View style={{
+                                borderBottomWidth: 0.3,
+                                borderColor: '#9B9D9D',
+                            }}>
                                 <TouchableOpacity
                                     style={styles.searchCardImage}
-                                    onPress={() => this._moveToRoomDetail(item)}
+                                    onPress={() => this.props.navigation.navigate('RoomDetailScreen', { item })}
                                 >
-                                    <View style={styles.searchCard}>
+                                    <View style={{
+                                        flex: 1,
+                                        flexDirection: 'row',
+                                        height: 100,
+                                        // borderWidth: 1,
+                                        paddingTop: 10,
+                                        paddingBottom: 10,
+                                        // borderBottomWidth: 0.3,
+                                        //borderColor: '#9B9D9D',
+                                    }}>
                                         <Image
-                                            style={styles.searchCardImage}
-                                            source={{ uri: item.picture.large }} />
+                                            style={{ flex: 3, borderRadius: 5 }}
+                                            source={{ uri: item.Title }} />
 
                                         <View style={styles.searchCardTextBox}>
-                                            <Text style={styles.searchCardAddress}>{item.location.street} {item.location.city}</Text>
-                                            <Text style={styles.searchCardPostDate}>Ngày đăng: {item.registered}</Text>
+                                            <Text style={styles.searchCardAddress}>{item.Address}</Text>
+                                            <Text style={styles.searchCardPostDate}>Ngày đăng: {item.CreatedDate}</Text>
                                             <View style={styles.searchCardPriceBox}>
-                                                <Text style={styles.searchCardPrice}>Giá: 2.000.000 đ</Text>
-                                                <Ionicons style={styles.searCardDistanceIcon} name='md-pin' >  3 km</Ionicons>
+                                                {/* <Text style={styles.searchCardPrice}>Giá: 2.000.000 đ</Text> */}
+                                                <TextMask
+                                                    style={{ flex: 1, }}
+                                                    value={item.Price}
+                                                    type={'money'}
+                                                    options={{ suffixUnit: ' đ', precision: 0, unit: ' ', separator: ' ' }}
+                                                />
+                                                {/* <Ionicons style={styles.searCardDistanceIcon} name='md-pin' >  3 km</Ionicons> */}
                                                 {/* <Text>3 km</Text> */}
                                             </View>
                                         </View>
                                     </View>
                                 </TouchableOpacity>
-                            }
-                            keyExtractor={item => item.email}
-                        />
-                    </View>
-                    {/* <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center', marginTop: 20, }}>
-                            <Button
-                                buttonStyle={{ backgroundColor: '#9B9D9D', padding: 10, borderRadius: 5, }}
-                                raised={false}
-                                icon={{ name: 'ios-backspace', type: 'ionicon' }}
-                                title='Hủy'
-                                onPress={() => { this.setState({ modalPostedRoomHistory: false }) }}
-                            />
+                                <View style={{ marginBottom: 2, flexDirection: 'row', padding: 10 }}>
+                                    <TouchableOpacity
+                                        style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center' }}
+                                        onPress={() => {
 
-                            <Button
-                                buttonStyle={{ backgroundColor: '#73aa2a', padding: 10, borderRadius: 5, }}
-                                raised={false}
-                                icon={{ name: 'md-checkmark', type: 'ionicon' }}
-                                title='Đồng ý'
-                                onPress={() => {
-                                    this._updateAccount();
-                                }}
-                            />
-                        </View> */}
-                </ScrollView>
+
+                                            Alert.alert(
+                                                'Thông báo',
+                                                'Bạn chắc chắn xóa BĐS này?',
+                                                [
+                                                    {
+                                                        text: 'OK', onPress: () => {
+                                                            this._deleteRoomBoxAsync(item.ID);
+                                                        }
+                                                    },
+                                                ]
+                                            );
+
+
+
+                                        }}
+                                    >
+                                        <Ionicons style={{ fontSize: 12, marginRight: 5 }} name="md-trash" />
+                                        <Text>Xóa</Text>
+                                    </TouchableOpacity>
+                                </View>
+                            </View>
+                        }
+                        keyExtractor={item => item.ID}
+                    />
+                </View>
+
+
 
             </View>
         );
@@ -106,20 +285,9 @@ export default class PostedRoomHIstoryScreen extends React.Component {
 }
 
 const styles = StyleSheet.create({
-    searchCardImage: {
-        flex: 3
-    },
 
-    searchCard: {
-        flex: 1,
-        flexDirection: 'row',
-        height: 100,
-        // borderWidth: 1,
-        paddingTop: 10,
-        paddingBottom: 10,
-        borderBottomWidth: 0.3,
-        borderColor: '#9B9D9D',
-    },
+
+
 
     searchRoolResultBox: {
         flex: 1,

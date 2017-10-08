@@ -60,6 +60,9 @@ const LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO;
 
 
 const roomBox = [];
+function numberWithCommas(x) {
+  return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+}
 
 export default class HomeScreen extends React.Component {
   static navigationOptions = {
@@ -1097,7 +1100,7 @@ export default class HomeScreen extends React.Component {
             }}>
               <Icon name="md-cloud-upload" style={styles.actionButtonIcon} />
             </ActionButton.Item>
-            <ActionButton.Item buttonColor='#a4d227' title={this.state.wallet + " đ"} onPress={() => {
+            <ActionButton.Item buttonColor='#a4d227' title={numberWithCommas(this.state.wallet) + " đ"} onPress={() => {
 
             }}>
               <Icon name="logo-usd" style={styles.actionButtonIcon} />

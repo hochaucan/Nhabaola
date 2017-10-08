@@ -251,7 +251,7 @@ export default class ProfileScreen extends React.Component {
                     </TouchableOpacity>
                     <TouchableOpacity style={styles.profileMenuItem}
                         onPress={() => {
-                            {/* this.setState({ modalPostedRoomHistory: true }) */ }
+                            
                             this.props.navigation.navigate('PostedRoomHIstoryScreen');
                         }}
                     >
@@ -488,7 +488,7 @@ export default class ProfileScreen extends React.Component {
                     animationType={"slide"}
                     transparent={false}
                     visible={this.state.modalHelp}
-                    onRequestClose={() => { alert("Modal has been closed.") }}
+                    onRequestClose={() => {  }}
                 >
                     <View style={{ flexDirection: 'row', padding: 20, marginTop: Platform.OS === 'ios' ? 20 : 0, }}>
                         <TouchableOpacity
