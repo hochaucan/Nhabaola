@@ -22,8 +22,23 @@ import PopupDialog, { SlideAnimation, ScaleAnimation, DialogTitle, DialogButton 
 import { CheckBox, Rating, Button, FormLabel, FormInput, SocialIcon, FormValidationMessage } from 'react-native-elements'
 // import { users } from '../components/examples/data';
 import { TextInputMask, TextMask } from 'react-native-masked-text';
+import DatePicker from 'react-native-datepicker'
 
 var { height, width } = Dimensions.get('window');
+
+var today = new Date();
+var dd = today.getDate();
+var mm = today.getMonth() + 1;
+var yyyy = today.getFullYear();
+var minDate = yyyy + '-' + mm + '-' + dd
+
+var newdate = new Date(today);
+newdate.setDate(newdate.getDate() + 1);
+var dd2 = newdate.getDate();
+var mm2 = newdate.getMonth() + 1;
+var yyyy2 = newdate.getFullYear();
+var topDate = yyyy2 + '-' + mm2 + '-' + dd2
+
 const roomBox = [];
 export default class PostedRoomHIstoryScreen extends React.Component {
     static navigationOptions = {
@@ -40,13 +55,17 @@ export default class PostedRoomHIstoryScreen extends React.Component {
             roomPageIndex: 10,
             roomPageCount: 10,
             profile: null,
+            fromDate: minDate,
+            toDate: topDate,
+            hightLightFromDate: minDate,
+            hightLightToDate: topDate,
         }
     }
 
     componentWillMount() {
         roomBox = [];
-        this._getRoomBoxByUserAsync(true);
         this._getProfileFromStorageAsync();
+
     }
 
 
@@ -71,6 +90,7 @@ export default class PostedRoomHIstoryScreen extends React.Component {
                 this.setState({
                     profile: JSON.parse(value)
                 })
+                this._getRoomBoxByUserAsync(true);
             }
             else {
                 this.setState({
@@ -88,6 +108,7 @@ export default class PostedRoomHIstoryScreen extends React.Component {
 
     _getRoomBoxByUserAsync = async (isNew) => {
         await this.setState({ refresh: true })
+        //alert(JSON.stringify(this.state.profile))
 
         if (!isNew) {
             this.setState({
@@ -107,7 +128,7 @@ export default class PostedRoomHIstoryScreen extends React.Component {
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify({
-                    "UserName": "11",
+                    "UserName": this.state.profile.ID,
                     "SessionKey": "olala_phucnt",
                     "PageIndex": isNew ? "0" : this.state.roomPageIndex,
                     "PageCount": this.state.roomPageCount
@@ -245,9 +266,165 @@ export default class PostedRoomHIstoryScreen extends React.Component {
                                         </View>
                                     </View>
                                 </TouchableOpacity>
-                                <View style={{ marginBottom: 2, flexDirection: 'row', padding: 10 }}>
+
+                                <View style={{ marginBottom: 2, flexDirection: 'row', padding: 10, justifyContent: 'space-between' }}>
                                     <TouchableOpacity
-                                        style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center' }}
+                                        style={{ flex: 1, flexDirection: 'row', alignItems: 'center' }}
+                                        onPress={() => {
+
+
+                                        }}
+                                    >
+                                        <Ionicons style={{ fontSize: 12, marginRight: 5 }} name="md-timer" />
+                                        <Text style={{}}>Hiệu lực</Text>
+                                    </TouchableOpacity>
+                                    {/* <Text style={{ paddingTop: 10 }}>Từ</Text> */}
+                                    <DatePicker
+                                        style={{ flex: 1 }}
+                                        date={item.FromDate}
+                                        mode="date"
+                                        placeholder="select date"
+                                        format="YYYY-MM-DD"
+                                        minDate={minDate}
+                                        //maxDate="2016-06-01"
+                                        confirmBtnText="Chọn"
+                                        cancelBtnText="Hủy"
+                                        showIcon={false}
+                                        customStyles={{
+                                            dateIcon: {
+                                                position: 'absolute',
+                                                left: 0,
+                                                top: 4,
+                                                marginLeft: 0,
+                                            },
+                                            dateInput: {
+                                                // marginLeft: 36
+                                            }
+                                            // ... You can check the source to find the other keys.
+                                        }}
+                                        onDateChange={(fromDate) => { this.setState({ fromDate }) }}
+                                    />
+                                    <Text style={{ paddingTop: 10, }}> - </Text>
+                                    <DatePicker
+                                        style={{ flex: 1 }}
+                                        date={item.ToDate}
+                                        mode="date"
+                                        placeholder="select date"
+                                        format="YYYY-MM-DD"
+                                        minDate={topDate}
+                                        //maxDate="2016-06-01"
+                                        confirmBtnText="Confirm"
+                                        cancelBtnText="Cancel"
+                                        showIcon={false}
+                                        customStyles={{
+                                            dateIcon: {
+                                                position: 'absolute',
+                                                left: 0,
+                                                top: 4,
+                                                marginLeft: 0,
+                                                // height:10,
+                                                //width:10,
+                                            },
+                                            dateInput: {
+                                                //marginLeft: 36
+                                            }
+                                            // ... You can check the source to find the other keys.
+                                        }}
+                                        onDateChange={(toDate) => { this.setState({ toDate }) }}
+                                    />
+                                </View>
+
+                                <View style={{ marginBottom: 2, flexDirection: 'row', padding: 10, justifyContent: 'space-between' }}>
+                                    <TouchableOpacity
+                                        style={{ flex: 1, flexDirection: 'row', alignItems: 'center' }}
+                                        onPress={() => {
+
+
+
+
+
+                                        }}
+                                    >
+                                        <Ionicons style={{ fontSize: 12, marginRight: 5 }} name="md-sunny" />
+                                        <Text>Nổi bật</Text>
+                                    </TouchableOpacity>
+
+                                    <DatePicker
+                                        style={{ flex: 1 }}
+                                        date={item.HighlightFromDate}
+                                        mode="date"
+                                        placeholder="select date"
+                                        format="YYYY-MM-DD"
+                                        minDate={minDate}
+                                        //maxDate="2016-06-01"
+                                        confirmBtnText="Chọn"
+                                        cancelBtnText="Hủy"
+                                        showIcon={false}
+                                        customStyles={{
+                                            dateIcon: {
+                                                position: 'absolute',
+                                                left: 0,
+                                                top: 4,
+                                                marginLeft: 0,
+                                            },
+                                            dateInput: {
+                                                //marginLeft: 36
+                                            }
+                                            // ... You can check the source to find the other keys.
+                                        }}
+                                        onDateChange={(hightLightFromDate) => { this.setState({ hightLightFromDate }) }}
+                                    />
+                                    <Text style={{ paddingTop: 10, }}> - </Text>
+                                    <DatePicker
+                                        style={{ flex: 1 }}
+                                        date={item.HighlightToDate}
+                                        mode="date"
+                                        placeholder="select date"
+                                        format="YYYY-MM-DD"
+                                        minDate={topDate}
+                                        //maxDate="2016-06-01"
+                                        confirmBtnText="Confirm"
+                                        cancelBtnText="Cancel"
+                                        showIcon={false}
+                                        customStyles={{
+                                            dateIcon: {
+                                                position: 'absolute',
+                                                left: 0,
+                                                top: 4,
+                                                marginLeft: 0,
+                                                // height:10,
+                                                //width:10,
+                                            },
+                                            dateInput: {
+                                                //marginLeft: 36
+                                            }
+                                            // ... You can check the source to find the other keys.
+                                        }}
+                                        onDateChange={(hightLightToDate) => { this.setState({ hightLightToDate }) }}
+                                    />
+
+                                </View>
+
+                                <View style={{ marginBottom: 2, flexDirection: 'row', padding: 10, justifyContent: 'space-between' }}>
+
+                                    <TouchableOpacity
+                                        style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center', }}
+                                        onPress={() => {
+
+
+
+
+                                        }}
+                                    >
+                                        <Ionicons style={{ fontSize: 12, marginRight: 5 }} name="md-arrow-round-up" />
+                                        <Text>Lên đầu</Text>
+                                    </TouchableOpacity>
+
+
+
+
+                                    <TouchableOpacity
+                                        style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center', marginLeft: 10 }}
                                         onPress={() => {
 
 
@@ -256,7 +433,7 @@ export default class PostedRoomHIstoryScreen extends React.Component {
                                                 'Bạn chắc chắn xóa BĐS này?',
                                                 [
                                                     {
-                                                        text: 'OK', onPress: () => {
+                                                        text: 'Đồng ý', onPress: () => {
                                                             this._deleteRoomBoxAsync(item.ID);
                                                         }
                                                     },
