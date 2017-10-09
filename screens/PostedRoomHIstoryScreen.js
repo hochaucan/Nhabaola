@@ -26,18 +26,18 @@ import DatePicker from 'react-native-datepicker'
 
 var { height, width } = Dimensions.get('window');
 
-var today = new Date();
-var dd = today.getDate();
-var mm = today.getMonth() + 1;
-var yyyy = today.getFullYear();
-var minDate = yyyy + '-' + mm + '-' + dd
+// var today = new Date();
+// var dd = today.getDate();
+// var mm = today.getMonth() + 1;
+// var yyyy = today.getFullYear();
+// var minDate = yyyy + '-' + mm + '-' + dd
 
-var newdate = new Date(today);
-newdate.setDate(newdate.getDate() + 1);
-var dd2 = newdate.getDate();
-var mm2 = newdate.getMonth() + 1;
-var yyyy2 = newdate.getFullYear();
-var topDate = yyyy2 + '-' + mm2 + '-' + dd2
+// var newdate = new Date(today);
+// newdate.setDate(newdate.getDate() + 1);
+// var dd2 = newdate.getDate();
+// var mm2 = newdate.getMonth() + 1;
+// var yyyy2 = newdate.getFullYear();
+// var topDate = yyyy2 + '-' + mm2 + '-' + dd2
 
 const roomBox = [];
 export default class PostedRoomHIstoryScreen extends React.Component {
@@ -55,10 +55,9 @@ export default class PostedRoomHIstoryScreen extends React.Component {
             roomPageIndex: 10,
             roomPageCount: 10,
             profile: null,
-            fromDate: minDate,
-            toDate: topDate,
-            hightLightFromDate: minDate,
-            hightLightToDate: topDate,
+            // fromDate: minDate,
+            // toDate: topDate,
+
         }
     }
 
@@ -129,7 +128,7 @@ export default class PostedRoomHIstoryScreen extends React.Component {
                 },
                 body: JSON.stringify({
                     "UserName": this.state.profile.ID,
-                    "SessionKey": "olala_phucnt",
+                    "SessionKey": this.state.profile.UpdatedBy,
                     "PageIndex": isNew ? "0" : this.state.roomPageIndex,
                     "PageCount": this.state.roomPageCount
                 }),
@@ -189,6 +188,47 @@ export default class PostedRoomHIstoryScreen extends React.Component {
                             Alert.alert('Xóa thành công!');
                         }
                         this._getRoomBoxByUserAsync(true);
+                    }
+                    //this.setState({ refresh: false })
+                    //alert(JSON.stringify(responseJson))
+
+                }).
+                catch((error) => { console.log(error) });
+        } catch (error) {
+            console.log(error)
+        }
+
+    }
+
+    _setTopAsync = async (id) => {
+        //await this.setState({ refresh: true })
+        //alert(this.state.profile)
+
+        try {
+            await fetch("http://nhabaola.vn//api/RoomBox/FO_RoomBox_SetTop", {
+                method: 'POST',
+                headers: {
+                    Accept: 'application/json',
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    "ID": id,
+                    "IsTop": "true",
+                    "UpdatedBy": this.state.profile.UpdatedBy,
+                    "CreatedBy": this.state.profile.ID
+                }),
+            })
+                .then((response) => response.json())
+                .then((responseJson) => {
+
+                    if (JSON.stringify(responseJson.ErrorCode) === "0") {
+                        if (Platform.OS === 'android') {
+                            ToastAndroid.showWithGravity('Đưa tin lên đầu thành công!', ToastAndroid.SHORT, ToastAndroid.CENTER);
+                        }
+                        else {
+                            Alert.alert('Đưa tin lên đầu thành công!');
+                        }
+                        //this._getRoomBoxByUserAsync(true);
                     }
                     //this.setState({ refresh: false })
                     //alert(JSON.stringify(responseJson))
@@ -267,19 +307,16 @@ export default class PostedRoomHIstoryScreen extends React.Component {
                                     </View>
                                 </TouchableOpacity>
 
-                                <View style={{ marginBottom: 2, flexDirection: 'row', padding: 10, justifyContent: 'space-between' }}>
-                                    <TouchableOpacity
+                                <View style={{ marginBottom: 0, flexDirection: 'row', justifyContent: 'space-between' }}>
+                                    <View
                                         style={{ flex: 1, flexDirection: 'row', alignItems: 'center' }}
-                                        onPress={() => {
-
-
-                                        }}
                                     >
                                         <Ionicons style={{ fontSize: 12, marginRight: 5 }} name="md-timer" />
-                                        <Text style={{}}>Hiệu lực</Text>
-                                    </TouchableOpacity>
+                                        <Text style={{}}>Ngày hiệu lực</Text>
+                                    </View>
+                                    <Text style={{ flex: 1, textAlign: 'center', color: '#9B9D9D' }}>{item.FromDate}</Text>
                                     {/* <Text style={{ paddingTop: 10 }}>Từ</Text> */}
-                                    <DatePicker
+                                    {/* <DatePicker
                                         style={{ flex: 1 }}
                                         date={item.FromDate}
                                         mode="date"
@@ -303,9 +340,10 @@ export default class PostedRoomHIstoryScreen extends React.Component {
                                             // ... You can check the source to find the other keys.
                                         }}
                                         onDateChange={(fromDate) => { this.setState({ fromDate }) }}
-                                    />
-                                    <Text style={{ paddingTop: 10, }}> - </Text>
-                                    <DatePicker
+                                    /> */}
+                                    <Text style={{ color: '#9B9D9D' }}> - </Text>
+                                    <Text style={{ flex: 1, textAlign: 'center', color: '#9B9D9D' }}>{item.ToDate}</Text>
+                                    {/* <DatePicker
                                         style={{ flex: 1 }}
                                         date={item.ToDate}
                                         mode="date"
@@ -331,25 +369,18 @@ export default class PostedRoomHIstoryScreen extends React.Component {
                                             // ... You can check the source to find the other keys.
                                         }}
                                         onDateChange={(toDate) => { this.setState({ toDate }) }}
-                                    />
+                                    /> */}
                                 </View>
 
-                                <View style={{ marginBottom: 2, flexDirection: 'row', padding: 10, justifyContent: 'space-between' }}>
-                                    <TouchableOpacity
+                                <View style={{ marginBottom: 5, marginTop: 2, flexDirection: 'row', justifyContent: 'space-between' }}>
+                                    <View
                                         style={{ flex: 1, flexDirection: 'row', alignItems: 'center' }}
-                                        onPress={() => {
-
-
-
-
-
-                                        }}
                                     >
                                         <Ionicons style={{ fontSize: 12, marginRight: 5 }} name="md-sunny" />
-                                        <Text>Nổi bật</Text>
-                                    </TouchableOpacity>
-
-                                    <DatePicker
+                                        <Text>Ngày nổi bật</Text>
+                                    </View>
+                                    <Text style={{ flex: 1, textAlign: 'center', color: '#9B9D9D' }}>{item.HighlightFromDate}</Text>
+                                    {/* <DatePicker
                                         style={{ flex: 1 }}
                                         date={item.HighlightFromDate}
                                         mode="date"
@@ -373,9 +404,10 @@ export default class PostedRoomHIstoryScreen extends React.Component {
                                             // ... You can check the source to find the other keys.
                                         }}
                                         onDateChange={(hightLightFromDate) => { this.setState({ hightLightFromDate }) }}
-                                    />
-                                    <Text style={{ paddingTop: 10, }}> - </Text>
-                                    <DatePicker
+                                    /> */}
+                                    <Text style={{ color: '#9B9D9D' }}> - </Text>
+                                    <Text style={{ flex: 1, textAlign: 'center', color: '#9B9D9D' }}>{item.HighlightToDate}</Text>
+                                    {/* <DatePicker
                                         style={{ flex: 1 }}
                                         date={item.HighlightToDate}
                                         mode="date"
@@ -401,18 +433,21 @@ export default class PostedRoomHIstoryScreen extends React.Component {
                                             // ... You can check the source to find the other keys.
                                         }}
                                         onDateChange={(hightLightToDate) => { this.setState({ hightLightToDate }) }}
-                                    />
+                                    /> */}
 
                                 </View>
 
-                                <View style={{ marginBottom: 2, flexDirection: 'row', padding: 10, justifyContent: 'space-between' }}>
+                                <View style={{ marginBottom: 2, flexDirection: 'row', paddingTop: 10, paddingBottom: 10, justifyContent: 'space-between' }}>
 
                                     <TouchableOpacity
-                                        style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center', }}
+                                        style={{
+                                            flexDirection: 'row', justifyContent: 'center',
+                                            alignItems: 'center',
+                                            borderWidth: 0.5, borderColor: '#a4d227', padding: 10, borderRadius: 5,
+                                        }}
                                         onPress={() => {
 
-
-
+                                            this._setTopAsync(item.ID)
 
                                         }}
                                     >
@@ -420,11 +455,30 @@ export default class PostedRoomHIstoryScreen extends React.Component {
                                         <Text>Lên đầu</Text>
                                     </TouchableOpacity>
 
+                                    <TouchableOpacity
+                                        style={{
+                                            flexDirection: 'row', justifyContent: 'center',
+                                            alignItems: 'center',
+                                            borderWidth: 0.5, borderColor: '#a4d227', padding: 10, borderRadius: 5,
+                                        }}
+                                        onPress={() => {
 
+
+
+
+                                        }}
+                                    >
+                                        <Ionicons style={{ fontSize: 12, marginRight: 5 }} name="md-build" />
+                                        <Text>Cập nhật</Text>
+                                    </TouchableOpacity>
 
 
                                     <TouchableOpacity
-                                        style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center', marginLeft: 10 }}
+                                        style={{
+                                            flexDirection: 'row', justifyContent: 'center',
+                                            alignItems: 'center', marginLeft: 10,
+                                            borderWidth: 0.5, borderColor: '#a4d227', padding: 10, borderRadius: 5,
+                                        }}
                                         onPress={() => {
 
 

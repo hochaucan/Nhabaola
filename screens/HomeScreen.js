@@ -880,6 +880,7 @@ export default class HomeScreen extends React.Component {
           // alert(JSON.stringify(responseJson.obj))
 
           if (responseJson.obj !== null) {
+            saveStorageAsync('FO_Wallet_GetDataByUserID', JSON.stringify(responseJson.obj[0].CurrentAmount))
             this.setState({
               wallet: responseJson.obj[0].CurrentAmount,
             })

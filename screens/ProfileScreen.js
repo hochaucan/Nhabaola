@@ -27,7 +27,9 @@ import saveStorageAsync from '../components/saveStorageAsync';
 
 
 var { height, width } = Dimensions.get('window');
-
+function numberWithCommas(x) {
+    return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+}
 const SECTIONS = [
     {
         title: 'First',
@@ -84,6 +86,7 @@ export default class ProfileScreen extends React.Component {
             // Update Account
             updateAccountImage: null,
             profile: null,
+            wallet: '0',
         }
 
 
@@ -92,6 +95,7 @@ export default class ProfileScreen extends React.Component {
 
     componentWillMount() {
         this._getProfileFromStorageAsync();
+        this._getWalletFromStorageAsync();
 
     }
 
@@ -131,6 +135,29 @@ export default class ProfileScreen extends React.Component {
             else {
                 this.setState({
                     profile: null
+                })
+            }
+
+        } catch (e) {
+            console.log(e);
+        }
+
+        //alert(JSON.stringify(profile))
+        //alert(profile)
+    }
+
+    _getWalletFromStorageAsync = async () => {
+        try {
+            var value = await AsyncStorage.getItem('FO_Wallet_GetDataByUserID');
+
+            if (value !== null) {
+                this.setState({
+                    wallet: value
+                })
+            }
+            else {
+                this.setState({
+                    wallet: '0'
                 })
             }
 
@@ -244,14 +271,18 @@ export default class ProfileScreen extends React.Component {
                     </View>
                 </View>
                 <ScrollView style={styles.profileMenuBox}>
-                    <TouchableOpacity style={styles.profileMenuItem}>
+                    <TouchableOpacity style={styles.profileMenuItem}
+                        onPress={() => {
+                            this.props.navigation.navigate('PostRoomScreen')
+                        }}
+                    >
                         <Ionicons style={styles.profileMenuItemText} name='md-cloud-upload'>
                             <Text>  Đăng tin</Text>
                         </Ionicons>
                     </TouchableOpacity>
                     <TouchableOpacity style={styles.profileMenuItem}
                         onPress={() => {
-                            
+
                             this.props.navigation.navigate('PostedRoomHIstoryScreen');
                         }}
                     >
@@ -261,7 +292,8 @@ export default class ProfileScreen extends React.Component {
                     </TouchableOpacity>
                     <TouchableOpacity style={styles.profileMenuItem}>
                         <Ionicons style={styles.profileMenuItemText} name='logo-usd'>
-                            <Text style={{}}>  Ví tiền:  500.000 đ</Text>
+                            <Text style={{}}>  Ví tiền:  </Text>
+                            <Text style={{ color: '#73aa2a' }}>{numberWithCommas(this.state.wallet)} đ</Text>
                         </Ionicons>
                     </TouchableOpacity>
                     <View style={styles.profileMenuItemSeparator}></View>
@@ -488,7 +520,7 @@ export default class ProfileScreen extends React.Component {
                     animationType={"slide"}
                     transparent={false}
                     visible={this.state.modalHelp}
-                    onRequestClose={() => {  }}
+                    onRequestClose={() => { }}
                 >
                     <View style={{ flexDirection: 'row', padding: 20, marginTop: Platform.OS === 'ios' ? 20 : 0, }}>
                         <TouchableOpacity
