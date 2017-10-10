@@ -742,6 +742,7 @@ export default class PostRoomScreen extends React.Component {
                                 icon={{ name: 'ios-backspace', type: 'ionicon' }}
                                 onPress={() => {
                                     this.props.navigation.goBack();
+                                    this.props.navigation.state.params.onSelect({ selected: true });
                                 }}
                                 title='Hủy' />
                             <Button

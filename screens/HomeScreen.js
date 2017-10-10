@@ -140,13 +140,22 @@ export default class HomeScreen extends React.Component {
       registerAccountImage: null,
       registerFullName: null,
       wallet: '0',
+      selected: false,
     }
 
+    // state = { selected: false };
   }
   // 2. Define a variable that will keep track of the current scroll position
   _listViewOffset = 0
 
 
+  onSelect = data => {
+    this.setState(data);
+
+    // alert(JSON.stringify(data))
+
+    // alert(this.state.selected)
+  };
 
   static refreshRoomBoxAfterPost = async () => {
     // alert("can")
@@ -1090,7 +1099,7 @@ export default class HomeScreen extends React.Component {
             <ActionButton.Item buttonColor='#a4d227' title="Đăng tin" onPress={() => {
               this.state.profile
                 ?
-                this.props.navigation.navigate('PostRoomScreen', { key: 'CanHo' })
+                this.props.navigation.navigate('PostRoomScreen', { onSelect: this.onSelect })
                 :
                 Platform.OS === 'android'
                   ? ToastAndroid.showWithGravity('Vui lòng đăng nhập', ToastAndroid.SHORT, ToastAndroid.CENTER)
@@ -1101,8 +1110,19 @@ export default class HomeScreen extends React.Component {
             }}>
               <Icon name="md-cloud-upload" style={styles.actionButtonIcon} />
             </ActionButton.Item>
-            <ActionButton.Item buttonColor='#a4d227' title={numberWithCommas(this.state.wallet) + " đ"} onPress={() => {
+           
 
+           {this.state.selected &&
+
+            <ActionButton.Item buttonColor='#a4d227' title="Testing" onPress={() => {
+            // alert(this.state.selected)
+            }}>
+              <Icon name="logo-usd" style={styles.actionButtonIcon} />
+            </ActionButton.Item>
+           }
+           
+            <ActionButton.Item buttonColor='#a4d227' title={numberWithCommas(this.state.wallet) + " đ"} onPress={() => {
+             alert(this.state.selected)
             }}>
               <Icon name="logo-usd" style={styles.actionButtonIcon} />
             </ActionButton.Item>
