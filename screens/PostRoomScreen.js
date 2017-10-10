@@ -741,8 +741,12 @@ export default class PostRoomScreen extends React.Component {
                                 buttonStyle={{ backgroundColor: '#9B9D9D', padding: 15, borderRadius: 10 }}
                                 icon={{ name: 'ios-backspace', type: 'ionicon' }}
                                 onPress={() => {
+                                    HomeScreen.refreshRoomBoxAfterPost();
+                                    
                                     this.props.navigation.goBack();
                                     this.props.navigation.state.params.onSelect({ selected: true });
+                                  
+                                    //this.props.navigation.state.params.onSelect({ _refreshRoomBox });
                                 }}
                                 title='Hủy' />
                             <Button

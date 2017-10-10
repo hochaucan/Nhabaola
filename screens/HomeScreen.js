@@ -150,8 +150,8 @@ export default class HomeScreen extends React.Component {
 
 
   onSelect = data => {
-    this.setState(data);
-
+     this.setState(data);
+    //this.data;
     // alert(JSON.stringify(data))
 
     // alert(this.state.selected)
@@ -928,7 +928,7 @@ export default class HomeScreen extends React.Component {
   render() {
     let { image } = this.state;
     return (
-      <View style={styles.container}>
+      <View style={styles.container} key={this.state.selected}>
 
         <FlatList
           //onScroll={this._onScroll}
@@ -1110,19 +1110,19 @@ export default class HomeScreen extends React.Component {
             }}>
               <Icon name="md-cloud-upload" style={styles.actionButtonIcon} />
             </ActionButton.Item>
-           
 
-           {this.state.selected &&
 
-            <ActionButton.Item buttonColor='#a4d227' title="Testing" onPress={() => {
-            // alert(this.state.selected)
-            }}>
-              <Icon name="logo-usd" style={styles.actionButtonIcon} />
-            </ActionButton.Item>
-           }
-           
+            {this.state.selected &&
+
+              <ActionButton.Item buttonColor='#a4d227' title="Testing" onPress={() => {
+                // alert(this.state.selected)
+              }}>
+                <Icon name="logo-usd" style={styles.actionButtonIcon} />
+              </ActionButton.Item>
+            }
+
             <ActionButton.Item buttonColor='#a4d227' title={numberWithCommas(this.state.wallet) + " đ"} onPress={() => {
-             alert(this.state.selected)
+              alert(this.state.selected)
             }}>
               <Icon name="logo-usd" style={styles.actionButtonIcon} />
             </ActionButton.Item>
