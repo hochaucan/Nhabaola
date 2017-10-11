@@ -74,7 +74,7 @@ export default class HomeScreen extends React.Component {
     super(props);
     this.state = {
       sessionKey: null,
-      dataUsers: users,
+      //dataUsers: users,
       refresh: false,
       txt: 'test threshole',
       isActionButtonVisible: true, // 1. Define a state variable for showing/hiding the action-button 
@@ -229,6 +229,18 @@ export default class HomeScreen extends React.Component {
 
 
   }
+
+  // shouldComponentUpdate(nextProps, nextState) {
+  //   // return a boolean value
+  //   return true;
+  // }
+
+  // componentWillUpdate(nextProps, nextState) {
+  //   // perform any preparations for an upcoming update
+  //   if (this.state.refreshScreen) {
+  //     alert("updated")
+  //   }
+  // }
   // componentWillReceiveProps() {
   //   // alert("can")
   // }
@@ -449,11 +461,11 @@ export default class HomeScreen extends React.Component {
     //Form validation
     if (Platform.OS === 'android') {
       if (this.state.loginUsername === '') {
-        ToastAndroid.showWithGravity('Vui lòng nhập tài khoản', ToastAndroid.SHORT, ToastAndroid.BOTTOM);
+        ToastAndroid.showWithGravity('Vui lòng nhập tài khoản', ToastAndroid.SHORT, ToastAndroid.TOP);
         return;
       }
       if (this.state.loginPassword === '') {
-        ToastAndroid.showWithGravity('Vui lòng nhập mật khẩu', ToastAndroid.SHORT, ToastAndroid.BOTTOM);
+        ToastAndroid.showWithGravity('Vui lòng nhập mật khẩu', ToastAndroid.SHORT, ToastAndroid.TOP);
         return;
       }
     }
@@ -477,8 +489,6 @@ export default class HomeScreen extends React.Component {
           Accept: 'application/json',
           'Content-Type': 'application/json',
         },
-        //body: JSON.stringify(this.state.objectRegisterAccount)
-
 
         body: JSON.stringify({
           "UserName": this.state.loginUsername,
@@ -488,7 +498,6 @@ export default class HomeScreen extends React.Component {
         .then((response) => response.json())
         .then((responseJson) => {
 
-          //alert(JSON.stringify(responseJson.obj.UpdatedBy))
 
           if (responseJson.obj.UpdatedBy != "") { // Login successful
             this.popupLogin.dismiss();
@@ -510,7 +519,7 @@ export default class HomeScreen extends React.Component {
           }
           else { // Login False
             if (Platform.OS === 'android') {
-              ToastAndroid.showWithGravity('Tài khoản hoặc mật khẩu không đúng', ToastAndroid.SHORT, ToastAndroid.BOTTOM);
+              ToastAndroid.showWithGravity('Tài khoản hoặc mật khẩu không đúng', ToastAndroid.SHORT, ToastAndroid.TOP);
             }
             else {
               Alert.alert('Oops!', 'Tài khoản hoặc mật khẩu không đúng');
@@ -522,10 +531,6 @@ export default class HomeScreen extends React.Component {
             saveStorageAsync('loginPassword', '')
             this.setState({ profile: null, sessionKey: null })
           }
-
-          //this._getStorageAsync('SessionKey')
-          // var tmp = getStorageAsync('SessionKey')
-          // alert(JSON.stringify(tmp))
 
           this.popupLoadingIndicator.dismiss();
         }).
@@ -936,8 +941,9 @@ export default class HomeScreen extends React.Component {
 
   render() {
     let { image } = this.state;
+
     return (
-      <View style={styles.container} key={this.state.onRefreshScreen}>
+      <View style={styles.container} key={this.state.refreshScreen}>
 
         <FlatList
           //onScroll={this._onScroll}
@@ -1076,7 +1082,9 @@ export default class HomeScreen extends React.Component {
 
         {/* Action Button */}
         {this.state.isActionButtonVisible ?
-          <ActionButton buttonColor="#73aa2a">
+          <ActionButton buttonColor="#73aa2a"
+          //bgColor={"red"}
+          >
 
             {this.state.profile === null &&
               <ActionButton.Item buttonColor='#a4d227' title="Đăng nhập" onPress={() => {
@@ -1109,7 +1117,10 @@ export default class HomeScreen extends React.Component {
               this.state.profile
                 ?
                 //this.props.navigation.navigate('PostRoomScreen', { onSelect: this.onSelect })
-                this.props.navigation.navigate('PostRoomScreen', { onRefreshScreen: this.onRefreshScreen })
+                this.props.navigation.navigate('PostRoomScreen', {
+                  onRefreshScreen: this.onRefreshScreen,
+                  _getWalletAsync: this._getWalletAsync,
+                })
                 :
                 Platform.OS === 'android'
                   ? ToastAndroid.showWithGravity('Vui lòng đăng nhập', ToastAndroid.SHORT, ToastAndroid.CENTER)
@@ -1122,24 +1133,29 @@ export default class HomeScreen extends React.Component {
             </ActionButton.Item>
 
 
-            {this.state.refreshScreen &&
+            {/* {this.state.refreshScreen &&
 
               <ActionButton.Item buttonColor='#a4d227' title="Testing" onPress={() => {
                 // alert(this.state.selected)
               }}>
                 <Icon name="logo-usd" style={styles.actionButtonIcon} />
               </ActionButton.Item>
+            } */}
+            {this.state.profile !== null &&
+              <ActionButton.Item buttonColor='#a4d227' title={numberWithCommas(this.state.wallet) + " đ"} onPress={() => {
+                //alert(this.state.selected)
+              }}>
+                <Icon name="logo-usd" style={styles.actionButtonIcon} />
+              </ActionButton.Item>
             }
-
-            <ActionButton.Item buttonColor='#a4d227' title={numberWithCommas(this.state.wallet) + " đ"} onPress={() => {
-              alert(this.state.selected)
-            }}>
-              <Icon name="logo-usd" style={styles.actionButtonIcon} />
-            </ActionButton.Item>
-
             {this.state.profile !== null &&
               <ActionButton.Item buttonColor='#a4d227' title="Trang Cá Nhân" onPress={() => {
-                this.props.navigation.navigate("ProfileScreen", { onRefreshScreen: this.onRefreshScreen });
+
+                this.props.navigation.navigate("ProfileScreen", {
+                  onRefreshScreen: this.onRefreshScreen,
+                  _getWalletAsync: this._getWalletAsync
+                });
+
               }}>
                 <Icon name="ios-person" style={styles.actionButtonIcon} />
               </ActionButton.Item>

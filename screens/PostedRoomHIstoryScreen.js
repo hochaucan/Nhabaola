@@ -43,7 +43,7 @@ const roomBox = [];
 export default class PostedRoomHIstoryScreen extends React.Component {
     static navigationOptions = {
         title: 'Tin Bạn Đã Đăng',
-        //header: null,
+        header: null,
     };
 
     constructor(props) {
@@ -245,14 +245,19 @@ export default class PostedRoomHIstoryScreen extends React.Component {
         return (
             <View style={styles.container}>
 
-                {/* <View style={{ flexDirection: 'row', padding: 20, }}>
+                <View style={{ flexDirection: 'row', padding: 20, }}>
                     <TouchableOpacity
                         style={{}}
-                        onPress={() => this.props.navigation.goBack()}>
+                        onPress={() => {
+
+                            this.props.navigation.goBack()
+                            this.props.navigation.state.params.onRefreshScreen();
+                            //this.props.navigation.state.params.onRefreshScreen({ refreshScreen: true });
+                        }}>
                         <Ionicons style={{ fontSize: 28, color: '#a4d227', }} name='md-arrow-back'></Ionicons>
                     </TouchableOpacity>
                     <Text style={{ marginLeft: 20, color: '#73aa2a', fontSize: 20, justifyContent: 'center' }}>Tin Bạn Đã Đăng</Text>
-                </View> */}
+                </View>
 
                 <View style={styles.searchRoolResultBox}>
                     <FlatList

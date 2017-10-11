@@ -11,6 +11,13 @@ react-native-map: https://github.com/airbnb/react-native-maps
 Android SDK Location: C:\Users\NickHo\AppData\Local\Android\Sdk
 
 
+  onRefreshScreen = data => {
+    this.setState(data);
+  }
+this.props.navigation.navigate('PostRoomScreen', { onRefreshScreen: this.onRefreshScreen })
+this.props.navigation.state.params.onRefreshScreen({ refreshScreen: true, profile: null });
+
+
 const styleButton = {
     container: {
         paddingTop: 16,

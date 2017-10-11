@@ -257,7 +257,7 @@ export default class SearchScreen extends React.Component {
             roomPageIndex: 5,
             roomPageCount: 5,
             roomCategory: [],
-            selectedCategory: '0',
+            selectedCategory: '',
             countMapLoad: 0,
             houseCoords: {
                 latitude: null,
@@ -466,7 +466,7 @@ export default class SearchScreen extends React.Component {
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify({
-
+                    "CategoryID": this.state.selectedCategory,
                     "Latitude": this.state.isSearching === true ? this.state.searchingMaker.latitude : this.state.location.coords.latitude, //"10.7143264",
                     "Longitude": this.state.isSearching === true ? this.state.searchingMaker.longitude : this.state.location.coords.longitude,//"106.6104477",
                     "Radius": this.state.radius,

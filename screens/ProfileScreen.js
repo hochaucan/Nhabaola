@@ -96,7 +96,7 @@ export default class ProfileScreen extends React.Component {
 
     componentWillMount() {
         this._getProfileFromStorageAsync();
-        this._getWalletFromStorageAsync();
+        //this._getWalletFromStorageAsync();
 
     }
 
@@ -114,14 +114,13 @@ export default class ProfileScreen extends React.Component {
     //     alert("can")
     //     return true
     // }
-    componentWillUpdate() {
-        //this._getProfileFromStorageAsync();
-    }
+    // componentWillUpdate() {
+    //     //this._getProfileFromStorageAsync();
+    // }
 
-    static _updateProfileAfterLogin(_profile) {
 
-        //alert(_profile)
-        //profile = _profile;
+    onRefreshScreen = data => {
+        this.setState(data);
     }
 
     _getProfileFromStorageAsync = async () => {
@@ -132,6 +131,8 @@ export default class ProfileScreen extends React.Component {
                 this.setState({
                     profile: JSON.parse(value)
                 })
+
+                this._getWalletAsync();
             }
             else {
                 this.setState({
@@ -142,9 +143,6 @@ export default class ProfileScreen extends React.Component {
         } catch (e) {
             console.log(e);
         }
-
-        //alert(JSON.stringify(profile))
-        //alert(profile)
     }
 
     _getWalletFromStorageAsync = async () => {
@@ -165,10 +163,52 @@ export default class ProfileScreen extends React.Component {
         } catch (e) {
             console.log(e);
         }
-
-        //alert(JSON.stringify(profile))
-        //alert(profile)
     }
+
+    _getWalletAsync = async () => {
+        //  await this.setState({ refresh: true })  
+
+        // alert(this.state.wallet)
+
+        try {
+            await fetch("http://nhabaola.vn/api/Wallet/FO_Wallet_GetDataByUserID", {
+                method: 'POST',
+                headers: {
+                    Accept: 'application/json',
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    "UserID": this.state.profile.ID,
+                    "CreatedBy": this.state.profile.ID,
+                    "UpdatedBy": this.state.profile.UpdatedBy,
+                }),
+            })
+                .then((response) => response.json())
+                .then((responseJson) => {
+                    // alert(JSON.stringify(responseJson.obj))
+
+                    if (responseJson.obj !== null) {
+                        saveStorageAsync('FO_Wallet_GetDataByUserID', JSON.stringify(responseJson.obj[0].CurrentAmount))
+                        this.setState({
+                            wallet: responseJson.obj[0].CurrentAmount,
+                        })
+                    }
+
+                    //alert(JSON.stringify(this.state.wallet[0].CurrentAmount))
+                    //this._saveStorageAsync('FO_RoomBox_GetAllData', JSON.stringify(responseJson.obj))
+                    // responseJson.obj.map((y) => { return y.CatName })
+
+
+                    //   this.setState({ refresh: false })
+
+                }).
+                catch((error) => { console.log(error) });
+        } catch (error) {
+            console.log(error)
+        }
+
+    }
+
 
 
     _handleMapRegionChange = mapRegion => {
@@ -226,6 +266,19 @@ export default class ProfileScreen extends React.Component {
     render() {
         return (
             <View style={styles.container}>
+                <View style={{ flexDirection: 'row', padding: 20, }}>
+                    <TouchableOpacity
+                        style={{}}
+                        onPress={() => {
+                            this.props.navigation.goBack()
+                            this.props.navigation.state.params.onRefreshScreen({ refreshScreen: true });
+                            this.props.navigation.state.params._getWalletAsync();
+
+                        }}>
+                        <Ionicons style={{ fontSize: 28, color: '#a4d227', }} name='md-arrow-back'></Ionicons>
+                    </TouchableOpacity>
+                    <Text style={{ marginLeft: 20, color: '#73aa2a', fontSize: 20, justifyContent: 'center' }}>Trang cá nhân</Text>
+                </View>
                 <View style={styles.card}>
                     {/* <Text>{JSON.stringify(this.props.navigation.state.params)}</Text> */}
 
@@ -284,7 +337,7 @@ export default class ProfileScreen extends React.Component {
                     <TouchableOpacity style={styles.profileMenuItem}
                         onPress={() => {
 
-                            this.props.navigation.navigate('PostedRoomHIstoryScreen');
+                            this.props.navigation.navigate('PostedRoomHIstoryScreen', { onRefreshScreen: this._getWalletAsync });
                         }}
                     >
                         <Ionicons style={styles.profileMenuItemText} name='md-folder'>
@@ -363,7 +416,13 @@ export default class ProfileScreen extends React.Component {
                                                 saveStorageAsync('loginPassword', '')
                                                 this.setState({ profile: null })
                                                 //HomeScreen._onRefreshScreen({ refreshScreen: true })
-                                                this.props.navigation.state.params.onRefreshScreen({ refreshScreen: true });
+                                                this.props.navigation.state.params.onRefreshScreen({
+                                                    refreshScreen: true,
+                                                    profile: null,
+                                                    sessionKey: null,
+                                                    loginUsername: '',
+                                                    loginPassword: ''
+                                                });
                                                 this.props.navigation.goBack();
                                                 //this.props.navigation.navigate("Home")
                                             }

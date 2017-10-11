@@ -15,6 +15,7 @@ import {
     ToastAndroid,
     Alert,
     Modal,
+    Switch,
 }
     from 'react-native';
 import { Constants, Location, Permissions, ImagePicker } from 'expo';
@@ -69,12 +70,6 @@ export default class PostRoomScreen extends React.Component {
             postRoomImage5: null,
             postRoomImage6: null,
             imageUrl: '',
-            // imageUrl1: '',
-            // imageUrl2: '',
-            // imageUrl3: '',
-            // imageUrl4: '',
-            // imageUrl5: '',
-            // imageUrl6: '',
             postRoomAddressMaker: {
                 latitude: null,
                 longitude: null,
@@ -93,7 +88,10 @@ export default class PostRoomScreen extends React.Component {
             SessionKey: null,
             profile: null,
             fromDate: minDate,
-            toDate: topDate
+            toDate: topDate,
+            fromDateHighLight: minDate,
+            toDateHighLight: topDate,
+            isHighlight: false,
         }
     }
 
@@ -360,47 +358,29 @@ export default class PostRoomScreen extends React.Component {
                     "FromDate": this.state.fromDate,
                     "ToDate": this.state.toDate,
                     "IsTop": "true",
-                    "IsPinned": "true",
-                    "IsHighlight": "false",
-                    "HighlightFromDate": "2017-10-30",
-                    "HighlightToDate": "2017-12-09",
+                    "IsPinned": "false",
+                    "IsHighlight": this.state.isHighlight,
+                    "HighlightFromDate": this.state.fromDateHighLight,
+                    "HighlightToDate": this.state.toDateHighLight,
                     "IsActive": "true",
                     "CreatedBy": this.state.profile.ID,
                     "UpdatedBy": this.state.SessionKey,
-
-                    // "Title": "Title",
-                    // "Description": "Description",
-                    // "CategoryID": "1",
-                    // "Address": "Address",
-                    // "Longitude": "106.7004238",
-                    // "Latitude": "10.7756587",
-                    // "Price": "5000000",
-                    // "Acreage": "10",
-                    // "Toilet": "5",
-                    // "Bedroom": "2",
-                    // "AirConditioner": "3",
-                    // "ContactPhone": "0919880980",
-                    // "FromDate": "2017-10-06",
-                    // "ToDate": "2017-10-30",
-                    // "IsTop": "true",
-                    // "IsHighlight": "true",
-                    // "HighlightFromDate": "2017-10-06",
-                    // "HighlightToDate": "2017-10-09",
-                    // "IsActive": "true",
-                    // "IsPinned": "true",
-                    // "CreatedBy": "11",
-                    // "UpdatedBy": "4ef12660657bafce3226d1ae2228ada1"
                 }),
             })
                 .then((response) => response.json())
                 .then((responseJson) => {
 
-                    this.popupLoadingIndicator.dismiss();
+
                     //this.props.navigation.navigate('Home');
                     HomeScreen.refreshRoomBoxAfterPost();
                     //this.props.navigation.state.params.onSelect({ selected: true });
-                    this.props.navigation.state.params.onRefreshScreen({ refreshScreen: true });
                     this.props.navigation.goBack();
+                    this.props.navigation.state.params._getWalletAsync();
+                    this.props.navigation.state.params.onRefreshScreen({ refreshScreen: true });
+
+
+                    this.popupLoadingIndicator.dismiss();
+
                 }).
                 catch((error) => { console.log(error) });
         } catch (error) {
@@ -579,7 +559,7 @@ export default class PostRoomScreen extends React.Component {
 
                     </View>
                     {/* <FormLabel style={{ borderBottomWidth: 0.7, borderColor: '#a4d227' }}>Thông tin chi tiết</FormLabel> */}
-                    <View style={{ height: 200, }}>
+                    <View style={{ paddingBottom: 20 }}>
                         <View style={{ flexDirection: 'row', }}>
                             <FormLabel style={{}}>Giá:</FormLabel>
                             <TextInputMask
@@ -658,8 +638,10 @@ export default class PostRoomScreen extends React.Component {
                             }
                         </View>
 
+                        <FormLabel labelStyle={{}}>Hiệu lực (5K/ngày):</FormLabel>
+
                         <View style={{ flexDirection: 'row', marginTop: 8 }}>
-                            <FormLabel labelStyle={{}}>Hiệu lực:</FormLabel>
+                            <FormLabel labelStyle={{ color: '#fff' }}>Hiệu lực:</FormLabel>
                             <Text style={{ paddingTop: 10 }}>Từ</Text>
                             <DatePicker
                                 style={{ marginLeft: 8 }}
@@ -681,7 +663,10 @@ export default class PostRoomScreen extends React.Component {
                                     },
                                     dateInput: {
                                         marginLeft: 36
-                                    }
+                                    },
+                                    //dateText:{
+                                    //  color:'red'
+                                    //}
                                     // ... You can check the source to find the other keys.
                                 }}
                                 onDateChange={(fromDate) => { this.setState({ fromDate }) }}
@@ -720,6 +705,94 @@ export default class PostRoomScreen extends React.Component {
                             />
                         </View>
 
+                        <View
+                            style={{ flexDirection: 'row', marginTop: 10, alignItems: 'center' }}
+                        >
+                            <FormLabel style={{}}>Làm nổi bật (2K/ngày):</FormLabel>
+                            <Switch
+                                style={{ marginTop: 12 }}
+                                onValueChange={() => {
+                                    this.setState({ isHighlight: !this.state.isHighlight })
+                                }}
+                                value={this.state.isHighlight}
+                            />
+                        </View>
+
+
+                        {this.state.isHighlight &&
+                            <View>
+                                <View style={{ flexDirection: 'row', marginTop: 8 }}>
+                                    <FormLabel labelStyle={{ color: '#fff' }}>Hiệu lực:</FormLabel>
+                                    <Text style={{ paddingTop: 10 }}>Từ</Text>
+                                    <DatePicker
+                                        style={{ marginLeft: 8 }}
+                                        date={this.state.fromDateHighLight}
+                                        mode="date"
+                                        placeholder="select date"
+                                        format="YYYY-MM-DD"
+                                        minDate={minDate}
+                                        //maxDate="2016-06-01"
+                                        confirmBtnText="Chọn"
+                                        cancelBtnText="Hủy"
+                                        showIcon={true}
+                                        customStyles={{
+                                            dateIcon: {
+                                                position: 'absolute',
+                                                left: 0,
+                                                top: 4,
+                                                marginLeft: 0,
+                                            },
+                                            dateInput: {
+                                                marginLeft: 36
+                                            },
+                                            //dateText:{
+                                            //  color:'red'
+                                            //}
+                                            // ... You can check the source to find the other keys.
+                                        }}
+                                        onDateChange={(fromDateHighLight) => { this.setState({ fromDateHighLight }) }}
+                                    />
+
+                                </View>
+
+                                <View style={{ flexDirection: 'row', marginTop: 10 }}>
+                                    <FormLabel labelStyle={{ color: '#fff' }}>Hiệu lực:</FormLabel>
+
+                                    <Text style={{ paddingTop: 10 }}>Đến</Text>
+                                    <DatePicker
+                                        style={{}}
+                                        date={this.state.toDateHighLight}
+                                        mode="date"
+                                        placeholder="select date"
+                                        format="YYYY-MM-DD"
+                                        minDate={topDate}
+                                        //maxDate="2016-06-01"
+                                        confirmBtnText="Confirm"
+                                        cancelBtnText="Cancel"
+                                        showIcon={true}
+                                        customStyles={{
+                                            dateIcon: {
+                                                position: 'absolute',
+                                                left: 0,
+                                                top: 4,
+                                                marginLeft: 0
+                                            },
+                                            dateInput: {
+                                                marginLeft: 36
+                                            }
+                                            // ... You can check the source to find the other keys.
+                                        }}
+                                        onDateChange={(toDateHighLight) => { this.setState({ toDateHighLight }) }}
+                                    />
+                                </View>
+
+
+
+                            </View>
+                        }
+
+
+
                         <FormLabel style={{ marginTop: 10, }}>Chi tiết:</FormLabel>
                         <FormInput
                             containerStyle={{ borderWidth: 0.5, borderColor: '#73aa2a', borderRadius: 10, }}
@@ -736,37 +809,38 @@ export default class PostRoomScreen extends React.Component {
                         />
 
                     </View>
-                    <View style={{ marginTop: 220, }}>
-                        <View style={{ height: 100, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', paddingBottom: 50, }}>
-                            <Button
-                                buttonStyle={{ backgroundColor: '#9B9D9D', padding: 15, borderRadius: 10 }}
-                                icon={{ name: 'ios-backspace', type: 'ionicon' }}
-                                onPress={() => {
-                                    //HomeScreen.refreshRoomBoxAfterPost();
 
-                                    this.props.navigation.goBack();
-                                    //this.props.navigation.state.params.onSelect({ selected: true });
-
-                                    //this.props.navigation.state.params.onSelect({ _refreshRoomBox });
-                                }}
-                                title='Hủy' />
-                            <Button
-                                buttonStyle={{ backgroundColor: '#73aa2a', padding: 15, borderRadius: 10 }}
-                                icon={{ name: 'md-cloud-upload', type: 'ionicon' }}
-                                title='Đăng tin'
-                                onPress={() => {
-
-                                    this._postRoomAsync();
-
-
-                                }}
-                            />
-                        </View>
-                    </View>
                 </ScrollView>
                 {/* The view that will animate to match the keyboards height */}
                 <KeyboardSpacer />
+                <View style={{ marginTop: 20, }}>
+                    <View style={{ height: 80, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', paddingBottom: 20, }}>
+                        <Button
+                            buttonStyle={{ backgroundColor: '#9B9D9D', padding: 15, borderRadius: 10 }}
+                            icon={{ name: 'ios-backspace', type: 'ionicon' }}
+                            onPress={() => {
+                                //HomeScreen.refreshRoomBoxAfterPost();
 
+                                this.props.navigation.goBack();
+                                // this.props.navigation.state.params.onRefreshScreen({ refreshScreen: true, profile: null });
+                                //this.props.navigation.state.params.onSelect({ selected: true });
+
+                                //this.props.navigation.state.params.onSelect({ _refreshRoomBox });
+                            }}
+                            title='Hủy' />
+                        <Button
+                            buttonStyle={{ backgroundColor: '#73aa2a', padding: 15, borderRadius: 10 }}
+                            icon={{ name: 'md-cloud-upload', type: 'ionicon' }}
+                            title='Đăng tin'
+                            onPress={() => {
+
+                                this._postRoomAsync();
+
+
+                            }}
+                        />
+                    </View>
+                </View>
 
                 {/* Popup Loading Indicator */}
                 <PopupDialog
