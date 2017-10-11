@@ -140,7 +140,8 @@ export default class HomeScreen extends React.Component {
       registerAccountImage: null,
       registerFullName: null,
       wallet: '0',
-      selected: false,
+      //selected: false,
+      refreshScreen: false,
     }
 
     // state = { selected: false };
@@ -148,14 +149,22 @@ export default class HomeScreen extends React.Component {
   // 2. Define a variable that will keep track of the current scroll position
   _listViewOffset = 0
 
+  onRefreshScreen = data => {
+    this.setState(data);
+  }
 
-  onSelect = data => {
-     this.setState(data);
-    //this.data;
-    // alert(JSON.stringify(data))
+  // static _onRefreshScreen = data => {
+  //   this.setState(data);
+  //   //alert(JSON.stringify(data))
+  // }
 
-    // alert(this.state.selected)
-  };
+  // onSelect = data => {
+  //   this.setState(data);
+  //   //this.data;
+  //   // alert(JSON.stringify(data))
+
+  //   // alert(this.state.selected)
+  // };
 
   static refreshRoomBoxAfterPost = async () => {
     // alert("can")
@@ -928,7 +937,7 @@ export default class HomeScreen extends React.Component {
   render() {
     let { image } = this.state;
     return (
-      <View style={styles.container} key={this.state.selected}>
+      <View style={styles.container} key={this.state.onRefreshScreen}>
 
         <FlatList
           //onScroll={this._onScroll}
@@ -1099,7 +1108,8 @@ export default class HomeScreen extends React.Component {
             <ActionButton.Item buttonColor='#a4d227' title="Đăng tin" onPress={() => {
               this.state.profile
                 ?
-                this.props.navigation.navigate('PostRoomScreen', { onSelect: this.onSelect })
+                //this.props.navigation.navigate('PostRoomScreen', { onSelect: this.onSelect })
+                this.props.navigation.navigate('PostRoomScreen', { onRefreshScreen: this.onRefreshScreen })
                 :
                 Platform.OS === 'android'
                   ? ToastAndroid.showWithGravity('Vui lòng đăng nhập', ToastAndroid.SHORT, ToastAndroid.CENTER)
@@ -1112,7 +1122,7 @@ export default class HomeScreen extends React.Component {
             </ActionButton.Item>
 
 
-            {this.state.selected &&
+            {this.state.refreshScreen &&
 
               <ActionButton.Item buttonColor='#a4d227' title="Testing" onPress={() => {
                 // alert(this.state.selected)
@@ -1129,7 +1139,7 @@ export default class HomeScreen extends React.Component {
 
             {this.state.profile !== null &&
               <ActionButton.Item buttonColor='#a4d227' title="Trang Cá Nhân" onPress={() => {
-                this.props.navigation.navigate("ProfileScreen");
+                this.props.navigation.navigate("ProfileScreen", { onRefreshScreen: this.onRefreshScreen });
               }}>
                 <Icon name="ios-person" style={styles.actionButtonIcon} />
               </ActionButton.Item>

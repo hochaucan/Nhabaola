@@ -24,6 +24,7 @@ import { CheckBox, Rating, Button, FormLabel, FormInput, SocialIcon, FormValidat
 import { users } from '../components/examples/data';
 import Accordion from 'react-native-collapsible/Accordion';
 import saveStorageAsync from '../components/saveStorageAsync';
+import HomeScreen from './HomeScreen';
 
 
 var { height, width } = Dimensions.get('window');
@@ -59,7 +60,7 @@ export default class ProfileScreen extends React.Component {
 
     static navigationOptions = {
         title: 'Trang cá nhân',
-        //header: null,
+        header: null,
     };
 
     constructor(props) {
@@ -361,8 +362,10 @@ export default class ProfileScreen extends React.Component {
                                                 saveStorageAsync('loginUsername', '')
                                                 saveStorageAsync('loginPassword', '')
                                                 this.setState({ profile: null })
-                                                //this.props.navigation.goBack();
-                                                this.props.navigation.navigate("Home")
+                                                //HomeScreen._onRefreshScreen({ refreshScreen: true })
+                                                this.props.navigation.state.params.onRefreshScreen({ refreshScreen: true });
+                                                this.props.navigation.goBack();
+                                                //this.props.navigation.navigate("Home")
                                             }
                                         },
                                     ]
