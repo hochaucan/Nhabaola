@@ -427,15 +427,16 @@ export default class HomeScreen extends React.Component {
           }
           else {
             if (Platform.OS === 'android') {
-              ToastAndroid.showWithGravity('Tài khoản hoặc mật khẩu đã thay đổi', ToastAndroid.SHORT, ToastAndroid.BOTTOM);
+              ToastAndroid.showWithGravity('Tài khoản hoặc mật khẩu đã thay đổi', ToastAndroid.SHORT, ToastAndroid.CENTER);
             }
             else {
               Alert.alert('Oops!', 'Tài khoản hoặc mật khẩu đã thay đổi');
             }
 
+            this.setState({ profile: null, sessionKey: null })
             saveStorageAsync('FO_Account_Login', '')
             saveStorageAsync('SessionKey', '')
-            this.setState({ profile: null, sessionKey: null })
+
           }
 
           //this._getStorageAsync('SessionKey')
@@ -1550,7 +1551,7 @@ export default class HomeScreen extends React.Component {
           </ScrollView>
         </Modal>
 
-   
+
         {/* Popup select image library or camera */}
         <PopupDialog
           ref={(popupSelectedImage) => { this.popupSelectedImage = popupSelectedImage; }}
