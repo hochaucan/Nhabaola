@@ -413,6 +413,7 @@ export default class SearchScreen extends React.Component {
         }
         await this.setState({ mapRegion: region });
         this._getRoomByFilter();
+        this.fitAllMarkers();
     };
 
     _getCurrentPositionAsync() {
@@ -785,6 +786,8 @@ export default class SearchScreen extends React.Component {
                                     <Picker.Item label="18 km" value="18" />
                                     <Picker.Item label="20 km" value="20" />
                                     <Picker.Item label="30 km" value="30" />
+                                    <Picker.Item label="40 km" value="40" />
+                                    <Picker.Item label="50 km" value="50" />
                                 </Picker>
                             }
                             <TouchableOpacity
@@ -859,7 +862,21 @@ export default class SearchScreen extends React.Component {
                                                     options={{ suffixUnit: ' đ', precision: 0, unit: ' ', separator: ' ' }}
                                                 />
                                                 <View style={{ flex: 1, flexDirection: 'row', alignItems: 'center', justifyContent: 'center' }}>
-                                                    <Text>{item.Acreage} m</Text><Text style={{ fontSize: 8, marginBottom: 5 }}>2</Text>
+
+                                                    {
+
+                                                        this.state.roomCategory.map((y, i) => {
+                                                            return (
+                                                                y.ID == item.CategoryID &&
+                                                                <Text
+                                                                    style={{}}
+                                                                    key={i}>{y.CatName}:  {item.Acreage} m</Text>
+                                                                // : null
+                                                            )
+                                                        })
+                                                    }
+                                                    {/* <Text>{item.Acreage} m</Text> */}
+                                                    <Text style={{ fontSize: 8, marginBottom: 5 }}>2</Text>
                                                 </View>
                                                 <Ionicons style={styles.searCardDistanceIcon} name='md-pin' >  {item.Distance} km</Ionicons>
                                                 {/* <Text>3 km</Text> */}

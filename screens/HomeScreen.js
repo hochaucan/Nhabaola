@@ -513,8 +513,6 @@ export default class HomeScreen extends React.Component {
             })
 
             this._getWalletAsync();
-            ProfileScreen._updateProfileAfterLogin(responseJson.obj);
-
 
           }
           else { // Login False
@@ -989,6 +987,12 @@ export default class HomeScreen extends React.Component {
                 </View>
               </View>
 
+              {item.IsHighlight &&
+                <Image
+                  style={{ position: 'absolute', borderRadius: 100, right: 15, zIndex: 10, width: 80, height: 80, top: 50 }}
+                  source={require('../assets/images/nbl-highlight.jpg')}
+                />
+              }
               <TouchableWithoutFeedback
                 style={styles.cardImageBox}
                 onPress={() => {
@@ -999,20 +1003,35 @@ export default class HomeScreen extends React.Component {
                 }
               >
 
+
                 <Image
                   style={styles.cardImage}
                   //source={require('../images/1.jpg')}
                   source={item.Title !== "" ? { uri: item.Title } : require("../images/nha-bao-la.jpg")}
                 />
               </TouchableWithoutFeedback>
-              <View style={{ flexDirection: 'row', paddingLeft: 20, paddingRight: 20, paddingTop: 5, paddingBottom: 5, marginTop: -50, backgroundColor: '#000', opacity: 0.5 }}>
+              <View style={{ flexDirection: 'row', paddingLeft: 20, paddingRight: 20, paddingTop: 5, paddingBottom: 5, marginTop: -50, backgroundColor: '#000', opacity: 0.6 }}>
                 <TextMask
-                  style={{ flex: 1, color: '#fff' }}
+                  style={{ flex: 1, color: '#fff', fontSize: 15 }}
                   value={item.Price}
                   type={'money'}
                   options={{ suffixUnit: ' đ', precision: 0, unit: 'Giá:   ', separator: ' ' }}
                 />
-                <Text style={{ flex: 1, textAlign: 'right', color: '#fff' }}>Diện tích:   {item.Acreage} m</Text><Text style={{ fontSize: 8, marginBottom: 5, color: '#fff' }}>2</Text>
+
+                {
+
+                  this.state.roomCategory.map((y, i) => {
+                    return (
+                      y.ID == item.CategoryID &&
+                      <Text
+                        style={{ flex: 1, fontSize: 15, textAlign: 'right', color: '#fff', }}
+                        key={i}>{y.CatName}:  {item.Acreage} m</Text>
+                      // : null
+                    )
+                  })
+                }
+                {/* <Text style={{ flex: 1, textAlign: 'right', color: '#fff' }}> {item.CategoryID} Diện tích:   {item.Acreage} m</Text> */}
+                <Text style={{ fontSize: 8, marginBottom: 5, color: '#fff' }}>2</Text>
 
               </View>
               <View style={styles.cardDesBox}>
@@ -1531,276 +1550,7 @@ export default class HomeScreen extends React.Component {
           </ScrollView>
         </Modal>
 
-        {/* Modal Post Room */}
-        <Modal
-          animationType={"slide"}
-          transparent={false}
-          visible={this.state.modalVisible}
-          onRequestClose={() => { }}
-        >
-          <ScrollView style={{ paddingTop: 10, marginTop: 20, }}>
-            <FormLabel>Hình ảnh</FormLabel>
-            <View style={{
-              height: 120, paddingRight: 20,
-              paddingLeft: 20, flexDirection: 'row', justifyContent: 'space-between',
-
-            }}>
-
-              <TouchableOpacity
-                style={{}}
-                onPress={() => this._pickImageAsync('1')}
-              >
-                <Ionicons style={{ opacity: 0.5, fontSize: 133, color: '#73aa2a', flex: 1, textAlign: 'center', }} name='ios-image-outline' />
-                {this.state.postRoomImage1 && <Image source={{ uri: this.state.postRoomImage1 }} style={{ width: 100, height: 100 }} />}
-              </TouchableOpacity>
-
-              <TouchableOpacity
-                style={{}}
-                onPress={() => this._pickImageAsync('2')}
-              >
-                <Ionicons style={{ opacity: 0.5, fontSize: 133, color: '#73aa2a', flex: 1, textAlign: 'center', }} name='ios-image-outline' />
-                {this.state.postRoomImage2 && <Image source={{ uri: this.state.postRoomImage2 }} style={{ width: 100, height: 100 }} />}
-              </TouchableOpacity>
-              <TouchableOpacity
-                style={{}}
-                onPress={() => this._pickImageAsync('3')}
-              >
-                <Ionicons style={{ opacity: 0.5, fontSize: 133, color: '#73aa2a', flex: 1, textAlign: 'center', }} name='ios-image-outline' />
-                {this.state.postRoomImage3 && <Image source={{ uri: this.state.postRoomImage3 }} style={{ width: 100, height: 100 }} />}
-              </TouchableOpacity>
-
-            </View>
-            <View style={{
-              height: 120, paddingRight: 20,
-              paddingLeft: 20, flexDirection: 'row', justifyContent: 'space-between',
-
-            }}>
-
-              <TouchableOpacity
-                style={{}}
-                onPress={() => this._pickImageAsync('4')}
-              >
-                <Ionicons style={{ opacity: 0.5, fontSize: 133, color: '#73aa2a', flex: 1, textAlign: 'center', }} name='ios-image-outline' />
-                {this.state.postRoomImage4 && <Image source={{ uri: this.state.postRoomImage4 }} style={{ width: 100, height: 100 }} />}
-              </TouchableOpacity>
-
-              <TouchableOpacity
-                style={{}}
-                onPress={() => this._pickImageAsync('5')}
-              >
-                <Ionicons style={{ opacity: 0.5, fontSize: 133, color: '#73aa2a', flex: 1, textAlign: 'center', }} name='ios-image-outline' />
-                {this.state.postRoomImage5 && <Image source={{ uri: this.state.postRoomImage5 }} style={{ width: 100, height: 100 }} />}
-              </TouchableOpacity>
-              <TouchableOpacity
-                style={{}}
-                onPress={() => this._pickImageAsync('6')}
-              >
-                <Ionicons style={{ opacity: 0.5, fontSize: 133, color: '#73aa2a', flex: 1, textAlign: 'center', }} name='ios-image-outline' />
-                {this.state.postRoomImage6 && <Image source={{ uri: this.state.postRoomImage6 }} style={{ width: 100, height: 100 }} />}
-              </TouchableOpacity>
-
-            </View>
-            {/* <FormLabel style={{ borderBottomWidth: 0.7, borderColor: '#a4d227', marginTop: 15, }}>Địa chỉ</FormLabel> */}
-            <View style={{ height: 270, padding: 20, }}>
-              {/* <FormInput
-                containerStyle={{ marginLeft: 0, marginRight: 0, }}
-                placeholder='Vui lòng nhập địa chỉ'
-                autoCapitalize='sentences'
-                maxLength={300}
-              /> */}
-
-
-
-
-              <GooglePlacesAutocomplete
-                placeholder="Vui lòng nhập địa chỉ"
-                minLength={1} // minimum length of text to search
-                autoFocus={false}
-                returnKeyType={'search'} // Can be left out for default return key https://facebook.github.io/react-native/docs/textinput.html#returnkeytype
-                listViewDisplayed="auto" // true/false/undefined
-                fetchDetails={true}
-                renderDescription={row => row.description} // custom description render
-                onPress={(data, details = null) => {
-                  // 'details' is provided when fetchDetails = true
-                  {/* console.log(data); */ }
-                  console.log(details.geometry.location);
-
-                  let currentMaker = {
-                    latitude: details.geometry.location.lat,
-                    longitude: details.geometry.location.lng,
-                    latitudeDelta: LATITUDE_DELTA,
-                    longitudeDelta: LONGITUDE_DELTA,
-                  }
-                  this.map.animateToRegion(currentMaker, 1000);
-
-                  {/* this.setState({
-                    postRoomAddressMaker: {
-                      latitude: details.geometry.location.lat,
-                      longitude: details.geometry.location.lng,
-                    }
-                  })
-                  this.map.animateToCoordinate(this.state.postRoomAddressMaker, 1000); */}
-
-                }}
-                getDefaultValue={() => {
-                  return ''; // text input default value
-                }}
-                query={{
-                  // available options: https://developers.google.com/places/web-service/autocomplete
-                  key: 'AIzaSyC2QhtACfVZ2cr9HVvxQuzxd3HT36NNK3Q',
-                  language: 'vi', // language of the results
-                  //types: '(cities)', // default: 'geocode'
-                }}
-                styles={{
-                  description: {
-                    fontWeight: 'bold',
-                  },
-                  predefinedPlacesDescription: {
-                    color: '#1faadb',
-                  },
-                  textInputContainer: {
-                    backgroundColor: '#fff',
-                    height: 44,
-                    //borderTopColor: '#7e7e7e',
-                    borderBottomColor: '#b5b5b5',
-                    borderTopWidth: 0,
-                    borderBottomWidth: 0.5,
-                    flexDirection: 'row',
-                  },
-                }}
-                currentLocation={false} // Will add a 'Current location' button at the top of the predefined places list
-                currentLocationLabel="Current location"
-                nearbyPlacesAPI="GooglePlacesSearch" // Which API to use: GoogleReverseGeocoding or GooglePlacesSearch
-                GoogleReverseGeocodingQuery={{
-                  // available options for GoogleReverseGeocoding API : https://developers.google.com/maps/documentation/geocoding/intro
-                }}
-                GooglePlacesSearchQuery={{
-                  // available options for GooglePlacesSearch API : https://developers.google.com/places/web-service/search
-                  rankby: 'distance',
-                  types: 'food',
-                }}
-                filterReverseGeocodingByTypes={[
-                  'locality',
-                  'administrative_area_level_3',
-                ]} // filter the reverse geocoding results by types - ['locality', 'administrative_area_level_3'] if you want to display only cities
-                //predefinedPlaces={[homePlace, workPlace]}
-                debounce={200}
-              />
-
-
-
-
-
-
-              <MapView
-                style={{ height: 150, alignSelf: 'stretch' }}
-                ref={ref => { this.map = ref; }}
-                region={this.state.mapRegion}
-                provider='google'
-                showsUserLocation={false}
-                showsMyLocationButton={false}
-                followsUserLocation={false}
-              >
-
-                {this.state.postRoomAddressMaker.latitude ?
-                  <MapView.Marker
-                    coordinate={this.state.postRoomAddressMaker}
-                    title='Im here'
-                    description='Home'
-                  >
-
-                  </MapView.Marker>
-                  : null}
-              </MapView>
-
-
-            </View>
-            {/* <FormLabel style={{ borderBottomWidth: 0.7, borderColor: '#a4d227' }}>Thông tin chi tiết</FormLabel> */}
-            <View style={{ height: 200, paddingTop: 20, }}>
-              <View style={{ flexDirection: 'row', }}>
-                <FormLabel style={{}}>Giá:</FormLabel>
-                <TextInputMask
-                  ref={'price'}
-                  type={'money'}
-                  options={{ suffixUnit: '', precision: 0, unit: '', separator: ' ' }}
-                  style={{ flex: 1, paddingLeft: 25, paddingTop: Platform.OS === 'ios' ? 11 : 7, }}
-                  placeholder=''
-                  underlineColorAndroid='#73aa2a'
-                />
-                <FormLabel>(đồng)</FormLabel>
-                {/* <FormInput
-                  containerStyle={{ flex: 1, paddingLeft: 29 }}
-                  placeholder='Vui lòng nhập giá (triệu)'
-                  autoCapitalize='sentences'
-                  maxLength={300}
-                  underlineColorAndroid='#fff'
-                  keyboardType='numeric'
-                /> */}
-              </View>
-              <View style={{ flexDirection: 'row', }}>
-                <FormLabel style={{}}>Diện tích:</FormLabel>
-                <TextInputMask
-                  ref={'acreage'}
-                  type={'only-numbers'}
-                  style={{ flex: 1, paddingTop: Platform.OS === 'ios' ? 11 : 7, marginLeft: Platform.OS === 'ios' ? -11 : -5, }}
-                  placeholder=''
-                  underlineColorAndroid='#73aa2a'
-                />
-
-                <FormLabel>(mét vuông)</FormLabel>
-              </View>
-              <View style={{ flexDirection: 'row', }}>
-                <FormLabel style={{}}>Loại BĐS:</FormLabel>
-
-                <Picker
-                  style={{ flex: 1, marginTop: -4 }}
-                  mode='dropdown'
-                  selectedValue={this.state.selectedCategory}
-                  onValueChange={(itemValue, itemIndex) => this.setState({ selectedCategory: itemValue })}>
-                  <Picker.Item label='-- Chọn loại BĐS --' value='0' />
-                  {this.state.roomCategory.map((y, i) => {
-                    return (
-                      <Picker.Item key={i} label={y.CatName} value={y.ID} />
-                    )
-                  })}
-                </Picker>
-
-              </View>
-              <FormLabel style={{ marginTop: 10, }}>Chi tiết:</FormLabel>
-              <FormInput
-                containerStyle={{ paddingLeft: 8, borderWidth: 0.5, borderColor: '#73aa2a', borderRadius: 10, height: 140, }}
-                placeholder='Vui lòng nhập thông tin chi tiết'
-                multiline={true}
-                autoCapitalize='sentences'
-                maxLength={300}
-                clearButtonMode='always'
-                underlineColorAndroid='#fff'
-              />
-
-            </View>
-            <View style={{ marginTop: 140, }}>
-              <View style={{ height: 100, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', paddingBottom: 50, }}>
-                <Button
-                  buttonStyle={{ backgroundColor: '#9B9D9D', padding: 15, borderRadius: 10 }}
-                  icon={{ name: 'ios-backspace', type: 'ionicon' }}
-                  onPress={() => {
-                    this._setModalVisible(false)
-                    this.setState({ image: null })
-                  }}
-                  title='Hủy' />
-                <Button
-                  buttonStyle={{ backgroundColor: '#73aa2a', padding: 15, borderRadius: 10 }}
-                  icon={{ name: 'md-cloud-upload', type: 'ionicon' }}
-                  title='Đăng tin'
-                  onPress={() => {
-                    alert(this.state.roomCategory)
-                  }}
-                />
-              </View>
-            </View>
-          </ScrollView>
-        </Modal>
-
+   
         {/* Popup select image library or camera */}
         <PopupDialog
           ref={(popupSelectedImage) => { this.popupSelectedImage = popupSelectedImage; }}

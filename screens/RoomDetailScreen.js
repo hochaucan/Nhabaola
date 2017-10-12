@@ -69,6 +69,7 @@ export default class RoomDetailScreen extends React.Component {
             roomBox: null,
             profile: null,
             commentContent: null,
+            roomCategory: [],
         }
     }
 
@@ -81,10 +82,13 @@ export default class RoomDetailScreen extends React.Component {
     }
 
     _getRoomBoxDetailAsync = async () => {
+
         await this.setState({
             roomBox: this.props.navigation.state.params.item
         })
+        await this._getRoomCategoryFromStorageAsync();
         await this._getProfileFromStorageAsync();
+
         this._getCommentsAsync();
 
         // alert(JSON.stringify(this.state.roomBox))
@@ -113,6 +117,31 @@ export default class RoomDetailScreen extends React.Component {
         // alert(JSON.stringify(this.state.profile))
         //alert(profile)
     }
+
+    _getRoomCategoryFromStorageAsync = async () => {
+        try {
+            var value = await AsyncStorage.getItem('FO_Category_GetAllData');
+            //alert(value)
+            if (value !== null) {
+                this.setState({
+                    roomCategory: JSON.parse(value)
+                })
+            }
+            else {
+                this.setState({
+                    roomCategory: []
+                })
+            }
+
+        } catch (e) {
+            console.log(e);
+        }
+
+        //alert(JSON.stringify(this.state.roomCategory))
+        //alert(profile)
+    }
+
+
 
     _handleMapRegionChange = mapRegion => {
         this.setState({ mapRegion });
@@ -290,6 +319,17 @@ export default class RoomDetailScreen extends React.Component {
                             <Text style={styles.cardAvatarPhone}>: {this.state.roomBox.AccountPhone}</Text>
                         </TouchableOpacity>
                     </View>
+
+                    {this.state.roomBox.IsHighlight &&
+                        <Image
+                            style={{
+                                position: 'absolute', borderRadius: 100, right: 15, zIndex: 10,
+                                width: 80, height: 80, top: 5
+                            }}
+                            source={require('../assets/images/nbl-highlight.jpg')}
+                        />
+                    }
+
                 </View>
                 <ScrollView style={styles.container}>
 
@@ -326,14 +366,29 @@ export default class RoomDetailScreen extends React.Component {
 
 
 
-                            <View style={{ flexDirection: 'row', paddingLeft: 20, paddingRight: 20, paddingTop: 5, paddingBottom: 5, marginTop: -50, backgroundColor: '#000', opacity: 0.5 }}>
+                            <View style={{ flexDirection: 'row', paddingLeft: 20, paddingRight: 20, paddingTop: 5, paddingBottom: 5, marginTop: -50, backgroundColor: '#000', opacity: 0.6 }}>
                                 <TextMask
-                                    style={{ flex: 1, color: '#fff' }}
+                                    style={{ flex: 1, color: '#fff', fontSize: 15 }}
                                     value={this.state.roomBox.Price}
                                     type={'money'}
                                     options={{ suffixUnit: ' đ', precision: 0, unit: 'Giá:   ', separator: ' ' }}
                                 />
-                                <Text style={{ flex: 1, textAlign: 'right', color: '#fff' }}>Diện tích:   {this.state.roomBox.Acreage} m</Text><Text style={{ fontSize: 8, marginBottom: 5, color: '#fff' }}>2</Text>
+
+                                {
+
+                                    this.state.roomCategory.map((y, i) => {
+                                        return (
+                                            y.ID == this.state.roomBox.CategoryID &&
+                                            <Text
+                                                style={{ flex: 1, fontSize: 15, textAlign: 'right', color: '#fff', }}
+                                                key={i}>{y.CatName}:  {this.state.roomBox.Acreage} m</Text>
+                                            // : null
+                                        )
+                                    })
+                                }
+
+                                {/* <Text style={{ flex: 1, textAlign: 'right', color: '#fff' }}>Diện tích:   {this.state.roomBox.Acreage} m</Text> */}
+                                <Text style={{ fontSize: 8, marginBottom: 5, color: '#fff' }}>2</Text>
 
                             </View>
                         </View>
@@ -473,13 +528,13 @@ export default class RoomDetailScreen extends React.Component {
                                     <View style={{ flex: 2 }}>
                                         <Image
                                             style={{ width: 40, height: 40, borderRadius: 100, }}
-                                            //source={{ uri: item.UserID }} 
-                                            source={require('../images/app-icon.png')}
+                                            source={{ uri: item.Avarta }}
+                                        //source={require('../images/app-icon.png')}
                                         />
                                     </View>
                                     <View style={{ flex: 8 }}>
-                                        <Text style={{}}>Tên: {item.UserID}</Text>
-                                        <Text style={{ color: '#9B9D9D', fontSize: 10 }}>{item.CreatedDate}</Text>
+                                        <Text style={{}}>{item.FullName}</Text>
+                                        <Text style={{ color: '#9B9D9D', fontSize: 10 }}>{item.UpdatedDate}</Text>
                                         <Text>{item.Content}</Text>
                                     </View>
 
