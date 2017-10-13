@@ -1303,8 +1303,8 @@ export default class HomeScreen extends React.Component {
               <TouchableOpacity style={{ flex: 1, }}
                 onPress={() => {
                   this.popupLogin.dismiss();
-                  //this.popupRegisterAccount.show();
-                  this.setState({ modalRegisterAccount: true })
+                  //this.setState({ modalRegisterAccount: true })
+                  this.props.navigation.navigate('RegisterAccountScreen', { login: this._loginAsync })
                 }}
               >
                 <Text style={{ padding: 15, textAlign: 'center' }}>Đăng ký mới</Text>
