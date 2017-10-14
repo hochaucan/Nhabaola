@@ -1304,7 +1304,10 @@ export default class HomeScreen extends React.Component {
                 onPress={() => {
                   this.popupLogin.dismiss();
                   //this.setState({ modalRegisterAccount: true })
-                  this.props.navigation.navigate('RegisterAccountScreen', { login: this._loginAsync })
+                  this.props.navigation.navigate('RegisterAccountScreen', {
+                    onRefreshScreen: this.onRefreshScreen,
+                    login: this._loginAsync
+                  })
                 }}
               >
                 <Text style={{ padding: 15, textAlign: 'center' }}>Đăng ký mới</Text>
