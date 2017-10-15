@@ -52,7 +52,8 @@ export default class PostedRoomHIstoryScreen extends React.Component {
             // Posted Room History
             postedRoomHistoryData: [],//users,
             refresh: false,
-            roomPageIndex: 10,
+            page: 1,
+            roomPageIndex: 0,
             roomPageCount: 10,
             profile: null,
             // fromDate: minDate,
@@ -80,6 +81,10 @@ export default class PostedRoomHIstoryScreen extends React.Component {
     // _moveToRoomDetail = (user) => {
     //     this.props.navigation.navigate('RoomDetailScreen', { ...user });
     // };
+
+    onRefreshScreen = data => {
+        this.setState(data);
+    }
 
     _getProfileFromStorageAsync = async () => {
         try {
@@ -109,15 +114,19 @@ export default class PostedRoomHIstoryScreen extends React.Component {
         await this.setState({ refresh: true })
         //alert(JSON.stringify(this.state.profile))
 
-        if (!isNew) {
-            this.setState({
-                roomPageIndex: this.state.roomPageIndex + this.state.roomPageCount,
-            })
+        if (!isNew) { // Loading more page 
+            this.setState((prevState, props) => ({
+                page: prevState.page + 1,
+            }));
         }
-        else {
+        else { // Refresh page
             roomBox = [];
-            this.setState({ roomPageIndex: 10 })
+            this.setState({ page: 1 })
         }
+
+        this.setState({ // Calculate page index
+            roomPageIndex: (this.state.page - 1) * this.state.roomPageCount
+        })
 
         try {
             await fetch("http://nhabaola.vn/api/RoomBox/FO_RoomBox_GetDataPostedByUserId", {
@@ -129,24 +138,18 @@ export default class PostedRoomHIstoryScreen extends React.Component {
                 body: JSON.stringify({
                     "UserName": this.state.profile.ID,
                     "SessionKey": this.state.profile.UpdatedBy,
-                    "PageIndex": isNew ? "0" : this.state.roomPageIndex,
+                    "PageIndex": this.state.roomPageIndex,
                     "PageCount": this.state.roomPageCount
                 }),
             })
                 .then((response) => response.json())
                 .then((responseJson) => {
 
-                    // this.setState({
-
-                    //     postedRoomHistoryData: responseJson.obj
-                    // })
-
                     responseJson.obj.map((y) => {
                         roomBox.push(y);
 
                     })
                     this.setState({ refresh: false })
-                    // alert(JSON.stringify(roomBox))
 
                 }).
                 catch((error) => { console.log(error) });
@@ -296,9 +299,19 @@ export default class PostedRoomHIstoryScreen extends React.Component {
 
                                         <View style={styles.searchCardTextBox}>
                                             <Text style={styles.searchCardAddress}>{item.Address}</Text>
-                                            <Text style={styles.searchCardPostDate}>Ngày đăng: {item.CreatedDate}</Text>
+                                            {/* {
+                                                this.state.roomCategory.map((y, i) => {
+                                                    return (
+                                                        y.ID == item.CategoryID &&
+                                                        <Text
+                                                            style={{ flex: 1, fontSize: 15, textAlign: 'right', color: '#fff', }}
+                                                            key={i}>{y.CatName}:  {item.Acreage} m</Text>
+                                                        // : null
+                                                    )
+                                                })
+                                            } */}
+                                            <Text style={styles.searchCardPostDate}>Ngày đăng: {item.UpdatedDate}</Text>
                                             <View style={styles.searchCardPriceBox}>
-                                                {/* <Text style={styles.searchCardPrice}>Giá: 2.000.000 đ</Text> */}
                                                 <TextMask
                                                     style={{ flex: 1, }}
                                                     value={item.Price}
@@ -320,61 +333,8 @@ export default class PostedRoomHIstoryScreen extends React.Component {
                                         <Text style={{}}>Ngày hiệu lực</Text>
                                     </View>
                                     <Text style={{ flex: 1, textAlign: 'center', color: '#9B9D9D' }}>{item.FromDate}</Text>
-                                    {/* <Text style={{ paddingTop: 10 }}>Từ</Text> */}
-                                    {/* <DatePicker
-                                        style={{ flex: 1 }}
-                                        date={item.FromDate}
-                                        mode="date"
-                                        placeholder="select date"
-                                        format="YYYY-MM-DD"
-                                        minDate={minDate}
-                                        //maxDate="2016-06-01"
-                                        confirmBtnText="Chọn"
-                                        cancelBtnText="Hủy"
-                                        showIcon={false}
-                                        customStyles={{
-                                            dateIcon: {
-                                                position: 'absolute',
-                                                left: 0,
-                                                top: 4,
-                                                marginLeft: 0,
-                                            },
-                                            dateInput: {
-                                                // marginLeft: 36
-                                            }
-                                            // ... You can check the source to find the other keys.
-                                        }}
-                                        onDateChange={(fromDate) => { this.setState({ fromDate }) }}
-                                    /> */}
                                     <Text style={{ color: '#9B9D9D' }}> - </Text>
                                     <Text style={{ flex: 1, textAlign: 'center', color: '#9B9D9D' }}>{item.ToDate}</Text>
-                                    {/* <DatePicker
-                                        style={{ flex: 1 }}
-                                        date={item.ToDate}
-                                        mode="date"
-                                        placeholder="select date"
-                                        format="YYYY-MM-DD"
-                                        minDate={topDate}
-                                        //maxDate="2016-06-01"
-                                        confirmBtnText="Confirm"
-                                        cancelBtnText="Cancel"
-                                        showIcon={false}
-                                        customStyles={{
-                                            dateIcon: {
-                                                position: 'absolute',
-                                                left: 0,
-                                                top: 4,
-                                                marginLeft: 0,
-                                                // height:10,
-                                                //width:10,
-                                            },
-                                            dateInput: {
-                                                //marginLeft: 36
-                                            }
-                                            // ... You can check the source to find the other keys.
-                                        }}
-                                        onDateChange={(toDate) => { this.setState({ toDate }) }}
-                                    /> */}
                                 </View>
 
                                 <View style={{ marginBottom: 5, marginTop: 2, flexDirection: 'row', justifyContent: 'space-between' }}>
@@ -385,61 +345,8 @@ export default class PostedRoomHIstoryScreen extends React.Component {
                                         <Text>Ngày nổi bật</Text>
                                     </View>
                                     <Text style={{ flex: 1, textAlign: 'center', color: '#9B9D9D' }}>{item.HighlightFromDate}</Text>
-                                    {/* <DatePicker
-                                        style={{ flex: 1 }}
-                                        date={item.HighlightFromDate}
-                                        mode="date"
-                                        placeholder="select date"
-                                        format="YYYY-MM-DD"
-                                        minDate={minDate}
-                                        //maxDate="2016-06-01"
-                                        confirmBtnText="Chọn"
-                                        cancelBtnText="Hủy"
-                                        showIcon={false}
-                                        customStyles={{
-                                            dateIcon: {
-                                                position: 'absolute',
-                                                left: 0,
-                                                top: 4,
-                                                marginLeft: 0,
-                                            },
-                                            dateInput: {
-                                                //marginLeft: 36
-                                            }
-                                            // ... You can check the source to find the other keys.
-                                        }}
-                                        onDateChange={(hightLightFromDate) => { this.setState({ hightLightFromDate }) }}
-                                    /> */}
                                     <Text style={{ color: '#9B9D9D' }}> - </Text>
                                     <Text style={{ flex: 1, textAlign: 'center', color: '#9B9D9D' }}>{item.HighlightToDate}</Text>
-                                    {/* <DatePicker
-                                        style={{ flex: 1 }}
-                                        date={item.HighlightToDate}
-                                        mode="date"
-                                        placeholder="select date"
-                                        format="YYYY-MM-DD"
-                                        minDate={topDate}
-                                        //maxDate="2016-06-01"
-                                        confirmBtnText="Confirm"
-                                        cancelBtnText="Cancel"
-                                        showIcon={false}
-                                        customStyles={{
-                                            dateIcon: {
-                                                position: 'absolute',
-                                                left: 0,
-                                                top: 4,
-                                                marginLeft: 0,
-                                                // height:10,
-                                                //width:10,
-                                            },
-                                            dateInput: {
-                                                //marginLeft: 36
-                                            }
-                                            // ... You can check the source to find the other keys.
-                                        }}
-                                        onDateChange={(hightLightToDate) => { this.setState({ hightLightToDate }) }}
-                                    /> */}
-
                                 </View>
 
                                 <View style={{ marginBottom: 2, flexDirection: 'row', paddingTop: 10, paddingBottom: 10, justifyContent: 'space-between' }}>
@@ -448,7 +355,7 @@ export default class PostedRoomHIstoryScreen extends React.Component {
                                         style={{
                                             flexDirection: 'row', justifyContent: 'center',
                                             alignItems: 'center',
-                                            borderWidth: 0.5, borderColor: '#a4d227', padding: 10, borderRadius: 5,
+                                            borderWidth: 0.8, borderColor: '#a4d227', padding: 10, borderRadius: 5,
                                         }}
                                         onPress={() => {
 
@@ -460,29 +367,30 @@ export default class PostedRoomHIstoryScreen extends React.Component {
                                         <Text>Lên đầu</Text>
                                     </TouchableOpacity>
 
+                                    {/* Update Room */}
                                     <TouchableOpacity
                                         style={{
                                             flexDirection: 'row', justifyContent: 'center',
                                             alignItems: 'center',
-                                            borderWidth: 0.5, borderColor: '#a4d227', padding: 10, borderRadius: 5,
+                                            borderWidth: 0.8, borderColor: '#a4d227', padding: 10, borderRadius: 5,
                                         }}
                                         onPress={() => {
-
-
-
-
+                                            this.props.navigation.navigate('UpdateRoomScreen', {
+                                                onRefreshScreen: this.onRefreshScreen,
+                                                item: item,
+                                            })
                                         }}
                                     >
                                         <Ionicons style={{ fontSize: 12, marginRight: 5 }} name="md-build" />
                                         <Text>Cập nhật</Text>
                                     </TouchableOpacity>
 
-
+                                    {/* Delete Room */}
                                     <TouchableOpacity
                                         style={{
                                             flexDirection: 'row', justifyContent: 'center',
                                             alignItems: 'center', marginLeft: 10,
-                                            borderWidth: 0.5, borderColor: '#a4d227', padding: 10, borderRadius: 5,
+                                            borderWidth: 0.8, borderColor: '#a4d227', padding: 10, borderRadius: 5,
                                         }}
                                         onPress={() => {
 

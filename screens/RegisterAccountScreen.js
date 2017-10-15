@@ -177,7 +177,7 @@ export default class RegisterAccountScreen extends React.Component {
                     })
 
                     this.popupLoadingIndicator.dismiss();
-                   // this.props.navigation.state.params.onRefreshScreen({ loginUsername: registerCellPhone, loginPassword: registerPassword });
+                    // this.props.navigation.state.params.onRefreshScreen({ loginUsername: registerCellPhone, loginPassword: registerPassword });
                     //this.props.navigation.state.params.login();
                     this.props.navigation.goBack();
                 }).
@@ -213,12 +213,10 @@ export default class RegisterAccountScreen extends React.Component {
 
     render() {
         return (
-            <View style={{ flex: 1, backgroundColor: '#fff' }}>
+            <View style={{ flex: 1, backgroundColor: '#fff', paddingBottom: 20, }}>
                 <ScrollView
                     style={{}}
                 >
-
-
                     <View style={{ flexDirection: 'row', padding: 20, justifyContent: 'center', alignItems: 'center' }}>
                         <TouchableOpacity
                             style={{}}
@@ -328,46 +326,42 @@ export default class RegisterAccountScreen extends React.Component {
                         </View>
 
                     </View>
-                    {/* Form Button */}
-                    <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center', marginTop: 20, }}>
-                        <Button
-                            buttonStyle={{ backgroundColor: '#9B9D9D', padding: 10, borderRadius: 5, }}
-                            raised={false}
-                            icon={{ name: 'ios-backspace', type: 'ionicon' }}
-                            title='Hủy'
-                            onPress={() => {
-                                this.setState({
-                                    registerCellPhone: null,
-                                    registerPassword: null,
-                                    registerConfirmPassword: null,
-                                    registerAccountImage: null,
-                                    registerFullName: null,
-                                    registerConfirmCellPhone: null,
-                                    registerEmail: null,
-                                })
 
-                                this.props.navigation.goBack();
-                            }}
-                        />
-
-                        <Button
-                            buttonStyle={{ backgroundColor: '#73aa2a', padding: 10, borderRadius: 5, }}
-                            raised={false}
-                            icon={{ name: 'md-checkmark', type: 'ionicon' }}
-                            title='Đăng ký'
-                            onPress={() => {
-                                this._registerAccountAsync();
-                            }}
-                        />
-                    </View>
                     {/* The view that will animate to match the keyboards height */}
                     <KeyboardSpacer />
-
-
-
-
                 </ScrollView>
+                {/* Form Button */}
+                <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center', marginTop: 20, }}>
+                    <Button
+                        buttonStyle={{ backgroundColor: '#9B9D9D', padding: 10, borderRadius: 5, }}
+                        raised={false}
+                        icon={{ name: 'ios-backspace', type: 'ionicon' }}
+                        title='Hủy'
+                        onPress={() => {
+                            this.setState({
+                                registerCellPhone: null,
+                                registerPassword: null,
+                                registerConfirmPassword: null,
+                                registerAccountImage: null,
+                                registerFullName: null,
+                                registerConfirmCellPhone: null,
+                                registerEmail: null,
+                            })
 
+                            this.props.navigation.goBack();
+                        }}
+                    />
+
+                    <Button
+                        buttonStyle={{ backgroundColor: '#73aa2a', padding: 10, borderRadius: 5, }}
+                        raised={false}
+                        icon={{ name: 'md-checkmark', type: 'ionicon' }}
+                        title='Đăng ký'
+                        onPress={() => {
+                            this._registerAccountAsync();
+                        }}
+                    />
+                </View>
 
 
                 {/* Popup select image library or camera */}

@@ -408,7 +408,7 @@ export default class ProfileScreen extends React.Component {
                                     'Bạn chắc chắn Đăng xuất?',
                                     [
                                         {
-                                            text: 'OK', onPress: () => {
+                                            text: 'Đồng ý', onPress: () => {
                                                 //BackHandler.exitApp()
                                                 saveStorageAsync('FO_Account_Login', '')
                                                 saveStorageAsync('SessionKey', '')

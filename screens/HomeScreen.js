@@ -98,7 +98,8 @@ export default class HomeScreen extends React.Component {
         longitude: null,
       },
       selectedCategory: '0',
-      roomPageIndex: 5,
+      page: 1,
+      roomPageIndex: 0,
       roomPageCount: 5,
 
       // Login
@@ -116,23 +117,23 @@ export default class HomeScreen extends React.Component {
 
       // Register Account
       modalRegisterAccount: false,
-      objectRegisterAccount: {
-        Avarta: "",
-        UserName: "UserName",
-        FullName: "Nguyen Van A",
-        Email: "Email@gmail.com",
-        Sex: "Nam",
-        YearOfBirth: "2017-10-09",
-        Address: "5 Hello 10 Hi 15 Hehe",
-        ContactPhone: "0919999888",
-        Password: "Passwordvinaphuc",
-        RegistryDate: "2017-10-09",
-        IsActive: "true",
-        CreatedDate: "2017-10-09",
-        CreatedBy: "10",
-        UpdatedBy: "Olala_SessionKey",
-        UpdatedDate: "2017-10-09"
-      },
+      // objectRegisterAccount: {
+      //   Avarta: "",
+      //   UserName: "UserName",
+      //   FullName: "Nguyen Van A",
+      //   Email: "Email@gmail.com",
+      //   Sex: "Nam",
+      //   YearOfBirth: "2017-10-09",
+      //   Address: "5 Hello 10 Hi 15 Hehe",
+      //   ContactPhone: "0919999888",
+      //   Password: "Passwordvinaphuc",
+      //   RegistryDate: "2017-10-09",
+      //   IsActive: "true",
+      //   CreatedDate: "2017-10-09",
+      //   CreatedBy: "10",
+      //   UpdatedBy: "Olala_SessionKey",
+      //   UpdatedDate: "2017-10-09"
+      // },
       registerCellPhone: null,
       registerPassword: null,
       registerConfirmPassword: null,
@@ -142,6 +143,12 @@ export default class HomeScreen extends React.Component {
       wallet: '0',
       //selected: false,
       refreshScreen: false,
+
+      // Reset Password
+      resetPasswordUsername: '',
+      resetPasswordEmail: '',
+      resetPasswordActiveKey: '',
+      resetPasswordNewPassword: '',
     }
 
     // state = { selected: false };
@@ -750,26 +757,26 @@ export default class HomeScreen extends React.Component {
 
   }
 
-  _postImage = async () => {
-    var can = 'http://uploads.im/api?upload=http://www.google.com/images/srpr/nav_logo66.png'
-    // console.log(JSON.stringify(this.state.objectRegisterAccount))
-    //Post to register account
-    try {
-      await fetch(can)
-        .then((response) => response.json())
-        .then((responseJson) => {
+  // _postImage = async () => {
+  //   var can = 'http://uploads.im/api?upload=http://www.google.com/images/srpr/nav_logo66.png'
+  //   // console.log(JSON.stringify(this.state.objectRegisterAccount))
+  //   //Post to register account
+  //   try {
+  //     await fetch(can)
+  //       .then((response) => response.json())
+  //       .then((responseJson) => {
 
-          //alert(JSON.stringify(responseJson))
-          console.log(responseJson)
+  //         //alert(JSON.stringify(responseJson))
+  //         console.log(responseJson)
 
-        })
-        .catch((e) => { console.log(e) });
-    } catch (error) {
-      console.log(error)
-    }
+  //       })
+  //       .catch((e) => { console.log(e) });
+  //   } catch (error) {
+  //     console.log(error)
+  //   }
 
 
-  }
+  // }
 
   _getCategoryAsync = async () => {
     try {
@@ -818,15 +825,21 @@ export default class HomeScreen extends React.Component {
   _getRoomBoxAsync = async (isNew) => {
     await this.setState({ refresh: true })
 
-    if (!isNew) {
-      this.setState({
-        roomPageIndex: this.state.roomPageIndex + this.state.roomPageCount,
-      })
+    if (!isNew) { // Loading more page 
+      this.setState((prevState, props) => ({
+        page: prevState.page + 1,
+      }));
     }
-    else {
+    else { // Refresh page
       roomBox = [];
-      this.setState({ roomPageIndex: 5 })
+      this.setState({ page: 1 })
     }
+
+    this.setState({ // Calculate page index
+      roomPageIndex: (this.state.page - 1) * this.state.roomPageCount
+    })
+
+    //alert(this.state.roomPageIndex)
 
     try {
       await fetch("http://nhabaola.vn/api/RoomBox/FO_RoomBox_GetAllData", {
@@ -836,7 +849,7 @@ export default class HomeScreen extends React.Component {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          "PageIndex": isNew ? "0" : this.state.roomPageIndex,
+          "PageIndex": this.state.roomPageIndex,
           "PageCount": this.state.roomPageCount
 
         }),
@@ -924,18 +937,161 @@ export default class HomeScreen extends React.Component {
   }
 
 
-  _sendProps() {
-    // this.props.navigator.push({
-    //   name: 'ProfileScreen'
-    // })
+  _resetPasswordStep1 = async () => {
 
-    this.props.navigation.navigate('ProfileScreen', {
-      passProfile: {
-        name: 'Can HO',
-        age: '16'
+    //Form validation
+    if (Platform.OS === 'android') {
+      if (this.state.resetPasswordUsername === '') {
+        ToastAndroid.showWithGravity('Vui lòng nhập số điện thoại', ToastAndroid.SHORT, ToastAndroid.TOP);
+        return;
       }
-    });
+      // if (this.state.resetPasswordEmail === null) {
+      //   ToastAndroid.showWithGravity('Vui lòng nhập email đã đăng ký', ToastAndroid.SHORT, ToastAndroid.TOP);
+      //   return;
+      // }
+    }
+    else {
+      if (this.state.resetPasswordUsername === '') {
+        Alert.alert('Oops!', 'Vui lòng nhập số điện thoại');
+        return;
+      }
+      // if (this.state.resetPasswordEmail === null) {
+      //   Alert.alert('Oops!', 'Vui lòng nhập email đã đăng ký');
+      //   return;
+      // }
+    }
+
+    this.popupLoadingIndicator.show()
+
+    try {
+      await fetch("http://nhabaola.vn/api/ForgetPassword/FO_ForgetPassword_Add/", {
+        method: 'POST',
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          "UserName": this.state.resetPasswordUsername,
+          //  "Email": this.resetPasswordEmail,
+        }),
+      })
+        .then((response) => response.json())
+        .then((responseJson) => {
+
+          // this._saveStorageAsync('FO_Category_GetAllData', JSON.stringify(responseJson.obj))
+          if (JSON.stringify(responseJson.ErrorCode) === "23") {
+            Alert.alert('Thông báo', 'Tài khoản này không tồn tại');
+            this.popupLoadingIndicator.dismiss()
+            return;
+          }
+          if (JSON.stringify(responseJson.ErrorCode) === "24") {
+            this.popupLoadingIndicator.dismiss()
+            this.popupResetPassword.dismiss();
+            this.popupActiveNewPassword.show();
+          }
+
+          this.popupLoadingIndicator.dismiss()
+        }).
+        catch((error) => { console.log(error) });
+    } catch (error) {
+      console.log(error)
+    }
+
   }
+
+  _resetPasswordStep2 = async () => {
+
+    //Form validation
+    if (Platform.OS === 'android') {
+      if (this.state.resetPasswordActiveKey === '') {
+        ToastAndroid.showWithGravity('Vui lòng nhập Mã Kích Hoạt', ToastAndroid.SHORT, ToastAndroid.TOP);
+        return;
+      }
+      if (this.state.resetPasswordNewPassword === '') {
+        ToastAndroid.showWithGravity('Vui lòng nhập mật khẩu mới', ToastAndroid.SHORT, ToastAndroid.TOP);
+        return;
+      }
+    }
+    else {
+      if (this.state.resetPasswordActiveKey === '') {
+        Alert.alert('Oops!', 'Vui lòng nhập Mã Kích Hoạt');
+        return;
+      }
+      if (this.state.resetPasswordNewPassword === '') {
+        Alert.alert('Oops!', 'Vui lòng nhập mật khẩu mới');
+        return;
+      }
+    }
+
+    this.popupLoadingIndicator.show()
+
+    try {
+      await fetch("http://nhabaola.vn/api/ForgetPassword/FO_ForgetPassword_ActiveAccount", {
+        method: 'POST',
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+
+          "UserName": this.state.resetPasswordUsername,
+          "ActiveKey": this.state.resetPasswordActiveKey,
+          "NewPassword": this.state.resetPasswordNewPassword,
+        }),
+      })
+        .then((response) => response.json())
+        .then((responseJson) => {
+
+          // this._saveStorageAsync('FO_Category_GetAllData', JSON.stringify(responseJson.obj))
+
+          if (JSON.stringify(responseJson.ErrorCode) === "0") { // Reset password successful
+            if (Platform.OS === 'android') {
+              ToastAndroid.showWithGravity('Lấy lại mật khẩu thành công!', ToastAndroid.SHORT, ToastAndroid.TOP);
+            }
+            else {
+              Alert.alert('Thông báo', 'Lấy lại mật khẩu thành công!');
+            }
+            this.popupActiveNewPassword.dismiss();
+
+            // this.setState({
+            //   loginUsername: this.state.resetPasswordUsername,
+            //   loginPassword: resetPasswordNewPassword,
+            // })
+
+            // this._loginAsync();
+          }
+          else {
+            if (Platform.OS === 'android') { // Active Code not correct
+              ToastAndroid.showWithGravity('Mã kích hoạt không đúng', ToastAndroid.SHORT, ToastAndroid.TOP);
+            }
+            else {
+              Alert.alert('Thông báo', 'Mã kích hoạt không đúng');
+            }
+          }
+
+          this.popupLoadingIndicator.dismiss()
+        }).
+        catch((error) => { console.log(error) });
+    } catch (error) {
+      console.log(error)
+    }
+
+  }
+
+  // _sendProps() {
+  //   // this.props.navigator.push({
+  //   //   name: 'ProfileScreen'
+  //   // })
+
+  //   this.props.navigation.navigate('ProfileScreen', {
+  //     passProfile: {
+  //       name: 'Can HO',
+  //       age: '16'
+  //     }
+  //   });
+  // }
+
+
 
 
   render() {
@@ -1161,13 +1317,7 @@ export default class HomeScreen extends React.Component {
                 <Icon name="logo-usd" style={styles.actionButtonIcon} />
               </ActionButton.Item>
             } */}
-            {this.state.profile !== null &&
-              <ActionButton.Item buttonColor='#a4d227' title={numberWithCommas(this.state.wallet) + " đ"} onPress={() => {
-                //alert(this.state.selected)
-              }}>
-                <Icon name="logo-usd" style={styles.actionButtonIcon} />
-              </ActionButton.Item>
-            }
+
             {this.state.profile !== null &&
               <ActionButton.Item buttonColor='#a4d227' title="Trang Cá Nhân" onPress={() => {
 
@@ -1180,6 +1330,14 @@ export default class HomeScreen extends React.Component {
                 <Icon name="ios-person" style={styles.actionButtonIcon} />
               </ActionButton.Item>
             }
+
+            {this.state.profile !== null &&
+              <ActionButton.Item buttonColor='#a4d227' title={numberWithCommas(this.state.wallet) + " đ"} onPress={() => {
+                //alert(this.state.selected)
+              }}>
+                <Icon name="logo-usd" style={styles.actionButtonIcon} />
+              </ActionButton.Item>
+            }
             {/* <ActionButton.Item buttonColor='#1abc9c' title="All Tasks" onPress={() => { }}>
               <Icon name="md-done-all" style={styles.actionButtonIcon} />
             </ActionButton.Item> */}
@@ -1189,47 +1347,155 @@ export default class HomeScreen extends React.Component {
 
 
 
-        {/* Popup Reset Password */}
+        {/* Popup Reset Password Step 1 */}
         <PopupDialog
           ref={(popupResetPassword) => { this.popupResetPassword = popupResetPassword; }}
           dialogAnimation={new ScaleAnimation()}
           dialogTitle={<DialogTitle title="Lấy lại mật khẩu" titleStyle={{}} titleTextStyle={{ color: '#73aa2a' }} />}
           dismissOnTouchOutside={false}
-          dialogStyle={{ marginBottom: 150, width: width * 0.9, height: Platform.OS === 'ios' ? height * 0.35 : height * 0.3, }}
-
-
+          dialogStyle={{
+            marginBottom: 150, width: width * 0.9,
+            height: Platform.OS === 'ios' ? height * 0.35 : height * 0.32,
+          }}
         >
 
-          <View>
-            <Animated.View style={{ position: 'relative', left: this.state.animation.usernamePostionLeft, flexDirection: 'row', padding: 10, }}>
-              <Ionicons style={{ flex: 1, fontSize: 22, paddingTop: 12, textAlign: 'center', }} name='ios-call-outline' />
+          <View style={{
+            padding: 20
+          }}>
+            {/* Username */}
+            <Animated.View style={{
+              position: 'relative', left: this.state.animation.usernamePostionLeft,
+              flexDirection: 'row',
+            }}>
+              <Ionicons style={{ flex: 1, fontSize: 22, paddingTop: 12, textAlign: 'center', }} name='md-call' />
               <FormInput
                 containerStyle={{ flex: 15 }}
                 placeholder='Số điện thoại'
                 autoCapitalize='sentences'
                 keyboardType='phone-pad'
                 underlineColorAndroid={'#fff'}
-                onChangeText={(text) => this.setState({ text })}
-                value={this.state.text}
+                onChangeText={(resetPasswordUsername) => this.setState({ resetPasswordUsername })}
+                value={this.state.resetPasswordUsername}
               />
-
             </Animated.View>
-
+            {/* Email  */}
+            {/* <Animated.View style={{
+              position: 'relative', left: this.state.animation.usernamePostionLeft,
+              flexDirection: 'row',
+            }}>
+              <Ionicons style={{ flex: 1, fontSize: 22, paddingTop: 12, textAlign: 'center', }} name='ios-mail' />
+              <FormInput
+                containerStyle={{ flex: 15 }}
+                placeholder='Email bạn đăng ký'
+                autoCapitalize='sentences'
+                keyboardType='email-address'
+                underlineColorAndroid={'#fff'}
+                onChangeText={(resetPasswordEmail) => this.setState({ resetPasswordEmail })}
+                value={this.state.resetPasswordEmail}
+              />
+            </Animated.View> */}
           </View>
-
-          <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center', marginTop: 20, }}>
+          {/* Button */}
+          <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center', marginTop: 15, }}>
             <Button
               buttonStyle={{ backgroundColor: '#9B9D9D', padding: 10, borderRadius: 5, }}
               raised={false}
               icon={{ name: 'ios-backspace', type: 'ionicon' }}
               title='Hủy'
-              onPress={() => { this.popupResetPassword.dismiss() }}
+              onPress={() => {
+                Keyboard.dismiss();
+                this.popupResetPassword.dismiss()
+              }}
             />
 
             <Button
               buttonStyle={{ backgroundColor: '#73aa2a', padding: 10, borderRadius: 5, }}
               raised={false}
               icon={{ name: 'md-checkmark', type: 'ionicon' }}
+              onPress={() => {
+                Keyboard.dismiss();
+                this._resetPasswordStep1();
+              }}
+              title='Đồng ý' />
+          </View>
+
+        </PopupDialog>
+
+
+        {/* Popup Reset Password Step 2 */}
+        <PopupDialog
+          ref={(popupActiveNewPassword) => { this.popupActiveNewPassword = popupActiveNewPassword; }}
+          dialogAnimation={new ScaleAnimation()}
+          dialogTitle={<DialogTitle title="Mật khẩu mới" titleStyle={{}} titleTextStyle={{ color: '#73aa2a' }} />}
+          dismissOnTouchOutside={false}
+          dialogStyle={{
+            marginBottom: 220, width: width * 0.9,
+            height: Platform.OS === 'ios' ? height * 0.35 : height * 0.44,
+          }}
+        >
+
+          <View style={{
+            padding: 20
+          }}>
+            <Text style={{ textAlign: 'center', color: '#73aa2a' }}>Bạn vui lòng kiểm tra Email để lấy Mã Kích Hoạt mật khẩu mới!</Text>
+            {/* Active Key */}
+            <Animated.View style={{
+              position: 'relative', left: this.state.animation.usernamePostionLeft,
+              flexDirection: 'row',
+              marginTop: 5,
+            }}>
+              <Ionicons style={{ flex: 1, fontSize: 22, paddingTop: 12, textAlign: 'center', }} name='md-key' />
+              <FormInput
+                containerStyle={{ flex: 15 }}
+                placeholder='Mã kích hoạt mật khẩu mới'
+                autoCapitalize='sentences'
+                keyboardType='numeric'
+                underlineColorAndroid={'#fff'}
+                onChangeText={(resetPasswordActiveKey) => this.setState({ resetPasswordActiveKey })}
+                value={this.state.resetPasswordActiveKey}
+              />
+            </Animated.View>
+            {/* New password  */}
+            <Animated.View style={{
+              position: 'relative', left: this.state.animation.usernamePostionLeft,
+              flexDirection: 'row',
+            }}>
+              <Ionicons style={{ flex: 1, fontSize: 22, paddingTop: 12, textAlign: 'center', }} name='md-lock' />
+              <FormInput
+                containerStyle={{ flex: 15 }}
+                placeholder='Mật khẩu mới'
+                autoCapitalize='sentences'
+                //keyboardType='email-address'
+                underlineColorAndroid={'#fff'}
+                onChangeText={(resetPasswordNewPassword) => this.setState({ resetPasswordNewPassword })}
+                value={this.state.resetPasswordNewPassword}
+              />
+            </Animated.View>
+
+
+
+          </View>
+          {/* Button */}
+          <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center', marginTop: 15, }}>
+            <Button
+              buttonStyle={{ backgroundColor: '#9B9D9D', padding: 10, borderRadius: 5, }}
+              raised={false}
+              icon={{ name: 'ios-backspace', type: 'ionicon' }}
+              title='Hủy'
+              onPress={() => {
+                Keyboard.dismiss();
+                this.popupActiveNewPassword.dismiss()
+              }}
+            />
+
+            <Button
+              buttonStyle={{ backgroundColor: '#73aa2a', padding: 10, borderRadius: 5, }}
+              raised={false}
+              icon={{ name: 'md-checkmark', type: 'ionicon' }}
+              onPress={() => {
+                Keyboard.dismiss();
+                this._resetPasswordStep2();
+              }}
               title='Đồng ý' />
           </View>
         </PopupDialog>
@@ -1246,7 +1512,7 @@ export default class HomeScreen extends React.Component {
 
         >
           <View>
-
+            {/* Username */}
             <Animated.View style={{ position: 'relative', left: this.state.animation.usernamePostionLeft, flexDirection: 'row', padding: 10, }}>
               <Ionicons style={{ flex: 1, fontSize: 22, paddingTop: 12, textAlign: 'center', }} name='ios-person' />
               <FormInput
@@ -1258,6 +1524,7 @@ export default class HomeScreen extends React.Component {
                 onChangeText={(loginUsername) => this.setState({ loginUsername })}
               />
             </Animated.View>
+            {/* Password */}
             <Animated.View style={{ position: 'relative', left: this.state.animation.passwordPositionLeft, flexDirection: 'row', padding: 10, paddingTop: 0, }}>
               <Ionicons style={{ flex: 1, fontSize: 22, paddingTop: 12, textAlign: 'center', }} name='ios-lock' />
               <FormInput
@@ -1268,13 +1535,17 @@ export default class HomeScreen extends React.Component {
                 onChangeText={(loginPassword) => this.setState({ loginPassword })}
               />
             </Animated.View>
+            {/* Button */}
             <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center', marginTop: 10, }}>
               <Button
                 buttonStyle={{ backgroundColor: '#9B9D9D', padding: 10, borderRadius: 5, }}
                 raised={false}
                 icon={{ name: 'ios-backspace', type: 'ionicon' }}
                 title='Hủy'
-                onPress={() => { this.popupLogin.dismiss() }}
+                onPress={() => {
+                  Keyboard.dismiss();
+                  this.popupLogin.dismiss()
+                }}
               />
 
               <Button

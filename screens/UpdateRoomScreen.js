@@ -16,6 +16,7 @@ import {
     Alert,
     Modal,
     Switch,
+    Keyboard,
 }
     from 'react-native';
 import { Constants, Location, Permissions, ImagePicker } from 'expo';
@@ -51,7 +52,7 @@ var mm2 = newdate.getMonth() + 1;
 var yyyy2 = newdate.getFullYear();
 var topDate = yyyy2 + '-' + mm2 + '-' + dd2
 
-export default class PostRoomScreen extends React.Component {
+export default class UpdateRoomScreen extends React.Component {
     static navigationOptions = {
         // title: 'app.json',
         header: null,
@@ -92,10 +93,12 @@ export default class PostRoomScreen extends React.Component {
             fromDateHighLight: minDate,
             toDateHighLight: topDate,
             isHighlight: false,
+            roomBox: null,
         }
     }
 
     componentWillMount() {
+        this._getRoomBoxDetailAsync();
         this._getSessionKeyFromStorageAsync();
         this._getProfileFromStorageAsync();
         this._getCategoryFromStorageAsync();
@@ -103,6 +106,29 @@ export default class PostRoomScreen extends React.Component {
 
     componentDidMount() {
         //alert(topDate)
+    }
+
+    _getRoomBoxDetailAsync = async () => {
+
+        await this.setState({
+            roomBox: this.props.navigation.state.params.item
+        })
+
+        //alert(JSON.stringify(this.state.roomBox))
+        this.setState({
+            detailInfo: this.state.roomBox.Description,
+            price: this.state.roomBox.Price,
+            acreage: this.state.roomBox.Acreage,
+            selectedCategory: this.state.roomBox.CategoryID,
+            selectedAddress: this.state.roomBox.Address,
+            // fromDate: this.state.roomBox.FromDate,
+            // today: this.state.roomBox.ToDate,
+            isHighlight: this.state.roomBox.IsHighlight,
+            postRoomAddressMaker: {
+                latitude: this.state.roomBox.Latitude,
+                longitude: this.state.roomBox.Longitude,
+            },
+        })
     }
 
     _getSessionKeyFromStorageAsync = async () => {
@@ -217,7 +243,7 @@ export default class PostRoomScreen extends React.Component {
 
     };
 
-    _postRoomAsync = async () => {
+    _updateRoomAsync = async () => {
         // alert(this.state.fromDate + '    ' + this.state.toDate)
         // return
 
@@ -334,7 +360,7 @@ export default class PostRoomScreen extends React.Component {
         //return
 
         try {
-            await fetch("http://nhabaola.vn/api/RoomBox/FO_RoomBox_Add", {
+            await fetch("http://nhabaola.vn/api/RoomBox/FO_RoomBox_Edit", {
                 method: 'POST',
                 headers: {
                     Accept: 'application/json',
@@ -342,6 +368,7 @@ export default class PostRoomScreen extends React.Component {
                 },
 
                 body: JSON.stringify({
+                    "ID": this.state.roomBox.ID,
                     "Title": this.state.imageUrl.split('|')[1],
                     "Images": this.state.imageUrl,
                     "CategoryID": this.state.selectedCategory,
@@ -829,12 +856,10 @@ export default class PostRoomScreen extends React.Component {
                         <Button
                             buttonStyle={{ backgroundColor: '#73aa2a', padding: 15, borderRadius: 10 }}
                             icon={{ name: 'md-cloud-upload', type: 'ionicon' }}
-                            title='Đăng tin'
+                            title='Cập nhật'
                             onPress={() => {
-
-                                this._postRoomAsync();
-
-
+                                Keyboard.dismiss();
+                                this._updateRoomAsync();
                             }}
                         />
                     </View>
