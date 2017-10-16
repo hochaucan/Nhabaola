@@ -1038,6 +1038,7 @@ export default class HomeScreen extends React.Component {
           "UserName": this.state.resetPasswordUsername,
           "ActiveKey": this.state.resetPasswordActiveKey,
           "NewPassword": this.state.resetPasswordNewPassword,
+          "SessionKey": this.state.resetPasswordUsername,
         }),
       })
         .then((response) => response.json())
