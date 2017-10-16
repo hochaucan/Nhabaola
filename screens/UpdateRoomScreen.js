@@ -114,7 +114,7 @@ export default class UpdateRoomScreen extends React.Component {
             roomBox: this.props.navigation.state.params.item
         })
 
-        //alert(JSON.stringify(this.state.roomBox))
+        alert(JSON.stringify(this.state.roomBox))
         this.setState({
             detailInfo: this.state.roomBox.Description,
             price: this.state.roomBox.Price,

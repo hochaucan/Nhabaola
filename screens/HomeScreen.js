@@ -988,6 +988,7 @@ export default class HomeScreen extends React.Component {
             this.popupLoadingIndicator.dismiss()
             this.popupResetPassword.dismiss();
             this.popupActiveNewPassword.show();
+            this.setState({ resetPasswordUsername: '' })
           }
 
           this.popupLoadingIndicator.dismiss()
@@ -1327,7 +1328,7 @@ export default class HomeScreen extends React.Component {
                 });
 
               }}>
-                <Icon name="ios-person" style={styles.actionButtonIcon} />
+                <Icon name="md-person" style={styles.actionButtonIcon} />
               </ActionButton.Item>
             }
 
@@ -1373,7 +1374,7 @@ export default class HomeScreen extends React.Component {
                 placeholder='Số điện thoại'
                 autoCapitalize='sentences'
                 keyboardType='phone-pad'
-                underlineColorAndroid={'#fff'}
+                underlineColorAndroid={'#73aa2a'}
                 onChangeText={(resetPasswordUsername) => this.setState({ resetPasswordUsername })}
                 value={this.state.resetPasswordUsername}
               />
@@ -1405,6 +1406,7 @@ export default class HomeScreen extends React.Component {
               onPress={() => {
                 Keyboard.dismiss();
                 this.popupResetPassword.dismiss()
+                this.setState({ resetPasswordUsername: '' })
               }}
             />
 
@@ -1430,12 +1432,12 @@ export default class HomeScreen extends React.Component {
           dismissOnTouchOutside={false}
           dialogStyle={{
             marginBottom: 220, width: width * 0.9,
-            height: Platform.OS === 'ios' ? height * 0.35 : height * 0.44,
+            height: Platform.OS === 'ios' ? height * 0.35 : height * 0.46,
           }}
         >
 
           <View style={{
-            padding: 20
+            padding: 15
           }}>
             <Text style={{ textAlign: 'center', color: '#73aa2a' }}>Bạn vui lòng kiểm tra Email để lấy Mã Kích Hoạt mật khẩu mới!</Text>
             {/* Active Key */}
@@ -1450,7 +1452,7 @@ export default class HomeScreen extends React.Component {
                 placeholder='Mã kích hoạt mật khẩu mới'
                 autoCapitalize='sentences'
                 keyboardType='numeric'
-                underlineColorAndroid={'#fff'}
+                underlineColorAndroid={'#73aa2a'}
                 onChangeText={(resetPasswordActiveKey) => this.setState({ resetPasswordActiveKey })}
                 value={this.state.resetPasswordActiveKey}
               />
@@ -1466,7 +1468,8 @@ export default class HomeScreen extends React.Component {
                 placeholder='Mật khẩu mới'
                 autoCapitalize='sentences'
                 //keyboardType='email-address'
-                underlineColorAndroid={'#fff'}
+                secureTextEntry={true}
+                underlineColorAndroid={'#73aa2a'}
                 onChangeText={(resetPasswordNewPassword) => this.setState({ resetPasswordNewPassword })}
                 value={this.state.resetPasswordNewPassword}
               />
@@ -1521,15 +1524,17 @@ export default class HomeScreen extends React.Component {
                 autoCapitalize='sentences'
                 keyboardType='phone-pad'
                 value={this.state.loginUsername}
+                underlineColorAndroid={'#73aa2a'}
                 onChangeText={(loginUsername) => this.setState({ loginUsername })}
               />
             </Animated.View>
             {/* Password */}
             <Animated.View style={{ position: 'relative', left: this.state.animation.passwordPositionLeft, flexDirection: 'row', padding: 10, paddingTop: 0, }}>
-              <Ionicons style={{ flex: 1, fontSize: 22, paddingTop: 12, textAlign: 'center', }} name='ios-lock' />
+              <Ionicons style={{ flex: 1, fontSize: 22, paddingTop: 12, textAlign: 'center', }} name='md-lock' />
               <FormInput
                 containerStyle={{ flex: 15 }}
                 placeholder='Mật khẩu'
+                underlineColorAndroid={'#73aa2a'}
                 secureTextEntry={true}
                 value={this.state.loginPassword}
                 onChangeText={(loginPassword) => this.setState({ loginPassword })}
