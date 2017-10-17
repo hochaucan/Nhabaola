@@ -938,7 +938,7 @@ export default class HomeScreen extends React.Component {
 
 
   _resetPasswordStep1 = async () => {
-
+    //alert(this.state.resetPasswordUsername)
     //Form validation
     if (Platform.OS === 'android') {
       if (this.state.resetPasswordUsername === '') {
@@ -988,7 +988,7 @@ export default class HomeScreen extends React.Component {
             this.popupLoadingIndicator.dismiss()
             this.popupResetPassword.dismiss();
             this.popupActiveNewPassword.show();
-            this.setState({ resetPasswordUsername: '' })
+            //this.setState({ resetPasswordUsername: '' })
           }
 
           this.popupLoadingIndicator.dismiss()
@@ -1001,6 +1001,8 @@ export default class HomeScreen extends React.Component {
   }
 
   _resetPasswordStep2 = async () => {
+
+    //alert(this.state.resetPasswordUsername)
 
     //Form validation
     if (Platform.OS === 'android') {
@@ -1054,7 +1056,7 @@ export default class HomeScreen extends React.Component {
               Alert.alert('Thông báo', 'Lấy lại mật khẩu thành công!');
             }
             this.popupActiveNewPassword.dismiss();
-
+            this.setState({ resetPasswordUsername: '' })
             // this.setState({
             //   loginUsername: this.state.resetPasswordUsername,
             //   loginPassword: resetPasswordNewPassword,

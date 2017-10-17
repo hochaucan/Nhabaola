@@ -318,6 +318,9 @@ export default class PostedRoomHIstoryScreen extends React.Component {
                                                     type={'money'}
                                                     options={{ suffixUnit: ' đ', precision: 0, unit: ' ', separator: ' ' }}
                                                 />
+                                                {!item.IsActive &&
+                                                    <Text style={{ flex: 1, color: 'red', }}>Hết hạn</Text>
+                                                }
                                                 {/* <Ionicons style={styles.searCardDistanceIcon} name='md-pin' >  3 km</Ionicons> */}
                                                 {/* <Text>3 km</Text> */}
                                             </View>
@@ -350,23 +353,23 @@ export default class PostedRoomHIstoryScreen extends React.Component {
                                 </View>
 
                                 <View style={{ marginBottom: 2, flexDirection: 'row', paddingTop: 10, paddingBottom: 10, justifyContent: 'space-between' }}>
+                                    {item.IsActive &&
+                                        <TouchableOpacity
+                                            style={{
+                                                flexDirection: 'row', justifyContent: 'center',
+                                                alignItems: 'center',
+                                                borderWidth: 0.8, borderColor: '#a4d227', padding: 10, borderRadius: 5,
+                                            }}
+                                            onPress={() => {
 
-                                    <TouchableOpacity
-                                        style={{
-                                            flexDirection: 'row', justifyContent: 'center',
-                                            alignItems: 'center',
-                                            borderWidth: 0.8, borderColor: '#a4d227', padding: 10, borderRadius: 5,
-                                        }}
-                                        onPress={() => {
+                                                this._setTopAsync(item.ID)
 
-                                            this._setTopAsync(item.ID)
-
-                                        }}
-                                    >
-                                        <Ionicons style={{ fontSize: 12, marginRight: 5 }} name="md-arrow-round-up" />
-                                        <Text>Lên đầu</Text>
-                                    </TouchableOpacity>
-
+                                            }}
+                                        >
+                                            <Ionicons style={{ fontSize: 12, marginRight: 5 }} name="md-arrow-round-up" />
+                                            <Text>Lên đầu</Text>
+                                        </TouchableOpacity>
+                                    }
                                     {/* Update Room */}
                                     <TouchableOpacity
                                         style={{
