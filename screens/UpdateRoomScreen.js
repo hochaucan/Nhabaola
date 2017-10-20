@@ -39,26 +39,49 @@ const LONGITUDE = -122.4324;
 const LATITUDE_DELTA = 0.02;
 const LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO;
 
+// var today = new Date();
+// var dd = today.getDate();
+// var mm = today.getMonth() + 1;
+// var yyyy = today.getFullYear();
+// var minDate = dd + '/' + mm + '/' + yyyy //yyyy + '-' + mm + '-' + dd
+
+// var newdate = new Date(today);
+// newdate.setDate(newdate.getDate() + 1);
+// var dd2 = newdate.getDate();
+// var mm2 = newdate.getMonth() + 1;
+// var yyyy2 = newdate.getFullYear();
+// var topDate = dd2 + '/' + mm2 + '/' + yyyy2// yyyy2 + '-' + mm2 + '-' + dd2
+
+// function funcAdd1Day(_date) {
+//     var _newdate = new Date(_date);
+//     _newdate.setDate(_newdate.getDate() + 1);
+//     var _dd = _newdate.getDate();
+//     var _mm = _newdate.getMonth() + 1;
+//     var _yyyy = _newdate.getFullYear();
+//     var _topDate = _dd + '/' + _mm + '/' + _yyyy//_yyyy2 + '-' + _mm2 + '-' + _dd2
+//     return _topDate;
+// }
+
 var today = new Date();
 var dd = today.getDate();
 var mm = today.getMonth() + 1;
 var yyyy = today.getFullYear();
-var minDate = dd + '/' + mm + '/' + yyyy //yyyy + '-' + mm + '-' + dd
+var minDate = yyyy + '-' + mm + '-' + dd
 
 var newdate = new Date(today);
 newdate.setDate(newdate.getDate() + 1);
 var dd2 = newdate.getDate();
 var mm2 = newdate.getMonth() + 1;
 var yyyy2 = newdate.getFullYear();
-var topDate = dd2 + '/' + mm2 + '/' + yyyy2// yyyy2 + '-' + mm2 + '-' + dd2
+var topDate = yyyy2 + '-' + mm2 + '-' + dd2
 
 function funcAdd1Day(_date) {
     var _newdate = new Date(_date);
     _newdate.setDate(_newdate.getDate() + 1);
-    var _dd = _newdate.getDate();
-    var _mm = _newdate.getMonth() + 1;
-    var _yyyy = _newdate.getFullYear();
-    var _topDate = _dd + '/' + _mm + '/' + _yyyy//_yyyy2 + '-' + _mm2 + '-' + _dd2
+    var _dd2 = _newdate.getDate();
+    var _mm2 = _newdate.getMonth() + 1;
+    var _yyyy2 = _newdate.getFullYear();
+    var _topDate = _yyyy2 + '-' + _mm2 + '-' + _dd2
     return _topDate;
 }
 
@@ -128,7 +151,7 @@ export default class UpdateRoomScreen extends React.Component {
         var images = this.state.roomBox.Images.replace('|', '').split('|');
         var _latitude = parseFloat(this.state.roomBox.Latitude)
         var _longitude = parseFloat(this.state.roomBox.Longitude)
-        //alert(this.state.roomBox.ToDate)
+        //  alert(images[3] == null ? images[3] : "khac")
         this.setState({
             detailInfo: this.state.roomBox.Description,
             price: this.state.roomBox.Price,
@@ -391,6 +414,13 @@ export default class UpdateRoomScreen extends React.Component {
             this.setState({ imageUrl: this.state.imageUrl + '|' + uploadResult.location })
         }
 
+        if (!this.state.isHighlight) {
+            this.setState({
+                fromDateHighLight: minDate,
+                toDateHighLight: funcAdd1Day(minDate)
+            })
+        }
+
         try {
             await fetch("http://nhabaola.vn/api/RoomBox/FO_RoomBox_Edit", {
                 method: 'POST',
@@ -429,6 +459,8 @@ export default class UpdateRoomScreen extends React.Component {
                 .then((response) => response.json())
                 .then((responseJson) => {
 
+
+
                     if (JSON.stringify(responseJson.ErrorCode) === "11") {
                         this.props.navigation.state.params.onRefreshScreen({ refreshScreen: true, });
                         this.props.navigation.goBack();
@@ -441,6 +473,18 @@ export default class UpdateRoomScreen extends React.Component {
                         }
                         //this._getRoomBoxByUserAsync(true);
                     }
+
+                    // if (JSON.stringify(responseJson.ErrorCode) === "3") {
+
+                    //     if (Platform.OS === 'android') {
+                    //         ToastAndroid.showWithGravity('Ngày bắt đầu hiệu lực phải lớn hơn ngày hiện tại', ToastAndroid.SHORT, ToastAndroid.CENTER);
+                    //     }
+                    //     else {
+                    //         Alert.alert('Ngày bắt đầu hiệu lực phải lớn hơn ngày hiện tại');
+                    //     }
+                    //     //this._getRoomBoxByUserAsync(true);
+                    // }
+
 
                     //alert(JSON.stringify(responseJson))
 
@@ -723,7 +767,7 @@ export default class UpdateRoomScreen extends React.Component {
                                 date={this.state.fromDate}
                                 mode="date"
                                 placeholder="select date"
-                                format="DD/MM/YYYY"//"YYYY-MM-DD"
+                                format="YYYY-MM-DD"
                                 minDate={minDate}
                                 //maxDate="2016-06-01"
                                 confirmBtnText="Chọn"
@@ -766,7 +810,7 @@ export default class UpdateRoomScreen extends React.Component {
                                 date={this.state.toDate}
                                 mode="date"
                                 placeholder="select date"
-                                format="DD/MM/YYYY"//"YYYY-MM-DD"
+                                format="YYYY-MM-DD"
                                 minDate={this.state.fromDate}
                                 //maxDate="2016-06-01"
                                 confirmBtnText="Confirm"
@@ -816,7 +860,7 @@ export default class UpdateRoomScreen extends React.Component {
                                         date={this.state.fromDateHighLight}
                                         mode="date"
                                         placeholder="select date"
-                                        format="DD/MM/YYYY"//"YYYY-MM-DD"
+                                        format="YYYY-MM-DD"
                                         minDate={this.state.fromDate}
                                         maxDate={this.state.toDate}
                                         confirmBtnText="Chọn"
@@ -852,7 +896,7 @@ export default class UpdateRoomScreen extends React.Component {
                                         date={this.state.toDateHighLight}
                                         mode="date"
                                         placeholder="select date"
-                                        format="DD/MM/YYYY"//"YYYY-MM-DD"
+                                        format="YYYY-MM-DD"
                                         minDate={this.state.fromDate}
                                         maxDate={this.state.toDate}
                                         confirmBtnText="Confirm"
