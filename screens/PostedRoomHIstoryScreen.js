@@ -42,7 +42,7 @@ var { height, width } = Dimensions.get('window');
 const roomBox = [];
 export default class PostedRoomHIstoryScreen extends React.Component {
     static navigationOptions = {
-        title: 'Tin Bạn Đã Đăng',
+        title: 'Tin Đã Đăng',
         header: null,
     };
 
@@ -56,6 +56,7 @@ export default class PostedRoomHIstoryScreen extends React.Component {
             roomPageIndex: 0,
             roomPageCount: 10,
             profile: null,
+            roomCategory: [],
             // fromDate: minDate,
             // toDate: topDate,
 
@@ -65,6 +66,7 @@ export default class PostedRoomHIstoryScreen extends React.Component {
     componentWillMount() {
         roomBox = [];
         this._getProfileFromStorageAsync();
+        this._getCategoryFromStorageAsync();
 
     }
 
@@ -108,6 +110,23 @@ export default class PostedRoomHIstoryScreen extends React.Component {
 
         //alert(JSON.stringify(profile))
         //alert(profile)
+    }
+
+    _getCategoryFromStorageAsync = async () => {
+        try {
+            var value = await AsyncStorage.getItem('FO_Category_GetAllData');
+
+            if (value !== null) {
+                this.setState({
+                    roomCategory: JSON.parse(value)
+                })
+            }
+
+        } catch (e) {
+            console.log(e);
+        }
+
+        // alert(JSON.stringify(this.state.roomCategory))
     }
 
     _getRoomBoxByUserAsync = async (isNew) => {
@@ -318,11 +337,25 @@ export default class PostedRoomHIstoryScreen extends React.Component {
                                                     type={'money'}
                                                     options={{ suffixUnit: ' đ', precision: 0, unit: ' ', separator: ' ' }}
                                                 />
-                                                {!item.IsActive &&
-                                                    <Text style={{ flex: 1, color: 'red', }}>Hết hạn</Text>
+
+                                                {/* Category */}
+                                                {
+
+                                                    this.state.roomCategory.map((y, i) => {
+                                                        return (
+                                                            // <Text>{y.ID} {item.CategoryID}</Text>
+                                                            y.ID == item.CategoryID &&
+                                                            <Text
+                                                                style={{ flex: 1, fontSize: 15, textAlign: 'center', }}
+                                                                key={i}>{y.CatName}</Text>
+                                                        )
+                                                    })
                                                 }
-                                                {/* <Ionicons style={styles.searCardDistanceIcon} name='md-pin' >  3 km</Ionicons> */}
-                                                {/* <Text>3 km</Text> */}
+
+                                                {!item.IsActive &&
+                                                    <Text style={{ flex: 1, color: 'red', textAlign: 'center' }}>Hết hạn</Text>
+                                                }
+
                                             </View>
                                         </View>
                                     </View>

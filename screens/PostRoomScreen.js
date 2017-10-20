@@ -51,6 +51,16 @@ var mm2 = newdate.getMonth() + 1;
 var yyyy2 = newdate.getFullYear();
 var topDate = yyyy2 + '-' + mm2 + '-' + dd2
 
+function funcAdd1Day(_date) {
+    var _newdate = new Date(_date);
+    _newdate.setDate(_newdate.getDate() + 1);
+    var _dd2 = _newdate.getDate();
+    var _mm2 = _newdate.getMonth() + 1;
+    var _yyyy2 = _newdate.getFullYear();
+    var _topDate = _yyyy2 + '-' + _mm2 + '-' + _dd2
+    return _topDate;
+}
+
 export default class PostRoomScreen extends React.Component {
     static navigationOptions = {
         // title: 'app.json',
@@ -249,6 +259,7 @@ export default class PostRoomScreen extends React.Component {
                 ToastAndroid.showWithGravity('Vui lòng chọn loại BĐS', ToastAndroid.SHORT, ToastAndroid.CENTER);
                 return;
             }
+
             if (this.state.detailInfo === '') {
                 ToastAndroid.showWithGravity('Vui lòng nhập thông tin chi tiết', ToastAndroid.SHORT, ToastAndroid.CENTER);
                 return;
@@ -640,7 +651,7 @@ export default class PostRoomScreen extends React.Component {
                             }
                         </View>
 
-                        {/* Effective Date */}
+                        {/* From Effected Date */}
                         <FormLabel labelStyle={{}}>Hiệu lực (5K/ngày):</FormLabel>
                         <View style={{ flexDirection: 'row', marginTop: 8 }}>
                             <FormLabel labelStyle={{ color: '#fff' }}>Hiệu lực:</FormLabel>
@@ -671,11 +682,18 @@ export default class PostRoomScreen extends React.Component {
                                     //}
                                     // ... You can check the source to find the other keys.
                                 }}
-                                onDateChange={(fromDate) => { this.setState({ fromDate }) }}
+                                onDateChange={(fromDate) => {
+                                    this.setState({
+                                        fromDate,
+                                        toDate: funcAdd1Day(fromDate),
+                                        fromDateHighLight: fromDate,
+                                        toDateHighLight: funcAdd1Day(fromDate)
+                                    })
+                                }}
                             />
 
                         </View>
-
+                        {/* To Effected Date */}
                         <View style={{ flexDirection: 'row', marginTop: 10 }}>
                             <FormLabel labelStyle={{ color: '#fff' }}>Hiệu lực:</FormLabel>
 
@@ -686,7 +704,7 @@ export default class PostRoomScreen extends React.Component {
                                 mode="date"
                                 placeholder="select date"
                                 format="YYYY-MM-DD"
-                                minDate={topDate}
+                                minDate={this.state.fromDate}
                                 //maxDate="2016-06-01"
                                 confirmBtnText="Confirm"
                                 cancelBtnText="Cancel"
@@ -707,7 +725,7 @@ export default class PostRoomScreen extends React.Component {
                             />
                         </View>
 
-                        {/* Highlight Date */}
+
                         <View
                             style={{ flexDirection: 'row', marginTop: 10, alignItems: 'center' }}
                         >
@@ -721,7 +739,7 @@ export default class PostRoomScreen extends React.Component {
                             />
                         </View>
 
-
+                        {/* From Highlight Date */}
                         {this.state.isHighlight &&
                             <View>
                                 <View style={{ flexDirection: 'row', marginTop: 8 }}>
@@ -733,8 +751,8 @@ export default class PostRoomScreen extends React.Component {
                                         mode="date"
                                         placeholder="select date"
                                         format="YYYY-MM-DD"
-                                        minDate={minDate}
-                                        //maxDate="2016-06-01"
+                                        minDate={this.state.fromDate}
+                                        maxDate={this.state.toDate}
                                         confirmBtnText="Chọn"
                                         cancelBtnText="Hủy"
                                         showIcon={true}
@@ -757,7 +775,7 @@ export default class PostRoomScreen extends React.Component {
                                     />
 
                                 </View>
-
+                                {/* To Highlight Date */}
                                 <View style={{ flexDirection: 'row', marginTop: 10 }}>
                                     <FormLabel labelStyle={{ color: '#fff' }}>Hiệu lực:</FormLabel>
 
@@ -768,8 +786,8 @@ export default class PostRoomScreen extends React.Component {
                                         mode="date"
                                         placeholder="select date"
                                         format="YYYY-MM-DD"
-                                        minDate={topDate}
-                                        //maxDate="2016-06-01"
+                                        minDate={this.state.fromDate}
+                                        maxDate={this.state.toDate}
                                         confirmBtnText="Confirm"
                                         cancelBtnText="Cancel"
                                         showIcon={true}

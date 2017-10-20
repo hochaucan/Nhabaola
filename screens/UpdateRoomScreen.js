@@ -43,14 +43,24 @@ var today = new Date();
 var dd = today.getDate();
 var mm = today.getMonth() + 1;
 var yyyy = today.getFullYear();
-var minDate = yyyy + '-' + mm + '-' + dd
+var minDate = dd + '/' + mm + '/' + yyyy //yyyy + '-' + mm + '-' + dd
 
 var newdate = new Date(today);
 newdate.setDate(newdate.getDate() + 1);
 var dd2 = newdate.getDate();
 var mm2 = newdate.getMonth() + 1;
 var yyyy2 = newdate.getFullYear();
-var topDate = yyyy2 + '-' + mm2 + '-' + dd2
+var topDate = dd2 + '/' + mm2 + '/' + yyyy2// yyyy2 + '-' + mm2 + '-' + dd2
+
+function funcAdd1Day(_date) {
+    var _newdate = new Date(_date);
+    _newdate.setDate(_newdate.getDate() + 1);
+    var _dd = _newdate.getDate();
+    var _mm = _newdate.getMonth() + 1;
+    var _yyyy = _newdate.getFullYear();
+    var _topDate = _dd + '/' + _mm + '/' + _yyyy//_yyyy2 + '-' + _mm2 + '-' + _dd2
+    return _topDate;
+}
 
 export default class UpdateRoomScreen extends React.Component {
     static navigationOptions = {
@@ -115,6 +125,10 @@ export default class UpdateRoomScreen extends React.Component {
         })
 
         //alert(JSON.stringify(this.state.roomBox))
+        var images = this.state.roomBox.Images.replace('|', '').split('|');
+        var _latitude = parseFloat(this.state.roomBox.Latitude)
+        var _longitude = parseFloat(this.state.roomBox.Longitude)
+        //alert(this.state.roomBox.ToDate)
         this.setState({
             detailInfo: this.state.roomBox.Description,
             price: this.state.roomBox.Price,
@@ -122,13 +136,26 @@ export default class UpdateRoomScreen extends React.Component {
             selectedCategory: this.state.roomBox.CategoryID,
             selectedAddress: this.state.roomBox.Address,
             // fromDate: this.state.roomBox.FromDate,
-            // today: this.state.roomBox.ToDate,
+            toDate: this.state.roomBox.ToDate,
             isHighlight: this.state.roomBox.IsHighlight,
-            postRoomAddressMaker: {
-                latitude: this.state.roomBox.Latitude,
-                longitude: this.state.roomBox.Longitude,
+            toDateHighLight: this.state.roomBox.HighlightToDate,
+            postRoomImage1: images[0],
+            postRoomImage2: images[1],
+            postRoomImage3: images[2],
+            postRoomImage4: images[3],
+            postRoomImage5: images[4],
+            postRoomImage6: images[5],
+            searchingMaker: {
+                latitude: _latitude,
+                longitude: _longitude,
+            },
+            mapRegion: {
+                latitude: _latitude, longitude: _longitude, latitudeDelta: LATITUDE_DELTA, longitudeDelta: LONGITUDE_DELTA
             },
         })
+
+        //alert(this.state.selectedCategory)
+
     }
 
     _getSessionKeyFromStorageAsync = async () => {
@@ -256,39 +283,47 @@ export default class UpdateRoomScreen extends React.Component {
                 // && this.state.postRoomImage5 === null
                 // && this.state.postRoomImage6 === null
             ) {
-                ToastAndroid.showWithGravity('Vui lòng chọn hình đại diện', ToastAndroid.SHORT, ToastAndroid.CENTER);
+                ToastAndroid.showWithGravity('Vui lòng chọn hình đại diện', ToastAndroid.SHORT, ToastAndroid.TOP);
                 return;
             }
             if (this.state.searchingMaker.latitude === null) {
-                ToastAndroid.showWithGravity('Vui lòng nhập địa chỉ', ToastAndroid.SHORT, ToastAndroid.CENTER);
+                ToastAndroid.showWithGravity('Vui lòng nhập địa chỉ', ToastAndroid.SHORT, ToastAndroid.TOP);
                 return;
             }
             if (this.state.price === '') {
-                ToastAndroid.showWithGravity('Vui lòng nhập giá', ToastAndroid.SHORT, ToastAndroid.CENTER);
+                ToastAndroid.showWithGravity('Vui lòng nhập giá', ToastAndroid.SHORT, ToastAndroid.TOP);
                 return;
             }
             if (this.state.acreage === '') {
-                ToastAndroid.showWithGravity('Vui lòng nhập diện tích', ToastAndroid.SHORT, ToastAndroid.CENTER);
+                ToastAndroid.showWithGravity('Vui lòng nhập diện tích', ToastAndroid.SHORT, ToastAndroid.TOP);
                 return;
             }
             if (this.state.selectedCategory === '0') {
-                ToastAndroid.showWithGravity('Vui lòng chọn loại BĐS', ToastAndroid.SHORT, ToastAndroid.CENTER);
+                ToastAndroid.showWithGravity('Vui lòng chọn loại BĐS', ToastAndroid.SHORT, ToastAndroid.TOP);
+                return;
+            }
+            if (this.state.toDate < this.state.fromDate) {
+                ToastAndroid.showWithGravity('Ngày kết thúc hiệu lực không được nhỏ hơn ngày bắt đầu', ToastAndroid.SHORT, ToastAndroid.TOP);
+                return;
+            }
+            if (this.state.isHighlight && this.state.toDateHighLight < this.state.fromDateHighLight) {
+                ToastAndroid.showWithGravity('Ngày kết thúc nổi bật không được nhỏ hơn ngày bắt đầu', ToastAndroid.SHORT, ToastAndroid.TOP);
                 return;
             }
             if (this.state.detailInfo === '') {
-                ToastAndroid.showWithGravity('Vui lòng nhập thông tin chi tiết', ToastAndroid.SHORT, ToastAndroid.CENTER);
+                ToastAndroid.showWithGravity('Vui lòng nhập thông tin chi tiết', ToastAndroid.SHORT, ToastAndroid.TOP);
                 return;
             }
         }
         else { // iOS
             if (this.state.postRoomImage1 === null
-                && this.state.postRoomImage2 === null
-                && this.state.postRoomImage3 === null
-                && this.state.postRoomImage4 === null
-                && this.state.postRoomImage5 === null
-                && this.state.postRoomImage6 === null
+                // && this.state.postRoomImage2 === null
+                // && this.state.postRoomImage3 === null
+                // && this.state.postRoomImage4 === null
+                // && this.state.postRoomImage5 === null
+                // && this.state.postRoomImage6 === null
             ) {
-                Alert.alert('Vui lòng chọn ít nhất 1 hình ảnh', ToastAndroid.SHORT, ToastAndroid.CENTER);
+                Alert.alert('Vui lòng chọn hình đại diện');
                 return;
             }
             if (this.state.searchingMaker.latitude === null) {
@@ -307,6 +342,14 @@ export default class UpdateRoomScreen extends React.Component {
                 Alert.alert('Vui lòng chọn loại BĐS');
                 return;
             }
+            if (this.state.toDate < this.state.fromDate) {
+                Alert.alert('Ngày kết thúc hiệu lực không được nhỏ hơn ngày bắt đầu');
+                return;
+            }
+            if (this.state.isHighlight && this.state.toDateHighLight < this.state.fromDateHighLight) {
+                Alert.alert('Ngày kết thúc nổi bật không được nhỏ hơn ngày bắt đầu');
+                return;
+            }
             if (this.state.detailInfo === '') {
                 Alert.alert('Vui lòng nhập thông tin chi tiết');
                 return;
@@ -315,10 +358,6 @@ export default class UpdateRoomScreen extends React.Component {
 
         //Loading
         this.popupLoadingIndicator.show();
-
-        //await this._postImage('http://www.google.com/images/srpr/nav_logo66.png');
-        //console.log(this.state.postRoomImage1)
-        //await this._postImage(this.state.postRoomImage1);
 
         if (this.state.postRoomImage1 != null) {
             let uploadResponse = await uploadImageAsync(this.state.postRoomImage1);
@@ -351,13 +390,6 @@ export default class UpdateRoomScreen extends React.Component {
             let uploadResult = await uploadResponse.json();
             this.setState({ imageUrl: this.state.imageUrl + '|' + uploadResult.location })
         }
-
-
-        // this.setState({ image: uploadResult.location });
-
-        //alert(this.state.imageUrl)
-
-        //return
 
         try {
             await fetch("http://nhabaola.vn/api/RoomBox/FO_RoomBox_Edit", {
@@ -397,13 +429,27 @@ export default class UpdateRoomScreen extends React.Component {
                 .then((response) => response.json())
                 .then((responseJson) => {
 
+                    if (JSON.stringify(responseJson.ErrorCode) === "11") {
+                        this.props.navigation.state.params.onRefreshScreen({ refreshScreen: true, });
+                        this.props.navigation.goBack();
+
+                        if (Platform.OS === 'android') {
+                            ToastAndroid.showWithGravity('Cập nhật tin thành công!', ToastAndroid.SHORT, ToastAndroid.CENTER);
+                        }
+                        else {
+                            Alert.alert('Cập nhật tin thành công!');
+                        }
+                        //this._getRoomBoxByUserAsync(true);
+                    }
+
+                    //alert(JSON.stringify(responseJson))
 
                     //this.props.navigation.navigate('Home');
-                    HomeScreen.refreshRoomBoxAfterPost();
+                    // HomeScreen.refreshRoomBoxAfterPost();
                     //this.props.navigation.state.params.onSelect({ selected: true });
-                    this.props.navigation.goBack();
-                    this.props.navigation.state.params._getWalletAsync();
-                    this.props.navigation.state.params.onRefreshScreen({ refreshScreen: true });
+                    //this.props.navigation.goBack();
+                    //  this.props.navigation.state.params._getWalletAsync();
+                    // this.props.navigation.state.params.onRefreshScreen({ refreshScreen: true });
 
 
                     this.popupLoadingIndicator.dismiss();
@@ -667,7 +713,7 @@ export default class UpdateRoomScreen extends React.Component {
                             }
                         </View>
 
-                        {/* Effective Date */}
+                        {/* From Effected Date */}
                         <FormLabel labelStyle={{}}>Hiệu lực (5K/ngày):</FormLabel>
                         <View style={{ flexDirection: 'row', marginTop: 8 }}>
                             <FormLabel labelStyle={{ color: '#fff' }}>Hiệu lực:</FormLabel>
@@ -677,7 +723,7 @@ export default class UpdateRoomScreen extends React.Component {
                                 date={this.state.fromDate}
                                 mode="date"
                                 placeholder="select date"
-                                format="YYYY-MM-DD"
+                                format="DD/MM/YYYY"//"YYYY-MM-DD"
                                 minDate={minDate}
                                 //maxDate="2016-06-01"
                                 confirmBtnText="Chọn"
@@ -698,11 +744,19 @@ export default class UpdateRoomScreen extends React.Component {
                                     //}
                                     // ... You can check the source to find the other keys.
                                 }}
-                                onDateChange={(fromDate) => { this.setState({ fromDate }) }}
+                                onDateChange={(fromDate) => {
+                                    this.setState({
+                                        fromDate,
+                                        //toDate: funcAdd1Day(fromDate),
+                                        fromDateHighLight: fromDate,
+                                        //toDateHighLight: funcAdd1Day(fromDate)
+                                    })
+                                }}
                             />
 
                         </View>
 
+                        {/* To Effected Date */}
                         <View style={{ flexDirection: 'row', marginTop: 10 }}>
                             <FormLabel labelStyle={{ color: '#fff' }}>Hiệu lực:</FormLabel>
 
@@ -712,8 +766,8 @@ export default class UpdateRoomScreen extends React.Component {
                                 date={this.state.toDate}
                                 mode="date"
                                 placeholder="select date"
-                                format="YYYY-MM-DD"
-                                minDate={topDate}
+                                format="DD/MM/YYYY"//"YYYY-MM-DD"
+                                minDate={this.state.fromDate}
                                 //maxDate="2016-06-01"
                                 confirmBtnText="Confirm"
                                 cancelBtnText="Cancel"
@@ -732,6 +786,9 @@ export default class UpdateRoomScreen extends React.Component {
                                 }}
                                 onDateChange={(toDate) => { this.setState({ toDate }) }}
                             />
+                            {this.state.toDate < this.state.fromDate &&
+                                <Text style={{ marginLeft: 10, marginTop: 12, color: 'red' }}>*</Text>
+                            }
                         </View>
 
                         {/* Highlight Date */}
@@ -748,7 +805,7 @@ export default class UpdateRoomScreen extends React.Component {
                             />
                         </View>
 
-
+                        {/* fromDateHighLight */}
                         {this.state.isHighlight &&
                             <View>
                                 <View style={{ flexDirection: 'row', marginTop: 8 }}>
@@ -759,9 +816,9 @@ export default class UpdateRoomScreen extends React.Component {
                                         date={this.state.fromDateHighLight}
                                         mode="date"
                                         placeholder="select date"
-                                        format="YYYY-MM-DD"
-                                        minDate={minDate}
-                                        //maxDate="2016-06-01"
+                                        format="DD/MM/YYYY"//"YYYY-MM-DD"
+                                        minDate={this.state.fromDate}
+                                        maxDate={this.state.toDate}
                                         confirmBtnText="Chọn"
                                         cancelBtnText="Hủy"
                                         showIcon={true}
@@ -785,6 +842,7 @@ export default class UpdateRoomScreen extends React.Component {
 
                                 </View>
 
+                                {/* toDateHighLight */}
                                 <View style={{ flexDirection: 'row', marginTop: 10 }}>
                                     <FormLabel labelStyle={{ color: '#fff' }}>Hiệu lực:</FormLabel>
 
@@ -794,9 +852,9 @@ export default class UpdateRoomScreen extends React.Component {
                                         date={this.state.toDateHighLight}
                                         mode="date"
                                         placeholder="select date"
-                                        format="YYYY-MM-DD"
-                                        minDate={topDate}
-                                        //maxDate="2016-06-01"
+                                        format="DD/MM/YYYY"//"YYYY-MM-DD"
+                                        minDate={this.state.fromDate}
+                                        maxDate={this.state.toDate}
                                         confirmBtnText="Confirm"
                                         cancelBtnText="Cancel"
                                         showIcon={true}
@@ -814,6 +872,9 @@ export default class UpdateRoomScreen extends React.Component {
                                         }}
                                         onDateChange={(toDateHighLight) => { this.setState({ toDateHighLight }) }}
                                     />
+                                    {this.state.toDateHighLight < this.state.fromDateHighLight &&
+                                        <Text style={{ marginLeft: 10, marginTop: 12, color: 'red' }}>*</Text>
+                                    }
                                 </View>
                             </View>
                         }
@@ -835,35 +896,40 @@ export default class UpdateRoomScreen extends React.Component {
                         />
                     </View>
 
-                </ScrollView>
-                {/* The view that will animate to match the keyboards height */}
-                {/* <KeyboardSpacer /> */}
-                <View style={{ marginTop: 20, }}>
-                    <View style={{ height: 80, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', paddingBottom: 20, }}>
-                        <Button
-                            buttonStyle={{ backgroundColor: '#9B9D9D', padding: 15, borderRadius: 10 }}
-                            icon={{ name: 'ios-backspace', type: 'ionicon' }}
-                            onPress={() => {
-                                //HomeScreen.refreshRoomBoxAfterPost();
+                    {/* Button */}
+                    <View style={{ marginTop: 20, }}>
+                        <View style={{ height: 80, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', paddingBottom: 20, }}>
+                            <Button
+                                buttonStyle={{ backgroundColor: '#9B9D9D', padding: 15, borderRadius: 10 }}
+                                icon={{ name: 'ios-backspace', type: 'ionicon' }}
+                                onPress={() => {
+                                    //HomeScreen.refreshRoomBoxAfterPost();
 
-                                this.props.navigation.goBack();
-                                // this.props.navigation.state.params.onRefreshScreen({ refreshScreen: true, profile: null });
-                                //this.props.navigation.state.params.onSelect({ selected: true });
+                                    this.props.navigation.goBack();
+                                    // this.props.navigation.state.params.onRefreshScreen({ refreshScreen: true, profile: null });
+                                    //this.props.navigation.state.params.onSelect({ selected: true });
 
-                                //this.props.navigation.state.params.onSelect({ _refreshRoomBox });
-                            }}
-                            title='Hủy' />
-                        <Button
-                            buttonStyle={{ backgroundColor: '#73aa2a', padding: 15, borderRadius: 10 }}
-                            icon={{ name: 'md-cloud-upload', type: 'ionicon' }}
-                            title='Cập nhật'
-                            onPress={() => {
-                                Keyboard.dismiss();
-                                this._updateRoomAsync();
-                            }}
-                        />
+                                    //this.props.navigation.state.params.onSelect({ _refreshRoomBox });
+                                }}
+                                title='Hủy' />
+                            <Button
+                                buttonStyle={{ backgroundColor: '#73aa2a', padding: 15, borderRadius: 10 }}
+                                icon={{ name: 'md-cloud-upload', type: 'ionicon' }}
+                                title='Cập nhật'
+                                onPress={() => {
+                                    Keyboard.dismiss();
+                                    this._updateRoomAsync();
+                                }}
+                            />
+                        </View>
                     </View>
-                </View>
+                </ScrollView>
+
+                {/* <KeyboardSpacer /> */}
+
+
+
+                {/* MODAL AND POPUP AREA */}
 
                 {/* Popup Loading Indicator */}
                 <PopupDialog
