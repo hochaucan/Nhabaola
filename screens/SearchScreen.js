@@ -16,6 +16,7 @@ import {
     Alert,
     ActivityIndicator,
     AsyncStorage,
+
 } from 'react-native';
 import { ExpoLinksView } from '@expo/samples';
 import { Constants, Location, Permissions } from 'expo';
@@ -461,6 +462,7 @@ export default class SearchScreen extends React.Component {
             })
         }
 
+        //Add current location to fix maker
         MARKERS.push(this.state.houseCoords);
 
         try {
@@ -918,7 +920,9 @@ export default class SearchScreen extends React.Component {
                                         style={{ flex: 1, marginTop: -4, }}
                                         mode='dropdown'
                                         selectedValue={this.state.selectedCategory}
-                                        onValueChange={(itemValue, itemIndex) => this.setState({ selectedCategory: itemValue })}>
+                                        onValueChange={(itemValue, itemIndex) => {
+                                            this.setState({ selectedCategory: itemValue })
+                                        }}>
                                         <Picker.Item label='-- Chọn loại BĐS --' value='0' />
 
 
@@ -971,8 +975,15 @@ export default class SearchScreen extends React.Component {
                                     }}
                                 />
 
-
-
+                                {/* <Slider
+                                    style={{ width: 300 }}
+                                    step={1}
+                                    minimumValue={18}
+                                    maximumValue={71}
+                                    value={this.state.age}
+                                    onValueChange={val => this.setState({ age: val })}
+                                    onSlidingComplete={val => this.getVal(val)}
+                                /> */}
 
 
                             </View>
@@ -986,14 +997,15 @@ export default class SearchScreen extends React.Component {
                                             buttonStyle={{ backgroundColor: '#9B9D9D', padding: 15, borderRadius: 10 }}
                                             icon={{ name: 'ios-backspace', type: 'ionicon' }}
                                             title='Xóa lọc'
-                                            onPress={() => {
+                                            onPress={async () => {
                                                 this.setState({
                                                     txtFilterResult: null,
                                                     multiSliderPriceValue: [1, 10],
                                                     multiSliderAreaValue: [20, 200],
+                                                    selectedCategory: '',
                                                 })
-                                                this._getRoomByFilter();
                                                 this.setState({ modalSearchFilterVisible: false });
+                                                await this._getRoomByFilter();
                                                 this.fitAllMarkers();
                                             }}
                                         />
@@ -1010,7 +1022,19 @@ export default class SearchScreen extends React.Component {
                                         buttonStyle={{ backgroundColor: '#73aa2a', padding: 15, borderRadius: 10 }}
                                         icon={{ name: 'md-checkmark', type: 'ionicon' }}
                                         title='Lọc'
-                                        onPress={() => {
+                                        onPress={async () => {
+
+                                            await this.state.roomCategory.map((y, i) => {
+
+                                                if (y.ID == this.state.selectedCategory) {
+                                                    this.setState({
+                                                        selectedBDS: y.CatName
+                                                    })
+                                                }
+
+                                            })
+
+
                                             this.setState({
                                                 txtFilterResult: this.state.selectedBDS + ', ' + this.state.multiSliderPriceValue[0] + '-' + this.state.multiSliderPriceValue[1] + ' triệu đồng, '
                                                 + this.state.multiSliderAreaValue[0] + '-' + this.state.multiSliderAreaValue[1] + ' mét vuông',

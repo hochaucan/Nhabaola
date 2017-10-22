@@ -1123,7 +1123,14 @@ export default class HomeScreen extends React.Component {
           data={roomBox}//{this.state.dataUsers}
           extraData={this.state}
           renderItem={({ item }) =>
-            <View style={styles.card}>
+            <View style={{
+              flex: 1,
+              height: height * 0.8,
+              borderColor: '#d6d7da',
+              padding: 0,
+              flexDirection: 'column',
+              //backgroundColor: item.IsHighlight ? '#a4d227' : '#fff'
+            }}>
               <View style={styles.cardHeader}>
                 <View style={styles.cardAvatarBox}>
                   <TouchableOpacity
@@ -1975,14 +1982,7 @@ const styles = StyleSheet.create({
   searchFilterButtonText: {
     color: '#fff',
   },
-  card: {
-    flex: 1,
-    height: height * 0.8, //500,
-    // borderBottomWidth: 0.5,
-    borderColor: '#d6d7da',
-    padding: 0,
-    flexDirection: 'column',
-  },
+
   cardHeader: {
     // flex: 2,
     flexDirection: 'row',
