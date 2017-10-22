@@ -245,7 +245,7 @@ export default class PostedRoomHIstoryScreen extends React.Component {
 
                     if (JSON.stringify(responseJson.ErrorCode) === "0") {
                         if (Platform.OS === 'android') {
-                            ToastAndroid.showWithGravity('Đưa tin lên đầu thành công!', ToastAndroid.SHORT, ToastAndroid.CENTER);
+                            ToastAndroid.showWithGravity('Đưa tin lên đầu thành công!', ToastAndroid.SHORT, ToastAndroid.TOP);
                         }
                         else {
                             Alert.alert('Đưa tin lên đầu thành công!');
@@ -372,19 +372,19 @@ export default class PostedRoomHIstoryScreen extends React.Component {
                                     <Text style={{ color: '#9B9D9D' }}> - </Text>
                                     <Text style={{ flex: 1, textAlign: 'center', color: '#9B9D9D' }}>{item.ToDate}</Text>
                                 </View>
-
-                                <View style={{ marginBottom: 5, marginTop: 2, flexDirection: 'row', justifyContent: 'space-between' }}>
-                                    <View
-                                        style={{ flex: 1, flexDirection: 'row', alignItems: 'center' }}
-                                    >
-                                        <Ionicons style={{ fontSize: 12, marginRight: 5 }} name="md-sunny" />
-                                        <Text>Ngày nổi bật</Text>
+                                {item.IsHighlight &&
+                                    <View style={{ marginBottom: 5, marginTop: 2, flexDirection: 'row', justifyContent: 'space-between' }}>
+                                        <View
+                                            style={{ flex: 1, flexDirection: 'row', alignItems: 'center' }}
+                                        >
+                                            <Ionicons style={{ fontSize: 12, marginRight: 5 }} name="md-sunny" />
+                                            <Text>Ngày nổi bật</Text>
+                                        </View>
+                                        <Text style={{ flex: 1, textAlign: 'center', color: '#9B9D9D' }}>{item.HighlightFromDate}</Text>
+                                        <Text style={{ color: '#9B9D9D' }}> - </Text>
+                                        <Text style={{ flex: 1, textAlign: 'center', color: '#9B9D9D' }}>{item.HighlightToDate}</Text>
                                     </View>
-                                    <Text style={{ flex: 1, textAlign: 'center', color: '#9B9D9D' }}>{item.HighlightFromDate}</Text>
-                                    <Text style={{ color: '#9B9D9D' }}> - </Text>
-                                    <Text style={{ flex: 1, textAlign: 'center', color: '#9B9D9D' }}>{item.HighlightToDate}</Text>
-                                </View>
-
+                                }
                                 <View style={{ marginBottom: 2, flexDirection: 'row', paddingTop: 10, paddingBottom: 10, justifyContent: 'space-between' }}>
                                     {item.IsActive &&
                                         <TouchableOpacity

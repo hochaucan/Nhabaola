@@ -162,12 +162,12 @@ export default class UpdateRoomScreen extends React.Component {
             toDate: this.state.roomBox.ToDate,
             isHighlight: this.state.roomBox.IsHighlight,
             toDateHighLight: this.state.roomBox.HighlightToDate,
-            postRoomImage1: images[0],
-            postRoomImage2: images[1],
-            postRoomImage3: images[2],
-            postRoomImage4: images[3],
-            postRoomImage5: images[4],
-            postRoomImage6: images[5],
+            // postRoomImage1: images[0],
+            // postRoomImage2: images[1],
+            // postRoomImage3: images[2],
+            // postRoomImage4: images[3],
+            // postRoomImage5: images[4],
+            // postRoomImage6: images[5],
             searchingMaker: {
                 latitude: _latitude,
                 longitude: _longitude,
@@ -462,11 +462,11 @@ export default class UpdateRoomScreen extends React.Component {
 
 
                     if (JSON.stringify(responseJson.ErrorCode) === "11") {
-                        this.props.navigation.state.params.onRefreshScreen({ refreshScreen: true, });
+                        //this.props.navigation.state.params.onRefreshScreen({ refreshScreen: true, });
                         this.props.navigation.goBack();
 
                         if (Platform.OS === 'android') {
-                            ToastAndroid.showWithGravity('Cập nhật tin thành công!', ToastAndroid.SHORT, ToastAndroid.CENTER);
+                            ToastAndroid.showWithGravity('Cập nhật tin thành công!', ToastAndroid.SHORT, ToastAndroid.TOP);
                         }
                         else {
                             Alert.alert('Cập nhật tin thành công!');

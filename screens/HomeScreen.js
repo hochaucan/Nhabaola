@@ -1634,7 +1634,7 @@ export default class HomeScreen extends React.Component {
           dialogAnimation={new ScaleAnimation()}
           dialogTitle={<DialogTitle title="Báo cáo Nhà baola" titleStyle={{}} titleTextStyle={{ color: '#73aa2a' }} />}
           dismissOnTouchOutside={false}
-          dialogStyle={{ marginBottom: 10, width: width * 0.9 }}
+          dialogStyle={{ marginBottom: 100, width: width * 0.9 }}
 
         >
           <View>
@@ -1653,18 +1653,41 @@ export default class HomeScreen extends React.Component {
               title='Nhà đã cho thuê'
               checked={this.state.checked}
             />
-            <View style={{ height: 80, flexDirection: 'row', marginBottom: 15, }}>
-              <TouchableOpacity
+
+            {/* Button */}
+            <View style={{ height: 80, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', paddingBottom: 20, }}>
+              {/* <View style={{ height: 80, flexDirection: 'row', marginBottom: 15, }}> */}
+
+
+              <Button
+                buttonStyle={{ backgroundColor: '#9B9D9D', padding: 15, borderRadius: 10 }}
+                icon={{ name: 'ios-backspace', type: 'ionicon' }}
+                onPress={() => {
+                  this.popupDialog.dismiss()
+                }}
+                title='Hủy' />
+
+              <Button
+                buttonStyle={{ backgroundColor: '#73aa2a', padding: 15, borderRadius: 10 }}
+                icon={{ name: 'md-cloud-upload', type: 'ionicon' }}
+                title='Gửi'
+                onPress={() => {
+
+
+                }}
+              />
+
+              {/* <TouchableOpacity
                 style={{ flex: 1, backgroundColor: '#9B9D9D', margin: 20, }}
                 onPress={() => { this.popupDialog.dismiss() }}
               >
                 <Text style={{ color: '#fff', textAlign: 'center', padding: 10 }}>Hủy</Text>
-              </TouchableOpacity>
-              <TouchableOpacity
+              </TouchableOpacity> */}
+              {/* <TouchableOpacity
                 style={{ flex: 1, backgroundColor: '#73aa2a', margin: 20, }}
               >
                 <Text style={{ color: '#fff', textAlign: 'center', padding: 10 }}>Gửi</Text>
-              </TouchableOpacity>
+              </TouchableOpacity> */}
             </View>
           </View>
         </PopupDialog>

@@ -54,7 +54,16 @@ const SECTIONS = [
     },
 ];
 
-//const profile = null;
+function funcformatDateDDMMYYYY(_date) {
+    var _newdate = new Date(_date);
+    _newdate.setDate(_newdate.getDate() + 1);
+    var _dd2 = _newdate.getDate();
+    var _mm2 = _newdate.getMonth() + 1;
+    var _yyyy2 = _newdate.getFullYear();
+    var _topDate = _dd2 + '-' + _mm2 + '-' + _yyyy2
+   // alert(_topDate)
+    return _topDate;
+}
 
 export default class ProfileScreen extends React.Component {
 
@@ -303,7 +312,7 @@ export default class ProfileScreen extends React.Component {
                             ?
                             <View style={{ flex: 4, paddingLeft: 20, marginTop: 10 }}>
                                 <Text style={styles.cardAvatarName}>{this.state.profile.FullName}</Text>
-                                <Text style={styles.cardAvatarAddress}>{this.state.profile.RegistryDate}</Text>
+                                <Text style={styles.cardAvatarAddress}>Ngày đăng ký: {funcformatDateDDMMYYYY(this.state.profile.RegistryDate)}</Text>
                                 <TouchableOpacity style={styles.cardAvatarPhoneBox}>
                                     <Ionicons style={styles.cardAvatarPhoneIcon} name='logo-whatsapp' />
                                     <Text style={styles.cardAvatarPhone}>: {this.state.profile.ContactPhone}</Text>
@@ -327,7 +336,11 @@ export default class ProfileScreen extends React.Component {
                 <ScrollView style={styles.profileMenuBox}>
                     <TouchableOpacity style={styles.profileMenuItem}
                         onPress={() => {
-                            this.props.navigation.navigate('PostRoomScreen')
+                            // this.props.navigation.navigate('PostRoomScreen')
+                            this.props.navigation.navigate('PostRoomScreen', {
+                                onRefreshScreen: this.onRefreshScreen,
+                                _getWalletAsync: this._getWalletAsync,
+                            })
                         }}
                     >
                         <Ionicons style={styles.profileMenuItemText} name='md-cloud-upload'>
