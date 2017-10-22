@@ -667,10 +667,13 @@ export default class SearchScreen extends React.Component {
                                     <Image
                                         source={require('../assets/images/nbl-here-icon.png')}
                                         style={{ height: height * 0.07, width: width * 0.07 }}
-                                        onLayout={() => {
-                                            this.setState({ initialRenderCurrentMaker: false })
+                                        onLoad={() => {
+                                            this.forceUpdate()
                                         }}
-                                        key={`${this.state.initialRenderCurrentMaker}`}
+                                    //  onLayout={() => {
+                                    //    this.setState({ initialRenderCurrentMaker: false })
+                                    // }}
+                                    //key={`${this.state.initialRenderCurrentMaker}`}
                                     />
                                 </MapView.Marker>
                                 :
@@ -718,10 +721,14 @@ export default class SearchScreen extends React.Component {
                                     <Image
                                         source={require('../assets/images/nbl-house_icon.png')}
                                         style={{ height: height * 0.05, width: width * 0.08 }}
-                                        onLayout={() => {
-                                            this.setState({ initialRenderCurrentMaker: false })
+                                        onLoad={() => {
+                                            this.forceUpdate()
                                         }}
-                                        key={`${this.state.initialRenderCurrentMaker}`}
+
+                                    //onLayout={() => {
+                                    //   this.setState({ initialRenderCurrentMaker: false })
+                                    // }}
+                                    //key={`${this.state.initialRenderCurrentMaker}`}
                                     />
 
                                     <MapView.Callout style={{}}>
