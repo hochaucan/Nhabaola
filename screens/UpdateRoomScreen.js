@@ -152,7 +152,7 @@ export default class UpdateRoomScreen extends React.Component {
         var _latitude = parseFloat(this.state.roomBox.Latitude)
         var _longitude = parseFloat(this.state.roomBox.Longitude)
         //  alert(images[3] == null ? images[3] : "khac")
-        this.setState({
+        await this.setState({
             detailInfo: this.state.roomBox.Description,
             price: this.state.roomBox.Price,
             acreage: this.state.roomBox.Acreage,
@@ -162,12 +162,12 @@ export default class UpdateRoomScreen extends React.Component {
             toDate: this.state.roomBox.ToDate,
             isHighlight: this.state.roomBox.IsHighlight,
             toDateHighLight: this.state.roomBox.HighlightToDate,
-            // postRoomImage1: images[0],
-            // postRoomImage2: images[1],
-            // postRoomImage3: images[2],
-            // postRoomImage4: images[3],
-            // postRoomImage5: images[4],
-            // postRoomImage6: images[5],
+            postRoomImage1: images[0],
+            postRoomImage2: images[1],
+            postRoomImage3: images[2],
+            postRoomImage4: images[3],
+            postRoomImage5: images[4],
+            postRoomImage6: images[5],
             searchingMaker: {
                 latitude: _latitude,
                 longitude: _longitude,
@@ -177,7 +177,7 @@ export default class UpdateRoomScreen extends React.Component {
             },
         })
 
-        //alert(this.state.selectedCategory)
+        // alert(this.state.selectedCategory)
 
     }
 
@@ -294,7 +294,7 @@ export default class UpdateRoomScreen extends React.Component {
     };
 
     _updateRoomAsync = async () => {
-        // alert(this.state.fromDate + '    ' + this.state.toDate)
+        //alert(this.state.postRoomImage1.match("http")?"co":"khong")
         // return
 
         //Form validation
@@ -383,35 +383,67 @@ export default class UpdateRoomScreen extends React.Component {
         this.popupLoadingIndicator.show();
 
         if (this.state.postRoomImage1 != null) {
-            let uploadResponse = await uploadImageAsync(this.state.postRoomImage1);
-            let uploadResult = await uploadResponse.json();
-            this.setState({ imageUrl: this.state.imageUrl + '|' + uploadResult.location })
+            if (!this.state.postRoomImage1.match("http")) {
+                let uploadResponse = await uploadImageAsync(this.state.postRoomImage1);
+                let uploadResult = await uploadResponse.json();
+                this.setState({ imageUrl: this.state.imageUrl + '|' + uploadResult.location })
+            } else {
+                await this.setState({ imageUrl: this.state.imageUrl + '|' + this.state.postRoomImage1 })
+
+                // this.setState((prevState) => {
+                //     return { imageUrl: prevState.imageUrl + '|' + this.state.postRoomImage1 };
+                // })
+
+                // alert(this.state.imageUrl)
+                // return
+            }
+
         }
         if (this.state.postRoomImage2 != null) {
-            let uploadResponse = await uploadImageAsync(this.state.postRoomImage2);
-            let uploadResult = await uploadResponse.json();
-            this.setState({ imageUrl: this.state.imageUrl + '|' + uploadResult.location })
+            if (!this.state.postRoomImage2.match("http")) {
+                let uploadResponse = await uploadImageAsync(this.state.postRoomImage2);
+                let uploadResult = await uploadResponse.json();
+                this.setState({ imageUrl: this.state.imageUrl + '|' + uploadResult.location })
+            } else {
+                this.setState({ imageUrl: this.state.imageUrl + '|' + this.state.postRoomImage2 })
+            }
         }
         if (this.state.postRoomImage3 != null) {
-            let uploadResponse = await uploadImageAsync(this.state.postRoomImage3);
-            let uploadResult = await uploadResponse.json();
-            this.setState({ imageUrl: this.state.imageUrl + '|' + uploadResult.location })
+            if (!this.state.postRoomImage3.match("http")) {
+                let uploadResponse = await uploadImageAsync(this.state.postRoomImage3);
+                let uploadResult = await uploadResponse.json();
+                this.setState({ imageUrl: this.state.imageUrl + '|' + uploadResult.location })
+            } else {
+                this.setState({ imageUrl: this.state.imageUrl + '|' + this.state.postRoomImage3 })
+            }
         }
 
         if (this.state.postRoomImage4 != null) {
-            let uploadResponse = await uploadImageAsync(this.state.postRoomImage4);
-            let uploadResult = await uploadResponse.json();
-            this.setState({ imageUrl: this.state.imageUrl + '|' + uploadResult.location })
+            if (!this.state.postRoomImage4.match("http")) {
+                let uploadResponse = await uploadImageAsync(this.state.postRoomImage4);
+                let uploadResult = await uploadResponse.json();
+                this.setState({ imageUrl: this.state.imageUrl + '|' + uploadResult.location })
+            } else {
+                this.setState({ imageUrl: this.state.imageUrl + '|' + this.state.postRoomImage4 })
+            }
         }
         if (this.state.postRoomImage5 != null) {
-            let uploadResponse = await uploadImageAsync(this.state.postRoomImage5);
-            let uploadResult = await uploadResponse.json();
-            this.setState({ imageUrl: this.state.imageUrl + '|' + uploadResult.location })
+            if (!this.state.postRoomImage5.match("http")) {
+                let uploadResponse = await uploadImageAsync(this.state.postRoomImage5);
+                let uploadResult = await uploadResponse.json();
+                this.setState({ imageUrl: this.state.imageUrl + '|' + uploadResult.location })
+            } else {
+                this.setState({ imageUrl: this.state.imageUrl + '|' + this.state.postRoomImage5 })
+            }
         }
         if (this.state.postRoomImage6 != null) {
-            let uploadResponse = await uploadImageAsync(this.state.postRoomImage6);
-            let uploadResult = await uploadResponse.json();
-            this.setState({ imageUrl: this.state.imageUrl + '|' + uploadResult.location })
+            if (!this.state.postRoomImage6.match("http")) {
+                let uploadResponse = await uploadImageAsync(this.state.postRoomImage6);
+                let uploadResult = await uploadResponse.json();
+                this.setState({ imageUrl: this.state.imageUrl + '|' + uploadResult.location })
+            } else {
+                this.setState({ imageUrl: this.state.imageUrl + '|' + this.state.postRoomImage6 })
+            }
         }
 
         if (!this.state.isHighlight) {
@@ -420,6 +452,9 @@ export default class UpdateRoomScreen extends React.Component {
                 toDateHighLight: funcAdd1Day(minDate)
             })
         }
+
+        // alert(this.state.imageUrl + "   " + this.state.postRoomImage1)
+        // return
 
         try {
             await fetch("http://nhabaola.vn/api/RoomBox/FO_RoomBox_Edit", {
@@ -741,7 +776,7 @@ export default class UpdateRoomScreen extends React.Component {
                                 <Picker // Android
                                     style={{ flex: 1, marginTop: -4 }}
                                     mode='dropdown'
-                                    selectedValue={this.state.selectedCategory}
+                                    selectedValue={parseInt(this.state.selectedCategory)}
                                     onValueChange={(itemValue, itemIndex) => this.setState({ selectedCategory: itemValue })}>
                                     <Picker.Item label='-- Chọn loại BĐS --' value='0' />
 
