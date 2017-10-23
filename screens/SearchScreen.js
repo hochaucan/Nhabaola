@@ -232,7 +232,7 @@ export default class SearchScreen extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            mapRegion: { latitude: LATITUDE, longitude: LONGITUDE, latitudeDelta: LATITUDE_DELTA, longitudeDelta: LONGITUDE_DELTA },
+            mapRegion: null,//{ latitude: LATITUDE, longitude: LONGITUDE, latitudeDelta: LATITUDE_DELTA, longitudeDelta: LONGITUDE_DELTA },
             searchResultData: users,
             modalSearchFilterVisible: false,
             age: 18,
@@ -418,7 +418,7 @@ export default class SearchScreen extends React.Component {
         if (MARKERS != "") {
             this.fitAllMarkers();
         }
-        // alert(MARKERS)
+        // alert(this.state.mapRegion)
     };
 
     _getCurrentPositionAsync() {
@@ -625,26 +625,26 @@ export default class SearchScreen extends React.Component {
                             </View>
                         </TouchableOpacity>
 
+                        {this.state.mapRegion &&
+                            <MapView
+                                ref={ref => { this.map = ref; }}
 
-                        <MapView
-                            ref={ref => { this.map = ref; }}
+                                /* style={{ paddingBottom: this.state.hackHeight, alignSelf: 'stretch', }} */
+                                style={{ alignSelf: 'stretch', height: height * 0.4, }}
 
-                            /* style={{ paddingBottom: this.state.hackHeight, alignSelf: 'stretch', }} */
-                            style={{ alignSelf: 'stretch', height: height * 0.4, }}
+                                region={this.state.mapRegion}
+                                // onRegionChange={this._handleMapRegionChange}
+                                onRegionChangeComplete={(mapRegion) => { this.setState({ mapRegion }) }}
+                                provider='google'
+                                showsUserLocation={false}
+                                showsMyLocationButton={false}
+                                followsUserLocation={false}
+                                loadingEnabled={true}
+                                onPress={(e) => this.onMapPress(e)}
+                            /* customMapStyle={customStyle} */
+                            >
 
-                            region={this.state.mapRegion}
-                            //onRegionChange={this._handleMapRegionChange}
-                            onRegionChangeComplete={(mapRegion) => { this.setState({ mapRegion }) }}
-                            provider='google'
-                            showsUserLocation={false}
-                            showsMyLocationButton={false}
-                            followsUserLocation={false}
-                            loadingEnabled={true}
-                            onPress={(e) => this.onMapPress(e)}
-                        /* customMapStyle={customStyle} */
-                        >
-
-                            {/* <MapView.Marker
+                                {/* <MapView.Marker
                         coordinate={{
                             latitude: (this.state.lastLat + 0.00050) || -36.82339,
                             longitude: (this.state.lastLong + 0.00050) || -73.03569,
@@ -656,44 +656,47 @@ export default class SearchScreen extends React.Component {
                         </View>
                     </MapView.Marker> */}
 
-                            {this.state.location
-                                ?
+                                {this.state.location
+                                    ?
 
-                                <MapView.Marker
-                                    coordinate={currentMaker}
-                                    title='Im here'
-                                    description='Home'
-                                /* image={require('../images/nbl-here-icon.png')} */
+                                    <MapView.Marker
+                                        coordinate={currentMaker}
+                                        title='Im here'
+                                        description='Home'
+                                    /* image={require('../images/nbl-here-icon.png')} */
 
-                                >
-                                    <Image
-                                        source={require('../assets/images/nbl-here-icon.png')}
-                                        style={{ height: height * 0.07, width: width * 0.07 }}
-                                        onLoad={() => {
-                                            this.forceUpdate()
-                                        }}
-                                    //  onLayout={() => {
-                                    //    this.setState({ initialRenderCurrentMaker: false })
-                                    // }}
-                                    //key={`${this.state.initialRenderCurrentMaker}`}
-                                    />
-                                </MapView.Marker>
-                                :
-                                null}
+                                    >
+                                        <Image
+                                            source={require('../assets/images/nbl-here-icon.png')}
+                                            style={{ height: height * 0.07, width: width * 0.07 }}
+                                            onLoad={() => {
+                                                this.forceUpdate()
+                                            }}
+                                        //  onLayout={() => {
+                                        //    this.setState({ initialRenderCurrentMaker: false })
+                                        // }}
+                                        //key={`${this.state.initialRenderCurrentMaker}`}
+                                        >
 
-                            {this.state.searchingMaker
-                                ?
-                                <MapView.Marker
-                                    coordinate={this.state.searchingMaker}
-                                    title='Im here'
-                                    description='Home'
-                                >
+                                            <Text style={{ width: 0, height: 0 }}>{Math.random()}</Text>
+                                        </Image>
+                                    </MapView.Marker>
+                                    :
+                                    null}
 
-                                </MapView.Marker>
-                                : null}
+                                {this.state.searchingMaker
+                                    ?
+                                    <MapView.Marker
+                                        coordinate={this.state.searchingMaker}
+                                        title='Im here'
+                                        description='Home'
+                                    >
+
+                                    </MapView.Marker>
+                                    : null}
 
 
-                            {/* <MapView.Circle
+                                {/* <MapView.Circle
                                 center={currentMaker}
                                 fillColor='#73aa2a'
                                 radius={this.state.location.coords.accuracy}
@@ -701,8 +704,8 @@ export default class SearchScreen extends React.Component {
                                 strokeWidth={2}
                             /> */}
 
-                            {/* Tap to show maker on map */}
-                            {/* {this.state.markers.map(marker => (
+                                {/* Tap to show maker on map */}
+                                {/* {this.state.markers.map(marker => (
                                 <MapView.Marker
                                     key={marker.key}
                                     coordinate={marker.coordinate}
@@ -710,39 +713,120 @@ export default class SearchScreen extends React.Component {
                                 />
                             ))} */}
 
-                            {/* Fix all makers on Map */}
-                            {MARKERS.slice(1).map((marker, i) => (
-                                <MapView.Marker
-                                    key={i}
-                                    coordinate={marker}
-                                // title='Im here'
-                                // description='Home'
-
-                                /* image={require('../images/nbl-house_icon.png')} */
-                                >
-                                    <Image
-                                        source={require('../assets/images/nbl-house_icon.png')}
-                                        style={{ height: height * 0.05, width: width * 0.08 }}
-                                        onLoad={() => {
-                                            this.forceUpdate()
+                                {/* Fix all makers on Map */}
+                                {/* {MARKERS.slice(1).map((marker, i) => ( */}
+                                {roomBox.map((item, i) => (
+                                    <MapView.Marker
+                                        key={i}
+                                        //coordinate={marker}
+                                        coordinate={{
+                                            latitude: parseFloat(item.Latitude),
+                                            longitude: parseFloat(item.Longitude)
                                         }}
+                                    // title='Im here'
+                                    // description='Home'
 
-                                    //onLayout={() => {
-                                    //   this.setState({ initialRenderCurrentMaker: false })
-                                    // }}
-                                    //key={`${this.state.initialRenderCurrentMaker}`}
-                                    />
+                                    /* image={require('../images/nbl-house_icon.png')} */
+                                    >
+                                        <Image
+                                            source={require('../assets/images/nbl-house_icon.png')}
+                                            style={{ height: height * 0.05, width: width * 0.08 }}
+                                            onLoad={() => {
+                                                this.forceUpdate()
+                                            }}
 
-                                    <MapView.Callout style={{}}>
-                                        <View>
-                                            <Text>This is a plain view</Text>
-                                        </View>
-                                    </MapView.Callout>
-                                </MapView.Marker>
-                            ))}
+                                        //onLayout={() => {
+                                        //   this.setState({ initialRenderCurrentMaker: false })
+                                        // }}
+                                        //key={`${this.state.initialRenderCurrentMaker}`}
+                                        >
+                                            <Text style={{ width: 0, height: 0 }}>{Math.random()}</Text>
+                                        </Image>
+                                        <MapView.Callout style={{}}>
+                                            <View style={{ width: width * 0.7 }}>
+                                                <TouchableOpacity
+                                                    style={{
+                                                        //flex: 3,
+                                                        //borderRadius: 5,
+                                                    }}
+                                                    onPress={() => {
+                                                        this.props.navigation.navigate('RoomDetailScreen', { item });
+                                                    }}
+                                                >
+                                                    <View style={{
+                                                        flex: 1,
+                                                        flexDirection: 'row',
+                                                        //height: 100,
+                                                        //paddingTop: 10,
+                                                        //paddingBottom: 10,
 
-                            {/* Fix all finding house makers on Map */}
-                            {/* {findingHouseMakers.map((marker, i) => (
+                                                    }}>
+                                                        <Image
+                                                            style={{
+                                                                flex: 3,
+                                                                //borderRadius: 5,
+
+                                                            }}
+                                                            source={{ uri: item.Title }} />
+
+                                                        <View style={styles.searchCardTextBox}>
+                                                            <Text style={{
+                                                                flex: 2,
+                                                                fontSize: 10,
+                                                            }}>{item.Address}</Text>
+
+
+                                                            {/*  <Text style={{
+                                                                flex: 1,
+                                                                color: '#9B9D9D',
+                                                                fontSize: 9,
+                                                            }}>Ngày đăng: {item.UpdatedDate}</Text> */}
+
+
+                                                            {
+                                                                this.state.roomCategory.map((y, i) => {
+                                                                    return (
+                                                                        y.ID == item.CategoryID &&
+                                                                        <Text
+                                                                            style={{ fontSize: 10, color: '#73aa2a' }}
+                                                                            key={i}>{y.CatName}</Text>
+                                                                    )
+                                                                })
+                                                            }
+
+
+                                                            <View style={styles.searchCardPriceBox}>
+
+                                                                <TextMask
+                                                                    style={{ flex: 1, fontSize: 10 }}
+                                                                    value={item.Price}
+                                                                    type={'money'}
+                                                                    options={{ suffixUnit: ' đ', precision: 0, unit: ' ', separator: ' ' }}
+                                                                />
+                                                                <View style={{ flex: 1, flexDirection: 'row', alignItems: 'center', justifyContent: 'center' }}>
+
+
+                                                                    <Text style={{ fontSize: 10, }} >{item.Acreage} m</Text>
+                                                                    <Text style={{ fontSize: 7, marginBottom: 5 }}>2</Text>
+                                                                </View>
+                                                                <Ionicons style={{
+                                                                    flex: 1,
+                                                                    fontSize: 10,
+                                                                    paddingTop: 4,
+
+                                                                }} name='md-pin' >  {item.Distance} km</Ionicons>
+                                                                {/* <Text>3 km</Text> */}
+                                                            </View>
+                                                        </View>
+                                                    </View>
+                                                </TouchableOpacity>
+                                            </View>
+                                        </MapView.Callout>
+                                    </MapView.Marker>
+                                ))}
+
+                                {/* Fix all finding house makers on Map */}
+                                {/* {findingHouseMakers.map((marker, i) => (
                                 <MapView.Marker
                                     key={i}
                                     coordinate={marker}
@@ -750,7 +834,8 @@ export default class SearchScreen extends React.Component {
                                 />
                             ))} */}
 
-                        </MapView>
+                            </MapView>
+                        }
                     </View>
                     {/* : null
                     } */}
@@ -865,7 +950,19 @@ export default class SearchScreen extends React.Component {
 
                                         <View style={styles.searchCardTextBox}>
                                             <Text style={styles.searchCardAddress}>{item.Address}</Text>
-                                            <Text style={styles.searchCardPostDate}>Ngày đăng: {item.UpdatedDate}</Text>
+                                            {/* <Text style={styles.searchCardPostDate}>Ngày đăng: {item.UpdatedDate}</Text> */}
+
+                                            {
+                                                this.state.roomCategory.map((y, i) => {
+                                                    return (
+                                                        y.ID == item.CategoryID &&
+                                                        <Text
+                                                            style={{ color: '#73aa2a' }}
+                                                            key={i}>{y.CatName}</Text>
+                                                    )
+                                                })
+                                            }
+
                                             <View style={styles.searchCardPriceBox}>
                                                 {/* <Text style={styles.searchCardPrice}>Giá: {item.Price} đ</Text> */}
                                                 <TextMask
@@ -1263,12 +1360,12 @@ const styles = StyleSheet.create({
     },
     searchCardAddress: {
         flex: 2,
-        fontSize: 15,
+        fontSize: 13,
     },
     searchCard: {
         flex: 1,
         flexDirection: 'row',
-        height: 100,
+        height: 105,
         // borderWidth: 1,
         paddingTop: 10,
         paddingBottom: 10,
