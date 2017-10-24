@@ -243,6 +243,7 @@ export default class SearchScreen extends React.Component {
             markers: [],
             findingHouseMakers: [],
             initialRenderCurrentMaker: true,
+            initialRenderCurrenHouse: true,
 
             // Searching Filter
             multiSliderPriceValue: [1, 10],
@@ -661,24 +662,24 @@ export default class SearchScreen extends React.Component {
 
                                     <MapView.Marker
                                         coordinate={currentMaker}
-                                        title='Im here'
-                                        description='Home'
+                                        title='Vị trí của tôi'
+                                    //description='Home'
                                     /* image={require('../images/nbl-here-icon.png')} */
 
                                     >
                                         <Image
                                             source={require('../assets/images/nbl-here-icon.png')}
                                             style={{ height: height * 0.07, width: width * 0.07 }}
-                                            onLoad={() => {
-                                                this.forceUpdate()
+                                            // onLoad={() => {
+                                            //   this.forceUpdate()
+                                            //}}
+                                            onLayout={() => {
+                                                this.setState({ initialRenderCurrentMaker: false })
                                             }}
-                                        //  onLayout={() => {
-                                        //    this.setState({ initialRenderCurrentMaker: false })
-                                        // }}
-                                        //key={`${this.state.initialRenderCurrentMaker}`}
+                                            key={`${this.state.initialRenderCurrentMaker}`}
                                         >
 
-                                            <Text style={{ width: 0, height: 0 }}>{Math.random()}</Text>
+                                            {/* <Text style={{ width: 0, height: 0 }}>{Math.random()}</Text> */}
                                         </Image>
                                     </MapView.Marker>
                                     :
@@ -688,8 +689,8 @@ export default class SearchScreen extends React.Component {
                                     ?
                                     <MapView.Marker
                                         coordinate={this.state.searchingMaker}
-                                        title='Im here'
-                                        description='Home'
+                                        title='Vị trí tìm kiếm'
+                                    //description='Home'
                                     >
 
                                     </MapView.Marker>
@@ -730,17 +731,17 @@ export default class SearchScreen extends React.Component {
                                     >
                                         <Image
                                             source={require('../assets/images/nbl-house_icon.png')}
-                                            style={{ height: height * 0.05, width: width * 0.08 }}
-                                            onLoad={() => {
-                                                this.forceUpdate()
-                                            }}
+                                            style={{ height: height * 0.04, width: width * 0.07 }}
+                                            //onLoad={() => {
+                                            //  this.forceUpdate()
+                                            // }}
 
-                                        //onLayout={() => {
-                                        //   this.setState({ initialRenderCurrentMaker: false })
-                                        // }}
-                                        //key={`${this.state.initialRenderCurrentMaker}`}
+                                            onLayout={() => {
+                                                this.setState({ initialRenderCurrenHouse: false })
+                                            }}
+                                            key={`${this.state.initialRenderCurrenHouse}`}
                                         >
-                                            <Text style={{ width: 0, height: 0 }}>{Math.random()}</Text>
+                                            {/* <Text style={{ width: 0, height: 0 }}>{Math.random()}</Text> */}
                                         </Image>
                                         <MapView.Callout style={{}}>
                                             <View style={{ width: width * 0.7 }}>
@@ -888,7 +889,7 @@ export default class SearchScreen extends React.Component {
                                     <Picker.Item label="50 km" value="50" />
                                 </Picker>
                             }
-                            <TouchableOpacity
+                            {/* <TouchableOpacity
                                 style={{ flex: 1, }}
                                 onPress={() => {
                                     this.fitAllMarkers()
@@ -897,7 +898,7 @@ export default class SearchScreen extends React.Component {
                                 }}
                             >
                                 <Text style={{ flex: 3, textAlign: 'right', color: '#73aa2a' }}>Đăng ký vùng này</Text>
-                            </TouchableOpacity>
+                            </TouchableOpacity> */}
                         </View>
                         <View style={{
                             flexDirection: 'row',
@@ -943,7 +944,16 @@ export default class SearchScreen extends React.Component {
                                         this.props.navigation.navigate('RoomDetailScreen', { item });
                                     }}
                                 >
-                                    <View style={styles.searchCard}>
+                                    <View style={{
+                                        flex: 1,
+                                        flexDirection: 'row',
+                                        height: 100,
+                                        // borderWidth: 1,
+                                        paddingTop: 10,
+                                        paddingBottom: 10,
+                                        borderBottomWidth: 0.3,
+                                        borderColor: '#9B9D9D',
+                                    }}>
                                         <Image
                                             style={styles.searchCardImage}
                                             source={{ uri: item.Title }} />
@@ -1186,9 +1196,11 @@ export default class SearchScreen extends React.Component {
                                 latitude: details.geometry.location.lat,
                                 longitude: details.geometry.location.lng,
                             } */}
+
+                            this.popupSearching.dismiss();
                             this.map.animateToCoordinate(this.state.searchingMaker, 1000)
                             this._getRoomByFilter()
-                            this.popupSearching.dismiss();
+
                             {/* 
                             let currentMaker = {
                                 latitude: details.geometry.location.lat,
@@ -1362,16 +1374,16 @@ const styles = StyleSheet.create({
         flex: 2,
         fontSize: 13,
     },
-    searchCard: {
-        flex: 1,
-        flexDirection: 'row',
-        height: 105,
-        // borderWidth: 1,
-        paddingTop: 10,
-        paddingBottom: 10,
-        borderBottomWidth: 0.3,
-        borderColor: '#9B9D9D',
-    },
+    // searchCard: {
+    //     flex: 1,
+    //     flexDirection: 'row',
+    //     height: 105,
+    //     // borderWidth: 1,
+    //     paddingTop: 10,
+    //     paddingBottom: 10,
+    //     borderBottomWidth: 0.3,
+    //     borderColor: '#9B9D9D',
+    // },
 
     searchFilterIcon: {
         paddingTop: 5,
