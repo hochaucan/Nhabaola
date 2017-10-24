@@ -931,7 +931,7 @@ export default class SearchScreen extends React.Component {
                                 onPress={() => this.setState({ modalSearchFilterVisible: true })}
                             >
                                 {this.state.txtFilterResult
-                                    ? <Text style={{ color: '#9B9D9D', width: width * 0.8 }}>{this.state.txtFilterResult}</Text>
+                                    ? <Text style={{ color: '#73aa2a', width: width * 0.8 }}>{this.state.txtFilterResult}</Text>
                                     : <Ionicons style={styles.searchFilterIcon} name='ios-funnel'></Ionicons>
                                 }
 
