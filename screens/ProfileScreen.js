@@ -14,7 +14,7 @@ import {
     Alert,
     BackHandler,
     AsyncStorage,
-
+    ToastAndroid,
 } from 'react-native';
 import { ExpoLinksView } from '@expo/samples';
 import { Constants, ImagePicker } from 'expo';
@@ -61,7 +61,7 @@ function funcformatDateDDMMYYYY(_date) {
     var _mm2 = _newdate.getMonth() + 1;
     var _yyyy2 = _newdate.getFullYear();
     var _topDate = _dd2 + '-' + _mm2 + '-' + _yyyy2
-   // alert(_topDate)
+    // alert(_topDate)
     return _topDate;
 }
 
@@ -97,6 +97,9 @@ export default class ProfileScreen extends React.Component {
             updateAccountImage: null,
             profile: null,
             wallet: '0',
+            oldPassword: '',
+            newPassword: '',
+            confirmNewPassword: '',
         }
 
 
@@ -218,6 +221,87 @@ export default class ProfileScreen extends React.Component {
 
     }
 
+    _changePassword = async () => {
+
+
+        //Form validation
+        if (Platform.OS === 'android') {
+            if (this.state.oldPassword === '') {
+                ToastAndroid.showWithGravity('Vui lòng nhập mật khẩu cũ', ToastAndroid.SHORT, ToastAndroid.TOP);
+                return;
+            }
+            if (this.state.newPassword === '') {
+                ToastAndroid.showWithGravity('Vu lòng nhập mật khẩu mới', ToastAndroid.SHORT, ToastAndroid.TOP);
+                return;
+            }
+            if (this.state.newPassword !== this.state.confirmNewPassword) {
+                ToastAndroid.showWithGravity('Xác nhận mật khẩu không đúng', ToastAndroid.SHORT, ToastAndroid.TOP);
+                return;
+            }
+
+        }
+        else { // iOS
+            if (this.state.oldPassword === '') {
+                Alert.alert('Vui lòng nhập mật khẩu cũ');
+                return;
+            }
+            if (this.state.newPassword === '') {
+                Alert.alert('Vu lòng nhập mật khẩu mới');
+                return;
+            }
+            if (this.state.newPassword !== this.state.confirmNewPassword) {
+                Alert.alert('Xác nhận mật khẩu không đúng');
+                return;
+            }
+        }
+
+
+        try {
+            await fetch("http://nhabaola.vn/api/Account/FO_Account_ChangePassword", {
+                method: 'POST',
+                headers: {
+                    Accept: 'application/json',
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    "UserId": this.state.profile.ID,
+                    "NewPassword": this.state.newPassword,
+                    "OldPassword": this.state.oldPassword,
+                    "SessionKey": this.state.profile.UpdatedBy,
+                }),
+            })
+                .then((response) => response.json())
+                .then((responseJson) => {
+                    //alert(JSON.stringify(responseJson))
+
+                    if (JSON.stringify(responseJson.ErrorCode) === "0") { // Change Password successful
+                        this.popupChangePassword.dismiss();
+
+                        if (Platform.OS === 'android') {
+                            ToastAndroid.showWithGravity('Đổi mật khẩu thành công!', ToastAndroid.SHORT, ToastAndroid.TOP);
+                        }
+                        else {
+                            Alert.alert('Thông báo', 'Đổi mật khẩu thành công!');
+                        }
+                    }
+                    if (JSON.stringify(responseJson.ErrorCode) === "15") { // Change Password successful
+
+                        if (Platform.OS === 'android') {
+                            ToastAndroid.showWithGravity('Mật khẩu cũ không đúng!', ToastAndroid.SHORT, ToastAndroid.TOP);
+                        }
+                        else {
+                            Alert.alert('Thông báo', 'Mật khẩu cũ không đúng!');
+                        }
+                    }
+
+                }).
+                catch((error) => { console.log(error) });
+        } catch (error) {
+            console.log(error)
+        }
+
+    }
+
 
 
     _handleMapRegionChange = mapRegion => {
@@ -315,7 +399,7 @@ export default class ProfileScreen extends React.Component {
                                 <Text style={styles.cardAvatarAddress}>Ngày đăng ký: {funcformatDateDDMMYYYY(this.state.profile.RegistryDate)}</Text>
                                 <TouchableOpacity style={styles.cardAvatarPhoneBox}>
                                     <Ionicons style={styles.cardAvatarPhoneIcon} name='logo-whatsapp' />
-                                    <Text style={styles.cardAvatarPhone}>: {this.state.profile.ContactPhone}</Text>
+                                    <Text style={styles.cardAvatarPhone}>: {this.state.profile.UserName}</Text>
                                 </TouchableOpacity>
                             </View>
                             :
@@ -366,9 +450,15 @@ export default class ProfileScreen extends React.Component {
                     <View style={styles.profileMenuItemSeparator}></View>
                     <TouchableOpacity style={styles.profileMenuItem}
                         onPress={() => {
-                            this.setState({
-                                modalUpdateAccount: true,
+
+                            this.props.navigation.navigate('UpdateAccountScreen', {
+                                onRefreshScreen: this.onRefreshScreen,
+                                item: this.state.profile,
                             })
+
+                            {/* this.setState({
+                                modalUpdateAccount: true,
+                            }) */}
                         }}
                     >
                         <Ionicons style={styles.profileMenuItemText} name='md-information-circle'>
@@ -469,33 +559,38 @@ export default class ProfileScreen extends React.Component {
                         <Animated.View style={{ position: 'relative', left: this.state.animation.usernamePostionLeft, flexDirection: 'row', padding: 10, }}>
                             <Ionicons style={{ flex: 1, fontSize: 22, paddingTop: 12, textAlign: 'center', }} name='ios-lock-outline' />
                             <FormInput
-                                containerStyle={{ flex: 15, paddingLeft: 5, }}
+                                containerStyle={{ flex: 15, }}
                                 placeholder='Mật khẩu củ'
-                                autoCapitalize='sentences'
-                                keyboardType='phone-pad'
-                                underlineColorAndroid={'#fff'}
-                                onChangeText={(text) => this.setState({ text })}
-                                value={this.state.text}
+                                // autoCapitalize='sentences'
+                                secureTextEntry={true}
+                                //keyboardType='phone-pad'
+                                underlineColorAndroid={'#73aa2a'}
+                                onChangeText={(oldPassword) => this.setState({ oldPassword })}
+                                value={this.state.oldPassword}
                             />
 
 
                         </Animated.View>
                         <Animated.View style={{ position: 'relative', left: this.state.animation.passwordPositionLeft, flexDirection: 'row', padding: 10, paddingTop: 0, }}>
-                            <Ionicons style={{ flex: 1, fontSize: 22, paddingTop: 12, textAlign: 'center', }} name='ios-lock-outline' />
+                            <Ionicons style={{ flex: 1, fontSize: 22, paddingTop: 12, textAlign: 'center', }} name='md-lock' />
                             <FormInput
                                 containerStyle={{ flex: 15 }}
                                 placeholder='Mật khẩu mới'
                                 secureTextEntry={true}
-                                underlineColorAndroid={'#fff'}
+                                underlineColorAndroid={'#73aa2a'}
+                                onChangeText={(newPassword) => this.setState({ newPassword })}
+                                value={this.state.newPassword}
                             />
                         </Animated.View>
                         <Animated.View style={{ position: 'relative', left: this.state.animation.passwordPositionLeft, flexDirection: 'row', padding: 10, paddingTop: 0, }}>
-                            <Ionicons style={{ flex: 1, fontSize: 22, paddingTop: 12, textAlign: 'center', }} name='ios-lock-outline' />
+                            <Ionicons style={{ flex: 1, fontSize: 22, paddingTop: 12, textAlign: 'center', }} name='md-checkmark' />
                             <FormInput
                                 containerStyle={{ flex: 15 }}
                                 placeholder='Xác nhận mật khẩu mới'
                                 secureTextEntry={true}
-                                underlineColorAndroid={'#fff'}
+                                underlineColorAndroid={'#73aa2a'}
+                                onChangeText={(confirmNewPassword) => this.setState({ confirmNewPassword })}
+                                value={this.state.confirmNewPassword}
                             />
                         </Animated.View>
 
@@ -515,7 +610,11 @@ export default class ProfileScreen extends React.Component {
                             buttonStyle={{ backgroundColor: '#73aa2a', padding: 10, borderRadius: 5, }}
                             raised={false}
                             icon={{ name: 'md-checkmark', type: 'ionicon' }}
-                            title='Đồng ý' />
+                            title='Đồng ý'
+                            onPress={() => {
+                                this._changePassword();
+                            }}
+                        />
                     </View>
                 </PopupDialog>
 

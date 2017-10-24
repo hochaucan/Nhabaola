@@ -18,6 +18,7 @@ import ProfileScreen from '../screens/ProfileScreen';
 import PostedRoomHIstoryScreen from '../screens/PostedRoomHIstoryScreen';
 import RegisterAccountScreen from '../screens/RegisterAccountScreen';
 import UpdateRoomScreen from '../screens/UpdateRoomScreen';
+import UpdateAccountScreen from '../screens/UpdateAccountScreen';
 
 // export const ScreenStack = StackNavigator({
 //   Settings2: {
@@ -52,6 +53,9 @@ const RootStackNavigator = StackNavigator(
     },
     UpdateRoomScreen: {
       screen: UpdateRoomScreen,
+    },
+    UpdateAccountScreen: {
+      screen: UpdateAccountScreen,
     },
   },
   {

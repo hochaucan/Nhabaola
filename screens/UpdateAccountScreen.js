@@ -32,7 +32,7 @@ import KeyboardSpacer from 'react-native-keyboard-spacer';
 
 var { height, width } = Dimensions.get('window');
 
-export default class RegisterAccountScreen extends React.Component {
+export default class UpdateAccountScreen extends React.Component {
 
     static navigationOptions = {
         // title: 'app.json',
@@ -42,6 +42,7 @@ export default class RegisterAccountScreen extends React.Component {
     constructor(props) {
         super(props)
         this.state = {
+            profile: null,
             registerCellPhone: '',
             registerPassword: '',
             registerConfirmPassword: '',
@@ -53,14 +54,30 @@ export default class RegisterAccountScreen extends React.Component {
     }
 
     componentWillMount() {
-
+        this._getAccountDetailAsync();
     }
 
     componentDidMount() {
-        //alert(topDate)
+
     }
 
-    _registerAccountAsync = async () => {
+    _getAccountDetailAsync = async () => {
+        await this.setState({
+            profile: this.props.navigation.state.params.item
+        })
+
+        //alert(JSON.stringify(this.state.profile))
+        this.setState({
+            registerFullName: this.state.profile.FullName,
+            registerAccountImage: this.state.profile.Avarta,
+            registerEmail: this.state.profile.Email,
+            registerCellPhone: this.state.profile.UserName,
+        })
+
+    }
+
+
+    _updateAccountAsync = async () => {
 
         //Form validation
         if (Platform.OS === 'android') {
@@ -68,26 +85,12 @@ export default class RegisterAccountScreen extends React.Component {
                 ToastAndroid.showWithGravity('Vui lòng chọn hình đại diện', ToastAndroid.SHORT, ToastAndroid.TOP);
                 return;
             }
-            if (this.state.registerCellPhone === '') {
-                ToastAndroid.showWithGravity('Vui lòng nhập Số Điện Thoại', ToastAndroid.SHORT, ToastAndroid.TOP);
-                return;
-            }
-            if (this.state.registerPassword === '') {
-                ToastAndroid.showWithGravity('Vui lòng nhập mật khẩu', ToastAndroid.SHORT, ToastAndroid.TOP);
-                return;
-            }
-            if (this.state.registerPassword != this.state.registerConfirmPassword) {
-                ToastAndroid.showWithGravity('Xác nhận mật khẩu không đúng', ToastAndroid.SHORT, ToastAndroid.TOP);
-                return;
-            }
+
             if (this.state.registerFullName === '') {
                 ToastAndroid.showWithGravity('Vui lòng nhập Họ Tên', ToastAndroid.SHORT, ToastAndroid.TOP);
                 return;
             }
-            if (this.state.registerConfirmCellPhone === '') {
-                ToastAndroid.showWithGravity('Vui lòng nhập mã xác nhận Số Điện Thoại', ToastAndroid.SHORT, ToastAndroid.TOP);
-                return;
-            }
+
             if (this.state.registerEmail === '') {
                 ToastAndroid.showWithGravity('Vui lòng nhập Email', ToastAndroid.SHORT, ToastAndroid.TOP);
                 return;
@@ -95,43 +98,36 @@ export default class RegisterAccountScreen extends React.Component {
         }
         else {
             if (this.state.registerAccountImage === null) {
-                Alert.alert('Thông báo', 'Vui lòng chọn hình đại diện');
+                Alert.alert('Vui lòng chọn hình đại diện');
                 return;
             }
-            if (this.state.registerCellPhone === '') {
-                Alert.alert('Thông báo', 'Vui lòng nhập Số Điện Thoại');
+
+            if (this.state.registerFullName === null) {
+                Alert.alert('Oops!', 'Vui lòng nhập Họ Tên');
                 return;
             }
-            if (this.state.registerPassword === '') {
-                Alert.alert('Thông báo', 'Vui lòng nhập mật khẩu');
-                return;
-            }
-            if (this.state.registerPassword != this.state.registerConfirmPassword) {
-                Alert.alert('Thông báo', 'Xác nhận mật khẩu không đúng');
-                return;
-            }
-            if (this.state.registerFullName === '') {
-                Alert.alert('Thông báo', 'Vui lòng nhập Họ Tên');
-                return;
-            }
-            if (this.state.registerEmail === '') {
-                Alert.alert('Thông báo', 'Vui lòng nhập Email');
-                return;
-            }
-            if (this.state.registerConfirmCellPhone === '') {
-                Alert.alert('Thông báo', 'Vui lòng nhập mã xác nhận Số Điện Thoại');
+            if (this.state.registerEmail === null) {
+                Alert.alert('Oops!', 'Vui lòng nhập Email');
                 return;
             }
         }
 
         this.popupLoadingIndicator.show();
 
-        let uploadResponse = await uploadImageAsync(this.state.registerAccountImage);
-        let uploadResult = await uploadResponse.json();
+        if (this.state.registerAccountImage != null) {
+            if (!this.state.registerAccountImage.match("http")) {
+                let uploadResponse = await uploadImageAsync(this.state.registerAccountImage);
+                let uploadResult = await uploadResponse.json();
+                this.setState({
+                    registerAccountImage: uploadResult.location
+                })
+            }
+        }
+
 
         //Post to register account
         try {
-            await fetch("http://nhabaola.vn/api/Account/FO_Account_Add", {
+            await fetch("http://nhabaola.vn/api/Account/FO_Account_Edit", {
                 method: 'POST',
                 headers: {
                     Accept: 'application/json',
@@ -141,45 +137,38 @@ export default class RegisterAccountScreen extends React.Component {
 
 
                 body: JSON.stringify({
-                    "Avarta": uploadResult.location,
-                    "UserName": this.state.registerCellPhone,
+
+                    "ID": this.state.profile.ID,
                     "FullName": this.state.registerFullName,
                     "Email": this.state.registerEmail,
                     "Sex": "",
-                    //"YearOfBirth": "2017-10-09",
+                    "Avarta": this.state.registerAccountImage, //uploadResult.location,
+                    //"YearOfBirth": "1985-05-19",
                     "Address": "",
                     "ContactPhone": this.state.registerCellPhone,
-                    "Password": this.state.registerPassword,
-                    "IsActive": "true",
+                    "CreatedBy": this.state.profile.ID,
+                    "UpdatedBy": this.state.profile.UpdatedBy,
                 }),
             })
                 .then((response) => response.json())
                 .then((responseJson) => {
 
-                    if (JSON.stringify(responseJson.ErrorCode) === "20") { // Account is existing
+                    //alert(JSON.stringify(responseJson))
+
+                    if (JSON.stringify(responseJson.ErrorCode) === "0") { // Update Account successful
+                        this.popupLoadingIndicator.dismiss();
+                        this.props.navigation.goBack();
+
                         if (Platform.OS === 'android') {
-                            ToastAndroid.showWithGravity('Tài khoản này đã tồn tại', ToastAndroid.SHORT, ToastAndroid.TOP);
+                            ToastAndroid.showWithGravity('Cập nhật thông tin thành công!', ToastAndroid.SHORT, ToastAndroid.TOP);
                         }
                         else {
-                            Alert.alert('Oops!', 'Tài khoản này đã tồn tại');
+                            Alert.alert('Oops!', 'Cập nhật thông tin thành công!');
                         }
-                        return;
                     }
-
-                    this.setState({
-                        registerCellPhone: '',
-                        registerPassword: '',
-                        registerConfirmPassword: '',
-                        registerAccountImage: null,
-                        registerFullName: '',
-                        registerConfirmCellPhone: '',
-                        registerEmail: '',
-                    })
-
-                    this.popupLoadingIndicator.dismiss();
                     // this.props.navigation.state.params.onRefreshScreen({ loginUsername: registerCellPhone, loginPassword: registerPassword });
                     //this.props.navigation.state.params.login();
-                    this.props.navigation.goBack();
+
                 }).
                 catch((error) => { console.log(error) });
         } catch (error) {
@@ -237,9 +226,11 @@ export default class RegisterAccountScreen extends React.Component {
                     </View>
                     <View>
                         {/* Cellphone */}
-                        <View style={{ position: 'relative', flexDirection: 'row', padding: 10, }}>
+                        <View style={{ position: 'relative', flexDirection: 'row', }}>
                             <Ionicons style={{ flex: 2, fontSize: 22, paddingTop: 12, textAlign: 'center', }} name='md-call' />
-                            <FormInput
+                            <Text style={{ flex: 15, marginLeft: 10, color: '#73aa2a', marginTop: 10, }}>{this.state.registerCellPhone}</Text>
+
+                            {/* <FormInput
                                 containerStyle={{ flex: 15, marginLeft: Platform.OS === 'ios' ? 20 : 10 }}
                                 inputStyle={{ paddingLeft: Platform.OS === 'android' ? 4 : 0 }}
                                 placeholder='Số điện thoại'
@@ -248,8 +239,8 @@ export default class RegisterAccountScreen extends React.Component {
                                 underlineColorAndroid={'#73aa2a'}
                                 onChangeText={(registerCellPhone) => this.setState({ registerCellPhone })}
                                 value={this.state.registerCellPhone}
-                            />
-                            <TouchableOpacity>
+                            /> */}
+                            {/* <TouchableOpacity>
                                 <FormLabel
                                     containerStyle={{
                                         alignItems: 'center', justifyContent: 'center',
@@ -258,32 +249,9 @@ export default class RegisterAccountScreen extends React.Component {
                                 >
                                     (Xác nhận ĐT)
                             </FormLabel>
-                            </TouchableOpacity>
+                            </TouchableOpacity> */}
                         </View>
-                        {/* Password */}
-                        <View style={{ flexDirection: 'row', padding: 10, paddingTop: 0, }}>
-                            <Ionicons style={{ flex: 1, fontSize: 22, paddingTop: 12, textAlign: 'center', }} name='ios-lock' />
-                            <FormInput
-                                containerStyle={{ flex: 15 }}
-                                inputStyle={{ paddingLeft: Platform.OS === 'android' ? 4 : 0 }}
-                                placeholder='Mật khẩu'
-                                secureTextEntry={true}
-                                underlineColorAndroid={'#73aa2a'}
-                                value={this.state.registerPassword}
-                                onChangeText={(registerPassword) => { this.setState({ registerPassword }) }}
-                            />
-                        </View>
-                        <View style={{ flexDirection: 'row', padding: 10, paddingTop: 0, }}>
-                            <FormInput
-                                containerStyle={{ flex: 15, marginLeft: 36 }}
-                                inputStyle={{ paddingLeft: Platform.OS === 'android' ? 4 : 0 }}
-                                placeholder='Xác nhận mật khẩu'
-                                secureTextEntry={true}
-                                underlineColorAndroid={'#73aa2a'}
-                                value={this.state.registerConfirmPassword}
-                                onChangeText={(registerConfirmPassword) => { this.setState({ registerConfirmPassword }) }}
-                            />
-                        </View>
+
                         {/* Fulllname */}
                         <View style={{ flexDirection: 'row', padding: 10, paddingTop: 0, }}>
                             <Ionicons style={{ flex: 1, fontSize: 22, paddingTop: 12, textAlign: 'center', }} name='ios-person' />
@@ -311,20 +279,6 @@ export default class RegisterAccountScreen extends React.Component {
                             />
 
                         </View>
-                        {/* Verify Cellphone */}
-                        <View style={{ flexDirection: 'row', padding: 10, paddingTop: 0, }}>
-                            <FormInput
-                                containerStyle={{ flex: 1, borderWidth: 0.6, borderColor: '#9B9D9D', borderRadius: 10, padding: 5, marginTop: 10, }}
-                                inputStyle={{}}
-                                placeholder='Mã xác nhận số điện thoại (4 số)'
-                                secureTextEntry={true}
-                                underlineColorAndroid={'#fff'}
-                                keyboardType='numeric'
-                                value={this.state.registerConfirmCellPhone}
-                                onChangeText={(registerConfirmCellPhone) => { this.setState({ registerConfirmCellPhone }) }}
-                            />
-                        </View>
-
                     </View>
 
                     {/* The view that will animate to match the keyboards height */}
@@ -338,15 +292,15 @@ export default class RegisterAccountScreen extends React.Component {
                             icon={{ name: 'ios-backspace', type: 'ionicon' }}
                             title='Hủy'
                             onPress={() => {
-                                this.setState({
+                                {/* this.setState({
                                     registerCellPhone: '',
                                     registerPassword: '',
                                     registerConfirmPassword: '',
-                                    registerAccountImage: null,
+                                    registerAccountImage: '',
                                     registerFullName: '',
                                     registerConfirmCellPhone: '',
                                     registerEmail: '',
-                                })
+                                }) */}
 
                                 this.props.navigation.goBack();
                             }}
@@ -356,9 +310,9 @@ export default class RegisterAccountScreen extends React.Component {
                             buttonStyle={{ backgroundColor: '#73aa2a', padding: 10, borderRadius: 5, }}
                             raised={false}
                             icon={{ name: 'md-checkmark', type: 'ionicon' }}
-                            title='Đăng ký'
+                            title='Cập nhật'
                             onPress={() => {
-                                this._registerAccountAsync();
+                                this._updateAccountAsync();
                             }}
                         />
                     </View>

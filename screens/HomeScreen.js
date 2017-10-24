@@ -149,6 +149,8 @@ export default class HomeScreen extends React.Component {
       resetPasswordEmail: '',
       resetPasswordActiveKey: '',
       resetPasswordNewPassword: '',
+
+      ratingRoomId: 0,
     }
 
     // state = { selected: false };
@@ -230,6 +232,7 @@ export default class HomeScreen extends React.Component {
 
   _refreshRoomBox() {
     this._getRoomBoxAsync(true);
+    this._getWalletAsync();
   }
 
   componentDidMount() {
@@ -822,6 +825,62 @@ export default class HomeScreen extends React.Component {
 
   }
 
+  _postRatingByRoom = async (_rate, _roomId) => {
+
+    // alert(_roomId + "  " + _rate + "  " + this.state.profile.ID + "  " + this.state.sessionKey)
+
+    try {
+      await fetch("http://nhabaola.vn/api/RoomBox/FO_RoomBox_SetLike", {
+        method: 'POST',
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          "ID": _roomId,
+          "Point": _rate,
+          "CreatedBy": this.state.profile.ID,
+          "UpdatedBy": this.state.sessionKey,
+        }),
+      })
+        .then((response) => response.json())
+        .then((responseJson) => {
+
+          if (JSON.stringify(responseJson.ErrorCode) === "0") { // Rating successful
+            this.popupRating.dismiss();
+
+            if (Platform.OS === 'android') {
+              ToastAndroid.showWithGravity('Cảm ơn bạn đã đánh giá!', ToastAndroid.SHORT, ToastAndroid.TOP);
+            }
+            else {
+              Alert.alert('Thông báo', 'Cảm ơn bạn đã đánh giá!');
+            }
+            // this.popupActiveNewPassword.dismiss();
+            // this.setState({ resetPasswordUsername: '' })
+            // this.setState({
+            //   loginUsername: this.state.resetPasswordUsername,
+            //   loginPassword: resetPasswordNewPassword,
+            // })
+
+            // this._loginAsync();
+          }
+
+          // this.setState({
+          //   //roomCategory: JSON.stringify(responseJson.obj)
+          //   // roomCategory: responseJson.obj.map((y) => { return y.CatName })
+          //   //roomCategory: JSON.parse(this._getCategoryAsync('roomCategory'))
+          //   roomCategory: responseJson.obj
+          // })
+
+
+        }).
+        catch((error) => { console.log(error) });
+    } catch (error) {
+      console.log(error)
+    }
+
+  }
+
   _getRoomBoxAsync = async (isNew) => {
     await this.setState({ refresh: true })
 
@@ -1216,9 +1275,12 @@ export default class HomeScreen extends React.Component {
               </View>
               <View style={styles.cardBottom}>
                 <View style={styles.cardBottomLeft}>
-                  <Text style={styles.cardBottomIconText}>5</Text>
+                  <Text style={styles.cardBottomIconText}>{item.Point}</Text>
                   <TouchableOpacity
-                    onPress={() => {
+                    onPress={async () => {
+                      await this.setState({
+                        ratingRoomId: item.ID,
+                      })
                       this.popupRating.show();
                     }}
                   >
@@ -1710,7 +1772,10 @@ export default class HomeScreen extends React.Component {
             maxStars={5}
             starColor={'#a4d227'}
             rating={this.state.starCount}
-            selectedStar={(rating) => { this.onStarRatingPress(rating) }}
+            selectedStar={(rating) => {
+              //this.onStarRatingPress(rating)
+              this._postRatingByRoom(rating, this.state.ratingRoomId)
+            }}
           />
         </PopupDialog>
 
