@@ -416,9 +416,9 @@ export default class SearchScreen extends React.Component {
         await this.setState({ mapRegion: region });
         this._getRoomByFilter();
 
-        if (MARKERS != "") {
-            this.fitAllMarkers();
-        }
+        // if (MARKERS != "") {
+        //     this.fitAllMarkers();
+        // }
         // alert(this.state.mapRegion)
     };
 
@@ -519,6 +519,15 @@ export default class SearchScreen extends React.Component {
         } catch (error) {
             console.log(error)
         }
+
+        if (MARKERS.length > 1) {
+            //alert(MARKERS.length)
+            //this.fitAllMarkers()
+
+            setTimeout(() => { this.fitAllMarkers() }, 500)
+        }
+
+
 
     }
 
@@ -635,7 +644,13 @@ export default class SearchScreen extends React.Component {
 
                                 region={this.state.mapRegion}
                                 // onRegionChange={this._handleMapRegionChange}
-                                onRegionChangeComplete={(mapRegion) => { this.setState({ mapRegion }) }}
+                                onRegionChangeComplete={(mapRegion) => {
+                                    //alert("can")
+                                    this.setState({ mapRegion })
+                                    {/* if (MARKERS.length > 1) {
+                                        this.fitAllMarkers()
+                                    } */}
+                                }}
                                 provider='google'
                                 showsUserLocation={false}
                                 showsMyLocationButton={false}
@@ -743,85 +758,89 @@ export default class SearchScreen extends React.Component {
                                         >
                                             {/* <Text style={{ width: 0, height: 0 }}>{Math.random()}</Text> */}
                                         </Image>
-                                        <MapView.Callout style={{}}>
-                                            <View style={{ width: width * 0.7 }}>
-                                                <TouchableOpacity
-                                                    style={{
-                                                        //flex: 3,
-                                                        //borderRadius: 5,
-                                                    }}
-                                                    onPress={() => {
-                                                        this.props.navigation.navigate('RoomDetailScreen', { item });
-                                                    }}
-                                                >
-                                                    <View style={{
-                                                        flex: 1,
-                                                        flexDirection: 'row',
-                                                        //height: 100,
-                                                        //paddingTop: 10,
-                                                        //paddingBottom: 10,
+                                        <MapView.Callout style={{}}
+                                            onPress={() => {
+                                                this.props.navigation.navigate('RoomDetailScreen', { item });
+                                            }}
+                                        >
+                                            {/* <View style={{ width: width * 0.7 }}> */}
+                                            <View
+                                                style={{
+                                                    width: width * 0.7
+                                                }}
+                                                onPress={() => {
+                                                    //alert("can")
+                                                    //this.props.navigation.navigate('RoomDetailScreen', { item });
+                                                }}
+                                            >
+                                                <View style={{
+                                                    flex: 1,
+                                                    flexDirection: 'row',
+                                                    //height: 100,
+                                                    //paddingTop: 10,
+                                                    //paddingBottom: 10,
 
-                                                    }}>
-                                                        <Image
-                                                            style={{
-                                                                flex: 3,
-                                                                //borderRadius: 5,
+                                                }}>
+                                                    <Image
+                                                        style={{
+                                                            flex: 3,
+                                                            //borderRadius: 5,
 
-                                                            }}
-                                                            source={{ uri: item.Title }} />
+                                                        }}
+                                                        source={{ uri: item.Title }} />
 
-                                                        <View style={styles.searchCardTextBox}>
-                                                            <Text style={{
-                                                                flex: 2,
-                                                                fontSize: 10,
-                                                            }}>{item.Address}</Text>
+                                                    <View style={styles.searchCardTextBox}>
+                                                        <Text style={{
+                                                            flex: 2,
+                                                            fontSize: 10,
+                                                        }}>{item.Address}</Text>
 
 
-                                                            {/*  <Text style={{
+                                                        {/*  <Text style={{
                                                                 flex: 1,
                                                                 color: '#9B9D9D',
                                                                 fontSize: 9,
                                                             }}>Ngày đăng: {item.UpdatedDate}</Text> */}
 
 
-                                                            {
-                                                                this.state.roomCategory.map((y, i) => {
-                                                                    return (
-                                                                        y.ID == item.CategoryID &&
-                                                                        <Text
-                                                                            style={{ fontSize: 10, color: '#73aa2a' }}
-                                                                            key={i}>{y.CatName}</Text>
-                                                                    )
-                                                                })
-                                                            }
+                                                        {
+                                                            this.state.roomCategory.map((y, i) => {
+                                                                return (
+                                                                    y.ID == item.CategoryID &&
+                                                                    <Text
+                                                                        style={{ fontSize: 10, color: '#73aa2a' }}
+                                                                        key={i}>{y.CatName}</Text>
+                                                                )
+                                                            })
+                                                        }
 
 
-                                                            <View style={styles.searchCardPriceBox}>
+                                                        <View style={styles.searchCardPriceBox}>
 
-                                                                <TextMask
-                                                                    style={{ flex: 1, fontSize: 10 }}
-                                                                    value={item.Price}
-                                                                    type={'money'}
-                                                                    options={{ suffixUnit: ' đ', precision: 0, unit: ' ', separator: ' ' }}
-                                                                />
-                                                                <View style={{ flex: 1, flexDirection: 'row', alignItems: 'center', justifyContent: 'center' }}>
+                                                            <TextMask
+                                                                style={{ flex: 1, fontSize: 10 }}
+                                                                value={item.Price}
+                                                                type={'money'}
+                                                                options={{ suffixUnit: ' đ', precision: 0, unit: ' ', separator: ' ' }}
+                                                            />
+                                                            <View style={{ flex: 1, flexDirection: 'row', alignItems: 'center', justifyContent: 'center' }}>
 
 
-                                                                    <Text style={{ fontSize: 10, }} >{item.Acreage} m</Text>
-                                                                    <Text style={{ fontSize: 7, marginBottom: 5 }}>2</Text>
-                                                                </View>
-                                                                <Ionicons style={{
-                                                                    flex: 1,
-                                                                    fontSize: 10,
-                                                                    paddingTop: 4,
-
-                                                                }} name='md-pin' >  {item.Distance} km</Ionicons>
-                                                                {/* <Text>3 km</Text> */}
+                                                                <Text style={{ fontSize: 10, }} >{item.Acreage} m</Text>
+                                                                <Text style={{ fontSize: 7, marginBottom: 5 }}>2</Text>
                                                             </View>
+                                                            <Ionicons style={{
+                                                                flex: 1,
+                                                                fontSize: 10,
+                                                                paddingTop: 2,
+
+                                                            }} name='md-pin' >  {item.Distance} km</Ionicons>
+                                                            {/* <Text>3 km</Text> */}
                                                         </View>
                                                     </View>
-                                                </TouchableOpacity>
+                                                </View>
                                             </View>
+                                            {/* </View> */}
                                         </MapView.Callout>
                                     </MapView.Marker>
                                 ))}
@@ -870,9 +889,8 @@ export default class SearchScreen extends React.Component {
                                     selectedValue={this.state.radius}
                                     onValueChange={async (itemValue, itemIndex) => {
                                         await this.setState({ radius: itemValue })
-                                        //alert(this.state.radius)
-                                        await this._getRoomByFilter();
-                                        this.fitAllMarkers()
+                                        this._getRoomByFilter();
+                                        //this.fitAllMarkers()
                                     }}>
                                     <Picker.Item label="2 km" value="2" />
                                     <Picker.Item label="4 km" value="4" />
@@ -1112,8 +1130,8 @@ export default class SearchScreen extends React.Component {
                                                     selectedCategory: '',
                                                 })
                                                 this.setState({ modalSearchFilterVisible: false });
-                                                await this._getRoomByFilter();
-                                                this.fitAllMarkers();
+                                                this._getRoomByFilter();
+                                                // this.fitAllMarkers();
                                             }}
                                         />
                                         :
@@ -1151,7 +1169,7 @@ export default class SearchScreen extends React.Component {
                                             this._getRoomByFilter();
 
                                             this.setState({ modalSearchFilterVisible: false })
-                                            this.fitAllMarkers();
+                                            // this.fitAllMarkers();
                                         }}
                                     />
 
@@ -1184,6 +1202,8 @@ export default class SearchScreen extends React.Component {
                             {/* console.log(data); */ }
                             //console.log(details.geometry.location);
 
+                            this.popupSearching.dismiss();
+
                             this.setState({
                                 searchingMaker: {
                                     latitude: details.geometry.location.lat,
@@ -1192,12 +1212,8 @@ export default class SearchScreen extends React.Component {
                                 isSearching: true,
                             })
 
-                            {/* currentMaker = {
-                                latitude: details.geometry.location.lat,
-                                longitude: details.geometry.location.lng,
-                            } */}
+                            //this.map.animateToRegion(this.state.mapRegion, 1000);
 
-                            this.popupSearching.dismiss();
                             this.map.animateToCoordinate(this.state.searchingMaker, 1000)
                             this._getRoomByFilter()
 

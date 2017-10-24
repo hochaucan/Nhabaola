@@ -68,7 +68,7 @@ export default class RoomDetailScreen extends React.Component {
             comments: [],
             roomBox: null,
             profile: null,
-            commentContent: null,
+            commentContent: '',
             roomCategory: [],
         }
     }
@@ -161,14 +161,14 @@ export default class RoomDetailScreen extends React.Component {
         //Form validation
         if (Platform.OS === 'android') {
 
-            if (this.state.commentContent === null) {
-                ToastAndroid.showWithGravity('Vui lòng nhập nội dung Bình Luận', ToastAndroid.SHORT, ToastAndroid.CENTER);
+            if (this.state.commentContent == '') {
+                ToastAndroid.showWithGravity('Vui lòng nhập nội dung Bình Luận', ToastAndroid.SHORT, ToastAndroid.TOP);
                 return;
             }
         }
         else { // iOS
 
-            if (this.state.commentContent === null) {
+            if (this.state.commentContent == '') {
                 Alert.alert('Vui lòng nhập nội dung Bình Luận');
                 return;
             }
@@ -199,7 +199,8 @@ export default class RoomDetailScreen extends React.Component {
                 .then((responseJson) => {
 
                     this.setState({
-                        comments: []
+                        comments: [],
+                        commentContent: ''
                     })
                     this._getCommentsAsync();
                     // alert("success")
