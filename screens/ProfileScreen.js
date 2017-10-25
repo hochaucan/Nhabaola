@@ -517,6 +517,8 @@ export default class ProfileScreen extends React.Component {
                                                 saveStorageAsync('SessionKey', '')
                                                 saveStorageAsync('loginUsername', '')
                                                 saveStorageAsync('loginPassword', '')
+                                                saveStorageAsync('FO_Wallet_GetDataByUserID', '')
+
                                                 this.setState({ profile: null })
                                                 //HomeScreen._onRefreshScreen({ refreshScreen: true })
                                                 this.props.navigation.state.params.onRefreshScreen({
@@ -524,7 +526,8 @@ export default class ProfileScreen extends React.Component {
                                                     profile: null,
                                                     sessionKey: null,
                                                     loginUsername: '',
-                                                    loginPassword: ''
+                                                    loginPassword: '',
+                                                    wallet: '0',
                                                 });
                                                 this.props.navigation.goBack();
                                                 //this.props.navigation.navigate("Home")
