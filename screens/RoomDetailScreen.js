@@ -421,14 +421,29 @@ export default class RoomDetailScreen extends React.Component {
                                     <Ionicons style={styles.cardBottomIcon} name='ios-thumbs-up' />
                                 </TouchableOpacity>
                                 <TouchableOpacity
-                                    onPress={() => {
+                                    onPress={async () => {
+                                        let loadBDS = '';
+                                        await this.state.roomCategory.map((y, i) => {
+                                            if (y.ID == this.state.roomBox.CategoryID) {
+                                                loadBDS = y.CatName
+                                            }
+
+
+
+                                        })
+
                                         Share.share({
-                                            message: this.state.roomBox.Description,
-                                            url: this.state.roomBox.Title,
+                                            message: "***** Chia Sẻ Nhà Bao La *****"
+                                            + "\n\nLiên hệ: " + this.state.roomBox.AccountName + "\nĐiện thoại: " + this.state.roomBox.AccountPhone
+                                            + "\n\nLoại bất động sản: " + loadBDS
+                                            + "\nGiá: " + this.state.roomBox.Price + " đồng"
+                                            + "\nDiện tích: " + this.state.roomBox.Acreage + " mét vuông"
+                                            + "\nĐịa chỉ: " + this.state.roomBox.Address + "\n\nMô tả:\n" + this.state.roomBox.Description,
+                                            url: 'http://nhabaola.vn',
                                             title: 'Chia sẻ Nhà Bao La'
                                         }, {
                                                 // Android only:
-                                                dialogTitle: 'Nhà Bao La',
+                                                dialogTitle: 'Chia sẻ Nhà Bao La',
                                                 // iOS only:
                                                 excludedActivityTypes: [
                                                     'com.apple.UIKit.activity.PostToTwitter'

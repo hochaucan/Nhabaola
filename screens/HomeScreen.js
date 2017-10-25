@@ -76,11 +76,13 @@ export default class HomeScreen extends React.Component {
       sessionKey: null,
       //dataUsers: users,
       refresh: false,
-      txt: 'test threshole',
+      // txt: 'test threshole',
       isActionButtonVisible: true, // 1. Define a state variable for showing/hiding the action-button 
       modalVisible: false,
-      reportCheck: false,
-      starCount: 3.5,
+      reportAddress: false,
+      reportCall: false,
+      reportHouse: false,
+      starCount: 5,
       mapRegion: { latitude: 10.7777935, longitude: 106.7068674, latitudeDelta: 0.03, longitudeDelta: 0.03 },
       roomCategory: [],
       //roomBox: [],
@@ -117,23 +119,6 @@ export default class HomeScreen extends React.Component {
 
       // Register Account
       modalRegisterAccount: false,
-      // objectRegisterAccount: {
-      //   Avarta: "",
-      //   UserName: "UserName",
-      //   FullName: "Nguyen Van A",
-      //   Email: "Email@gmail.com",
-      //   Sex: "Nam",
-      //   YearOfBirth: "2017-10-09",
-      //   Address: "5 Hello 10 Hi 15 Hehe",
-      //   ContactPhone: "0919999888",
-      //   Password: "Passwordvinaphuc",
-      //   RegistryDate: "2017-10-09",
-      //   IsActive: "true",
-      //   CreatedDate: "2017-10-09",
-      //   CreatedBy: "10",
-      //   UpdatedBy: "Olala_SessionKey",
-      //   UpdatedDate: "2017-10-09"
-      // },
       registerCellPhone: null,
       registerPassword: null,
       registerConfirmPassword: null,
@@ -151,6 +136,8 @@ export default class HomeScreen extends React.Component {
       resetPasswordNewPassword: '',
 
       ratingRoomId: 0,
+      reportRoomId: 0,
+      //reportResult:'',
     }
 
     // state = { selected: false };
@@ -881,6 +868,49 @@ export default class HomeScreen extends React.Component {
 
   }
 
+  _reportNBLAsync = async (_reportTypeId, _roomId) => {
+
+    // alert(_roomId + "  " + _rate + "  " + this.state.profile.ID + "  " + this.state.sessionKey)
+
+    try {
+      await fetch("http://nhabaola.vn/api/ReportComment/FO_ReportComment_Add", {
+        method: 'POST',
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          "RoomBoxId": _roomId,
+          "ReportTypeID": _reportTypeId,
+          "UserID": this.state.profile.ID,
+          "CreatedBy": this.state.profile.ID,
+          "UpdatedBy": this.state.sessionKey,
+        }),
+      })
+        .then((response) => response.json())
+        .then((responseJson) => {
+
+          if (JSON.stringify(responseJson.ErrorCode) === "0") { // Rating successful
+            this.popupReportNBL.dismiss();
+
+            if (Platform.OS === 'android') {
+              ToastAndroid.showWithGravity('Cảm ơn bạn đã báo cáo chúng tôi!', ToastAndroid.SHORT, ToastAndroid.TOP);
+            }
+            else {
+              Alert.alert('Thông báo', 'Cảm ơn bạn đã báo cáo chúng tôi!');
+            }
+
+          }
+
+
+        }).
+        catch((error) => { console.log(error) });
+    } catch (error) {
+      console.log(error)
+    }
+
+  }
+
   _getRoomBoxAsync = async (isNew) => {
     await this.setState({ refresh: true })
 
@@ -1278,10 +1308,16 @@ export default class HomeScreen extends React.Component {
                   <Text style={styles.cardBottomIconText}>{item.Point}</Text>
                   <TouchableOpacity
                     onPress={async () => {
-                      await this.setState({
-                        ratingRoomId: item.ID,
-                      })
-                      this.popupRating.show();
+                      if (this.state.profile === null) {
+                        ToastAndroid.showWithGravity("Bạn vui lòng đăng nhập!", ToastAndroid.SHORT, ToastAndroid.TOP)
+
+                      } else {
+                        await this.setState({
+                          ratingRoomId: item.ID,
+                          starCount: item.Point
+                        })
+                        this.popupRating.show();
+                      }
                     }}
                   >
                     <Ionicons style={styles.cardBottomIcon} name='ios-star' />
@@ -1296,14 +1332,30 @@ export default class HomeScreen extends React.Component {
                     <Ionicons style={styles.cardBottomIcon} name='ios-thumbs-up' />
                   </TouchableOpacity>
                   <TouchableOpacity
-                    onPress={() => {
+                    onPress={async () => {
+
+                      let loadBDS = '';
+                      await this.state.roomCategory.map((y, i) => {
+                        if (y.ID == item.CategoryID) {
+                          loadBDS = y.CatName
+                        }
+
+
+
+                      })
+
                       Share.share({
-                        message: item.AccountName,
-                        url: 'http://bam.tech',
-                        title: 'Wow, did you see that?'
+                        message: "***** Chia Sẻ Nhà Bao La *****"
+                        + "\n\nLiên hệ: " + item.AccountName + "\nĐiện thoại: " + item.AccountPhone
+                        + "\n\nLoại bất động sản: " + loadBDS
+                        + "\nGiá: " + item.Price + " đồng"
+                        + "\nDiện tích: " + item.Acreage + " mét vuông"
+                        + "\nĐịa chỉ: " + item.Address + "\n\nMô tả:\n" + item.Description,
+                        url: 'http://nhabaola.vn',
+                        title: 'Chia sẻ Nhà Bao La'
                       }, {
                           // Android only:
-                          dialogTitle: 'Share BAM goodness',
+                          dialogTitle: 'Chia sẻ Nhà Bao La',
                           // iOS only:
                           excludedActivityTypes: [
                             'com.apple.UIKit.activity.PostToTwitter'
@@ -1313,8 +1365,16 @@ export default class HomeScreen extends React.Component {
                     <Ionicons style={styles.cardBottomIcon} name='md-share' />
                   </TouchableOpacity>
                   <TouchableOpacity
-                    onPress={() => {
-                      this.popupDialog.show();
+                    onPress={async () => {
+                      if (this.state.profile === null) {
+                        ToastAndroid.showWithGravity("Bạn vui lòng đăng nhập!", ToastAndroid.SHORT, ToastAndroid.TOP)
+
+                      } else {
+                        await this.setState({
+                          reportRoomId: item.ID,
+                        })
+                        this.popupReportNBL.show();
+                      }
                     }}
                   >
                     <Ionicons style={styles.cardBottomIconRightEnd} name='md-flag' />
@@ -1699,9 +1759,9 @@ export default class HomeScreen extends React.Component {
 
         {/* Popup Report */}
         <PopupDialog
-          ref={(popupDialog) => { this.popupDialog = popupDialog; }}
+          ref={(popupReportNBL) => { this.popupReportNBL = popupReportNBL; }}
           dialogAnimation={new ScaleAnimation()}
-          dialogTitle={<DialogTitle title="Báo cáo Nhà baola" titleStyle={{}} titleTextStyle={{ color: '#73aa2a' }} />}
+          dialogTitle={<DialogTitle title="Báo cáo Nhà Bao La" titleStyle={{}} titleTextStyle={{ color: '#73aa2a' }} />}
           dismissOnTouchOutside={false}
           dialogStyle={{ marginBottom: 100, width: width * 0.9 }}
 
@@ -1709,18 +1769,30 @@ export default class HomeScreen extends React.Component {
           <View>
             <CheckBox
               title='Không đúng địa chỉ'
-              checked={this.state.reportCheck}
+              checked={this.state.reportAddress}
               onPress={() => {
-
+                this.setState({
+                  reportAddress: !this.state.reportAddress
+                })
               }}
             />
             <CheckBox
               title='Không gọi được'
-              checked={this.state.checked}
+              checked={this.state.reportCall}
+              onPress={() => {
+                this.setState({
+                  reportCall: !this.state.reportCall
+                })
+              }}
             />
             <CheckBox
               title='Nhà đã cho thuê'
-              checked={this.state.checked}
+              checked={this.state.reportHouse}
+              onPress={() => {
+                this.setState({
+                  reportHouse: !this.state.reportHouse
+                })
+              }}
             />
 
             {/* Button */}
@@ -1732,7 +1804,7 @@ export default class HomeScreen extends React.Component {
                 buttonStyle={{ backgroundColor: '#9B9D9D', padding: 15, borderRadius: 10 }}
                 icon={{ name: 'ios-backspace', type: 'ionicon' }}
                 onPress={() => {
-                  this.popupDialog.dismiss()
+                  this.popupReportNBL.dismiss()
                 }}
                 title='Hủy' />
 
@@ -1741,22 +1813,18 @@ export default class HomeScreen extends React.Component {
                 icon={{ name: 'md-cloud-upload', type: 'ionicon' }}
                 title='Gửi'
                 onPress={() => {
-
+                  if (this.state.reportAddress) {
+                    this._reportNBLAsync(2, this.state.reportRoomId)
+                  }
+                  if (this.state.reportCall) {
+                    this._reportNBLAsync(3, this.state.reportRoomId)
+                  }
+                  if (this.state.reportHouse) {
+                    this._reportNBLAsync(5, this.state.reportRoomId)
+                  }
 
                 }}
               />
-
-              {/* <TouchableOpacity
-                style={{ flex: 1, backgroundColor: '#9B9D9D', margin: 20, }}
-                onPress={() => { this.popupDialog.dismiss() }}
-              >
-                <Text style={{ color: '#fff', textAlign: 'center', padding: 10 }}>Hủy</Text>
-              </TouchableOpacity> */}
-              {/* <TouchableOpacity
-                style={{ flex: 1, backgroundColor: '#73aa2a', margin: 20, }}
-              >
-                <Text style={{ color: '#fff', textAlign: 'center', padding: 10 }}>Gửi</Text>
-              </TouchableOpacity> */}
             </View>
           </View>
         </PopupDialog>

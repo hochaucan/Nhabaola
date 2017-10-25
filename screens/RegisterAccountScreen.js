@@ -245,9 +245,13 @@ export default class RegisterAccountScreen extends React.Component {
                                 placeholder='Số điện thoại'
                                 autoCapitalize='sentences'
                                 keyboardType='numeric'
+                                returnKeyType={"next"}
                                 underlineColorAndroid={'#73aa2a'}
                                 onChangeText={(registerCellPhone) => this.setState({ registerCellPhone })}
                                 value={this.state.registerCellPhone}
+                                onSubmitEditing={(event) => {
+                                    this.refs.passwordInput.focus();
+                                }}
                             />
                             <TouchableOpacity>
                                 <FormLabel
@@ -264,6 +268,11 @@ export default class RegisterAccountScreen extends React.Component {
                         <View style={{ flexDirection: 'row', padding: 10, paddingTop: 0, }}>
                             <Ionicons style={{ flex: 1, fontSize: 22, paddingTop: 12, textAlign: 'center', }} name='ios-lock' />
                             <FormInput
+                                ref='passwordInput'
+                                returnKeyType={"next"}
+                                onSubmitEditing={(event) => {
+                                    this.refs.confirmPasswordInput.focus();
+                                }}
                                 containerStyle={{ flex: 15 }}
                                 inputStyle={{ paddingLeft: Platform.OS === 'android' ? 4 : 0 }}
                                 placeholder='Mật khẩu'
@@ -275,6 +284,11 @@ export default class RegisterAccountScreen extends React.Component {
                         </View>
                         <View style={{ flexDirection: 'row', padding: 10, paddingTop: 0, }}>
                             <FormInput
+                                ref='confirmPasswordInput'
+                                returnKeyType={"next"}
+                                onSubmitEditing={(event) => {
+                                    this.refs.fullNameInput.focus();
+                                }}
                                 containerStyle={{ flex: 15, marginLeft: 36 }}
                                 inputStyle={{ paddingLeft: Platform.OS === 'android' ? 4 : 0 }}
                                 placeholder='Xác nhận mật khẩu'
@@ -288,6 +302,11 @@ export default class RegisterAccountScreen extends React.Component {
                         <View style={{ flexDirection: 'row', padding: 10, paddingTop: 0, }}>
                             <Ionicons style={{ flex: 1, fontSize: 22, paddingTop: 12, textAlign: 'center', }} name='ios-person' />
                             <FormInput
+                                ref='fullNameInput'
+                                returnKeyType={"next"}
+                                onSubmitEditing={(event) => {
+                                    this.refs.emailInput.focus();
+                                }}
                                 containerStyle={{ flex: 15, marginLeft: Platform.OS === 'ios' ? 22 : 18 }}
                                 inputStyle={{ paddingLeft: Platform.OS === 'android' ? 4 : 0 }}
                                 placeholder='Họ và tên'
@@ -301,6 +320,11 @@ export default class RegisterAccountScreen extends React.Component {
                         <View style={{ flexDirection: 'row', padding: 10, paddingTop: 0, }}>
                             <Ionicons style={{ flex: 1, fontSize: 22, paddingTop: 12, textAlign: 'center', }} name='ios-mail' />
                             <FormInput
+                                ref='emailInput'
+                                returnKeyType={"next"}
+                                onSubmitEditing={(event) => {
+                                    this.refs.verifyCellPhoneInput.focus();
+                                }}
                                 containerStyle={{ flex: 15, marginLeft: Platform.OS === 'ios' ? 22 : 18 }}
                                 inputStyle={{ paddingLeft: Platform.OS === 'android' ? 4 : 0 }}
                                 placeholder='Email'
@@ -314,6 +338,11 @@ export default class RegisterAccountScreen extends React.Component {
                         {/* Verify Cellphone */}
                         <View style={{ flexDirection: 'row', padding: 10, paddingTop: 0, }}>
                             <FormInput
+                                ref='verifyCellPhoneInput'
+                                returnKeyType={"done"}
+                                onSubmitEditing={(event) => {
+                                    this._registerAccountAsync();
+                                }}
                                 containerStyle={{ flex: 1, borderWidth: 0.6, borderColor: '#9B9D9D', borderRadius: 10, padding: 5, marginTop: 10, }}
                                 inputStyle={{}}
                                 placeholder='Mã xác nhận số điện thoại (4 số)'
@@ -326,9 +355,6 @@ export default class RegisterAccountScreen extends React.Component {
                         </View>
 
                     </View>
-
-                    {/* The view that will animate to match the keyboards height */}
-                    <KeyboardSpacer />
 
                     {/* Form Button */}
                     <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center', marginTop: 20, }}>
@@ -363,6 +389,8 @@ export default class RegisterAccountScreen extends React.Component {
                         />
                     </View>
 
+                    {/* The view that will animate to match the keyboards height */}
+                    <KeyboardSpacer />
                 </ScrollView>
 
 
