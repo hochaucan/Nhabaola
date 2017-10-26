@@ -9,7 +9,6 @@ import {
     Platform,
     View,
     TextInput,
-    Button,
     Share,
     FlatList,
     AsyncStorage,
@@ -23,6 +22,7 @@ import Swiper from 'react-native-swiper';
 import Communications from 'react-native-communications';
 import StarRating from 'react-native-star-rating';
 import PopupDialog, { SlideAnimation, ScaleAnimation, DialogTitle, DialogButton } from 'react-native-popup-dialog';
+import { CheckBox, Rating, Button, FormLabel, FormInput, SocialIcon, FormValidationMessage } from 'react-native-elements'
 import KeyboardSpacer from 'react-native-keyboard-spacer';
 import { TextInputMask, TextMask } from 'react-native-masked-text';
 
@@ -64,12 +64,18 @@ export default class RoomDetailScreen extends React.Component {
         super(props);
         this.state = {
             mapRegion: { latitude: LATITUDE, longitude: LONGITUDE, latitudeDelta: LATITUDE_DELTA, longitudeDelta: LONGITUDE_DELTA },
-            starCount: 3.5,
+            starCount: 5,
+            starView: 0,
+            isRating: false,
             comments: [],
             roomBox: null,
             profile: null,
             commentContent: '',
             roomCategory: [],
+
+            reportAddress: false,
+            reportCall: false,
+            reportHouse: false,
         }
     }
 
@@ -84,7 +90,8 @@ export default class RoomDetailScreen extends React.Component {
     _getRoomBoxDetailAsync = async () => {
 
         await this.setState({
-            roomBox: this.props.navigation.state.params.item
+            roomBox: this.props.navigation.state.params.item,
+            starView: this.props.navigation.state.params.item.Point
         })
         await this._getRoomCategoryFromStorageAsync();
         await this._getProfileFromStorageAsync();
@@ -249,6 +256,96 @@ export default class RoomDetailScreen extends React.Component {
 
     }
 
+    _postRatingByRoom = async (_rate, _roomId) => {
+
+        // alert(_roomId + "  " + _rate + "  " + this.state.profile.ID + "  " + this.state.profile.UpdatedBy)
+        // return;
+
+        try {
+            await fetch("http://nhabaola.vn/api/RoomBox/FO_RoomBox_SetLike", {
+                method: 'POST',
+                headers: {
+                    Accept: 'application/json',
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    "ID": _roomId,
+                    "Point": _rate,
+                    "CreatedBy": this.state.profile.ID,
+                    "UpdatedBy": this.state.profile.UpdatedBy,
+                }),
+            })
+                .then((response) => response.json())
+                .then((responseJson) => {
+
+                    if (JSON.stringify(responseJson.ErrorCode) === "0") { // Rating successful
+                        this.popupRating.dismiss();
+
+                        if (Platform.OS === 'android') {
+                            ToastAndroid.showWithGravity('Cảm ơn bạn đã đánh giá!', ToastAndroid.SHORT, ToastAndroid.TOP);
+                        }
+                        else {
+                            Alert.alert('Thông báo', 'Cảm ơn bạn đã đánh giá!');
+                        }
+                    }
+                }).
+                catch((error) => { console.log(error) });
+        } catch (error) {
+            console.log(error)
+        }
+
+    }
+
+    _reportNBLAsync = async (_reportTypeId, _roomId) => {
+
+        // alert(_roomId + "  " + _rate + "  " + this.state.profile.ID + "  " + this.state.sessionKey)
+
+        try {
+            await fetch("http://nhabaola.vn/api/ReportComment/FO_ReportComment_Add", {
+                method: 'POST',
+                headers: {
+                    Accept: 'application/json',
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    "RoomBoxId": _roomId,
+                    "ReportTypeID": _reportTypeId,
+                    "UserID": this.state.profile.ID,
+                    "CreatedBy": this.state.profile.ID,
+                    "UpdatedBy": this.state.profile.UpdatedBy,
+                }),
+            })
+                .then((response) => response.json())
+                .then((responseJson) => {
+
+                    if (JSON.stringify(responseJson.ErrorCode) === "0") { // Rating successful
+                        this.popupReportNBL.dismiss();
+
+                        if (Platform.OS === 'android') {
+                            ToastAndroid.showWithGravity('Cảm ơn bạn đã báo cáo chúng tôi!', ToastAndroid.SHORT, ToastAndroid.TOP);
+                        }
+                        else {
+                            Alert.alert('Thông báo', 'Cảm ơn bạn đã báo cáo chúng tôi!');
+                        }
+
+                        this.setState({
+                            reportAddress: false,
+                            reportCall: false,
+                            reportHouse: false,
+                        })
+
+                    }
+
+
+
+                }).
+                catch((error) => { console.log(error) });
+        } catch (error) {
+            console.log(error)
+        }
+
+    }
+
     render() {
         //const { picture, name, email, phone, login, dob, location } = this.props.navigation.state.params;
         //const { item } = this.props.navigation.state.params;
@@ -334,10 +431,18 @@ export default class RoomDetailScreen extends React.Component {
                 </View>
                 <ScrollView style={styles.container}>
 
-                    <View style={styles.card}>
+                    <View style={{
+
+                        flex: 1,
+                        height: height * 0.6, //500,
+                        // borderBottomWidth: 0.5,
+                        borderColor: '#d6d7da',
+                        padding: 0,
+                        flexDirection: 'column',
+                    }}>
 
                         <View
-                            style={styles.cardImageBox}
+                            style={{ flex: 1, }}
                         >
 
                             <Swiper
@@ -403,15 +508,29 @@ export default class RoomDetailScreen extends React.Component {
                         </View>
                         <View style={styles.cardBottom}>
                             <View style={styles.cardBottomLeft}>
-                                <Text style={styles.cardBottomIconText}>5</Text>
+                                <Text style={styles.cardBottomIconText}>{this.state.starView}</Text>
                                 <TouchableOpacity
-                                    onPress={() => {
-                                        this.popupRating.show();
+                                    onPress={async () => {
+                                        if (this.state.profile === null) {
+                                            ToastAndroid.showWithGravity("Bạn vui lòng đăng nhập!", ToastAndroid.SHORT, ToastAndroid.TOP)
+
+                                        } else {
+                                            await this.setState({
+                                                //ratingRoomId: item.ID,
+                                                starCount: parseFloat(this.state.roomBox.Point)
+                                            })
+                                            this.popupRating.show();
+                                        }
                                     }}
                                 >
-                                    <Ionicons style={styles.cardBottomIcon} name='ios-star' />
+                                    <Ionicons style={{
+                                        fontSize: 20,
+                                        paddingRight: 20,
+                                        paddingLeft: 5,
+                                        color: this.state.isRating ? '#a4d227' : '#8B8E8E',
+                                    }} name='ios-star' />
                                 </TouchableOpacity>
-                                <Text style={styles.cardBottomIconText}>3</Text>
+                                <Text style={styles.cardBottomIconText}>{this.state.comments.length}</Text>
                                 <TouchableOpacity >
                                     <Ionicons style={styles.cardBottomIcon} name='ios-chatbubbles' />
                                 </TouchableOpacity>
@@ -433,17 +552,17 @@ export default class RoomDetailScreen extends React.Component {
                                         })
 
                                         Share.share({
-                                            message: "***** Chia Sẻ Nhà Bao La *****"
+                                            message: "***** Chia Sẻ từ Ứng Dụng Nhà Bao La *****"
                                             + "\n\nLiên hệ: " + this.state.roomBox.AccountName + "\nĐiện thoại: " + this.state.roomBox.AccountPhone
                                             + "\n\nLoại bất động sản: " + loadBDS
                                             + "\nGiá: " + this.state.roomBox.Price + " đồng"
                                             + "\nDiện tích: " + this.state.roomBox.Acreage + " mét vuông"
                                             + "\nĐịa chỉ: " + this.state.roomBox.Address + "\n\nMô tả:\n" + this.state.roomBox.Description,
                                             url: 'http://nhabaola.vn',
-                                            title: 'Chia sẻ Nhà Bao La'
+                                            title: 'Chia Sẻ từ Ứng Dụng Nhà Bao La'
                                         }, {
                                                 // Android only:
-                                                dialogTitle: 'Chia sẻ Nhà Bao La',
+                                                dialogTitle: 'Chia Sẻ từ Ứng Dụng Nhà Bao La',
                                                 // iOS only:
                                                 excludedActivityTypes: [
                                                     'com.apple.UIKit.activity.PostToTwitter'
@@ -453,7 +572,19 @@ export default class RoomDetailScreen extends React.Component {
                                 >
                                     <Ionicons style={styles.cardBottomIcon} name='md-share' />
                                 </TouchableOpacity>
-                                <TouchableOpacity>
+                                <TouchableOpacity
+                                    onPress={async () => {
+                                        if (this.state.profile === null) {
+                                            ToastAndroid.showWithGravity("Bạn vui lòng đăng nhập!", ToastAndroid.SHORT, ToastAndroid.TOP)
+
+                                        } else {
+                                            {/* await this.setState({
+                                                reportRoomId: item.ID,
+                                            }) */}
+                                            this.popupReportNBL.show();
+                                        }
+                                    }}
+                                >
                                     <Ionicons style={styles.cardBottomIconRightEnd} name='md-flag' />
                                 </TouchableOpacity>
                             </View>
@@ -474,8 +605,8 @@ export default class RoomDetailScreen extends React.Component {
 
                             <MapView.Marker
                                 coordinate={roomMaker}
-                                title='Im here'
-                                description='Home'
+                            //title='Vị trí nhà'
+                            // description='Home'
                             >
 
                             </MapView.Marker>
@@ -501,6 +632,12 @@ export default class RoomDetailScreen extends React.Component {
                                 padding: 5,
                                 borderRadius: 5,
                             }}
+                            ref='commentInput'
+                            returnKeyType={"done"}
+                            onSubmitEditing={(event) => {
+                                this._postCommentsAsync();
+                            }}
+
                             placeholder='Bình luận'
                             underlineColorAndroid='transparent'
                             value={this.state.commentContent}
@@ -556,7 +693,7 @@ export default class RoomDetailScreen extends React.Component {
 
                                 </View>
                             }
-                            keyExtractor={item => item.ID}
+                            keyExtractor={item => item.Content + item.UpdatedDate}
                         />
                     </View>
                 </ScrollView>
@@ -574,8 +711,91 @@ export default class RoomDetailScreen extends React.Component {
                         maxStars={5}
                         starColor={'#a4d227'}
                         rating={this.state.starCount}
-                        selectedStar={(rating) => { this._starRatingPress(rating) }}
+                        selectedStar={(rating) => {
+                            this.setState({
+                                isRating: true,
+                                starView: (parseInt(this.state.starView) + rating) / 2
+                            })
+                            this._postRatingByRoom(rating, this.state.roomBox.ID)
+                        }}
                     />
+                </PopupDialog>
+
+                {/* Popup Report */}
+                <PopupDialog
+                    ref={(popupReportNBL) => { this.popupReportNBL = popupReportNBL; }}
+                    dialogAnimation={new ScaleAnimation()}
+                    dialogTitle={<DialogTitle title="Báo cáo Nhà Bao La" titleStyle={{}} titleTextStyle={{ color: '#73aa2a' }} />}
+                    dismissOnTouchOutside={false}
+                    dialogStyle={{ marginBottom: 100, width: width * 0.9 }}
+
+                >
+                    <View>
+                        <CheckBox
+                            title='Không đúng địa chỉ'
+                            checked={this.state.reportAddress}
+                            onPress={() => {
+                                this.setState({
+                                    reportAddress: !this.state.reportAddress
+                                })
+                            }}
+                        />
+                        <CheckBox
+                            title='Không gọi được'
+                            checked={this.state.reportCall}
+                            onPress={() => {
+                                this.setState({
+                                    reportCall: !this.state.reportCall
+                                })
+                            }}
+                        />
+                        <CheckBox
+                            title='Nhà đã cho thuê'
+                            checked={this.state.reportHouse}
+                            onPress={() => {
+                                this.setState({
+                                    reportHouse: !this.state.reportHouse
+                                })
+                            }}
+                        />
+
+                        {/* Button */}
+                        <View style={{ height: 80, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', paddingBottom: 20, }}>
+                            {/* <View style={{ height: 80, flexDirection: 'row', marginBottom: 15, }}> */}
+
+
+                            <Button
+                                buttonStyle={{ backgroundColor: '#9B9D9D', padding: 15, borderRadius: 10 }}
+                                icon={{ name: 'ios-backspace', type: 'ionicon' }}
+                                onPress={() => {
+                                    this.popupReportNBL.dismiss()
+                                    this.setState({
+                                        reportAddress: false,
+                                        reportCall: false,
+                                        reportHouse: false,
+                                    })
+                                }}
+                                title='Hủy' />
+
+                            <Button
+                                buttonStyle={{ backgroundColor: '#73aa2a', padding: 15, borderRadius: 10 }}
+                                icon={{ name: 'md-cloud-upload', type: 'ionicon' }}
+                                title='Gửi'
+                                onPress={() => {
+                                    if (this.state.reportAddress) {
+                                        this._reportNBLAsync(2, this.state.roomBox.ID)
+                                    }
+                                    if (this.state.reportCall) {
+                                        this._reportNBLAsync(3, this.state.roomBox.ID)
+                                    }
+                                    if (this.state.reportHouse) {
+                                        this._reportNBLAsync(5, this.state.roomBox.ID)
+                                    }
+
+                                }}
+                            />
+                        </View>
+                    </View>
                 </PopupDialog>
             </View>
         );
@@ -636,14 +856,14 @@ const styles = StyleSheet.create({
         backgroundColor: '#fff',
     },
 
-    card: {
-        flex: 1,
-        height: height * 0.8, //500,
-        // borderBottomWidth: 0.5,
-        borderColor: '#d6d7da',
-        padding: 0,
-        flexDirection: 'column',
-    },
+    // card: {
+    //     flex: 1,
+    //     height: height * 0.8, //500,
+    //     // borderBottomWidth: 0.5,
+    //     borderColor: '#d6d7da',
+    //     padding: 0,
+    //     flexDirection: 'column',
+    // },
 
     cardAvatarBox: {
         // flex: 1
@@ -674,13 +894,13 @@ const styles = StyleSheet.create({
         fontSize: 13,
         paddingLeft: 8,
     },
-    cardImageBox: {
-        flex: 6,
-        // paddingLeft: 20,
-        // paddingRight: 20,
-        // borderWidth: 1,
-        // borderColor: 'blue',
-    },
+    // cardImageBox: {
+    //     flex: 6,
+    //     // paddingLeft: 20,
+    //     // paddingRight: 20,
+    //     // borderWidth: 1,
+    //     // borderColor: 'blue',
+    // },
     cardImage: {
         flex: 1,
 

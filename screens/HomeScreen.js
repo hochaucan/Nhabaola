@@ -900,7 +900,14 @@ export default class HomeScreen extends React.Component {
               Alert.alert('Thông báo', 'Cảm ơn bạn đã báo cáo chúng tôi!');
             }
 
+            this.setState({
+              reportAddress: false,
+              reportCall: false,
+              reportHouse: false,
+            })
+
           }
+
 
 
         }).
@@ -1314,7 +1321,7 @@ export default class HomeScreen extends React.Component {
                       } else {
                         await this.setState({
                           ratingRoomId: item.ID,
-                          starCount: item.Point
+                          starCount: parseFloat(item.Point)
                         })
                         this.popupRating.show();
                       }
@@ -1322,8 +1329,12 @@ export default class HomeScreen extends React.Component {
                   >
                     <Ionicons style={styles.cardBottomIcon} name='ios-star' />
                   </TouchableOpacity>
-                  <Text style={styles.cardBottomIconText}>3</Text>
-                  <TouchableOpacity >
+                  <Text style={styles.cardBottomIconText}></Text>
+                  <TouchableOpacity
+                    onPress={() => {
+                      this.props.navigation.navigate('RoomDetailScreen', { item });
+                    }}
+                  >
                     <Ionicons style={styles.cardBottomIcon} name='ios-chatbubbles' />
                   </TouchableOpacity>
                 </View>
@@ -1345,17 +1356,17 @@ export default class HomeScreen extends React.Component {
                       })
 
                       Share.share({
-                        message: "***** Chia Sẻ Nhà Bao La *****"
+                        message: "***** Chia Sẻ từ Ứng Dụng Nhà Bao La *****"
                         + "\n\nLiên hệ: " + item.AccountName + "\nĐiện thoại: " + item.AccountPhone
                         + "\n\nLoại bất động sản: " + loadBDS
                         + "\nGiá: " + item.Price + " đồng"
                         + "\nDiện tích: " + item.Acreage + " mét vuông"
                         + "\nĐịa chỉ: " + item.Address + "\n\nMô tả:\n" + item.Description,
                         url: 'http://nhabaola.vn',
-                        title: 'Chia sẻ Nhà Bao La'
+                        title: 'Chia Sẻ từ Ứng Dụng Nhà Bao La'
                       }, {
                           // Android only:
-                          dialogTitle: 'Chia sẻ Nhà Bao La',
+                          dialogTitle: 'Chia Sẻ từ Ứng Dụng Nhà Bao La',
                           // iOS only:
                           excludedActivityTypes: [
                             'com.apple.UIKit.activity.PostToTwitter'
@@ -1830,6 +1841,11 @@ export default class HomeScreen extends React.Component {
                 icon={{ name: 'ios-backspace', type: 'ionicon' }}
                 onPress={() => {
                   this.popupReportNBL.dismiss()
+                  this.setState({
+                    reportAddress: false,
+                    reportCall: false,
+                    reportHouse: false,
+                  })
                 }}
                 title='Hủy' />
 

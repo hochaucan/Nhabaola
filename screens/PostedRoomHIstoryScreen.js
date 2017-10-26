@@ -346,7 +346,7 @@ export default class PostedRoomHIstoryScreen extends React.Component {
                                                             // <Text>{y.ID} {item.CategoryID}</Text>
                                                             y.ID == item.CategoryID &&
                                                             <Text
-                                                                style={{ flex: 1, fontSize: 15, textAlign: 'center', }}
+                                                                style={{ flex: 1, fontSize: 15, textAlign: 'center', color: '#73aa2a' }}
                                                                 key={i}>{y.CatName}</Text>
                                                         )
                                                     })
