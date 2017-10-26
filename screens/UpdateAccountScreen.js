@@ -29,6 +29,7 @@ import { CheckBox, Rating, Button, FormLabel, FormInput, SocialIcon, FormValidat
 import PopupDialog, { SlideAnimation, ScaleAnimation, DialogTitle, DialogButton } from 'react-native-popup-dialog';
 import uploadImageAsync from '../api/uploadImageAsync';
 import KeyboardSpacer from 'react-native-keyboard-spacer';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 
 var { height, width } = Dimensions.get('window');
 
@@ -200,11 +201,18 @@ export default class UpdateAccountScreen extends React.Component {
 
     };
 
+    _scrollToInput(reactNode) {
+        // Add a 'scroll' ref to your ScrollView
+        this.scroll.props.scrollToFocusedInput(reactNode)
+        //this.scroll.props.scrollToPosition(0, 20)
+        //alert(reactNode)
+    }
+
     render() {
         return (
             <View style={{ flex: 1, backgroundColor: '#fff', paddingBottom: 20, }}>
-                <ScrollView
-                    style={{}}
+                <KeyboardAwareScrollView
+                    innerRef={ref => { this.scroll = ref }}
                 >
                     <View style={{ flexDirection: 'row', padding: 20, justifyContent: 'center', alignItems: 'center' }}>
                         <TouchableOpacity
@@ -256,6 +264,14 @@ export default class UpdateAccountScreen extends React.Component {
                         <View style={{ flexDirection: 'row', padding: 10, paddingTop: 0, }}>
                             <Ionicons style={{ flex: 1, fontSize: 22, paddingTop: 12, textAlign: 'center', }} name='ios-person' />
                             <FormInput
+                                ref='fullNameInput'
+                                returnKeyType={"next"}
+                                onSubmitEditing={(event) => {
+                                    this.refs.emailInput.focus();
+                                }}
+                                onFocus={(event) => {
+                                    this._scrollToInput(event.target)
+                                }}
                                 containerStyle={{ flex: 15, marginLeft: Platform.OS === 'ios' ? 22 : 18 }}
                                 inputStyle={{ paddingLeft: Platform.OS === 'android' ? 4 : 0 }}
                                 placeholder='Họ và tên'
@@ -269,6 +285,14 @@ export default class UpdateAccountScreen extends React.Component {
                         <View style={{ flexDirection: 'row', padding: 10, paddingTop: 0, }}>
                             <Ionicons style={{ flex: 1, fontSize: 22, paddingTop: 12, textAlign: 'center', }} name='ios-mail' />
                             <FormInput
+                                ref='emailInput'
+                                returnKeyType={"done"}
+                                onSubmitEditing={(event) => {
+                                    this._updateAccountAsync();
+                                }}
+                                onFocus={(event) => {
+                                    this._scrollToInput(event.target)
+                                }}
                                 containerStyle={{ flex: 15, marginLeft: Platform.OS === 'ios' ? 22 : 18 }}
                                 inputStyle={{ paddingLeft: Platform.OS === 'android' ? 4 : 0 }}
                                 placeholder='Email'
@@ -281,8 +305,7 @@ export default class UpdateAccountScreen extends React.Component {
                         </View>
                     </View>
 
-                    {/* The view that will animate to match the keyboards height */}
-                    <KeyboardSpacer />
+
 
                     {/* Form Button */}
                     <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center', marginTop: 20, }}>
@@ -292,15 +315,15 @@ export default class UpdateAccountScreen extends React.Component {
                             icon={{ name: 'ios-backspace', type: 'ionicon' }}
                             title='Hủy'
                             onPress={() => {
-                                {/* this.setState({
+                                this.setState({
                                     registerCellPhone: '',
-                                    registerPassword: '',
-                                    registerConfirmPassword: '',
-                                    registerAccountImage: '',
+                                    //  registerPassword: '',
+                                    // registerConfirmPassword: '',
+                                    registerAccountImage: null,
                                     registerFullName: '',
-                                    registerConfirmCellPhone: '',
+                                    // registerConfirmCellPhone: '',
                                     registerEmail: '',
-                                }) */}
+                                })
 
                                 this.props.navigation.goBack();
                             }}
@@ -316,8 +339,9 @@ export default class UpdateAccountScreen extends React.Component {
                             }}
                         />
                     </View>
-
-                </ScrollView>
+                    {/* The view that will animate to match the keyboards height */}
+                    <KeyboardSpacer />
+                </KeyboardAwareScrollView>
 
 
 

@@ -1502,6 +1502,11 @@ export default class HomeScreen extends React.Component {
             }}>
               <Ionicons style={{ flex: 1, fontSize: 22, paddingTop: 12, textAlign: 'center', }} name='md-call' />
               <FormInput
+                ref='userNameInput'
+                returnKeyType={"done"}
+                onSubmitEditing={(event) => {
+                  this._resetPasswordStep1();
+                }}
                 containerStyle={{ flex: 15 }}
                 placeholder='Số điện thoại'
                 autoCapitalize='sentences'
@@ -1580,6 +1585,11 @@ export default class HomeScreen extends React.Component {
             }}>
               <Ionicons style={{ flex: 1, fontSize: 22, paddingTop: 12, textAlign: 'center', }} name='md-key' />
               <FormInput
+                ref='ActiveKeyInput'
+                returnKeyType={"next"}
+                onSubmitEditing={(event) => {
+                  this.refs.newPasswordInput.focus();
+                }}
                 containerStyle={{ flex: 15 }}
                 placeholder='Mã kích hoạt mật khẩu mới'
                 autoCapitalize='sentences'
@@ -1596,6 +1606,11 @@ export default class HomeScreen extends React.Component {
             }}>
               <Ionicons style={{ flex: 1, fontSize: 22, paddingTop: 12, textAlign: 'center', }} name='md-lock' />
               <FormInput
+                ref='newPasswordInput'
+                returnKeyType={"done"}
+                onSubmitEditing={(event) => {
+                  this._resetPasswordStep2();
+                }}
                 containerStyle={{ flex: 15 }}
                 placeholder='Mật khẩu mới'
                 autoCapitalize='sentences'
@@ -1651,6 +1666,11 @@ export default class HomeScreen extends React.Component {
             <Animated.View style={{ position: 'relative', left: this.state.animation.usernamePostionLeft, flexDirection: 'row', padding: 10, }}>
               <Ionicons style={{ flex: 1, fontSize: 22, paddingTop: 12, textAlign: 'center', }} name='ios-person' />
               <FormInput
+                ref='userNameInput'
+                returnKeyType={"next"}
+                onSubmitEditing={(event) => {
+                  this.refs.passwordInput.focus();
+                }}
                 containerStyle={{ flex: 15 }}
                 placeholder='Số điện thoại'
                 autoCapitalize='sentences'
@@ -1664,6 +1684,11 @@ export default class HomeScreen extends React.Component {
             <Animated.View style={{ position: 'relative', left: this.state.animation.passwordPositionLeft, flexDirection: 'row', padding: 10, paddingTop: 0, }}>
               <Ionicons style={{ flex: 1, fontSize: 22, paddingTop: 12, textAlign: 'center', }} name='md-lock' />
               <FormInput
+                ref='passwordInput'
+                returnKeyType={"done"}
+                onSubmitEditing={(event) => {
+                  this._loginAsync()
+                }}
                 containerStyle={{ flex: 15 }}
                 placeholder='Mật khẩu'
                 underlineColorAndroid={'#73aa2a'}

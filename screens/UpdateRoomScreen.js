@@ -30,6 +30,7 @@ import PopupDialog, { SlideAnimation, ScaleAnimation, DialogTitle, DialogButton 
 import uploadImageAsync from '../api/uploadImageAsync'
 import HomeScreen from './HomeScreen';
 import DatePicker from 'react-native-datepicker'
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 
 var { height, width } = Dimensions.get('window');
 
@@ -568,11 +569,21 @@ export default class UpdateRoomScreen extends React.Component {
 
     }
 
+    _scrollToInput(reactNode) {
+        // Add a 'scroll' ref to your ScrollView
+        this.scroll.props.scrollToFocusedInput(reactNode)
+        //this.scroll.props.scrollToPosition(0, 20)
+        //alert(reactNode)
+    }
+
     render() {
 
         return (
             <View style={{ flex: 1, backgroundColor: '#fff' }}>
-                <ScrollView style={{ paddingTop: 10, marginTop: 20, }}>
+                <KeyboardAwareScrollView
+                    innerRef={ref => { this.scroll = ref }}
+                    style={{ paddingTop: 10, marginTop: 20, }}
+                >
                     <FormLabel>Hình ảnh</FormLabel>
                     <View style={{
                         height: 120, paddingRight: 20,
@@ -716,7 +727,14 @@ export default class UpdateRoomScreen extends React.Component {
                         <View style={{ flexDirection: 'row', }}>
                             <FormLabel style={{}}>Giá:</FormLabel>
                             <TextInputMask
-                                ref={'price'}
+                                ref='priceInput'
+                                returnKeyType={"next"}
+                                onSubmitEditing={(event) => {
+                                    this.refs['acreageInput'].getElement().focus();
+                                }}
+                                onFocus={(event) => {
+                                    this._scrollToInput(event.target)
+                                }}
                                 type={'money'}
                                 options={{ suffixUnit: '', precision: 0, unit: '', separator: ' ' }}
                                 style={{ flex: 1, padding: 5, marginLeft: 30, borderBottomWidth: Platform.OS === 'ios' ? 0.5 : 0, borderColor: '#73aa2a' }}
@@ -732,7 +750,14 @@ export default class UpdateRoomScreen extends React.Component {
                         <View style={{ flexDirection: 'row', }}>
                             <FormLabel style={{}}>Diện tích:</FormLabel>
                             <TextInputMask
-                                ref={'acreage'}
+                                ref='acreageInput'
+                                returnKeyType={"next"}
+                                //onSubmitEditing={(event) => {
+                                //  this.refs.emailInput.focus();
+                                //}}
+                                onFocus={(event) => {
+                                    this._scrollToInput(event.target)
+                                }}
                                 type={'only-numbers'}
                                 style={{ flex: 1, padding: 5, borderBottomWidth: Platform.OS === 'ios' ? 0.5 : 0, borderColor: '#73aa2a' }}
                                 placeholder=''
@@ -863,7 +888,10 @@ export default class UpdateRoomScreen extends React.Component {
                                     }
                                     // ... You can check the source to find the other keys.
                                 }}
-                                onDateChange={(toDate) => { this.setState({ toDate }) }}
+                                onDateChange={(toDate) => {
+                                    this.setState({ toDate })
+                                    this.refs.roomInfoInput.focus();
+                                }}
                             />
                             {this.state.toDate < this.state.fromDate &&
                                 <Text style={{ marginLeft: 10, marginTop: 12, color: 'red' }}>*</Text>
@@ -949,7 +977,10 @@ export default class UpdateRoomScreen extends React.Component {
                                             }
                                             // ... You can check the source to find the other keys.
                                         }}
-                                        onDateChange={(toDateHighLight) => { this.setState({ toDateHighLight }) }}
+                                        onDateChange={(toDateHighLight) => {
+                                            this.setState({ toDateHighLight })
+                                            this.refs.roomInfoInput.focus();
+                                        }}
                                     />
                                     {this.state.toDateHighLight < this.state.fromDateHighLight &&
                                         <Text style={{ marginLeft: 10, marginTop: 12, color: 'red' }}>*</Text>
@@ -961,6 +992,14 @@ export default class UpdateRoomScreen extends React.Component {
                         {/* Detail Room Information */}
                         <FormLabel style={{ marginTop: 10, }}>Chi tiết:</FormLabel>
                         <FormInput
+                            ref='roomInfoInput'
+                            returnKeyType={"done"}
+                            onSubmitEditing={(event) => {
+                                this._updateRoomAsync();
+                            }}
+                            onFocus={(event) => {
+                                this._scrollToInput(event.target)
+                            }}
                             containerStyle={{ borderWidth: 0.5, borderColor: '#73aa2a', borderRadius: 10, }}
                             inputStyle={{ padding: 10, height: 140 }}
                             placeholder='Vui lòng nhập thông tin chi tiết'
@@ -969,7 +1008,7 @@ export default class UpdateRoomScreen extends React.Component {
                             //maxLength={300}
                             clearButtonMode='always'
                             underlineColorAndroid='#fff'
-                            blurOnSubmit={true}
+                            //blurOnSubmit={true}
                             value={this.state.detailInfo}
                             onChangeText={(detailInfo) => this.setState({ detailInfo })}
                         />
@@ -1002,7 +1041,8 @@ export default class UpdateRoomScreen extends React.Component {
                             />
                         </View>
                     </View>
-                </ScrollView>
+                    <KeyboardSpacer />
+                </KeyboardAwareScrollView>
 
                 {/* <KeyboardSpacer /> */}
 
@@ -1063,6 +1103,7 @@ export default class UpdateRoomScreen extends React.Component {
 
                             this.map.animateToCoordinate(this.state.searchingMaker, 1000)
                             this.popupSearching.dismiss();
+                            this.refs['priceInput'].getElement().focus();
 
                             {/* 
                             let currentMaker = {

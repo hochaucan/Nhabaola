@@ -29,6 +29,7 @@ import PopupDialog, { SlideAnimation, ScaleAnimation, DialogTitle, DialogButton 
 import uploadImageAsync from '../api/uploadImageAsync'
 import HomeScreen from './HomeScreen';
 import DatePicker from 'react-native-datepicker'
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 
 var { height, width } = Dimensions.get('window');
 
@@ -313,7 +314,7 @@ export default class PostRoomScreen extends React.Component {
         if (this.state.postRoomImage2 != null) {
             let uploadResponse = await uploadImageAsync(this.state.postRoomImage2);
             let uploadResult = await uploadResponse.json();
-            this.setState({ imageUrl: this.state.imageUrl + '|' + uploadResult.data.img_url  })
+            this.setState({ imageUrl: this.state.imageUrl + '|' + uploadResult.data.img_url })
         }
         if (this.state.postRoomImage3 != null) {
             let uploadResponse = await uploadImageAsync(this.state.postRoomImage3);
@@ -329,12 +330,12 @@ export default class PostRoomScreen extends React.Component {
         if (this.state.postRoomImage5 != null) {
             let uploadResponse = await uploadImageAsync(this.state.postRoomImage5);
             let uploadResult = await uploadResponse.json();
-            this.setState({ imageUrl: this.state.imageUrl + '|' + uploadResult.data.img_url  })
+            this.setState({ imageUrl: this.state.imageUrl + '|' + uploadResult.data.img_url })
         }
         if (this.state.postRoomImage6 != null) {
             let uploadResponse = await uploadImageAsync(this.state.postRoomImage6);
             let uploadResult = await uploadResponse.json();
-            this.setState({ imageUrl: this.state.imageUrl + '|' + uploadResult.data.img_url  })
+            this.setState({ imageUrl: this.state.imageUrl + '|' + uploadResult.data.img_url })
         }
 
 
@@ -427,11 +428,22 @@ export default class PostRoomScreen extends React.Component {
 
     }
 
+    _scrollToInput(reactNode) {
+        // Add a 'scroll' ref to your ScrollView
+        this.scroll.props.scrollToFocusedInput(reactNode)
+        //this.scroll.props.scrollToPosition(0, 20)
+        //alert(reactNode)
+    }
+
     render() {
 
         return (
             <View style={{ flex: 1, backgroundColor: '#fff' }}>
-                <ScrollView style={{ paddingTop: 10, marginTop: 20, }}>
+                <KeyboardAwareScrollView
+                    innerRef={ref => { this.scroll = ref }}
+                    style={{ paddingTop: 10, marginTop: 20, }}
+                >
+                    {/* <ScrollView style={{ paddingTop: 10, marginTop: 20, }}> */}
                     <FormLabel>Hình ảnh</FormLabel>
                     <View style={{
                         height: 120, paddingRight: 20,
@@ -575,7 +587,14 @@ export default class PostRoomScreen extends React.Component {
                         <View style={{ flexDirection: 'row', }}>
                             <FormLabel style={{}}>Giá:</FormLabel>
                             <TextInputMask
-                                ref={'price'}
+                                ref='priceInput'
+                                returnKeyType={"next"}
+                                onSubmitEditing={(event) => {
+                                    this.refs['acreageInput'].getElement().focus();
+                                }}
+                                onFocus={(event) => {
+                                    this._scrollToInput(event.target)
+                                }}
                                 type={'money'}
                                 options={{ suffixUnit: '', precision: 0, unit: '', separator: ' ' }}
                                 style={{ flex: 1, padding: 5, marginLeft: 30, borderBottomWidth: Platform.OS === 'ios' ? 0.5 : 0, borderColor: '#73aa2a' }}
@@ -591,7 +610,15 @@ export default class PostRoomScreen extends React.Component {
                         <View style={{ flexDirection: 'row', }}>
                             <FormLabel style={{}}>Diện tích:</FormLabel>
                             <TextInputMask
-                                ref={'acreage'}
+                                //ref='acreage'
+                                ref='acreageInput'
+                                returnKeyType={"next"}
+                                //onSubmitEditing={(event) => {
+                                //  this.refs.emailInput.focus();
+                                //}}
+                                onFocus={(event) => {
+                                    this._scrollToInput(event.target)
+                                }}
                                 type={'only-numbers'}
                                 style={{ flex: 1, padding: 5, borderBottomWidth: Platform.OS === 'ios' ? 0.5 : 0, borderColor: '#73aa2a' }}
                                 placeholder=''
@@ -721,7 +748,10 @@ export default class PostRoomScreen extends React.Component {
                                     }
                                     // ... You can check the source to find the other keys.
                                 }}
-                                onDateChange={(toDate) => { this.setState({ toDate }) }}
+                                onDateChange={(toDate) => {
+                                    this.setState({ toDate })
+                                    this.refs.roomInfoInput.focus();
+                                }}
                             />
                         </View>
 
@@ -803,7 +833,10 @@ export default class PostRoomScreen extends React.Component {
                                             }
                                             // ... You can check the source to find the other keys.
                                         }}
-                                        onDateChange={(toDateHighLight) => { this.setState({ toDateHighLight }) }}
+                                        onDateChange={(toDateHighLight) => {
+                                            this.setState({ toDateHighLight })
+                                            this.refs.roomInfoInput.focus();
+                                        }}
                                     />
                                 </View>
                             </View>
@@ -812,20 +845,30 @@ export default class PostRoomScreen extends React.Component {
                         {/* Detail Room Information */}
                         <FormLabel style={{ marginTop: 10, }}>Chi tiết:</FormLabel>
                         <FormInput
+                            ref='roomInfoInput'
+                            returnKeyType={"done"}
+                            onSubmitEditing={(event) => {
+                                this._postRoomAsync();
+                            }}
+                            onFocus={(event) => {
+                                this._scrollToInput(event.target)
+                            }}
                             containerStyle={{ borderWidth: 0.5, borderColor: '#73aa2a', borderRadius: 10, }}
-                            inputStyle={{ padding: 10, height: 140 }}
+                            inputStyle={{ padding: 10, height: 120 }}
                             placeholder='Vui lòng nhập thông tin chi tiết'
                             multiline={true}
+                            //numberOfLines={5}
+                            //keyboardType='default'
                             autoCapitalize='sentences'
                             //maxLength={300}
                             clearButtonMode='always'
                             underlineColorAndroid='#fff'
-                            blurOnSubmit={true}
+                            blurOnSubmit={false}
                             value={this.state.detailInfo}
                             onChangeText={(detailInfo) => this.setState({ detailInfo })}
                         />
                     </View>
-                    <KeyboardSpacer />
+
                     {/* Button */}
                     <View style={{ marginTop: 20, }}>
                         <View style={{ height: 80, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', paddingBottom: 20, }}>
@@ -855,8 +898,8 @@ export default class PostRoomScreen extends React.Component {
                             />
                         </View>
                     </View>
-
-                </ScrollView>
+                    <KeyboardSpacer />
+                </KeyboardAwareScrollView>
                 {/* The view that will animate to match the keyboards height */}
                 {/* <KeyboardSpacer /> */}
 
@@ -916,6 +959,7 @@ export default class PostRoomScreen extends React.Component {
 
                             this.map.animateToCoordinate(this.state.searchingMaker, 1000)
                             this.popupSearching.dismiss();
+                            this.refs['priceInput'].getElement().focus();
 
                             {/* 
                             let currentMaker = {
