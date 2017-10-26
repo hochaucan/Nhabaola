@@ -17,6 +17,10 @@ Android SDK Location: C:\Users\NickHo\AppData\Local\Android\Sdk
 this.props.navigation.navigate('PostRoomScreen', { onRefreshScreen: this.onRefreshScreen })
 this.props.navigation.state.params.onRefreshScreen({ refreshScreen: true, profile: null });
 
+* Scroll Animation
+https://github.com/Monte9/react-native-parallax-scrollview
+https://github.com/i6mi6/react-native-parallax-scroll-view
+
 
 const styleButton = {
     container: {

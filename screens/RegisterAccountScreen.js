@@ -29,6 +29,7 @@ import { CheckBox, Rating, Button, FormLabel, FormInput, SocialIcon, FormValidat
 import PopupDialog, { SlideAnimation, ScaleAnimation, DialogTitle, DialogButton } from 'react-native-popup-dialog';
 import uploadImageAsync from '../api/uploadImageAsync';
 import KeyboardSpacer from 'react-native-keyboard-spacer';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 
 var { height, width } = Dimensions.get('window');
 
@@ -129,6 +130,10 @@ export default class RegisterAccountScreen extends React.Component {
         let uploadResponse = await uploadImageAsync(this.state.registerAccountImage);
         let uploadResult = await uploadResponse.json();
 
+        // alert(JSON.stringify(uploadResult.data.img_url))
+        //return
+
+
         //Post to register account
         try {
             await fetch("http://nhabaola.vn/api/Account/FO_Account_Add", {
@@ -141,7 +146,7 @@ export default class RegisterAccountScreen extends React.Component {
 
 
                 body: JSON.stringify({
-                    "Avarta": uploadResult.location,
+                    "Avarta": uploadResult.data.img_url.match("http") ? uploadResult.data.img_url : "",
                     "UserName": this.state.registerCellPhone,
                     "FullName": this.state.registerFullName,
                     "Email": this.state.registerEmail,
@@ -157,6 +162,7 @@ export default class RegisterAccountScreen extends React.Component {
                 .then((responseJson) => {
 
                     if (JSON.stringify(responseJson.ErrorCode) === "20") { // Account is existing
+                        this.popupLoadingIndicator.dismiss();
                         if (Platform.OS === 'android') {
                             ToastAndroid.showWithGravity('Tài khoản này đã tồn tại', ToastAndroid.SHORT, ToastAndroid.TOP);
                         }
@@ -211,11 +217,20 @@ export default class RegisterAccountScreen extends React.Component {
 
     };
 
+    _scrollToInput(reactNode) {
+        // Add a 'scroll' ref to your ScrollView
+        this.scroll.props.scrollToFocusedInput(reactNode)
+        //this.scroll.props.scrollToPosition(0, 20)
+        //alert(reactNode)
+    }
+
     render() {
         return (
             <View style={{ flex: 1, backgroundColor: '#fff', paddingBottom: 20, }}>
-                <ScrollView
-                    style={{}}
+                <KeyboardAwareScrollView
+                    innerRef={ref => { this.scroll = ref }}
+                //extraHeight={50}
+                //extraScrollHeight={50}
                 >
                     <View style={{ flexDirection: 'row', padding: 20, justifyContent: 'center', alignItems: 'center' }}>
                         <TouchableOpacity
@@ -252,6 +267,9 @@ export default class RegisterAccountScreen extends React.Component {
                                 onSubmitEditing={(event) => {
                                     this.refs.passwordInput.focus();
                                 }}
+                                onFocus={(event) => {
+                                    this._scrollToInput(event.target)
+                                }}
                             />
                             <TouchableOpacity>
                                 <FormLabel
@@ -280,6 +298,9 @@ export default class RegisterAccountScreen extends React.Component {
                                 underlineColorAndroid={'#73aa2a'}
                                 value={this.state.registerPassword}
                                 onChangeText={(registerPassword) => { this.setState({ registerPassword }) }}
+                                onFocus={(event) => {
+                                    this._scrollToInput(event.target)
+                                }}
                             />
                         </View>
                         <View style={{ flexDirection: 'row', padding: 10, paddingTop: 0, }}>
@@ -296,6 +317,9 @@ export default class RegisterAccountScreen extends React.Component {
                                 underlineColorAndroid={'#73aa2a'}
                                 value={this.state.registerConfirmPassword}
                                 onChangeText={(registerConfirmPassword) => { this.setState({ registerConfirmPassword }) }}
+                                onFocus={(event) => {
+                                    this._scrollToInput(event.target)
+                                }}
                             />
                         </View>
                         {/* Fulllname */}
@@ -313,6 +337,9 @@ export default class RegisterAccountScreen extends React.Component {
                                 underlineColorAndroid={'#73aa2a'}
                                 value={this.state.registerFullName}
                                 onChangeText={(registerFullName) => { this.setState({ registerFullName }) }}
+                                onFocus={(event) => {
+                                    this._scrollToInput(event.target)
+                                }}
                             />
 
                         </View>
@@ -332,6 +359,10 @@ export default class RegisterAccountScreen extends React.Component {
                                 underlineColorAndroid={'#73aa2a'}
                                 value={this.state.registerEmail}
                                 onChangeText={(registerEmail) => { this.setState({ registerEmail }) }}
+                                onFocus={(event) => {
+                                    this._scrollToInput(event.target)
+
+                                }}
                             />
 
                         </View>
@@ -351,6 +382,10 @@ export default class RegisterAccountScreen extends React.Component {
                                 keyboardType='numeric'
                                 value={this.state.registerConfirmCellPhone}
                                 onChangeText={(registerConfirmCellPhone) => { this.setState({ registerConfirmCellPhone }) }}
+                                onFocus={(event) => {
+                                    this._scrollToInput(event.target)
+                                }}
+
                             />
                         </View>
 
@@ -391,7 +426,7 @@ export default class RegisterAccountScreen extends React.Component {
 
                     {/* The view that will animate to match the keyboards height */}
                     <KeyboardSpacer />
-                </ScrollView>
+                </KeyboardAwareScrollView>
 
 
 

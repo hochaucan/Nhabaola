@@ -2,8 +2,8 @@ import { Permissions, Notifications } from 'expo';
 
 
 export default (async function uploadImageAsync(uri) {
-    let apiUrl = 'https://file-upload-example-backend-dkhqoilqqn.now.sh/upload';
-    //let apiUrl = ' http://uploads.im/api';
+    //let apiUrl = 'https://file-upload-example-backend-dkhqoilqqn.now.sh/upload';
+    let apiUrl = 'http://uploads.im/api?upload';
 
 
     // Note:
@@ -18,13 +18,15 @@ export default (async function uploadImageAsync(uri) {
     let uriParts = uri.split('.');
     let fileType = uri[uri.length - 1];
 
+    // alert(uri + "  " + fileType)
+
     let formData = new FormData();
     formData.append('photo', {
         uri,
-        name: `photo.${fileType}`,
+        name: 'photo.jpg',//`photo.${fileType}`,
         type: `image/${fileType}`,
     });
-
+    //alert(uri + "  " + uri.length + "  " + fileType + "  " + JSON.stringify(formData))
     let options = {
         method: 'POST',
         body: formData,

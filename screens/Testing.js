@@ -11,6 +11,8 @@ import {
   Image,
   Button,
   Platform,
+  TextInput,
+  findNodeHandle,
 }
   from 'react-native';
 import { Constants, Location, Permissions } from 'expo';
@@ -23,6 +25,9 @@ import PostDemo from '../components/examples/PostDemo';
 import AsyncStorageDemo from '../components/examples/AsyncStorageDemo';
 import MyLocationMapMarker from '../components/examples/MyLocationMapMakerDemo';
 import { GooglePlacesAutocomplete, } from 'react-native-google-places-autocomplete'; // 1.2.12
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
+import KeyboardSpacer from 'react-native-keyboard-spacer';
+
 
 
 var date = new Date();
@@ -70,12 +75,51 @@ export default class Testing extends React.Component {
     this.props.navigation.navigate('Settings4');
   };
 
+  _scrollToInput(reactNode) {
+    // Add a 'scroll' ref to your ScrollView
+    this.scroll.props.scrollToFocusedInput(reactNode)
+    //this.scroll.props.scrollToPosition(0, 20)
+    //alert(reactNode)
+  }
 
   render() {
 
     return (
       <View style={styles.container}>
-        {/* <uploadFileDemo /> */}
+        <KeyboardAwareScrollView
+          innerRef={ref => { this.scroll = ref }}
+          //extraHeight={50}
+          //extraScrollHeight={50}
+        >
+          <View>
+
+            <TextInput
+              style={{ height: 40, marginTop: 300, borderColor: 'gray', borderWidth: 1 }}
+              onChangeText={(text) => this.setState({ text })}
+              value={this.state.text}
+              onFocus={(event) => {
+                // `bind` the function if you're using ES6 classes
+                // alert(event.target)
+                this._scrollToInput(event.target)
+                //this._scrollToInput(ReactNative.findNodeHandle(event.target))
+              }}
+            />
+
+            <TextInput
+              style={{ marginTop: 500, borderColor: 'gray', borderWidth: 1 }}
+              onChangeText={(text) => this.setState({ text })}
+              value={this.state.text}
+              onFocus={(event) => {
+                //alert(findNodeHandle(event.target))
+                // this._scrollToInput(event.target)
+                // this._scrollToInput(findNodeHandle(event.target))
+                this._scrollToInput(event.target)
+
+              }}
+            />
+            <KeyboardSpacer />
+          </View>
+        </KeyboardAwareScrollView>
 
       </View>
 

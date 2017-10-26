@@ -267,13 +267,13 @@ export default class PostRoomScreen extends React.Component {
         }
         else { // iOS
             if (this.state.postRoomImage1 === null
-                && this.state.postRoomImage2 === null
-                && this.state.postRoomImage3 === null
-                && this.state.postRoomImage4 === null
-                && this.state.postRoomImage5 === null
-                && this.state.postRoomImage6 === null
+                // && this.state.postRoomImage2 === null
+                // && this.state.postRoomImage3 === null
+                // && this.state.postRoomImage4 === null
+                // && this.state.postRoomImage5 === null
+                // && this.state.postRoomImage6 === null
             ) {
-                Alert.alert('Vui lòng chọn ít nhất 1 hình ảnh', ToastAndroid.SHORT, ToastAndroid.CENTER);
+                Alert.alert('Vui lòng chọn hình đại diện', ToastAndroid.SHORT, ToastAndroid.CENTER);
                 return;
             }
             if (this.state.searchingMaker.latitude === null) {
@@ -308,33 +308,33 @@ export default class PostRoomScreen extends React.Component {
         if (this.state.postRoomImage1 != null) {
             let uploadResponse = await uploadImageAsync(this.state.postRoomImage1);
             let uploadResult = await uploadResponse.json();
-            this.setState({ imageUrl: this.state.imageUrl + '|' + uploadResult.location })
+            this.setState({ imageUrl: this.state.imageUrl + '|' + uploadResult.data.img_url })
         }
         if (this.state.postRoomImage2 != null) {
             let uploadResponse = await uploadImageAsync(this.state.postRoomImage2);
             let uploadResult = await uploadResponse.json();
-            this.setState({ imageUrl: this.state.imageUrl + '|' + uploadResult.location })
+            this.setState({ imageUrl: this.state.imageUrl + '|' + uploadResult.data.img_url  })
         }
         if (this.state.postRoomImage3 != null) {
             let uploadResponse = await uploadImageAsync(this.state.postRoomImage3);
             let uploadResult = await uploadResponse.json();
-            this.setState({ imageUrl: this.state.imageUrl + '|' + uploadResult.location })
+            this.setState({ imageUrl: this.state.imageUrl + '|' + uploadResult.data.img_url })
         }
 
         if (this.state.postRoomImage4 != null) {
             let uploadResponse = await uploadImageAsync(this.state.postRoomImage4);
             let uploadResult = await uploadResponse.json();
-            this.setState({ imageUrl: this.state.imageUrl + '|' + uploadResult.location })
+            this.setState({ imageUrl: this.state.imageUrl + '|' + uploadResult.data.img_url })
         }
         if (this.state.postRoomImage5 != null) {
             let uploadResponse = await uploadImageAsync(this.state.postRoomImage5);
             let uploadResult = await uploadResponse.json();
-            this.setState({ imageUrl: this.state.imageUrl + '|' + uploadResult.location })
+            this.setState({ imageUrl: this.state.imageUrl + '|' + uploadResult.data.img_url  })
         }
         if (this.state.postRoomImage6 != null) {
             let uploadResponse = await uploadImageAsync(this.state.postRoomImage6);
             let uploadResult = await uploadResponse.json();
-            this.setState({ imageUrl: this.state.imageUrl + '|' + uploadResult.location })
+            this.setState({ imageUrl: this.state.imageUrl + '|' + uploadResult.data.img_url  })
         }
 
 
