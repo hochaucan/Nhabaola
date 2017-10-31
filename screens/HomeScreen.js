@@ -1192,6 +1192,9 @@ export default class HomeScreen extends React.Component {
   // }
 
 
+  _shouldItemUpdate = (prev, next) => {
+    return prev.item !== next.item;
+  }
 
 
   render() {
@@ -1204,6 +1207,10 @@ export default class HomeScreen extends React.Component {
           //onScroll={this._onScroll}
           // ref='homepage'
           refreshing={this.state.refresh}
+          keyboardShouldPersistTaps="always"
+          removeClippedSubviews={true}
+          initialNumToRender={2}
+          shouldItemUpdate={this._shouldItemUpdate}
           onRefresh={() => { this._refreshRoomBox() }}
 
           onEndReachedThreshold={0.2}

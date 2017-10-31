@@ -263,6 +263,10 @@ export default class PostedRoomHIstoryScreen extends React.Component {
 
     }
 
+    _shouldItemUpdate = (prev, next) => {
+        return prev.item !== next.item;
+    }
+
     render() {
         return (
             <View style={styles.container}>
@@ -284,10 +288,13 @@ export default class PostedRoomHIstoryScreen extends React.Component {
                 <View style={styles.searchRoolResultBox}>
                     <FlatList
                         //onScroll={this._onScroll}
-                        ref='refPostedRoomHistory'
+                        //ref='refPostedRoomHistory'
                         refreshing={this.state.refresh}
                         onRefresh={() => { this._refreshRoomBox() }}
-
+                        keyboardShouldPersistTaps="always"
+                        removeClippedSubviews={true}
+                        initialNumToRender={2}
+                        shouldItemUpdate={this._shouldItemUpdate}
                         onEndReachedThreshold={0.2}
                         onEndReached={() => {
                             this._getRoomBoxByUserAsync(false);
