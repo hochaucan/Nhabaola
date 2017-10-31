@@ -121,7 +121,7 @@ export default class App extends React.Component {
       await Promise.all([
         Asset.loadAsync([
           require('./assets/images/nbl-house_icon.png'),
-          // require('./assets/images/nbl-header_logo.png'),
+          require('./assets/images/nbl-header_logo.png'),
           require('./assets/images/nbl-here-icon.png'),
 
         ]),
