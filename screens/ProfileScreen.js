@@ -448,6 +448,8 @@ export default class ProfileScreen extends React.Component {
                         </Ionicons>
                     </TouchableOpacity>
                     <View style={styles.profileMenuItemSeparator}></View>
+
+                    {/* Update Profile */}
                     <TouchableOpacity style={styles.profileMenuItem}
                         onPress={() => {
 

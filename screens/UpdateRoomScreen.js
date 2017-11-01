@@ -64,10 +64,10 @@ const LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO;
 // }
 
 var today = new Date();
-var dd = today.getDate();
+var dd = today.getDate() == 1 ? '01' : today.getDate();
 var mm = today.getMonth() + 1;
 var yyyy = today.getFullYear();
-var minDate = yyyy + '-' + mm + '-' + dd
+var minDate = yyyy + '-' + mm + '-' + dd //== '1' ? '01' : dd
 
 var newdate = new Date(today);
 newdate.setDate(newdate.getDate() + 1);
@@ -76,15 +76,15 @@ var mm2 = newdate.getMonth() + 1;
 var yyyy2 = newdate.getFullYear();
 var topDate = yyyy2 + '-' + mm2 + '-' + dd2
 
-function funcAdd1Day(_date) {
-    var _newdate = new Date(_date);
-    _newdate.setDate(_newdate.getDate() + 1);
-    var _dd2 = _newdate.getDate();
-    var _mm2 = _newdate.getMonth() + 1;
-    var _yyyy2 = _newdate.getFullYear();
-    var _topDate = _yyyy2 + '-' + _mm2 + '-' + _dd2
-    return _topDate;
-}
+// function funcAdd1Day(_date) {
+//     var _newdate = new Date(_date);
+//     _newdate.setDate(_newdate.getDate() + 1);
+//     var _dd2 = _newdate.getDate();
+//     var _mm2 = _newdate.getMonth() + 1;
+//     var _yyyy2 = _newdate.getFullYear();
+//     var _topDate = _yyyy2 + '-' + _mm2 + '-' + _dd2
+//     return _topDate;
+// }
 
 export default class UpdateRoomScreen extends React.Component {
     static navigationOptions = {
@@ -160,9 +160,9 @@ export default class UpdateRoomScreen extends React.Component {
             selectedCategory: this.state.roomBox.CategoryID,
             selectedAddress: this.state.roomBox.Address,
             // fromDate: this.state.roomBox.FromDate,
-            toDate: this.state.roomBox.ToDate,
+            toDate: new Date(this.state.roomBox.ToDate) < today ? topDate : this.state.roomBox.ToDate,
             isHighlight: this.state.roomBox.IsHighlight,
-            toDateHighLight: this.state.roomBox.HighlightToDate,
+            toDateHighLight: new Date(this.state.roomBox.HighlightToDate) < today ? topDate : this.state.roomBox.HighlightToDate,
             postRoomImage1: images[0],
             postRoomImage2: images[1],
             postRoomImage3: images[2],
@@ -295,8 +295,9 @@ export default class UpdateRoomScreen extends React.Component {
     };
 
     _updateRoomAsync = async () => {
-        //alert(this.state.postRoomImage1.match("http")?"co":"khong")
-        // return
+        //alert(new Date(this.state.toDate) + " " + new Date(this.state.fromDate))
+        // alert(this.state.toDate + " " + minDate)
+        //return
 
         //Form validation
         if (Platform.OS === 'android') {
@@ -447,12 +448,12 @@ export default class UpdateRoomScreen extends React.Component {
             }
         }
 
-        if (!this.state.isHighlight) {
-            this.setState({
-                fromDateHighLight: minDate,
-                toDateHighLight: funcAdd1Day(minDate)
-            })
-        }
+        // if (!this.state.isHighlight) {
+        //     this.setState({
+        //         fromDateHighLight: minDate,
+        //         toDateHighLight: funcAdd1Day(minDate)
+        //     })
+        // }
 
         // alert(this.state.imageUrl + "   " + this.state.postRoomImage1)
         // return
@@ -498,7 +499,7 @@ export default class UpdateRoomScreen extends React.Component {
 
 
                     if (JSON.stringify(responseJson.ErrorCode) === "11") {
-                        //this.props.navigation.state.params.onRefreshScreen({ refreshScreen: true, });
+                        this.props.navigation.state.params.onRefreshScreen({ refreshScreen: true, });
                         this.props.navigation.goBack();
 
                         if (Platform.OS === 'android') {
@@ -508,10 +509,10 @@ export default class UpdateRoomScreen extends React.Component {
                             Alert.alert('Cập nhật tin thành công!');
                         }
                         //this._getRoomBoxByUserAsync(true);
+                    } else {
+
+                        alert(responseJson.ErrorCode)
                     }
-
-                    //alert(responseJson.ErrorCode)
-
                     // if (JSON.stringify(responseJson.ErrorCode) === "3") {
 
                     //     if (Platform.OS === 'android') {
@@ -893,11 +894,14 @@ export default class UpdateRoomScreen extends React.Component {
                                 onDateChange={(toDate) => {
                                     this.setState({ toDate })
                                     this.refs.roomInfoInput.focus();
+
+                                    //let _toDate = new Date(this.state.toDate);
+                                    // alert(_toDate > today)
                                 }}
                             />
-                            {this.state.toDate < this.state.fromDate &&
+                            {/* {new Date(this.state.toDate) < today &&
                                 <Text style={{ marginLeft: 10, marginTop: 12, color: 'red' }}>*</Text>
-                            }
+                            } */}
                         </View>
 
                         {/* Highlight Date */}
@@ -1015,37 +1019,35 @@ export default class UpdateRoomScreen extends React.Component {
                             onChangeText={(detailInfo) => this.setState({ detailInfo })}
                         />
                     </View>
-
-                    {/* Button */}
-                    <View style={{ marginTop: 20, }}>
-                        <View style={{ height: 80, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', paddingBottom: 20, }}>
-                            <Button
-                                buttonStyle={{ backgroundColor: '#9B9D9D', padding: 15, borderRadius: 10 }}
-                                icon={{ name: 'ios-backspace', type: 'ionicon' }}
-                                onPress={() => {
-                                    //HomeScreen.refreshRoomBoxAfterPost();
-
-                                    this.props.navigation.goBack();
-                                    // this.props.navigation.state.params.onRefreshScreen({ refreshScreen: true, profile: null });
-                                    //this.props.navigation.state.params.onSelect({ selected: true });
-
-                                    //this.props.navigation.state.params.onSelect({ _refreshRoomBox });
-                                }}
-                                title='Hủy' />
-                            <Button
-                                buttonStyle={{ backgroundColor: '#73aa2a', padding: 15, borderRadius: 10 }}
-                                icon={{ name: 'md-cloud-upload', type: 'ionicon' }}
-                                title='Cập nhật'
-                                onPress={() => {
-                                    Keyboard.dismiss();
-                                    this._updateRoomAsync();
-                                }}
-                            />
-                        </View>
-                    </View>
                     <KeyboardSpacer />
                 </KeyboardAwareScrollView>
+                {/* Button */}
+                <View style={{ marginTop: 20, }}>
+                    <View style={{ height: 80, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', paddingBottom: 20, }}>
+                        <Button
+                            buttonStyle={{ backgroundColor: '#9B9D9D', padding: 15, borderRadius: 10 }}
+                            icon={{ name: 'ios-backspace', type: 'ionicon' }}
+                            onPress={() => {
+                                //HomeScreen.refreshRoomBoxAfterPost();
 
+                                this.props.navigation.goBack();
+                                // this.props.navigation.state.params.onRefreshScreen({ refreshScreen: true, profile: null });
+                                //this.props.navigation.state.params.onSelect({ selected: true });
+
+                                //this.props.navigation.state.params.onSelect({ _refreshRoomBox });
+                            }}
+                            title='Hủy' />
+                        <Button
+                            buttonStyle={{ backgroundColor: '#73aa2a', padding: 15, borderRadius: 10 }}
+                            icon={{ name: 'md-cloud-upload', type: 'ionicon' }}
+                            title='Cập nhật'
+                            onPress={() => {
+                                Keyboard.dismiss();
+                                this._updateRoomAsync();
+                            }}
+                        />
+                    </View>
+                </View>
                 {/* <KeyboardSpacer /> */}
 
 

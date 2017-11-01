@@ -158,6 +158,15 @@ export default class UpdateAccountScreen extends React.Component {
 
                     if (JSON.stringify(responseJson.ErrorCode) === "0") { // Update Account successful
                         this.popupLoadingIndicator.dismiss();
+                        // this.props.navigation.state.params.onRefreshScreen({
+                        //     profile: {
+                        //         Avarta: this.state.registerAccountImage,
+                        //         FullName: this.state.registerFullName,
+                        //         Email: this.state.registerEmail,
+                        //         RegistryDate: '21-02-1984',
+                        //         UserName: 'Ho Chau Can'
+                        //     }
+                        // });
                         this.props.navigation.goBack();
 
                         if (Platform.OS === 'android') {
@@ -167,6 +176,8 @@ export default class UpdateAccountScreen extends React.Component {
                             Alert.alert('Oops!', 'Cập nhật thông tin thành công!');
                         }
                     }
+                    else { alert(responseJson.ErrorCode) }
+
                     // this.props.navigation.state.params.onRefreshScreen({ loginUsername: registerCellPhone, loginPassword: registerPassword });
                     //this.props.navigation.state.params.login();
 

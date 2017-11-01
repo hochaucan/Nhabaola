@@ -40,7 +40,7 @@ const LATITUDE_DELTA = 0.02;
 const LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO;
 
 var today = new Date();
-var dd = today.getDate();
+var dd = today.getDate() == 1 ? '01' : today.getDate();;
 var mm = today.getMonth() + 1;
 var yyyy = today.getFullYear();
 var minDate = yyyy + '-' + mm + '-' + dd
@@ -877,41 +877,37 @@ export default class PostRoomScreen extends React.Component {
                             onChangeText={(detailInfo) => this.setState({ detailInfo })}
                         />
                     </View>
-
-                    {/* Button */}
-                    <View style={{ marginTop: 20, }}>
-                        <View style={{ height: 80, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', paddingBottom: 20, }}>
-                            <Button
-                                buttonStyle={{ backgroundColor: '#9B9D9D', padding: 15, borderRadius: 10 }}
-                                icon={{ name: 'ios-backspace', type: 'ionicon' }}
-                                onPress={() => {
-                                    //HomeScreen.refreshRoomBoxAfterPost();
-
-                                    this.props.navigation.goBack();
-                                    // this.props.navigation.state.params.onRefreshScreen({ refreshScreen: true, profile: null });
-                                    //this.props.navigation.state.params.onSelect({ selected: true });
-
-                                    //this.props.navigation.state.params.onSelect({ _refreshRoomBox });
-                                }}
-                                title='Hủy' />
-                            <Button
-                                buttonStyle={{ backgroundColor: '#73aa2a', padding: 15, borderRadius: 10 }}
-                                icon={{ name: 'md-cloud-upload', type: 'ionicon' }}
-                                title='Đăng tin'
-                                onPress={() => {
-
-                                    this._postRoomAsync();
-
-
-                                }}
-                            />
-                        </View>
-                    </View>
                     <KeyboardSpacer />
                 </KeyboardAwareScrollView>
-                {/* The view that will animate to match the keyboards height */}
-                {/* <KeyboardSpacer /> */}
+                {/* Button */}
+                <View style={{ marginTop: 20, }}>
+                    <View style={{ height: 80, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', paddingBottom: 20, }}>
+                        <Button
+                            buttonStyle={{ backgroundColor: '#9B9D9D', padding: 15, borderRadius: 10 }}
+                            icon={{ name: 'ios-backspace', type: 'ionicon' }}
+                            onPress={() => {
+                                //HomeScreen.refreshRoomBoxAfterPost();
 
+                                this.props.navigation.goBack();
+                                // this.props.navigation.state.params.onRefreshScreen({ refreshScreen: true, profile: null });
+                                //this.props.navigation.state.params.onSelect({ selected: true });
+
+                                //this.props.navigation.state.params.onSelect({ _refreshRoomBox });
+                            }}
+                            title='Hủy' />
+                        <Button
+                            buttonStyle={{ backgroundColor: '#73aa2a', padding: 15, borderRadius: 10 }}
+                            icon={{ name: 'md-cloud-upload', type: 'ionicon' }}
+                            title='Đăng tin'
+                            onPress={() => {
+
+                                this._postRoomAsync();
+
+
+                            }}
+                        />
+                    </View>
+                </View>
 
                 {/* POPUP AND MODAL AREA */}
 

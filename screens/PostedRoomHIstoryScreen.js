@@ -57,6 +57,7 @@ export default class PostedRoomHIstoryScreen extends React.Component {
             roomPageCount: 10,
             profile: null,
             roomCategory: [],
+            refreshScreen: false,
             // fromDate: minDate,
             // toDate: topDate,
 
@@ -86,6 +87,7 @@ export default class PostedRoomHIstoryScreen extends React.Component {
 
     onRefreshScreen = data => {
         this.setState(data);
+        this._getRoomBoxByUserAsync(true)
     }
 
     _getProfileFromStorageAsync = async () => {

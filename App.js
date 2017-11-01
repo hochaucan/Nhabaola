@@ -41,7 +41,7 @@ export default class App extends React.Component {
 
   state = {
     assetsAreLoaded: false,
-    topLogo: new Animated.Value(500),
+    topLogo: new Animated.Value(200),
 
   };
 
@@ -50,26 +50,20 @@ export default class App extends React.Component {
 
 
   componentWillMount() {
-    // NetInfo.fetch().then((reach) => {
-    //   console.log('Initial: ' + reach);
-    // });
     NetInfo.addEventListener(
       'change',
       handleFirstConnectivityChange
     );
 
-
-
     this._loadAssetsAsync();
-
-
   }
 
   componentDidMount() {
+    // Animate NBL Logo
     Animated.timing(                  // Animate over time
       this.state.topLogo,            // The animated value to drive
       {
-        toValue: 3,                   // Animate to opacity: 1 (opaque)
+        toValue: 40,                   // Animate to opacity: 1 (opaque)
         duration: 3000,
         easing: Easing.bounce,         // Make it take a while
       }
@@ -95,10 +89,10 @@ export default class App extends React.Component {
 
             <Animated.Image
               style={{
-                width: 40,
+                width: topLogo,//40,
                 height: 40,
                 position: 'absolute',
-                top: topLogo,
+                top: 3,//topLogo,//3
                 zIndex: 2,
                 borderRadius: Platform.OS === 'ios' ? 10 : 100,
               }}
