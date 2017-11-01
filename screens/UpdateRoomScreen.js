@@ -510,6 +510,8 @@ export default class UpdateRoomScreen extends React.Component {
                         //this._getRoomBoxByUserAsync(true);
                     }
 
+                    //alert(responseJson.ErrorCode)
+
                     // if (JSON.stringify(responseJson.ErrorCode) === "3") {
 
                     //     if (Platform.OS === 'android') {

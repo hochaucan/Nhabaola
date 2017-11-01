@@ -382,14 +382,23 @@ export default class PostRoomScreen extends React.Component {
                 .then((response) => response.json())
                 .then((responseJson) => {
 
+                    //alert(responseJson.ErrorCode)
 
-                    //this.props.navigation.navigate('Home');
-                    HomeScreen.refreshRoomBoxAfterPost();
-                    //this.props.navigation.state.params.onSelect({ selected: true });
-                    this.props.navigation.goBack();
-                    this.props.navigation.state.params._getWalletAsync();
-                    this.props.navigation.state.params.onRefreshScreen({ refreshScreen: true });
+                    if (JSON.stringify(responseJson.ErrorCode) === "10") {
+                        //this.props.navigation.state.params.onRefreshScreen({ refreshScreen: true, });
 
+                        HomeScreen.refreshRoomBoxAfterPost();
+                        this.props.navigation.goBack();
+                        this.props.navigation.state.params._getWalletAsync();
+                        this.props.navigation.state.params.onRefreshScreen({ refreshScreen: true });
+
+                        if (Platform.OS === 'android') {
+                            ToastAndroid.showWithGravity('Đăng tin thành công!', ToastAndroid.SHORT, ToastAndroid.TOP);
+                        }
+                        else {
+                            Alert.alert('Đăng tin thành công!');
+                        }
+                    }
 
                     this.popupLoadingIndicator.dismiss();
 
