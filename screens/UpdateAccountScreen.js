@@ -30,6 +30,7 @@ import PopupDialog, { SlideAnimation, ScaleAnimation, DialogTitle, DialogButton 
 import uploadImageAsync from '../api/uploadImageAsync';
 import KeyboardSpacer from 'react-native-keyboard-spacer';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
+import saveStorageAsync from '../components/saveStorageAsync';
 
 var { height, width } = Dimensions.get('window');
 
@@ -158,15 +159,29 @@ export default class UpdateAccountScreen extends React.Component {
 
                     if (JSON.stringify(responseJson.ErrorCode) === "0") { // Update Account successful
                         this.popupLoadingIndicator.dismiss();
-                        // this.props.navigation.state.params.onRefreshScreen({
-                        //     profile: {
-                        //         Avarta: this.state.registerAccountImage,
-                        //         FullName: this.state.registerFullName,
-                        //         Email: this.state.registerEmail,
-                        //         RegistryDate: '21-02-1984',
-                        //         UserName: 'Ho Chau Can'
-                        //     }
-                        // });
+                        //alert(JSON.stringify(this.state.profile))
+                        this.props.navigation.state.params.onRefreshScreen({
+                            profile: {
+                                ID: this.state.profile.ID,
+                                UserName: this.state.profile.UserName,
+                                FullName: this.state.registerFullName,
+                                Email: this.state.registerEmail,
+                                Avarta: this.state.registerAccountImage,
+                                YearOfBirth: this.state.profile.YearOfBirth,
+                                Address: this.state.profile.Address,
+                                ContactPhone: this.state.profile.ContactPhone,
+                                Password: this.state.profile.Password,
+                                RegistryDate: this.state.profile.RegistryDate,
+                                AccountType: this.state.profile.AccountType,
+                                IsActive: this.state.profile.IsActive,
+                                CreatedBy: this.state.profile.CreatedBy,
+                                CreatedDate: this.state.profile.CreatedDate,
+                                UpdatedBy: this.state.profile.UpdatedBy,
+                                UpdatedDate: this.state.profile.UpdatedDate,
+                            }
+                        });
+                        //saveStorageAsync('FO_Account_Login', JSON.stringify(this.state.profile))
+
                         this.props.navigation.goBack();
 
                         if (Platform.OS === 'android') {

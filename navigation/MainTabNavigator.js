@@ -91,7 +91,7 @@ export default TabNavigator(
             size={28}
             style={{ marginTop: Platform.OS === 'ios' ? 40 : 0 }}
             //color={focused ? Colors.tabIconSelected : Colors.tabIconDefault}
-            color={focused ? '#a4d227' : '#5D5D5D'}
+            color={focused ? '#fff' : '#5D5D5D'}
           />
         );
       },
@@ -103,27 +103,27 @@ export default TabNavigator(
     tabBarOptions: {
       labelStyle: {
         // fontSize: 10,
-        // marginTop: Platform.OS === 'ios' ? 25 : 5,
+        marginTop: 0,
       },
       tabStyle: {
         // width: 100,
       },
       style: {
-        backgroundColor: '#fff',
-        height: 45,
+        backgroundColor: '#a4d227',
+        height: 44,
       },
       showIcon: true,
       indicatorStyle: {
         opacity: 1,
-        backgroundColor: '#a4d227'
+        backgroundColor: '#fff'//'#a4d227'
       },
       upperCaseLabel: false,
       showLabel: false,
       activeTintColor: '#a4d227',
       inactiveTintColor: '#000',
       iconStyle: {
-        marginTop: Platform.OS === 'ios' ? -25 : 0,
-        height: Platform.OS === 'ios' ? 40 : 30,
+        //marginTop: Platform.OS === 'ios' ? -25 : 0,
+        //height: Platform.OS === 'ios' ? 40 : 30,
       }
     }
   }

@@ -133,6 +133,7 @@ export default class ProfileScreen extends React.Component {
 
     onRefreshScreen = data => {
         this.setState(data);
+        saveStorageAsync('FO_Account_Login', JSON.stringify(this.state.profile))
     }
 
     _getProfileFromStorageAsync = async () => {
@@ -399,7 +400,7 @@ export default class ProfileScreen extends React.Component {
                                 <Text style={styles.cardAvatarAddress}>Ngày đăng ký: {funcformatDateDDMMYYYY(this.state.profile.RegistryDate)}</Text>
                                 <TouchableOpacity style={styles.cardAvatarPhoneBox}>
                                     <Ionicons style={styles.cardAvatarPhoneIcon} name='logo-whatsapp' />
-                                    <Text style={styles.cardAvatarPhone}>: {this.state.profile.UserName}</Text>
+                                    <Text style={styles.cardAvatarPhone}>: {this.state.profile.ContactPhone}</Text>
                                 </TouchableOpacity>
                             </View>
                             :

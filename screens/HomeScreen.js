@@ -66,6 +66,8 @@ function numberWithCommas(x) {
 
 export default class HomeScreen extends React.Component {
   static navigationOptions = {
+    tabBarLabel: 'Trang chủ',
+    title: 'Trang chủ',
     header: null,
   };
 

@@ -85,24 +85,26 @@ export default class App extends React.Component {
           {Platform.OS === 'android' &&
             <View style={styles.statusBarUnderlay} />
           }
-          <View style={Platform.OS === 'ios' ? styles.headerLogoBackgroundIos : styles.headerLogoBackgroundAndroid}>
+          {/* <View style={Platform.OS === 'ios' ? styles.headerLogoBackgroundIos : styles.headerLogoBackgroundAndroid}> */}
 
-            <Animated.Image
-              style={{
-                width: topLogo,//40,
-                height: 40,
-                position: 'absolute',
-                top: 3,//topLogo,//3
-                zIndex: 2,
-                borderRadius: Platform.OS === 'ios' ? 10 : 100,
-              }}
-              /* source={{ uri: 'https://facebook.github.io/react/img/logo_og.png' }} */
-              source={require('./images/nha-bao-la.jpg')}
-            />
-          </View>
-          <View style={styles.headerBar}>
-            {/* <Text style={styles.headerBarTitle}>{GLOBAL.BASE_URL} </Text> */}
-          </View>
+          <Animated.Image
+            style={{
+              width: 40,// topLogo,//40,
+              height: 40,
+              position: 'absolute',
+              top: 28,//topLogo,//3
+              left: width / 2 - 20,
+              zIndex: 2,
+              borderRadius: Platform.OS === 'ios' ? 10 : 100,
+
+            }}
+            /* source={{ uri: 'https://facebook.github.io/react/img/logo_og.png' }} */
+            source={require('./images/nha-bao-la.jpg')}
+          />
+          {/* </View> */}
+          {/* <View style={styles.headerBar}>
+            <Text style={styles.headerBarTitle}>{GLOBAL.BASE_URL} </Text>
+          </View> */}
           <RootNavigation />
 
         </View>
@@ -178,5 +180,6 @@ const styles = StyleSheet.create({
   headerLogoBackgroundAndroid: {
     justifyContent: 'center',
     alignItems: 'center',
+    //borderWidth: 1,
   },
 });

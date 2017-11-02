@@ -226,6 +226,7 @@ const roomBox = [];
 export default class SearchScreen extends React.Component {
 
     static navigationOptions = {
+        tabBarLabel: 'Tìm kiếm',
         // title: 'Links',
         header: null,
     };
@@ -546,6 +547,10 @@ export default class SearchScreen extends React.Component {
         }
     }
 
+    _shouldItemUpdate = (prev, next) => {
+        return prev.item !== next.item;
+    }
+
     render() {
         let text = 'Waiting..';
         let currentMaker = null;
@@ -863,7 +868,7 @@ export default class SearchScreen extends React.Component {
 
                 </View>
 
-                <ScrollView style={styles.container}>
+                <View style={styles.container}>
 
                     <View style={styles.searchRoolResultBox}>
                         <View style={styles.searchRadiusBox}>
@@ -941,9 +946,13 @@ export default class SearchScreen extends React.Component {
 
                         <FlatList
                             //onScroll={this._onScroll}
-                            ref='searchresult'
-
+                            // ref='searchresult'
                             refreshing={this.state.refreshFlatlist}
+                            keyboardShouldPersistTaps="always"
+                            removeClippedSubviews={true}
+                            initialNumToRender={2}
+                            shouldItemUpdate={this._shouldItemUpdate}
+
                             // onRefresh={() => { this._refreshRoomBox() }}
 
                             onEndReachedThreshold={0.2}
@@ -1181,7 +1190,7 @@ export default class SearchScreen extends React.Component {
                     </Modal>
 
 
-                </ScrollView>
+                </View>
 
                 {/* Popup Searching */}
                 <PopupDialog
