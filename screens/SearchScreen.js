@@ -562,110 +562,151 @@ export default class SearchScreen extends React.Component {
                 latitude: this.state.location.coords.latitude,
                 longitude: this.state.location.coords.longitude
             }
-            // let test = []
-
-            // roomBox.map((y) => {
-            //     test.push(y.Latitude)
-            // })
-
-            // alert(JSON.stringify(test))
-
-            // MARKERS = [
-
-            //     // roomBox.map((y) => {
-            //     //     return {
-            //     //         latitude: y.Latitude,
-            //     //         longitude: y.Longitude,
-            //     //         //createMarker(-4, y.Latitude, y.Longitude),
-            //     //     }
-            //     // })
-
-            //     createMarker(-4, this.state.location.coords.latitude, this.state.location.coords.longitude),
-            //     //currentMaker,
-            //     createMarker(1, this.state.location.coords.latitude, this.state.location.coords.longitude),
-            //     createMarker(2, this.state.location.coords.latitude, this.state.location.coords.longitude),
-            //     createMarker(5, this.state.location.coords.latitude, this.state.location.coords.longitude),
-
-            // ]
-
-            //alert(JSON.stringify(MARKERS))
-
-            // this.setState({
-            //     findingHouseMakers: [
-            //         currentMaker,
-            //         this._createTempMarker(1, this.state.location.coords.latitude, this.state.location.coords.longitude),
-            //         this._createTempMarker(2, this.state.location.coords.latitude, this.state.location.coords.longitude),
-            //         this._createTempMarker(3, this.state.location.coords.latitude, this.state.location.coords.longitude),
-
-            //     ]
-            // })
         }
 
         return (
-            <View>
-                <View style={{ height: height * 0.4, }}>
+            <View style={{ flex: 1 }}>
 
-                    {/* <View><Text>{text}</Text></View> */}
-                    {/* <View><Text>{this.state.watchLocation}</Text></View> */}
+                {/* Radius */}
+                <View style={{
+                    flexDirection: 'row',
+                    position: 'absolute',
+                    backgroundColor: '#fff',
+                    zIndex: 10,
+                    top: 10,
+                    paddingLeft: 10,
+                    borderRadius: 10,
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                }}>
+                    <Text >Bán kính: </Text>
+                    {Platform.OS === 'ios' ?
 
-
-                    {/* {this.state.location ? */}
-                    <View>
                         <TouchableOpacity
-                            style={{ height: 40, position: 'absolute', top: height * 0.20, zIndex: 10, right: 15, backgroundColor: 'transparent' }}
                             onPress={() => {
-                                this.popupSearching.show();
+                                this.setState({
+                                    modalRadius: true
+                                })
                             }}
                         >
-                            <View style={{
-                                backgroundColor: '#a4d227', padding: 5, borderRadius: 10, width: 32,
-                                height: 32, justifyContent: 'center',
-                                alignItems: 'center', shadowColor: "#000000",
+
+                            <Text>{this.state.radius} km</Text>
+                        </TouchableOpacity>
+                        :
+                        <Picker
+                            style={{
+                                width: width * 0.3,
+                            }}
+                            mode='dropdown'
+                            selectedValue={this.state.radius}
+                            onValueChange={async (itemValue, itemIndex) => {
+                                await this.setState({ radius: itemValue })
+                                this._getRoomByFilter();
                             }}>
-                                <Ionicons style={{ fontSize: 25, color: '#fff', textAlign: 'center' }} name='ios-search-outline' />
-                            </View>
-                        </TouchableOpacity>
-                        <TouchableOpacity
-                            style={{ height: 40, position: 'absolute', top: height * 0.28, zIndex: 10, right: 15, backgroundColor: 'transparent' }}
-                            onPress={async () => {
+                            <Picker.Item label="2 km" value="2" />
+                            <Picker.Item label="4 km" value="4" />
+                            <Picker.Item label="6 km" value="6" />
+                            <Picker.Item label="8 km" value="8" />
+                            <Picker.Item label="10 km" value="10" />
+                            <Picker.Item label="12 km" value="12" />
+                            <Picker.Item label="14 km" value="14" />
+                            <Picker.Item label="16 km" value="16" />
+                            <Picker.Item label="18 km" value="18" />
+                            <Picker.Item label="20 km" value="20" />
+                            <Picker.Item label="30 km" value="30" />
+                            <Picker.Item label="40 km" value="40" />
+                            <Picker.Item label="50 km" value="50" />
+                        </Picker>
+                    }
 
-                                await this.setState({ isSearching: false })
-                                this._getLocationAsync();
-                                //this.fitAllMarkers();
-                                //this.map.animateToCoordinate(currentMaker, 1000);
-                            }}
-                        >
-                            <View style={{ backgroundColor: '#a4d227', padding: 5, borderRadius: 10, width: 32, height: 32, justifyContent: 'center', alignItems: 'center' }}>
-                                <Ionicons style={{ fontSize: 25, color: '#fff', textAlign: 'center' }} name='ios-locate-outline' />
-                            </View>
-                        </TouchableOpacity>
+                </View>
 
-                        {this.state.mapRegion &&
-                            <MapView
-                                ref={ref => { this.map = ref; }}
 
-                                /* style={{ paddingBottom: this.state.hackHeight, alignSelf: 'stretch', }} */
-                                style={{ alignSelf: 'stretch', height: height * 0.4, }}
+                {/* Filter */}
+                <View style={{
+                    flexDirection: 'row',
+                    position: 'absolute',
+                    top: 70,
+                    zIndex: 10,
+                    backgroundColor: '#fff',
+                    borderRadius: 10,
+                    padding: 10,
+                    width: this.state.txtFilterResult !== null ? width * 0.8 : width * 0.3,
+                    //marginTop: 12,
+                    //borderBottomWidth: 0.3,
+                    //paddingBottom: 10,
+                    //borderColor: '#9B9D9D',
+                }}>
+                    <Text >Bộ lọc: </Text>
+                    <TouchableOpacity
+                        style={{}}
+                        onPress={() => this.setState({ modalSearchFilterVisible: true })}
+                    >
+                        {this.state.txtFilterResult
+                            ? <Text style={{ color: '#73aa2a', width: width * 0.8 }}>{this.state.txtFilterResult}</Text>
+                            : <Ionicons style={styles.searchFilterIcon} name='ios-funnel'></Ionicons>
+                        }
 
-                                region={this.state.mapRegion}
-                                // onRegionChange={this._handleMapRegionChange}
-                                onRegionChangeComplete={(mapRegion) => {
-                                    //alert("can")
-                                    this.setState({ mapRegion })
-                                    {/* if (MARKERS.length > 1) {
+                    </TouchableOpacity>
+
+                </View>
+
+
+                {/* Search location  */}
+                <TouchableOpacity
+                    style={{ height: 40, position: 'absolute', top: 10, zIndex: 10, right: 15, backgroundColor: 'transparent' }}
+                    onPress={() => {
+                        this.popupSearching.show();
+                    }}
+                >
+                    <View style={{
+                        backgroundColor: '#a4d227', padding: 5, borderRadius: 10, width: 32,
+                        height: 32, justifyContent: 'center',
+                        alignItems: 'center', shadowColor: "#000000",
+                    }}>
+                        <Ionicons style={{ fontSize: 25, color: '#fff', textAlign: 'center' }} name='ios-search-outline' />
+                    </View>
+                </TouchableOpacity>
+
+                {/* Get current location */}
+                <TouchableOpacity
+                    style={{ height: 40, position: 'absolute', top: 55, zIndex: 10, right: 15, backgroundColor: 'transparent' }}
+                    onPress={async () => {
+                        await this.setState({ isSearching: false, searchingMaker: null, })
+                        this._getLocationAsync();
+                    }}
+                >
+                    <View style={{ backgroundColor: '#a4d227', padding: 5, borderRadius: 10, width: 32, height: 32, justifyContent: 'center', alignItems: 'center' }}>
+                        <Ionicons style={{ fontSize: 25, color: '#fff', textAlign: 'center' }} name='ios-locate-outline' />
+                    </View>
+                </TouchableOpacity>
+
+                {this.state.mapRegion &&
+                    <MapView
+                        ref={ref => { this.map = ref; }}
+
+                        /* style={{ paddingBottom: this.state.hackHeight, alignSelf: 'stretch', }} */
+                        style={{ alignSelf: 'stretch', height: height }}
+
+                        region={this.state.mapRegion}
+                        // onRegionChange={this._handleMapRegionChange}
+                        onRegionChangeComplete={(mapRegion) => {
+                            //alert("can")
+                            this.setState({ mapRegion })
+                            {/* if (MARKERS.length > 1) {
                                         this.fitAllMarkers()
                                     } */}
-                                }}
-                                provider='google'
-                                showsUserLocation={false}
-                                showsMyLocationButton={false}
-                                followsUserLocation={false}
-                                loadingEnabled={true}
-                                onPress={(e) => this.onMapPress(e)}
-                            /* customMapStyle={customStyle} */
-                            >
+                        }}
+                        provider='google'
+                        showsUserLocation={false}
+                        showsMyLocationButton={false}
+                        followsUserLocation={false}
+                        loadingEnabled={true}
+                        onPress={(e) => this.onMapPress(e)}
+                    /* customMapStyle={customStyle} */
+                    >
 
-                                {/* <MapView.Marker
+                        {/* <MapView.Marker
                         coordinate={{
                             latitude: (this.state.lastLat + 0.00050) || -36.82339,
                             longitude: (this.state.lastLong + 0.00050) || -73.03569,
@@ -677,47 +718,47 @@ export default class SearchScreen extends React.Component {
                         </View>
                     </MapView.Marker> */}
 
-                                {this.state.location
-                                    ?
+                        {this.state.location
+                            ?
 
-                                    <MapView.Marker
-                                        coordinate={currentMaker}
-                                        title='Vị trí của tôi'
-                                    //description='Home'
-                                    /* image={require('../images/nbl-here-icon.png')} */
+                            <MapView.Marker
+                                coordinate={currentMaker}
+                                title='Vị trí của tôi'
+                            //description='Home'
+                            /* image={require('../images/nbl-here-icon.png')} */
 
-                                    >
-                                        <Image
-                                            source={require('../assets/images/nbl-here-icon.png')}
-                                            style={{ height: height * 0.07, width: width * 0.07 }}
-                                            // onLoad={() => {
-                                            //   this.forceUpdate()
-                                            //}}
-                                            onLayout={() => {
-                                                this.setState({ initialRenderCurrentMaker: false })
-                                            }}
-                                            key={`${this.state.initialRenderCurrentMaker}`}
-                                        >
+                            >
+                                <Image
+                                    source={require('../assets/images/nbl-here-icon.png')}
+                                    style={{ height: height * 0.07, width: width * 0.07 }}
+                                    // onLoad={() => {
+                                    //   this.forceUpdate()
+                                    //}}
+                                    onLayout={() => {
+                                        this.setState({ initialRenderCurrentMaker: false })
+                                    }}
+                                    key={`${this.state.initialRenderCurrentMaker}`}
+                                >
 
-                                            {/* <Text style={{ width: 0, height: 0 }}>{Math.random()}</Text> */}
-                                        </Image>
-                                    </MapView.Marker>
-                                    :
-                                    null}
+                                    {/* <Text style={{ width: 0, height: 0 }}>{Math.random()}</Text> */}
+                                </Image>
+                            </MapView.Marker>
+                            :
+                            null}
 
-                                {this.state.searchingMaker
-                                    ?
-                                    <MapView.Marker
-                                        coordinate={this.state.searchingMaker}
-                                        title='Vị trí tìm kiếm'
-                                    //description='Home'
-                                    >
+                        {this.state.searchingMaker
+                            ?
+                            <MapView.Marker
+                                coordinate={this.state.searchingMaker}
+                                title='Vị trí tìm kiếm'
+                            //description='Home'
+                            >
 
-                                    </MapView.Marker>
-                                    : null}
+                            </MapView.Marker>
+                            : null}
 
 
-                                {/* <MapView.Circle
+                        {/* <MapView.Circle
                                 center={currentMaker}
                                 fillColor='#73aa2a'
                                 radius={this.state.location.coords.accuracy}
@@ -725,8 +766,8 @@ export default class SearchScreen extends React.Component {
                                 strokeWidth={2}
                             /> */}
 
-                                {/* Tap to show maker on map */}
-                                {/* {this.state.markers.map(marker => (
+                        {/* Tap to show maker on map */}
+                        {/* {this.state.markers.map(marker => (
                                 <MapView.Marker
                                     key={marker.key}
                                     coordinate={marker.coordinate}
@@ -734,215 +775,140 @@ export default class SearchScreen extends React.Component {
                                 />
                             ))} */}
 
-                                {/* Fix all makers on Map */}
-                                {/* {MARKERS.slice(1).map((marker, i) => ( */}
-                                {roomBox.map((item, i) => (
-                                    <MapView.Marker
-                                        key={i}
-                                        //coordinate={marker}
-                                        coordinate={{
-                                            latitude: parseFloat(item.Latitude),
-                                            longitude: parseFloat(item.Longitude)
+                        {/* Fix all makers on Map */}
+                        {/* {MARKERS.slice(1).map((marker, i) => ( */}
+                        {roomBox.map((item, i) => (
+                            <MapView.Marker
+                                key={i}
+                                //coordinate={marker}
+                                coordinate={{
+                                    latitude: parseFloat(item.Latitude),
+                                    longitude: parseFloat(item.Longitude)
+                                }}
+                            // title='Im here'
+                            // description='Home'
+
+                            /* image={require('../images/nbl-house_icon.png')} */
+                            >
+                                <Image
+                                    source={require('../assets/images/nbl-house_icon.png')}
+                                    style={{ height: height * 0.04, width: width * 0.07 }}
+                                    //onLoad={() => {
+                                    //  this.forceUpdate()
+                                    // }}
+
+                                    onLayout={() => {
+                                        this.setState({ initialRenderCurrenHouse: false })
+                                    }}
+                                    key={`${this.state.initialRenderCurrenHouse}`}
+                                >
+                                    {/* <Text style={{ width: 0, height: 0 }}>{Math.random()}</Text> */}
+                                </Image>
+                                <MapView.Callout style={{}}
+                                    onPress={() => {
+                                        this.props.navigation.navigate('RoomDetailScreen', { item });
+                                    }}
+                                >
+                                    {/* <View style={{ width: width * 0.7 }}> */}
+                                    <View
+                                        style={{
+                                            width: width * 0.7
                                         }}
-                                    // title='Im here'
-                                    // description='Home'
-
-                                    /* image={require('../images/nbl-house_icon.png')} */
+                                        onPress={() => {
+                                            //alert("can")
+                                            //this.props.navigation.navigate('RoomDetailScreen', { item });
+                                        }}
                                     >
-                                        <Image
-                                            source={require('../assets/images/nbl-house_icon.png')}
-                                            style={{ height: height * 0.04, width: width * 0.07 }}
-                                            //onLoad={() => {
-                                            //  this.forceUpdate()
-                                            // }}
+                                        <View style={{
+                                            flex: 1,
+                                            flexDirection: 'row',
+                                            //height: 100,
+                                            //paddingTop: 10,
+                                            //paddingBottom: 10,
 
-                                            onLayout={() => {
-                                                this.setState({ initialRenderCurrenHouse: false })
-                                            }}
-                                            key={`${this.state.initialRenderCurrenHouse}`}
-                                        >
-                                            {/* <Text style={{ width: 0, height: 0 }}>{Math.random()}</Text> */}
-                                        </Image>
-                                        <MapView.Callout style={{}}
-                                            onPress={() => {
-                                                this.props.navigation.navigate('RoomDetailScreen', { item });
-                                            }}
-                                        >
-                                            {/* <View style={{ width: width * 0.7 }}> */}
-                                            <View
+                                        }}>
+                                            <Image
                                                 style={{
-                                                    width: width * 0.7
+                                                    flex: 3,
+                                                    //borderRadius: 5,
+
                                                 }}
-                                                onPress={() => {
-                                                    //alert("can")
-                                                    //this.props.navigation.navigate('RoomDetailScreen', { item });
-                                                }}
-                                            >
-                                                <View style={{
-                                                    flex: 1,
-                                                    flexDirection: 'row',
-                                                    //height: 100,
-                                                    //paddingTop: 10,
-                                                    //paddingBottom: 10,
+                                                source={{ uri: item.Title }} />
 
-                                                }}>
-                                                    <Image
-                                                        style={{
-                                                            flex: 3,
-                                                            //borderRadius: 5,
-
-                                                        }}
-                                                        source={{ uri: item.Title }} />
-
-                                                    <View style={styles.searchCardTextBox}>
-                                                        <Text style={{
-                                                            flex: 2,
-                                                            fontSize: 10,
-                                                        }}>{item.Address}</Text>
+                                            <View style={styles.searchCardTextBox}>
+                                                <Text style={{
+                                                    flex: 2,
+                                                    fontSize: 10,
+                                                }}>{item.Address}</Text>
 
 
-                                                        {/*  <Text style={{
+                                                {/*  <Text style={{
                                                                 flex: 1,
                                                                 color: '#9B9D9D',
                                                                 fontSize: 9,
                                                             }}>Ngày đăng: {item.UpdatedDate}</Text> */}
 
 
-                                                        {
-                                                            this.state.roomCategory.map((y, i) => {
-                                                                return (
-                                                                    y.ID == item.CategoryID &&
-                                                                    <Text
-                                                                        style={{ fontSize: 10, color: '#73aa2a' }}
-                                                                        key={i}>{y.CatName}</Text>
-                                                                )
-                                                            })
-                                                        }
+                                                {
+                                                    this.state.roomCategory.map((y, i) => {
+                                                        return (
+                                                            y.ID == item.CategoryID &&
+                                                            <Text
+                                                                style={{ fontSize: 10, color: '#73aa2a' }}
+                                                                key={i}>{y.CatName}</Text>
+                                                        )
+                                                    })
+                                                }
 
 
-                                                        <View style={styles.searchCardPriceBox}>
+                                                <View style={styles.searchCardPriceBox}>
 
-                                                            <TextMask
-                                                                style={{ flex: 1, fontSize: 10 }}
-                                                                value={item.Price}
-                                                                type={'money'}
-                                                                options={{ suffixUnit: ' đ', precision: 0, unit: ' ', separator: ' ' }}
-                                                            />
-                                                            <View style={{ flex: 1, flexDirection: 'row', alignItems: 'center', justifyContent: 'center' }}>
+                                                    <TextMask
+                                                        style={{ flex: 1, fontSize: 10 }}
+                                                        value={item.Price}
+                                                        type={'money'}
+                                                        options={{ suffixUnit: ' đ', precision: 0, unit: ' ', separator: ' ' }}
+                                                    />
+                                                    <View style={{ flex: 1, flexDirection: 'row', alignItems: 'center', justifyContent: 'center' }}>
 
 
-                                                                <Text style={{ fontSize: 10, }} >{item.Acreage} m</Text>
-                                                                <Text style={{ fontSize: 7, marginBottom: 5 }}>2</Text>
-                                                            </View>
-                                                            <Ionicons style={{
-                                                                flex: 1,
-                                                                fontSize: 10,
-                                                                paddingTop: 2,
-
-                                                            }} name='md-pin' >  {item.Distance} km</Ionicons>
-                                                            {/* <Text>3 km</Text> */}
-                                                        </View>
+                                                        <Text style={{ fontSize: 10, }} >{item.Acreage} m</Text>
+                                                        <Text style={{ fontSize: 7, marginBottom: 5 }}>2</Text>
                                                     </View>
+                                                    <Ionicons style={{
+                                                        flex: 1,
+                                                        fontSize: 10,
+                                                        paddingTop: 2,
+
+                                                    }} name='md-pin' >  {item.Distance} km</Ionicons>
+                                                    {/* <Text>3 km</Text> */}
                                                 </View>
                                             </View>
-                                            {/* </View> */}
-                                        </MapView.Callout>
-                                    </MapView.Marker>
-                                ))}
+                                        </View>
+                                    </View>
+                                    {/* </View> */}
+                                </MapView.Callout>
+                            </MapView.Marker>
+                        ))}
+                    </MapView>
+                }
 
-                                {/* Fix all finding house makers on Map */}
-                                {/* {findingHouseMakers.map((marker, i) => (
-                                <MapView.Marker
-                                    key={i}
-                                    coordinate={marker}
-                                    image={require('../images/nbl-house_icon.png')}
-                                />
-                            ))} */}
-
-                            </MapView>
-                        }
-                    </View>
-                    {/* : null
-                    } */}
-
-
-                </View>
-
-                <View style={styles.container}>
-
-                    <View style={styles.searchRoolResultBox}>
-                        <View style={styles.searchRadiusBox}>
-                            <Text >Bán kính: </Text>
-                            {Platform.OS === 'ios' ?
-
-                                <TouchableOpacity
-                                    onPress={() => {
-                                        this.setState({
-                                            modalRadius: true
-                                        })
-                                    }}
-                                >
-
-                                    <Text>{this.state.radius} km</Text>
-                                </TouchableOpacity>
+                {roomBox.length > 1 &&
+                    <View style={{
+                        width: width,
+                        height: height * 0.22,
+                        backgroundColor: '#fff',
+                        zIndex: 10,
+                        position: 'absolute',
+                        opacity: 0.7,
+                        //marginTop: -200,
+                        padding: 10,
+                        borderTopWidth: 2,
+                        borderColor: 'white',
+                        bottom: 0
+                    }}>
 
 
-                                :
-                                <Picker
-                                    style={styles.searchRadiusPicker}
-                                    mode='dropdown'
-                                    selectedValue={this.state.radius}
-                                    onValueChange={async (itemValue, itemIndex) => {
-                                        await this.setState({ radius: itemValue })
-                                        this._getRoomByFilter();
-                                        //this.fitAllMarkers()
-                                    }}>
-                                    <Picker.Item label="2 km" value="2" />
-                                    <Picker.Item label="4 km" value="4" />
-                                    <Picker.Item label="6 km" value="6" />
-                                    <Picker.Item label="8 km" value="8" />
-                                    <Picker.Item label="10 km" value="10" />
-                                    <Picker.Item label="12 km" value="12" />
-                                    <Picker.Item label="14 km" value="14" />
-                                    <Picker.Item label="16 km" value="16" />
-                                    <Picker.Item label="18 km" value="18" />
-                                    <Picker.Item label="20 km" value="20" />
-                                    <Picker.Item label="30 km" value="30" />
-                                    <Picker.Item label="40 km" value="40" />
-                                    <Picker.Item label="50 km" value="50" />
-                                </Picker>
-                            }
-                            {/* <TouchableOpacity
-                                style={{ flex: 1, }}
-                                onPress={() => {
-                                    this.fitAllMarkers()
-                                    //this._fitAllFindingHouseMakers();
-                                    //this.map.animateToCoordinate(currentMaker, 1000);
-                                }}
-                            >
-                                <Text style={{ flex: 3, textAlign: 'right', color: '#73aa2a' }}>Đăng ký vùng này</Text>
-                            </TouchableOpacity> */}
-                        </View>
-                        <View style={{
-                            flexDirection: 'row',
-                            marginTop: 12,
-                            borderBottomWidth: 0.3,
-                            paddingBottom: 10,
-                            borderColor: '#9B9D9D',
-                        }}>
-                            <Text >Bộ lọc: </Text>
-                            <TouchableOpacity
-                                style={{}}
-                                onPress={() => this.setState({ modalSearchFilterVisible: true })}
-                            >
-                                {this.state.txtFilterResult
-                                    ? <Text style={{ color: '#73aa2a', width: width * 0.8 }}>{this.state.txtFilterResult}</Text>
-                                    : <Ionicons style={styles.searchFilterIcon} name='ios-funnel'></Ionicons>
-                                }
-
-                            </TouchableOpacity>
-
-                        </View>
 
                         <FlatList
                             //onScroll={this._onScroll}
@@ -1036,6 +1002,17 @@ export default class SearchScreen extends React.Component {
                         />
 
                     </View>
+                }
+
+
+
+                <View style={{
+                    height: height * 0.5,
+                    backgroundColor: '#fff',
+                    marginTop: -25,
+                }}>
+
+
 
                     {/* Modal Filter Searching */}
                     <Modal
@@ -1415,33 +1392,16 @@ const styles = StyleSheet.create({
         paddingLeft: 22,
         textAlign: 'center',
     },
-    searchRadiusPicker: {
-        flex: 1,
-        marginTop: -16
-    },
+
     searchRadiusBox: {
         flexDirection: 'row',
     },
 
-    searchRoolResultBox: {
-        flex: 1,
-        // height: 400,
-        backgroundColor: '#fff',
-        // position: 'absolute',
-        opacity: 0.8,
-        // marginTop: -70,
-        padding: 10,
-        borderTopWidth: 2,
-        borderColor: 'white',
-    },
+
     searchMapView: {
         alignSelf: 'stretch',
         // height: height * 0.3,
         height: 100,
     },
-    container: {
-        height: height * 0.5,
-        backgroundColor: '#fff',
-        marginTop: -25,
-    },
+
 });
