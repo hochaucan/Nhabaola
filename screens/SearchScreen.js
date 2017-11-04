@@ -22,12 +22,13 @@ import { ExpoLinksView } from '@expo/samples';
 import { Constants, Location, Permissions } from 'expo';
 import { Ionicons } from '@expo/vector-icons';
 import { users } from '../components/examples/data';
-import { Button, FormLabel, FormInput, SocialIcon, } from 'react-native-elements'
+import { Button, FormLabel, FormInput, SocialIcon, Icon } from 'react-native-elements'
 import MapView from 'react-native-maps';
 import MultiSlider from '@ptomasroos/react-native-multi-slider';
 import PopupDialog, { SlideAnimation, ScaleAnimation, DialogTitle, DialogButton } from 'react-native-popup-dialog';
 import { GooglePlacesAutocomplete, } from 'react-native-google-places-autocomplete'; // 1.2.12
-import { TextInputMask, TextMask } from 'react-native-masked-text';
+import { TextInputMask, TextMask } from 'react-native-masked-text'; import { responsiveHeight, responsiveWidth, responsiveFontSize } from 'react-native-responsive-dimensions';
+
 
 var { height, width } = Dimensions.get('window');
 
@@ -297,7 +298,7 @@ export default class SearchScreen extends React.Component {
 
     fitAllMarkers() {
         this.map.fitToCoordinates(MARKERS, {
-            edgePadding: DEFAULT_PADDING,
+            edgePadding: { top: responsiveHeight(10), right: responsiveWidth(65), bottom: responsiveHeight(80), left: responsiveWidth(65) },//DEFAULT_PADDING,
             animated: true,
         });
     }
@@ -565,7 +566,25 @@ export default class SearchScreen extends React.Component {
         }
 
         return (
-            <View style={{ flex: 1 }}>
+            <View style={{
+                flex: 1,
+            }}>
+
+                {this.state.txtFilterResult &&
+                    <Text style={{
+                        color: '#73aa2a',
+                        width: responsiveWidth(80),
+                        position: 'absolute',
+                        top: 10,
+                        zIndex: 10,
+                        backgroundColor: '#fff',
+                        padding: 5,
+                        fontSize: responsiveFontSize(1.6),
+                        elevation: 2,
+                        borderRadius: 10,
+                    }}>{this.state.txtFilterResult}</Text>
+
+                }
 
                 {/* Radius */}
                 <View style={{
@@ -573,11 +592,12 @@ export default class SearchScreen extends React.Component {
                     position: 'absolute',
                     backgroundColor: '#fff',
                     zIndex: 10,
-                    top: 10,
+                    top: 45,
                     paddingLeft: 10,
                     borderRadius: 10,
                     justifyContent: 'center',
                     alignItems: 'center',
+                    elevation: 2,
                 }}>
                     <Text >Bán kính: </Text>
                     {Platform.OS === 'ios' ?
@@ -623,7 +643,7 @@ export default class SearchScreen extends React.Component {
 
 
                 {/* Filter */}
-                <View style={{
+                {/* <View style={{
                     flexDirection: 'row',
                     position: 'absolute',
                     top: 70,
@@ -632,10 +652,6 @@ export default class SearchScreen extends React.Component {
                     borderRadius: 10,
                     padding: 10,
                     width: this.state.txtFilterResult !== null ? width * 0.8 : width * 0.3,
-                    //marginTop: 12,
-                    //borderBottomWidth: 0.3,
-                    //paddingBottom: 10,
-                    //borderColor: '#9B9D9D',
                 }}>
                     <Text >Bộ lọc: </Text>
                     <TouchableOpacity
@@ -649,12 +665,46 @@ export default class SearchScreen extends React.Component {
 
                     </TouchableOpacity>
 
-                </View>
+                </View> */}
 
 
                 {/* Search location  */}
+
+
+                {/* 
+                <SocialIcon
+                    style={{
+                       position: 'absolute', top: 100, zIndex: 10, right: 15,
+                    }}
+                    button
+                    light
+                    type='instagram'
+                /> */}
+
+
+
                 <TouchableOpacity
-                    style={{ height: 40, position: 'absolute', top: 10, zIndex: 10, right: 15, backgroundColor: 'transparent' }}
+                    style={{
+                        height: 40, position: 'absolute', top: 10, zIndex: 10, right: 15,
+                    }}
+                    onPress={() => {
+                        this.setState({ modalSearchFilterVisible: true })
+                    }}
+                >
+                    <View style={{
+                        backgroundColor: '#a4d227', padding: 5, borderRadius: 10, width: 32,
+                        height: 32, justifyContent: 'center',
+                        alignItems: 'center',
+                    }}>
+                        <Ionicons style={{ fontSize: 25, color: '#fff', textAlign: 'center' }} name='ios-funnel-outline' />
+                    </View>
+                </TouchableOpacity>
+
+
+                <TouchableOpacity
+                    style={{
+                        height: 40, position: 'absolute', top: 55, zIndex: 10, right: 15,
+                    }}
                     onPress={() => {
                         this.popupSearching.show();
                     }}
@@ -662,7 +712,7 @@ export default class SearchScreen extends React.Component {
                     <View style={{
                         backgroundColor: '#a4d227', padding: 5, borderRadius: 10, width: 32,
                         height: 32, justifyContent: 'center',
-                        alignItems: 'center', shadowColor: "#000000",
+                        alignItems: 'center',
                     }}>
                         <Ionicons style={{ fontSize: 25, color: '#fff', textAlign: 'center' }} name='ios-search-outline' />
                     </View>
@@ -670,7 +720,7 @@ export default class SearchScreen extends React.Component {
 
                 {/* Get current location */}
                 <TouchableOpacity
-                    style={{ height: 40, position: 'absolute', top: 55, zIndex: 10, right: 15, backgroundColor: 'transparent' }}
+                    style={{ height: 40, position: 'absolute', top: 100, zIndex: 10, right: 15, backgroundColor: 'transparent' }}
                     onPress={async () => {
                         await this.setState({ isSearching: false, searchingMaker: null, })
                         this._getLocationAsync();
@@ -896,110 +946,130 @@ export default class SearchScreen extends React.Component {
                 {roomBox.length > 1 &&
                     <View style={{
                         width: width,
-                        height: height * 0.22,
-                        backgroundColor: '#fff',
+                        height: responsiveHeight(32),//height * 0.22,
+                        backgroundColor: 'transparent',
                         zIndex: 10,
                         position: 'absolute',
-                        opacity: 0.7,
+                        // opacity: 0.2,
                         //marginTop: -200,
                         padding: 10,
-                        borderTopWidth: 2,
-                        borderColor: 'white',
-                        bottom: 0
+                        //borderTopWidth: 2,
+                        //borderColor: 'white',
+                        bottom: 0,
+                        justifyContent: 'center',
+                        alignItems: 'center',
+
                     }}>
 
-
-
-                        <FlatList
-                            //onScroll={this._onScroll}
-                            // ref='searchresult'
-                            refreshing={this.state.refreshFlatlist}
-                            keyboardShouldPersistTaps="always"
-                            removeClippedSubviews={true}
-                            initialNumToRender={2}
-                            shouldItemUpdate={this._shouldItemUpdate}
-
-                            // onRefresh={() => { this._refreshRoomBox() }}
-
-                            onEndReachedThreshold={0.2}
-                            onEndReached={() => {
-                                //alert("refreshing")
-                                // this._getRoomByFilter(false);
-
+                        <View
+                            style={{
+                                width: width * 0.9,
+                                //height: responsiveHeight(30),//height * 0.22,
+                                backgroundColor: 'white',
+                                //zIndex: 20,
+                                //position: 'absolute',
+                                //opacity: 0.8,
+                                //marginTop: -200,
+                                padding: 10,
+                                elevation: 2,
+                                //borderTopWidth: 2,
+                                //borderColor: 'white',
+                                //bottom: 0
                             }}
+                        >
+
+                            <FlatList
+                                //onScroll={this._onScroll}
+                                // ref='searchresult'
+                                refreshing={this.state.refreshFlatlist}
+                                keyboardShouldPersistTaps="always"
+                                removeClippedSubviews={true}
+                                initialNumToRender={2}
+                                shouldItemUpdate={this._shouldItemUpdate}
+
+                                // onRefresh={() => { this._refreshRoomBox() }}
+
+                                onEndReachedThreshold={0.2}
+                                onEndReached={() => {
+                                    //alert("refreshing")
+                                    // this._getRoomByFilter(false);
+
+                                }}
 
 
-                            data={roomBox}
-                            renderItem={({ item }) =>
-                                <TouchableOpacity
-                                    style={styles.searchCardImage}
-                                    onPress={() => {
-                                        this.props.navigation.navigate('RoomDetailScreen', { item });
-                                    }}
-                                >
-                                    <View style={{
-                                        flex: 1,
-                                        flexDirection: 'row',
-                                        height: 100,
-                                        // borderWidth: 1,
-                                        paddingTop: 10,
-                                        paddingBottom: 10,
-                                        borderBottomWidth: 0.3,
-                                        borderColor: '#9B9D9D',
-                                    }}>
-                                        <Image
-                                            style={styles.searchCardImage}
-                                            source={{ uri: item.Title }} />
+                                data={roomBox}
+                                renderItem={({ item }) =>
+                                    <TouchableOpacity
+                                        style={{}}
+                                        onPress={() => {
+                                            this.props.navigation.navigate('RoomDetailScreen', { item });
+                                        }}
+                                    >
+                                        <View style={{
+                                            flex: 1,
+                                            flexDirection: 'row',
+                                            // height: responsiveHeight(13),
+                                            // borderWidth: 1,
+                                            paddingTop: 10,
+                                            paddingBottom: 10,
+                                            borderBottomWidth: 0.3,
+                                            borderColor: '#9B9D9D',
+                                        }}>
+                                            <Image
+                                                style={{
+                                                    flex: 3,
+                                                    borderRadius: 5,
+                                                }}
+                                                source={{ uri: item.Title }} />
 
-                                        <View style={styles.searchCardTextBox}>
-                                            <Text style={styles.searchCardAddress}>{item.Address}</Text>
-                                            {/* <Text style={styles.searchCardPostDate}>Ngày đăng: {item.UpdatedDate}</Text> */}
+                                            <View style={styles.searchCardTextBox}>
+                                                <Text style={{
+                                                    flex: 2,
+                                                    fontSize: responsiveFontSize(1.5),
+                                                }}>{item.Address}</Text>
+                                                {/* <Text style={styles.searchCardPostDate}>Ngày đăng: {item.UpdatedDate}</Text> */}
 
-                                            {
-                                                this.state.roomCategory.map((y, i) => {
-                                                    return (
-                                                        y.ID == item.CategoryID &&
-                                                        <Text
-                                                            style={{ color: '#73aa2a' }}
-                                                            key={i}>{y.CatName}</Text>
-                                                    )
-                                                })
-                                            }
-
-                                            <View style={styles.searchCardPriceBox}>
-                                                {/* <Text style={styles.searchCardPrice}>Giá: {item.Price} đ</Text> */}
-                                                <TextMask
-                                                    style={{ flex: 1, }}
-                                                    value={item.Price}
-                                                    type={'money'}
-                                                    options={{ suffixUnit: ' đ', precision: 0, unit: ' ', separator: ' ' }}
-                                                />
-                                                <View style={{ flex: 1, flexDirection: 'row', alignItems: 'center', justifyContent: 'center' }}>
-
-                                                    {/* {
-
+                                                <View style={{
+                                                    flexDirection: 'row',
+                                                }}>
+                                                    {
                                                         this.state.roomCategory.map((y, i) => {
                                                             return (
                                                                 y.ID == item.CategoryID &&
                                                                 <Text
-                                                                    style={{}}
-                                                                    key={i}>{y.CatName}:  {item.Acreage} m</Text>
-                                                                // : null
+                                                                    style={{ flex: 1, color: '#73aa2a', }}
+                                                                    key={i}>{y.CatName}</Text>
                                                             )
                                                         })
-                                                    } */}
-                                                    <Text>{item.Acreage} m</Text>
-                                                    <Text style={{ fontSize: 8, marginBottom: 5 }}>2</Text>
+                                                    }
+
+                                                    <View style={{ flex: 1, flexDirection: 'row', }}>
+                                                        <Text>{item.Acreage} m</Text>
+                                                        <Text style={{ fontSize: 8, marginBottom: 5 }}>2</Text>
+                                                    </View>
+
                                                 </View>
-                                                <Ionicons style={styles.searCardDistanceIcon} name='md-pin' >  {item.Distance} km</Ionicons>
-                                                {/* <Text>3 km</Text> */}
+
+                                                <View style={styles.searchCardPriceBox}>
+                                                    {/* <Text style={styles.searchCardPrice}>Giá: {item.Price} đ</Text> */}
+                                                    <TextMask
+                                                        style={{ flex: 1, }}
+                                                        value={item.Price}
+                                                        type={'money'}
+                                                        options={{ suffixUnit: ' đ', precision: 0, unit: ' ', separator: ' ' }}
+                                                    />
+
+                                                    <Ionicons style={styles.searCardDistanceIcon} name='md-pin' >  {item.Distance} km</Ionicons>
+                                                    {/* <Text>3 km</Text> */}
+                                                </View>
                                             </View>
                                         </View>
-                                    </View>
-                                </TouchableOpacity>
-                            }
-                            keyExtractor={item => item.ID}
-                        />
+                                    </TouchableOpacity>
+                                }
+                                keyExtractor={item => item.ID}
+                            />
+
+                        </View>
 
                     </View>
                 }
@@ -1368,14 +1438,14 @@ const styles = StyleSheet.create({
     dropdownStyle: {
         width: 100,
     },
-    searchCardImage: {
-        flex: 3,
-        borderRadius: 5,
-    },
-    searchCardAddress: {
-        flex: 2,
-        fontSize: 13,
-    },
+    // searchCardImage: {
+    //     flex: 3,
+    //     borderRadius: 5,
+    // },
+    // searchCardAddress: {
+    //     flex: 2,
+    //     fontSize: 13,
+    // },
     // searchCard: {
     //     flex: 1,
     //     flexDirection: 'row',
