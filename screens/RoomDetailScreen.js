@@ -25,6 +25,7 @@ import PopupDialog, { SlideAnimation, ScaleAnimation, DialogTitle, DialogButton 
 import { CheckBox, Rating, Button, FormLabel, FormInput, SocialIcon, FormValidationMessage } from 'react-native-elements'
 import KeyboardSpacer from 'react-native-keyboard-spacer';
 import { TextInputMask, TextMask } from 'react-native-masked-text';
+import { responsiveHeight, responsiveWidth, responsiveFontSize } from 'react-native-responsive-dimensions';
 
 var { height, width } = Dimensions.get('window');
 
@@ -370,7 +371,19 @@ export default class RoomDetailScreen extends React.Component {
 
         return (
             <View style={{ flex: 1 }}>
+                <View style={{ flexDirection: 'row', padding: 10, backgroundColor: '#a4d227' }}>
+                    <TouchableOpacity
+                        style={{}}
+                        onPress={() => {
+                            this.props.navigation.goBack()
+                           // this.props.navigation.state.params.onRefreshScreen({ refreshScreen: true });
+                            //this.props.navigation.state.params._getWalletAsync();
 
+                        }}>
+                        <Ionicons style={{ fontSize: 28, color: '#fff', }} name='md-arrow-back'></Ionicons>
+                    </TouchableOpacity>
+                    <Text style={{ marginLeft: 20, color: '#fff', fontSize: responsiveFontSize(2.2), justifyContent: 'center' }}>Chi tiết</Text>
+                </View>
 
                 <View style={{
                     backgroundColor: '#fff',
@@ -381,7 +394,7 @@ export default class RoomDetailScreen extends React.Component {
                     justifyContent: 'center',
                 }}>
 
-                    <TouchableOpacity
+                    {/* <TouchableOpacity
                         style={{
                             marginRight: 8,
                             justifyContent: 'center',
@@ -394,7 +407,7 @@ export default class RoomDetailScreen extends React.Component {
                         }}
                             name='md-arrow-back'
                         ></Ionicons>
-                    </TouchableOpacity>
+                    </TouchableOpacity> */}
 
                     <View style={styles.cardAvatarBox}>
                         <TouchableOpacity

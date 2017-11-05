@@ -25,6 +25,8 @@ import { users } from '../components/examples/data';
 import Accordion from 'react-native-collapsible/Accordion';
 import saveStorageAsync from '../components/saveStorageAsync';
 import HomeScreen from './HomeScreen';
+import { TextInputMask, TextMask } from 'react-native-masked-text';
+import { responsiveHeight, responsiveWidth, responsiveFontSize } from 'react-native-responsive-dimensions';
 
 
 var { height, width } = Dimensions.get('window');
@@ -360,7 +362,7 @@ export default class ProfileScreen extends React.Component {
     render() {
         return (
             <View style={styles.container}>
-                <View style={{ flexDirection: 'row', padding: 20, }}>
+                <View style={{ flexDirection: 'row', padding: 10, backgroundColor: '#a4d227' }}>
                     <TouchableOpacity
                         style={{}}
                         onPress={() => {
@@ -369,9 +371,9 @@ export default class ProfileScreen extends React.Component {
                             this.props.navigation.state.params._getWalletAsync();
 
                         }}>
-                        <Ionicons style={{ fontSize: 28, color: '#a4d227', }} name='md-arrow-back'></Ionicons>
+                        <Ionicons style={{ fontSize: 28, color: '#fff', }} name='md-arrow-back'></Ionicons>
                     </TouchableOpacity>
-                    <Text style={{ marginLeft: 20, color: '#73aa2a', fontSize: 20, justifyContent: 'center' }}>Trang cá nhân</Text>
+                    <Text style={{ marginLeft: 20, color: '#fff', fontSize: responsiveFontSize(2.2), justifyContent: 'center' }}>Trang cá nhân</Text>
                 </View>
                 <View style={styles.card}>
                     {/* <Text>{JSON.stringify(this.props.navigation.state.params)}</Text> */}
