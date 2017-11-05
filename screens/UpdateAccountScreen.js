@@ -31,6 +31,8 @@ import uploadImageAsync from '../api/uploadImageAsync';
 import KeyboardSpacer from 'react-native-keyboard-spacer';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import saveStorageAsync from '../components/saveStorageAsync';
+import { TextInputMask, TextMask } from 'react-native-masked-text';
+import { responsiveHeight, responsiveWidth, responsiveFontSize } from 'react-native-responsive-dimensions';
 
 var { height, width } = Dimensions.get('window');
 
@@ -237,6 +239,20 @@ export default class UpdateAccountScreen extends React.Component {
     render() {
         return (
             <View style={{ flex: 1, backgroundColor: '#fff', paddingBottom: 20, }}>
+                <View style={{ flexDirection: 'row', padding: 10, backgroundColor: '#a4d227',alignItems: 'center' }}>
+                    <TouchableOpacity
+                        style={{}}
+                        onPress={() => {
+                            this.props.navigation.goBack()
+                            // this.props.navigation.state.params.onRefreshScreen();
+                            // this.props.navigation.state.params.onRefreshScreen({ refreshScreen: true });
+                            //this.props.navigation.state.params._getWalletAsync();
+
+                        }}>
+                        <Ionicons style={{ fontSize: 28, color: '#fff', }} name='md-arrow-back'></Ionicons>
+                    </TouchableOpacity>
+                    <Text style={{ marginLeft: 20, color: '#fff', fontSize: responsiveFontSize(2.2), justifyContent: 'center' }}></Text>
+                </View>
                 <KeyboardAwareScrollView
                     innerRef={ref => { this.scroll = ref }}
                 >

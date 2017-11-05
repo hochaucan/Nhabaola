@@ -371,12 +371,12 @@ export default class RoomDetailScreen extends React.Component {
 
         return (
             <View style={{ flex: 1 }}>
-                <View style={{ flexDirection: 'row', padding: 10, backgroundColor: '#a4d227' }}>
+                <View style={{ flexDirection: 'row', padding: 10, backgroundColor: '#a4d227', alignItems: 'center' }}>
                     <TouchableOpacity
                         style={{}}
                         onPress={() => {
                             this.props.navigation.goBack()
-                           // this.props.navigation.state.params.onRefreshScreen({ refreshScreen: true });
+                            // this.props.navigation.state.params.onRefreshScreen({ refreshScreen: true });
                             //this.props.navigation.state.params._getWalletAsync();
 
                         }}>

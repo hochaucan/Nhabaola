@@ -362,7 +362,7 @@ export default class ProfileScreen extends React.Component {
     render() {
         return (
             <View style={styles.container}>
-                <View style={{ flexDirection: 'row', padding: 10, backgroundColor: '#a4d227' }}>
+                <View style={{ flexDirection: 'row', padding: 10, backgroundColor: '#a4d227',alignItems: 'center' }}>
                     <TouchableOpacity
                         style={{}}
                         onPress={() => {
