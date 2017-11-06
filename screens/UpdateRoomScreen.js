@@ -327,11 +327,11 @@ export default class UpdateRoomScreen extends React.Component {
                 ToastAndroid.showWithGravity('Vui lòng chọn loại BĐS', ToastAndroid.SHORT, ToastAndroid.TOP);
                 return;
             }
-            if (this.state.toDate < this.state.fromDate) {
+            if (new Date(this.state.toDate) < new Date(this.state.fromDate)) {
                 ToastAndroid.showWithGravity('Ngày kết thúc hiệu lực không được nhỏ hơn ngày bắt đầu', ToastAndroid.SHORT, ToastAndroid.TOP);
                 return;
             }
-            if (this.state.isHighlight && this.state.toDateHighLight < this.state.fromDateHighLight) {
+            if (this.state.isHighlight && new Date(this.state.toDateHighLight) < new Date(this.state.fromDateHighLight)) {
                 ToastAndroid.showWithGravity('Ngày kết thúc nổi bật không được nhỏ hơn ngày bắt đầu', ToastAndroid.SHORT, ToastAndroid.TOP);
                 return;
             }
@@ -367,11 +367,11 @@ export default class UpdateRoomScreen extends React.Component {
                 Alert.alert('Vui lòng chọn loại BĐS');
                 return;
             }
-            if (this.state.toDate < this.state.fromDate) {
+            if (new Date(this.state.toDate) < new Date(this.state.fromDate)) {
                 Alert.alert('Ngày kết thúc hiệu lực không được nhỏ hơn ngày bắt đầu');
                 return;
             }
-            if (this.state.isHighlight && this.state.toDateHighLight < this.state.fromDateHighLight) {
+            if (this.state.isHighlight && new Date(this.state.toDateHighLight) < new Date(this.state.fromDateHighLight)) {
                 Alert.alert('Ngày kết thúc nổi bật không được nhỏ hơn ngày bắt đầu');
                 return;
             }

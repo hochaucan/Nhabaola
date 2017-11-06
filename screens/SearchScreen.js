@@ -598,6 +598,8 @@ export default class SearchScreen extends React.Component {
                     justifyContent: 'center',
                     alignItems: 'center',
                     elevation: 2,
+                    //opacity: 0.8,
+                    width: responsiveWidth(46)
                 }}>
                     <Text >Bán kính: </Text>
                     {Platform.OS === 'ios' ?
@@ -610,12 +612,12 @@ export default class SearchScreen extends React.Component {
                             }}
                         >
 
-                            <Text>{this.state.radius} km</Text>
+                            <Text style={{}}>{this.state.radius} km</Text>
                         </TouchableOpacity>
                         :
                         <Picker
                             style={{
-                                width: width * 0.3,
+                                width: responsiveWidth(30),
                             }}
                             mode='dropdown'
                             selectedValue={this.state.radius}
@@ -682,10 +684,10 @@ export default class SearchScreen extends React.Component {
                 /> */}
 
 
-
+                {/* Filter */}
                 <TouchableOpacity
                     style={{
-                        height: 40, position: 'absolute', top: 10, zIndex: 10, right: 15,
+                        height: 40, position: 'absolute', top: responsiveHeight(30), zIndex: 10, right: 15,
                     }}
                     onPress={() => {
                         this.setState({ modalSearchFilterVisible: true })
@@ -694,16 +696,16 @@ export default class SearchScreen extends React.Component {
                     <View style={{
                         backgroundColor: '#a4d227', padding: 5, borderRadius: 10, width: 32,
                         height: 32, justifyContent: 'center',
-                        alignItems: 'center',
+                        alignItems: 'center', elevation: 2
                     }}>
                         <Ionicons style={{ fontSize: 25, color: '#fff', textAlign: 'center' }} name='ios-funnel-outline' />
                     </View>
                 </TouchableOpacity>
 
-
+                {/* Search location */}
                 <TouchableOpacity
                     style={{
-                        height: 40, position: 'absolute', top: 55, zIndex: 10, right: 15,
+                        height: 40, position: 'absolute', top: responsiveHeight(40), zIndex: 10, right: 15,
                     }}
                     onPress={() => {
                         this.popupSearching.show();
@@ -712,7 +714,7 @@ export default class SearchScreen extends React.Component {
                     <View style={{
                         backgroundColor: '#a4d227', padding: 5, borderRadius: 10, width: 32,
                         height: 32, justifyContent: 'center',
-                        alignItems: 'center',
+                        alignItems: 'center', elevation: 2
                     }}>
                         <Ionicons style={{ fontSize: 25, color: '#fff', textAlign: 'center' }} name='ios-search-outline' />
                     </View>
@@ -720,13 +722,16 @@ export default class SearchScreen extends React.Component {
 
                 {/* Get current location */}
                 <TouchableOpacity
-                    style={{ height: 40, position: 'absolute', top: 100, zIndex: 10, right: 15, backgroundColor: 'transparent' }}
+                    style={{ height: 40, position: 'absolute', top: responsiveHeight(50), zIndex: 10, right: 15, backgroundColor: 'transparent' }}
                     onPress={async () => {
                         await this.setState({ isSearching: false, searchingMaker: null, })
                         this._getLocationAsync();
                     }}
                 >
-                    <View style={{ backgroundColor: '#a4d227', padding: 5, borderRadius: 10, width: 32, height: 32, justifyContent: 'center', alignItems: 'center' }}>
+                    <View style={{
+                        backgroundColor: '#a4d227', padding: 5, borderRadius: 10,
+                        width: 32, height: 32, justifyContent: 'center', alignItems: 'center', elevation: 2
+                    }}>
                         <Ionicons style={{ fontSize: 25, color: '#fff', textAlign: 'center' }} name='ios-locate-outline' />
                     </View>
                 </TouchableOpacity>
@@ -736,16 +741,12 @@ export default class SearchScreen extends React.Component {
                         ref={ref => { this.map = ref; }}
 
                         /* style={{ paddingBottom: this.state.hackHeight, alignSelf: 'stretch', }} */
-                        style={{ alignSelf: 'stretch', height: height }}
+                        style={{ alignSelf: 'stretch', height: responsiveHeight(100) }}
 
                         region={this.state.mapRegion}
                         // onRegionChange={this._handleMapRegionChange}
                         onRegionChangeComplete={(mapRegion) => {
-                            //alert("can")
                             this.setState({ mapRegion })
-                            {/* if (MARKERS.length > 1) {
-                                        this.fitAllMarkers()
-                                    } */}
                         }}
                         provider='google'
                         showsUserLocation={false}
@@ -755,19 +756,6 @@ export default class SearchScreen extends React.Component {
                         onPress={(e) => this.onMapPress(e)}
                     /* customMapStyle={customStyle} */
                     >
-
-                        {/* <MapView.Marker
-                        coordinate={{
-                            latitude: (this.state.lastLat + 0.00050) || -36.82339,
-                            longitude: (this.state.lastLong + 0.00050) || -73.03569,
-                        }}>
-                        <View>
-                            <Text style={{ color: '#000' }}>
-                                {this.state.lastLong} / {this.state.lastLat}
-                            </Text>
-                        </View>
-                    </MapView.Marker> */}
-
                         {this.state.location
                             ?
 
@@ -943,18 +931,14 @@ export default class SearchScreen extends React.Component {
                     </MapView>
                 }
 
-                {roomBox.length > 1 &&
+                {roomBox.length >= 1 &&
                     <View style={{
                         width: width,
-                        height: responsiveHeight(32),//height * 0.22,
+                        height: responsiveHeight(32),
                         backgroundColor: 'transparent',
                         zIndex: 10,
                         position: 'absolute',
-                        // opacity: 0.2,
-                        //marginTop: -200,
                         padding: 10,
-                        //borderTopWidth: 2,
-                        //borderColor: 'white',
                         bottom: 0,
                         justifyContent: 'center',
                         alignItems: 'center',
@@ -964,17 +948,9 @@ export default class SearchScreen extends React.Component {
                         <View
                             style={{
                                 width: width * 0.9,
-                                //height: responsiveHeight(30),//height * 0.22,
                                 backgroundColor: 'white',
-                                //zIndex: 20,
-                                //position: 'absolute',
-                                //opacity: 0.8,
-                                //marginTop: -200,
                                 padding: 10,
                                 elevation: 2,
-                                //borderTopWidth: 2,
-                                //borderColor: 'white',
-                                //bottom: 0
                             }}
                         >
 
@@ -1008,8 +984,6 @@ export default class SearchScreen extends React.Component {
                                         <View style={{
                                             flex: 1,
                                             flexDirection: 'row',
-                                            // height: responsiveHeight(13),
-                                            // borderWidth: 1,
                                             paddingTop: 10,
                                             paddingBottom: 10,
                                             borderBottomWidth: 0.3,
@@ -1051,7 +1025,6 @@ export default class SearchScreen extends React.Component {
                                                 </View>
 
                                                 <View style={styles.searchCardPriceBox}>
-                                                    {/* <Text style={styles.searchCardPrice}>Giá: {item.Price} đ</Text> */}
                                                     <TextMask
                                                         style={{ flex: 1, }}
                                                         value={item.Price}
@@ -1060,7 +1033,6 @@ export default class SearchScreen extends React.Component {
                                                     />
 
                                                     <Ionicons style={styles.searCardDistanceIcon} name='md-pin' >  {item.Distance} km</Ionicons>
-                                                    {/* <Text>3 km</Text> */}
                                                 </View>
                                             </View>
                                         </View>
@@ -1184,6 +1156,7 @@ export default class SearchScreen extends React.Component {
                                                     multiSliderPriceValue: [1, 10],
                                                     multiSliderAreaValue: [20, 200],
                                                     selectedCategory: '',
+                                                    selectedBDS: 'Tất cả BĐS',
                                                 })
                                                 this.setState({ modalSearchFilterVisible: false });
                                                 this._getRoomByFilter();
@@ -1195,7 +1168,10 @@ export default class SearchScreen extends React.Component {
                                             buttonStyle={{ backgroundColor: '#9B9D9D', padding: 15, borderRadius: 10 }}
                                             icon={{ name: 'ios-backspace', type: 'ionicon' }}
                                             onPress={() => {
-                                                this.setState({ modalSearchFilterVisible: false })
+                                                this.setState({
+                                                    modalSearchFilterVisible: false,
+
+                                                })
                                             }}
                                             title='Hủy' />
                                     }
