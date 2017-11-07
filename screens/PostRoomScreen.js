@@ -857,7 +857,7 @@ export default class PostRoomScreen extends React.Component {
                             ref='roomInfoInput'
                             returnKeyType={"done"}
                             onSubmitEditing={(event) => {
-                                this._postRoomAsync();
+                                //this._postRoomAsync();
                             }}
                             onFocus={(event) => {
                                 this._scrollToInput(event.target)
