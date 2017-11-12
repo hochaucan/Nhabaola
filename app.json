@@ -14,8 +14,9 @@
       "color": "#000000"
     },
     "loading": {
-      "icon": "./assets/icons/loading-icon.png",
-      "hideExponentText": true
+      "icon": "./assets/icons/app-icon.png",
+      "hideExponentText": true,
+      "backgroundColor":"#a4d227"
       //"backgroundImage": "./assets/images/nbl-app_bg.png"
     },
     "packagerOpts": {

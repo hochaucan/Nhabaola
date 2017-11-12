@@ -104,7 +104,7 @@ export default class HomeScreen extends React.Component {
       selectedCategory: '0',
       page: 1,
       roomPageIndex: 0,
-      roomPageCount: 5,
+      roomPageCount: 10,
 
       // Login
       profile: null,

@@ -480,10 +480,10 @@ export default class SearchScreen extends React.Component {
                     "Latitude": this.state.isSearching === true ? this.state.searchingMaker.latitude : this.state.location.coords.latitude, //"10.7143264",
                     "Longitude": this.state.isSearching === true ? this.state.searchingMaker.longitude : this.state.location.coords.longitude,//"106.6104477",
                     "Radius": this.state.radius,
-                    "RoomPriceMin": this.state.multiSliderPriceValue[0] + '000000',
-                    "RoomPriceMax": this.state.multiSliderPriceValue[1] + '000000',
-                    "AcreageMin": this.state.multiSliderAreaValue[0],
-                    "AcreageMax": this.state.multiSliderAreaValue[1],
+                    "RoomPriceMin": this.state.txtFilterResult != null ? this.state.multiSliderPriceValue[0] + '000000' : '0',
+                    "RoomPriceMax": this.state.txtFilterResult != null ? this.state.multiSliderPriceValue[1] + '000000' : '999999999999',
+                    "AcreageMin": this.state.txtFilterResult != null ? this.state.multiSliderAreaValue[0] : '0',
+                    "AcreageMax": this.state.txtFilterResult != null ? this.state.multiSliderAreaValue[1] : '500',
                     "SortOptionKey": "SortDistance",
                     "PageIndex": "0",
                     "PageCount": "100"
@@ -572,7 +572,7 @@ export default class SearchScreen extends React.Component {
 
                 {this.state.txtFilterResult &&
                     <Text style={{
-                        color: '#73aa2a',
+                        //color: '#73aa2a',
                         width: responsiveWidth(80),
                         position: 'absolute',
                         top: 10,
