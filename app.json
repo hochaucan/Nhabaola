@@ -26,10 +26,10 @@
     },
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.solutioncenter.nhabaola"
+      "bundleIdentifier": "vn.nhabaola.nhabaola"
     },
     "android": {
-      "package": "com.solutioncenter.nhabaola",
+      "package": "vn.nhabaola.nhabaola",
       "config": {
         "googleMaps": {
           "apiKey": "AIzaSyDjGSoHkMu6Q55FifG90l25DR8SfMo3quM"
