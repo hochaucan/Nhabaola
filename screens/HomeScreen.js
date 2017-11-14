@@ -780,7 +780,7 @@ export default class HomeScreen extends React.Component {
         },
         body: JSON.stringify({
           "PageIndex": "0",
-          "PageCount": "5",
+          "PageCount": "100",
           "SessionKey": "Olala_SessionKey",
           "UserLogon": "100"
         }),
