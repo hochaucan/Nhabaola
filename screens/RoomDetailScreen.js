@@ -77,6 +77,7 @@ export default class RoomDetailScreen extends React.Component {
             reportAddress: false,
             reportCall: false,
             reportHouse: false,
+            isComment: false,
         }
     }
 
@@ -86,13 +87,18 @@ export default class RoomDetailScreen extends React.Component {
 
     componentDidMount() {
 
+        if (this.state.isComment) {
+            //setTimeout(() => this.scrollView.scrollTo({ x: 0, y: 500 }), 10);
+            this.refs.commentInput.focus();
+        }
     }
 
     _getRoomBoxDetailAsync = async () => {
 
         await this.setState({
             roomBox: this.props.navigation.state.params.item,
-            starView: this.props.navigation.state.params.item.Point
+            starView: this.props.navigation.state.params.item.Point,
+            isComment: this.props.navigation.state.params.isComment
         })
         await this._getRoomCategoryFromStorageAsync();
         await this._getProfileFromStorageAsync();
@@ -443,7 +449,9 @@ export default class RoomDetailScreen extends React.Component {
                     }
 
                 </View>
-                <ScrollView style={styles.container}>
+                <ScrollView
+                    ref={scrollView => this.scrollView = scrollView}
+                    style={styles.container}>
 
                     <View style={{
 
@@ -522,6 +530,7 @@ export default class RoomDetailScreen extends React.Component {
                         </View>
                         <View style={styles.cardBottom}>
                             <View style={styles.cardBottomLeft}>
+                                {/* Rating */}
                                 <Text style={styles.cardBottomIconText}>{this.state.starView}</Text>
                                 <TouchableOpacity
                                     onPress={async () => {
@@ -545,7 +554,14 @@ export default class RoomDetailScreen extends React.Component {
                                     }} name='ios-star' />
                                 </TouchableOpacity>
                                 <Text style={styles.cardBottomIconText}>{this.state.comments.length}</Text>
-                                <TouchableOpacity >
+
+                                {/* Comment */}
+                                <TouchableOpacity
+                                    onPress={() => {
+                                        this.scrollView.scrollTo({ x: 0, y: 200 })
+                                        this.refs.commentInput.focus();
+                                    }}
+                                >
                                     <Ionicons style={styles.cardBottomIcon} name='ios-chatbubbles' />
                                 </TouchableOpacity>
                             </View>
@@ -700,7 +716,7 @@ export default class RoomDetailScreen extends React.Component {
                                         />
                                     </View>
                                     <View style={{ flex: 8 }}>
-                                        <Text style={{}}>{item.FullName}</Text>
+                                        <Text style={{ color: '#73aa2a', fontSize: responsiveFontSize(1.6), marginLeft: -3 }} > {item.FullName}</Text>
                                         <Text style={{ color: '#9B9D9D', fontSize: 10 }}>{item.UpdatedDate}</Text>
                                         <Text>{item.Content}</Text>
                                     </View>

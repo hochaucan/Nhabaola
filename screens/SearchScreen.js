@@ -527,6 +527,8 @@ export default class SearchScreen extends React.Component {
             //this.fitAllMarkers()
 
             setTimeout(() => { this.fitAllMarkers() }, 500)
+        } else {
+            // this._getLocationAsync();
         }
 
 
@@ -828,91 +830,94 @@ export default class SearchScreen extends React.Component {
 
                             /* image={require('../images/nbl-house_icon.png')} */
                             >
-                                <Image
-                                    source={item.IsHighlight ? require('../assets/images/nbl-house_highlight_icon.png') : require('../assets/images/nbl-house_icon.png')}
-                                    style={{ height: height * 0.04, width: width * 0.07 }}
-                                    //onLoad={() => {
-                                    //  this.forceUpdate()
-                                    // }}
+                                <View style={{ justifyContent: 'center', alignItems: 'center' }}>
+                                    <Text style={{
+                                        backgroundColor: item.IsHighlight ? 'red' : '#9B9D9D',
+                                        color: '#fff',
+                                        padding: 5,
+                                        fontSize: responsiveFontSize(1.2),
+                                        borderRadius: 5,
+                                        opacity: 0.7,
+                                    }}>{item.Price} đ</Text>
+                                    {
+                                        this.state.roomCategory.map((y, i) => {
+                                            return (
+                                                y.ID == item.CategoryID &&
+                                                <Text
+                                                    style={{
+                                                        fontSize: responsiveFontSize(1.5),
+                                                        color: item.IsHighlight ? 'red' : '#6c6d6d'
+                                                    }}
+                                                    key={i}>{y.CatName}</Text>
+                                            )
+                                        })
+                                    }
+                                    <Image
+                                        source={require('../assets/images/nbl-house_icon.png')}
+                                        style={{ height: height * 0.045, width: width * 0.075 }}
+                                        onLayout={() => {
+                                            this.setState({ initialRenderCurrenHouse: false })
+                                        }}
+                                        key={`${this.state.initialRenderCurrenHouse}`}
+                                    >
+                                    </Image>
 
-                                    onLayout={() => {
-                                        this.setState({ initialRenderCurrenHouse: false })
-                                    }}
-                                    key={`${this.state.initialRenderCurrenHouse}`}
-                                >
-                                    {/* <Text style={{ width: 0, height: 0 }}>{Math.random()}</Text> */}
-                                </Image>
+
+                                </View>
                                 <MapView.Callout style={{}}
                                     onPress={() => {
                                         this.props.navigation.navigate('RoomDetailScreen', { item });
                                     }}
                                 >
-                                    {/* <View style={{ width: width * 0.7 }}> */}
                                     <View
                                         style={{
                                             width: width * 0.7
-                                        }}
-                                        onPress={() => {
-                                            //alert("can")
-                                            //this.props.navigation.navigate('RoomDetailScreen', { item });
                                         }}
                                     >
                                         <View style={{
                                             flex: 1,
                                             flexDirection: 'row',
-                                            //height: 100,
-                                            //paddingTop: 10,
-                                            //paddingBottom: 10,
-
                                         }}>
                                             <Image
                                                 style={{
                                                     flex: 3,
-                                                    //borderRadius: 5,
-
                                                 }}
                                                 source={{ uri: item.Title }} />
 
                                             <View style={styles.searchCardTextBox}>
+
                                                 <Text style={{
                                                     flex: 2,
                                                     fontSize: 10,
                                                 }}>{item.Address}</Text>
 
-
-                                                {/*  <Text style={{
-                                                                flex: 1,
-                                                                color: '#9B9D9D',
-                                                                fontSize: 9,
-                                                            }}>Ngày đăng: {item.UpdatedDate}</Text> */}
-
-
-                                                {
-                                                    this.state.roomCategory.map((y, i) => {
-                                                        return (
-                                                            y.ID == item.CategoryID &&
-                                                            <Text
-                                                                style={{ fontSize: 10, color: '#73aa2a' }}
-                                                                key={i}>{y.CatName}</Text>
-                                                        )
-                                                    })
-                                                }
-
-
-                                                <View style={styles.searchCardPriceBox}>
-
-                                                    <TextMask
-                                                        style={{ flex: 1, fontSize: 10 }}
-                                                        value={item.Price}
-                                                        type={'money'}
-                                                        options={{ suffixUnit: ' đ', precision: 0, unit: ' ', separator: ' ' }}
-                                                    />
-                                                    <View style={{ flex: 1, flexDirection: 'row', alignItems: 'center', justifyContent: 'center' }}>
+                                                <View style={{ flexDirection: 'row' }}>
+                                                    {
+                                                        this.state.roomCategory.map((y, i) => {
+                                                            return (
+                                                                y.ID == item.CategoryID &&
+                                                                <Text
+                                                                    style={{ flex: 2, fontSize: 10, color: '#73aa2a', }}
+                                                                    key={i}>{y.CatName}</Text>
+                                                            )
+                                                        })
+                                                    }
+                                                    <View style={{ flex: 1, flexDirection: 'row', }}>
 
 
                                                         <Text style={{ fontSize: 10, }} >{item.Acreage} m</Text>
                                                         <Text style={{ fontSize: 7, marginBottom: 5 }}>2</Text>
                                                     </View>
+                                                </View>
+                                                <View style={styles.searchCardPriceBox}>
+
+                                                    <TextMask
+                                                        style={{ flex: 2, fontSize: 10 }}
+                                                        value={item.Price}
+                                                        type={'money'}
+                                                        options={{ suffixUnit: ' đ', precision: 0, unit: ' ', separator: ' ' }}
+                                                    />
+
                                                     <Ionicons style={{
                                                         flex: 1,
                                                         fontSize: 10,
@@ -934,7 +939,7 @@ export default class SearchScreen extends React.Component {
                 {roomBox.length >= 1 &&
                     <View style={{
                         width: width,
-                        height: responsiveHeight(32),
+                        height: responsiveHeight(28),
                         backgroundColor: 'transparent',
                         zIndex: 10,
                         position: 'absolute',
@@ -942,7 +947,6 @@ export default class SearchScreen extends React.Component {
                         bottom: 0,
                         justifyContent: 'center',
                         alignItems: 'center',
-
                     }}>
 
                         <View
@@ -951,9 +955,10 @@ export default class SearchScreen extends React.Component {
                                 backgroundColor: 'white',
                                 padding: 10,
                                 elevation: 2,
+                                opacity: 0.9,
                             }}
                         >
-
+                            <Text style={{ color: '#73aa2a' }}>Tìm được {roomBox.length} Nhà</Text>
                             <FlatList
                                 //onScroll={this._onScroll}
                                 // ref='searchresult'
@@ -1011,7 +1016,7 @@ export default class SearchScreen extends React.Component {
                                                             return (
                                                                 y.ID == item.CategoryID &&
                                                                 <Text
-                                                                    style={{ flex: 1, color: '#73aa2a', }}
+                                                                    style={{ flex: 2, color: '#73aa2a', }}
                                                                     key={i}>{y.CatName}</Text>
                                                             )
                                                         })
@@ -1026,7 +1031,7 @@ export default class SearchScreen extends React.Component {
 
                                                 <View style={styles.searchCardPriceBox}>
                                                     <TextMask
-                                                        style={{ flex: 1, }}
+                                                        style={{ flex: 2, }}
                                                         value={item.Price}
                                                         type={'money'}
                                                         options={{ suffixUnit: ' đ', precision: 0, unit: ' ', separator: ' ' }}

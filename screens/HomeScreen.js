@@ -1326,6 +1326,8 @@ export default class HomeScreen extends React.Component {
               <View style={styles.cardBottom}>
                 <View style={styles.cardBottomLeft}>
                   <Text style={styles.cardBottomIconText}>{item.Point}</Text>
+
+                  {/* Rating */}
                   <TouchableOpacity
                     onPress={async () => {
                       if (this.state.profile === null) {
@@ -1343,9 +1345,11 @@ export default class HomeScreen extends React.Component {
                     <Ionicons style={styles.cardBottomIcon} name='ios-star' />
                   </TouchableOpacity>
                   <Text style={styles.cardBottomIconText}></Text>
+
+                  {/* Comment */}
                   <TouchableOpacity
                     onPress={() => {
-                      this.props.navigation.navigate('RoomDetailScreen', { item });
+                      this.props.navigation.navigate('RoomDetailScreen', { item, isComment: true });
                     }}
                   >
                     <Ionicons style={styles.cardBottomIcon} name='ios-chatbubbles' />
@@ -1420,48 +1424,54 @@ export default class HomeScreen extends React.Component {
           >
 
             {this.state.profile === null &&
-              <ActionButton.Item buttonColor='#a4d227' title="Đăng nhập" onPress={() => {
-                this.popupLogin.show()
-                const timing = Animated.timing;
-                Animated.parallel([
-                  timing(this.state.animation.usernamePostionLeft, {
-                    toValue: 0,
-                    duration: 900
-                  }),
-                  timing(this.state.animation.passwordPositionLeft, {
-                    toValue: 0,
-                    duration: 1100
-                  }),
-                  timing(this.state.animation.loginPositionTop, {
-                    toValue: 0,
-                    duration: 700
-                  }),
-                  timing(this.state.animation.statusPositionTop, {
-                    toValue: 0,
-                    duration: 700
-                  })
+              <ActionButton.Item buttonColor='#a4d227'
+                textContainerStyle={{ backgroundColor: '#73aa2a' }}
+                textStyle={{ color: '#fff' }}
+                title="Đăng nhập" onPress={() => {
+                  this.popupLogin.show()
+                  const timing = Animated.timing;
+                  Animated.parallel([
+                    timing(this.state.animation.usernamePostionLeft, {
+                      toValue: 0,
+                      duration: 900
+                    }),
+                    timing(this.state.animation.passwordPositionLeft, {
+                      toValue: 0,
+                      duration: 1100
+                    }),
+                    timing(this.state.animation.loginPositionTop, {
+                      toValue: 0,
+                      duration: 700
+                    }),
+                    timing(this.state.animation.statusPositionTop, {
+                      toValue: 0,
+                      duration: 700
+                    })
 
-                ]).start()
-              }}>
+                  ]).start()
+                }}>
                 <Icon name="ios-contact" style={styles.actionButtonIcon} />
               </ActionButton.Item>
             }
-            <ActionButton.Item buttonColor='#a4d227' title="Đăng tin" onPress={() => {
-              this.state.profile
-                ?
-                //this.props.navigation.navigate('PostRoomScreen', { onSelect: this.onSelect })
-                this.props.navigation.navigate('PostRoomScreen', {
-                  onRefreshScreen: this.onRefreshScreen,
-                  _getWalletAsync: this._getWalletAsync,
-                })
-                :
-                Platform.OS === 'android'
-                  ? ToastAndroid.showWithGravity('Vui lòng đăng nhập', ToastAndroid.SHORT, ToastAndroid.TOP)
-                  : Alert.alert("Vui lòng đăng nhập")
+            <ActionButton.Item buttonColor='#a4d227'
+              textContainerStyle={{ backgroundColor: '#73aa2a' }}
+              textStyle={{ color: '#fff' }}
+              title="Đăng tin" onPress={() => {
+                this.state.profile
+                  ?
+                  //this.props.navigation.navigate('PostRoomScreen', { onSelect: this.onSelect })
+                  this.props.navigation.navigate('PostRoomScreen', {
+                    onRefreshScreen: this.onRefreshScreen,
+                    _getWalletAsync: this._getWalletAsync,
+                  })
+                  :
+                  Platform.OS === 'android'
+                    ? ToastAndroid.showWithGravity('Vui lòng đăng nhập', ToastAndroid.SHORT, ToastAndroid.TOP)
+                    : Alert.alert("Vui lòng đăng nhập")
 
 
-              //this.popupLogin.show();
-            }}>
+                //this.popupLogin.show();
+              }}>
               <Icon name="md-cloud-upload" style={styles.actionButtonIcon} />
             </ActionButton.Item>
 
@@ -1476,22 +1486,28 @@ export default class HomeScreen extends React.Component {
             } */}
 
             {this.state.profile !== null &&
-              <ActionButton.Item buttonColor='#a4d227' title="Trang Cá Nhân" onPress={() => {
+              <ActionButton.Item buttonColor='#a4d227'
+                textContainerStyle={{ backgroundColor: '#73aa2a' }}
+                textStyle={{ color: '#fff' }}
+                title="Trang Cá Nhân" onPress={() => {
 
-                this.props.navigation.navigate("ProfileScreen", {
-                  onRefreshScreen: this.onRefreshScreen,
-                  _getWalletAsync: this._getWalletAsync
-                });
+                  this.props.navigation.navigate("ProfileScreen", {
+                    onRefreshScreen: this.onRefreshScreen,
+                    _getWalletAsync: this._getWalletAsync
+                  });
 
-              }}>
+                }}>
                 <Icon name="md-person" style={styles.actionButtonIcon} />
               </ActionButton.Item>
             }
 
             {this.state.profile !== null &&
-              <ActionButton.Item buttonColor='#a4d227' title={numberWithCommas(this.state.wallet) + " đ"} onPress={() => {
-                //alert(this.state.selected)
-              }}>
+              <ActionButton.Item buttonColor='#a4d227'
+                textContainerStyle={{ backgroundColor: '#73aa2a' }}
+                textStyle={{ color: '#fff' }}
+                title={numberWithCommas(this.state.wallet) + " đ"} onPress={() => {
+                  //alert(this.state.selected)
+                }}>
                 <Icon name="logo-usd" style={styles.actionButtonIcon} />
               </ActionButton.Item>
             }
@@ -1577,7 +1593,7 @@ export default class HomeScreen extends React.Component {
           dismissOnTouchOutside={false}
           dialogStyle={{
             marginBottom: 220, width: width * 0.9,
-            
+
           }}
         >
 
