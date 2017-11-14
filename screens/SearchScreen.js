@@ -829,7 +829,7 @@ export default class SearchScreen extends React.Component {
                             /* image={require('../images/nbl-house_icon.png')} */
                             >
                                 <Image
-                                    source={require('../assets/images/nbl-house_icon.png')}
+                                    source={item.IsHighlight ? require('../assets/images/nbl-house_highlight_icon.png') : require('../assets/images/nbl-house_icon.png')}
                                     style={{ height: height * 0.04, width: width * 0.07 }}
                                     //onLoad={() => {
                                     //  this.forceUpdate()
