@@ -30,6 +30,7 @@ import PopupDialog, { SlideAnimation, ScaleAnimation, DialogTitle, DialogButton 
 import uploadImageAsync from '../api/uploadImageAsync';
 import KeyboardSpacer from 'react-native-keyboard-spacer';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
+import { responsiveHeight, responsiveWidth, responsiveFontSize } from 'react-native-responsive-dimensions';
 
 var { height, width } = Dimensions.get('window');
 
@@ -227,10 +228,20 @@ export default class RegisterAccountScreen extends React.Component {
     render() {
         return (
             <View style={{ flex: 1, backgroundColor: '#fff', paddingBottom: 20, }}>
+
+                <View style={{ flexDirection: 'row', padding: 10, backgroundColor: '#a4d227', alignItems: 'center' }}>
+                    <TouchableOpacity
+                        style={{}}
+                        onPress={() => {
+                            this.props.navigation.goBack()
+                        }}>
+                        <Ionicons style={{ fontSize: 28, color: '#fff', }} name='md-arrow-back'></Ionicons>
+                    </TouchableOpacity>
+                    <Text style={{ marginLeft: 20, color: '#fff', fontSize: responsiveFontSize(2), justifyContent: 'center' }}>ĐK Tài khoản</Text>
+                </View>
+
                 <KeyboardAwareScrollView
                     innerRef={ref => { this.scroll = ref }}
-                //extraHeight={50}
-                //extraScrollHeight={50}
                 >
                     <View style={{ flexDirection: 'row', padding: 20, justifyContent: 'center', alignItems: 'center' }}>
                         <TouchableOpacity
@@ -253,7 +264,7 @@ export default class RegisterAccountScreen extends React.Component {
                     <View>
                         {/* Cellphone */}
                         <View style={{ position: 'relative', flexDirection: 'row', padding: 10, }}>
-                            <Ionicons style={{ flex: 2, fontSize: 22, paddingTop: 12, textAlign: 'center', }} name='md-call' />
+                            <Ionicons style={{ flex: 1, fontSize: 22, paddingTop: 12, textAlign: 'center', }} name='md-call' />
                             <FormInput
                                 containerStyle={{ flex: 15, marginLeft: Platform.OS === 'ios' ? 20 : 10 }}
                                 inputStyle={{ paddingLeft: Platform.OS === 'android' ? 4 : 0 }}
@@ -271,7 +282,7 @@ export default class RegisterAccountScreen extends React.Component {
                                     this._scrollToInput(event.target)
                                 }}
                             />
-                            <TouchableOpacity>
+                            {/* <TouchableOpacity>
                                 <FormLabel
                                     containerStyle={{
                                         alignItems: 'center', justifyContent: 'center',
@@ -280,7 +291,7 @@ export default class RegisterAccountScreen extends React.Component {
                                 >
                                     (Xác nhận ĐT)
                             </FormLabel>
-                            </TouchableOpacity>
+                            </TouchableOpacity> */}
                         </View>
                         {/* Password */}
                         <View style={{ flexDirection: 'row', padding: 10, paddingTop: 0, }}>
@@ -354,7 +365,7 @@ export default class RegisterAccountScreen extends React.Component {
                                 }}
                                 containerStyle={{ flex: 15, marginLeft: Platform.OS === 'ios' ? 22 : 18 }}
                                 inputStyle={{ paddingLeft: Platform.OS === 'android' ? 4 : 0 }}
-                                placeholder='Email'
+                                placeholder='Email (để lấy lại mật khẩu)'
                                 keyboardType='email-address'
                                 underlineColorAndroid={'#73aa2a'}
                                 value={this.state.registerEmail}
@@ -367,7 +378,7 @@ export default class RegisterAccountScreen extends React.Component {
 
                         </View>
                         {/* Verify Cellphone */}
-                        <View style={{ flexDirection: 'row', padding: 10, paddingTop: 0, }}>
+                        {/* <View style={{ flexDirection: 'row', padding: 10, paddingTop: 0, }}>
                             <FormInput
                                 ref='verifyCellPhoneInput'
                                 returnKeyType={"done"}
@@ -387,7 +398,7 @@ export default class RegisterAccountScreen extends React.Component {
                                 }}
 
                             />
-                        </View>
+                        </View> */}
 
                     </View>
 

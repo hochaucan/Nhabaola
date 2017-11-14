@@ -39,7 +39,8 @@ import Swiper from 'react-native-swiper';
 import KeyboardSpacer from 'react-native-keyboard-spacer';
 import uploadImageAsync from '../api/uploadImageAsync';
 import saveStorageAsync from '../components/saveStorageAsync';
-import ProfileScreen from './ProfileScreen';
+import { responsiveHeight, responsiveWidth, responsiveFontSize } from 'react-native-responsive-dimensions';
+//import ProfileScreen from './ProfileScreen';
 
 
 const homePlace = {
@@ -1262,8 +1263,11 @@ export default class HomeScreen extends React.Component {
 
               {item.IsHighlight &&
                 <Image
-                  style={{ position: 'absolute', borderRadius: 100, right: 15, zIndex: 10, width: 80, height: 80, top: 50 }}
-                  source={require('../assets/images/nbl-highlight.jpg')}
+                  style={{
+                    position: 'absolute', right: 15, zIndex: 10, width: responsiveWidth(30),
+                    height: responsiveWidth(30), top: 20
+                  }}
+                  source={require('../assets/images/nbl-highlight.gif')}
                 />
               }
               <TouchableWithoutFeedback
@@ -1348,9 +1352,9 @@ export default class HomeScreen extends React.Component {
                   </TouchableOpacity>
                 </View>
                 <View style={styles.cardBottomRight}>
-                  <TouchableOpacity >
+                  {/* <TouchableOpacity >
                     <Ionicons style={styles.cardBottomIcon} name='ios-thumbs-up' />
-                  </TouchableOpacity>
+                  </TouchableOpacity> */}
                   <TouchableOpacity
                     onPress={async () => {
 
@@ -1452,7 +1456,7 @@ export default class HomeScreen extends React.Component {
                 })
                 :
                 Platform.OS === 'android'
-                  ? ToastAndroid.showWithGravity('Vui lòng đăng nhập', ToastAndroid.SHORT, ToastAndroid.CENTER)
+                  ? ToastAndroid.showWithGravity('Vui lòng đăng nhập', ToastAndroid.SHORT, ToastAndroid.TOP)
                   : Alert.alert("Vui lòng đăng nhập")
 
 
@@ -1508,7 +1512,7 @@ export default class HomeScreen extends React.Component {
           dismissOnTouchOutside={false}
           dialogStyle={{
             marginBottom: 150, width: width * 0.9,
-            height: Platform.OS === 'ios' ? height * 0.35 : height * 0.32,
+            //height: 100,
           }}
         >
 
@@ -1536,22 +1540,6 @@ export default class HomeScreen extends React.Component {
                 value={this.state.resetPasswordUsername}
               />
             </Animated.View>
-            {/* Email  */}
-            {/* <Animated.View style={{
-              position: 'relative', left: this.state.animation.usernamePostionLeft,
-              flexDirection: 'row',
-            }}>
-              <Ionicons style={{ flex: 1, fontSize: 22, paddingTop: 12, textAlign: 'center', }} name='ios-mail' />
-              <FormInput
-                containerStyle={{ flex: 15 }}
-                placeholder='Email bạn đăng ký'
-                autoCapitalize='sentences'
-                keyboardType='email-address'
-                underlineColorAndroid={'#fff'}
-                onChangeText={(resetPasswordEmail) => this.setState({ resetPasswordEmail })}
-                value={this.state.resetPasswordEmail}
-              />
-            </Animated.View> */}
           </View>
           {/* Button */}
           <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center', marginTop: 15, }}>
@@ -1589,7 +1577,7 @@ export default class HomeScreen extends React.Component {
           dismissOnTouchOutside={false}
           dialogStyle={{
             marginBottom: 220, width: width * 0.9,
-            height: Platform.OS === 'ios' ? height * 0.35 : height * 0.46,
+            
           }}
         >
 
@@ -1677,7 +1665,7 @@ export default class HomeScreen extends React.Component {
           dialogAnimation={new ScaleAnimation()}
           dialogTitle={<DialogTitle title="Đăng nhập" titleStyle={{}} titleTextStyle={{ color: '#73aa2a' }} />}
           dismissOnTouchOutside={false}
-          dialogStyle={{ marginBottom: 150, width: width * 0.9, height: Platform.OS === 'ios' ? height * 0.7 : height * 0.45 }}
+          dialogStyle={{ marginBottom: 150, width: width * 0.9, }}
 
 
         >

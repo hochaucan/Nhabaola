@@ -35,24 +35,28 @@ function numberWithCommas(x) {
 }
 const SECTIONS = [
     {
-        title: 'First',
-        content: 'Lorem ipsum...',
+        title: 'Đăng tin',
+        content: 'Đang cập nhật...',
     },
     {
-        title: 'Second',
-        content: 'Lorem ipsum...',
+        title: 'Cập nhật tin',
+        content: 'Đang cập nhật...',
     },
     {
-        title: 'Third',
-        content: 'BACON_IPSUM',
+        title: 'Nạp ví tiền',
+        content: 'Đang cập nhật...',
     },
     {
-        title: 'Fourth',
-        content: 'BACON_IPSUM',
+        title: 'Đổi mật khẩu',
+        content: 'Đang cập nhật...',
     },
     {
-        title: 'Fifth',
-        content: 'BACON_IPSUM',
+        title: 'Đổi thông tin cá nhân',
+        content: 'Đang cập nhật...',
+    },
+    {
+        title: 'Quên mật khẩu',
+        content: 'Đang cập nhật...',
     },
 ];
 
@@ -362,7 +366,7 @@ export default class ProfileScreen extends React.Component {
     render() {
         return (
             <View style={styles.container}>
-                <View style={{ flexDirection: 'row', padding: 10, backgroundColor: '#a4d227',alignItems: 'center' }}>
+                <View style={{ flexDirection: 'row', padding: 10, backgroundColor: '#a4d227', alignItems: 'center' }}>
                     <TouchableOpacity
                         style={{}}
                         onPress={() => {
@@ -373,9 +377,14 @@ export default class ProfileScreen extends React.Component {
                         }}>
                         <Ionicons style={{ fontSize: 28, color: '#fff', }} name='md-arrow-back'></Ionicons>
                     </TouchableOpacity>
-                    <Text style={{ marginLeft: 20, color: '#fff', fontSize: responsiveFontSize(2.2), justifyContent: 'center' }}>Trang cá nhân</Text>
+                    <Text style={{ marginLeft: 20, color: '#fff', fontSize: responsiveFontSize(2.2), justifyContent: 'center' }}>Cá nhân</Text>
                 </View>
-                <View style={styles.card}>
+                <View style={{
+                    //height: 80,
+                    borderColor: '#d6d7da',
+                    padding: 0,
+                    flexDirection: 'column',
+                }}>
                     {/* <Text>{JSON.stringify(this.props.navigation.state.params)}</Text> */}
 
                     <View style={styles.cardHeader}>
@@ -504,7 +513,7 @@ export default class ProfileScreen extends React.Component {
                         onPress={() => { this.setState({ modalHelp: true }) }}
                     >
                         <Ionicons style={styles.profileMenuItemText} name='md-help'>
-                            <Text>  Giúp đỡ</Text>
+                            <Text>  Liên hệ và Giúp đỡ</Text>
                         </Ionicons>
                     </TouchableOpacity>
 
@@ -710,37 +719,23 @@ export default class ProfileScreen extends React.Component {
                             onPress={() => this.setState({ modalHelp: false })}>
                             <Ionicons style={{ fontSize: 28, color: '#a4d227', }} name='md-arrow-back'></Ionicons>
                         </TouchableOpacity>
-                        <Text style={{ marginLeft: 20, color: '#73aa2a', fontSize: 20, justifyContent: 'center' }}>Câu hỏi phổ biến</Text>
+                        <Text style={{ marginLeft: 20, color: '#73aa2a', fontSize: responsiveFontSize(2.2), justifyContent: 'center' }}>Liên hệ và Giúp đỡ</Text>
                     </View>
-                    <ScrollView>
-                        <View style={{ padding: 20, }}>
-                            <Accordion
-                                sections={SECTIONS}
-                                renderHeader={this._renderHeader}
-                                renderContent={this._renderContent}
-                                easing='bounce'
-                            />
-                        </View>
+                    <ScrollView style={{ flex: 1, padding: 20, }}>
 
-                        {/* <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center', marginTop: 20, }}>
-                            <Button
-                                buttonStyle={{ backgroundColor: '#9B9D9D', padding: 10, borderRadius: 5, }}
-                                raised={false}
-                                icon={{ name: 'ios-backspace', type: 'ionicon' }}
-                                title='Hủy'
-                                onPress={() => { this.setState({ modalHelp: false }) }}
-                            />
+                        <Text style={{ fontSize: responsiveFontSize(2), color: '#73aa2a' }} >Liên hệ</Text>
+                        <Text style={{ marginTop: 5, color: '#9B9D9D' }} >Hotline: 0973730111, 0905588639</Text>
+                        <Text style={{ marginTop: 5, color: '#9B9D9D' }} >Email: hochaucan@gmail.com</Text>
+                        <Text style={{ marginTop: 5, color: '#9B9D9D' }} >Skyle: hochaucan</Text>
 
-                            <Button
-                                buttonStyle={{ backgroundColor: '#73aa2a', padding: 10, borderRadius: 5, }}
-                                raised={false}
-                                icon={{ name: 'md-checkmark', type: 'ionicon' }}
-                                title='Đồng ý'
-                                onPress={() => {
-                                    this._updateAccount();
-                                }}
-                            />
-                        </View> */}
+                        <Text style={{ fontSize: responsiveFontSize(2), color: '#73aa2a', marginTop: 20, marginBottom: 5 }} >Giúp đỡ</Text>
+                        <Accordion
+                            sections={SECTIONS}
+                            renderHeader={this._renderHeader}
+                            renderContent={this._renderContent}
+                            easing='bounce'
+                        />
+
                     </ScrollView>
                 </Modal>
 
@@ -969,13 +964,13 @@ const styles = StyleSheet.create({
         backgroundColor: '#fff',
     },
 
-    card: {
-        height: 80,
-        // borderBottomWidth: 0.5,
-        borderColor: '#d6d7da',
-        padding: 0,
-        flexDirection: 'column',
-    },
+    // card: {
+    //     height: 80,
+    //     // borderBottomWidth: 0.5,
+    //     borderColor: '#d6d7da',
+    //     padding: 0,
+    //     flexDirection: 'column',
+    // },
     cardHeader: {
         // flex: 2,
         flexDirection: 'row',

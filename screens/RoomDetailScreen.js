@@ -434,10 +434,11 @@ export default class RoomDetailScreen extends React.Component {
                     {this.state.roomBox.IsHighlight &&
                         <Image
                             style={{
-                                position: 'absolute', borderRadius: 100, right: 15, zIndex: 10,
-                                width: 80, height: 80, top: 5
+                                position: 'absolute', right: 15, zIndex: 10,
+                                width: responsiveWidth(25),
+                                height: responsiveWidth(25), top: 5
                             }}
-                            source={require('../assets/images/nbl-highlight.jpg')}
+                            source={require('../assets/images/nbl-highlight.gif')}
                         />
                     }
 
@@ -549,9 +550,9 @@ export default class RoomDetailScreen extends React.Component {
                                 </TouchableOpacity>
                             </View>
                             <View style={styles.cardBottomRight}>
-                                <TouchableOpacity >
+                                {/* <TouchableOpacity >
                                     <Ionicons style={styles.cardBottomIcon} name='ios-thumbs-up' />
-                                </TouchableOpacity>
+                                </TouchableOpacity> */}
                                 <TouchableOpacity
                                     onPress={async () => {
                                         let loadBDS = '';
