@@ -945,8 +945,13 @@ export default class PostRoomScreen extends React.Component {
                             {/* console.log(data); */ }
                             //console.log(details.geometry.location);
                             const address = details.name + ", " + details.formatted_address;
-                            this.setState({ selectedAddress: address })
-                            // console.log(details.name + ", " + details.formatted_address)
+
+                            // Remove address duplication
+                            if (address.match(details.name)) {
+                                this.setState({ selectedAddress: details.formatted_address })
+                            } else {
+                                this.setState({ selectedAddress: address })
+                            }
 
                             this.setState({
                                 searchingMaker: {
