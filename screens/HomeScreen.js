@@ -148,8 +148,10 @@ export default class HomeScreen extends React.Component {
   // 2. Define a variable that will keep track of the current scroll position
   _listViewOffset = 0
 
-  onRefreshScreen = data => {
-    this.setState(data);
+  onRefreshScreen = async (data) => {
+    await this.setState(data);
+
+    //alert(this.state.loginUsername)
   }
 
   // static _onRefreshScreen = data => {
@@ -502,6 +504,7 @@ export default class HomeScreen extends React.Component {
 
           if (responseJson.obj.UpdatedBy != "") { // Login successful
             this.popupLogin.dismiss();
+
             saveStorageAsync('FO_Account_Login', JSON.stringify(responseJson.obj))
             saveStorageAsync('SessionKey', JSON.stringify(responseJson.obj.UpdatedBy))
             saveStorageAsync('loginUsername', this.state.loginUsername)
@@ -514,7 +517,70 @@ export default class HomeScreen extends React.Component {
             })
 
             this._getWalletAsync();
+            ToastAndroid.showWithGravity('Đăng nhập thành công!', ToastAndroid.SHORT, ToastAndroid.TOP);
+          }
+          else { // Login False
+            if (Platform.OS === 'android') {
+              ToastAndroid.showWithGravity('Tài khoản hoặc mật khẩu không đúng', ToastAndroid.SHORT, ToastAndroid.TOP);
+            }
+            else {
+              Alert.alert('Oops!', 'Tài khoản hoặc mật khẩu không đúng');
+            }
 
+            saveStorageAsync('FO_Account_Login', '')
+            saveStorageAsync('SessionKey', '')
+            saveStorageAsync('loginUsername', '')
+            saveStorageAsync('loginPassword', '')
+            this.setState({ profile: null, sessionKey: null })
+          }
+
+          this.popupLoadingIndicator.dismiss();
+        }).
+        catch((error) => { console.log(error) });
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
+  // Login after register new Account
+  _loginAfterRegisterAccountAsync = async () => {
+
+    //alert(this.state.loginUsername + '  ' + this.state.loginPassword)
+
+    this.popupLoadingIndicator.show()
+
+    try {
+      await fetch("http://nhabaola.vn/api/Account/FO_Account_Login", {
+        method: 'POST',
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
+        },
+
+        body: JSON.stringify({
+          "UserName": this.state.loginUsername,
+          "Password": this.state.loginPassword
+        }),
+      })
+        .then((response) => response.json())
+        .then((responseJson) => {
+
+          if (responseJson.obj.UpdatedBy != "") { // Login successful
+            this.popupLogin.dismiss();
+
+            saveStorageAsync('FO_Account_Login', JSON.stringify(responseJson.obj))
+            saveStorageAsync('SessionKey', JSON.stringify(responseJson.obj.UpdatedBy))
+            saveStorageAsync('loginUsername', this.state.loginUsername)
+            saveStorageAsync('loginPassword', this.state.loginPassword)
+            this.setState({
+              loginUsername: '',
+              loginPassword: '',
+              profile: responseJson.obj,
+              sessionKey: responseJson.obj.UpdatedBy
+            })
+
+            this._getWalletAsync();
+            ToastAndroid.showWithGravity('Đăng nhập thành công!', ToastAndroid.SHORT, ToastAndroid.TOP);
           }
           else { // Login False
             if (Platform.OS === 'android') {
@@ -1101,8 +1167,6 @@ export default class HomeScreen extends React.Component {
 
   _resetPasswordStep2 = async () => {
 
-    //alert(this.state.resetPasswordUsername)
-
     //Form validation
     if (Platform.OS === 'android') {
       if (this.state.resetPasswordActiveKey === '') {
@@ -1126,6 +1190,12 @@ export default class HomeScreen extends React.Component {
     }
 
     this.popupLoadingIndicator.show()
+
+    // Get Username and new Password after Reset password
+    await this.setState({
+      loginUsername: this.state.resetPasswordUsername,
+      loginPassword: this.state.resetPasswordNewPassword,
+    })
 
     try {
       await fetch("http://nhabaola.vn/api/ForgetPassword/FO_ForgetPassword_ActiveAccount", {
@@ -1156,12 +1226,9 @@ export default class HomeScreen extends React.Component {
             }
             this.popupActiveNewPassword.dismiss();
             this.setState({ resetPasswordUsername: '' })
-            // this.setState({
-            //   loginUsername: this.state.resetPasswordUsername,
-            //   loginPassword: resetPasswordNewPassword,
-            // })
 
-            // this._loginAsync();
+            // Login after reset password
+            this._loginAfterRegisterAccountAsync();
           }
           else {
             if (Platform.OS === 'android') { // Active Code not correct
@@ -1528,7 +1595,7 @@ export default class HomeScreen extends React.Component {
           dismissOnTouchOutside={false}
           dialogStyle={{
             marginBottom: 150, width: width * 0.9,
-            //height: 100,
+            height: 240,
           }}
         >
 
@@ -1763,8 +1830,12 @@ export default class HomeScreen extends React.Component {
                   //this.setState({ modalRegisterAccount: true })
                   this.props.navigation.navigate('RegisterAccountScreen', {
                     onRefreshScreen: this.onRefreshScreen,
-                    login: this._loginAsync
+                    login: this._loginAfterRegisterAccountAsync
                   })
+                  {/* this.props.navigation.navigate('RegisterAccountScreen', {
+                    onRefreshScreen: this.onRefreshScreen,
+                    //login: this._loginAsync()
+                  }) */}
                 }}
               >
                 <Text style={{ padding: 15, textAlign: 'center' }}>Đăng ký mới</Text>

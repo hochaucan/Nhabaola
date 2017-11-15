@@ -15,6 +15,7 @@ import {
     BackHandler,
     AsyncStorage,
     ToastAndroid,
+    Keyboard,
 } from 'react-native';
 import { ExpoLinksView } from '@expo/samples';
 import { Constants, ImagePicker } from 'expo';
@@ -629,6 +630,7 @@ export default class ProfileScreen extends React.Component {
                             icon={{ name: 'md-checkmark', type: 'ionicon' }}
                             title='Đồng ý'
                             onPress={() => {
+                                Keyboard.dismiss();
                                 this._changePassword();
                             }}
                         />
