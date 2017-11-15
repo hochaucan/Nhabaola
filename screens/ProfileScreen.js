@@ -726,11 +726,23 @@ export default class ProfileScreen extends React.Component {
                     <ScrollView style={{ flex: 1, padding: 20, }}>
 
                         <Text style={{ fontSize: responsiveFontSize(2), color: '#73aa2a' }} >Liên hệ</Text>
-                        <Text style={{ marginTop: 5, color: '#9B9D9D' }} >Hotline: 0973730111, 0905588639</Text>
-                        <Text style={{ marginTop: 5, color: '#9B9D9D' }} >Email: hochaucan@gmail.com</Text>
-                        <Text style={{ marginTop: 5, color: '#9B9D9D' }} >Skyle: hochaucan</Text>
-
-                        <Text style={{ fontSize: responsiveFontSize(2), color: '#73aa2a', marginTop: 20, marginBottom: 5 }} >Giúp đỡ</Text>
+                        <View style={{ marginTop: 5, flexDirection: 'row' }}>
+                            <Text style={{ flex: 1, color: '#000' }} >Hotline:</Text>
+                            <Text style={{ flex: 4, color: '#9B9D9D' }} >0973730111, 0905588639</Text>
+                        </View>
+                        <View style={{ marginTop: 5, flexDirection: 'row' }}>
+                            <Text style={{ flex: 1, color: '#000' }} >Email:</Text>
+                            <Text style={{ flex: 4, color: '#9B9D9D' }} >hochaucan@gmail.com</Text>
+                        </View>
+                        <View style={{ marginTop: 5, flexDirection: 'row' }}>
+                            <Text style={{ flex: 1, color: '#000' }} >Skyle:</Text>
+                            <Text style={{ flex: 4, color: '#9B9D9D' }} >hochaucan</Text>
+                        </View>
+                        <View style={{ marginTop: 5, flexDirection: 'row' }}>
+                            <Text style={{ flex: 1, color: '#000' }} >Facebook:</Text>
+                            <Text style={{ flex: 4, color: '#9B9D9D' }} > https://www.facebook.com/nhabaola/</Text>
+                        </View>
+                        <Text style={{ fontSize: responsiveFontSize(2), color: '#73aa2a', marginTop: 25, marginBottom: 5 }} >Giúp đỡ</Text>
                         <Accordion
                             sections={SECTIONS}
                             renderHeader={this._renderHeader}

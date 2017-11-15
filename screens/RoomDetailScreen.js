@@ -582,20 +582,21 @@ export default class RoomDetailScreen extends React.Component {
                                         })
 
                                         Share.share({
-                                            message: "***** Chia Sẻ từ Ứng Dụng Nhà Bao La *****"
+                                            message: "*Chia Sẻ từ Ứng Dụng Nhà Bao La*"
+                                            + "\nCài đặt: " + "https://play.google.com/store/apps/details?id=vn.nhabaola.nhabaola"
                                             + "\n\nLiên hệ: " + this.state.roomBox.AccountName + "\nĐiện thoại: " + this.state.roomBox.AccountPhone
                                             + "\n\nLoại bất động sản: " + loadBDS
                                             + "\nGiá: " + this.state.roomBox.Price + " đồng"
                                             + "\nDiện tích: " + this.state.roomBox.Acreage + " mét vuông"
                                             + "\nĐịa chỉ: " + this.state.roomBox.Address + "\n\nMô tả:\n" + this.state.roomBox.Description,
                                             url: 'http://nhabaola.vn',
-                                            title: 'Chia Sẻ từ Ứng Dụng Nhà Bao La'
+                                            title: '*Chia Sẻ từ Ứng Dụng Nhà Bao La*'
                                         }, {
                                                 // Android only:
-                                                dialogTitle: 'Chia Sẻ từ Ứng Dụng Nhà Bao La',
+                                                dialogTitle: '*Chia Sẻ từ Ứng Dụng Nhà Bao La*',
                                                 // iOS only:
                                                 excludedActivityTypes: [
-                                                    'com.apple.UIKit.activity.PostToTwitter'
+                                                    'http://nhabaola.vn'
                                                 ]
                                             })
                                     }}
