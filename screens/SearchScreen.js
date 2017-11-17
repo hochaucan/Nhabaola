@@ -21,7 +21,6 @@ import {
 import { ExpoLinksView } from '@expo/samples';
 import { Constants, Location, Permissions } from 'expo';
 import { Ionicons } from '@expo/vector-icons';
-import { users } from '../components/examples/data';
 import { Button, FormLabel, FormInput, SocialIcon, Icon } from 'react-native-elements'
 import MapView from 'react-native-maps';
 import MultiSlider from '@ptomasroos/react-native-multi-slider';
@@ -235,7 +234,7 @@ export default class SearchScreen extends React.Component {
         super(props);
         this.state = {
             mapRegion: null,//{ latitude: LATITUDE, longitude: LONGITUDE, latitudeDelta: LATITUDE_DELTA, longitudeDelta: LONGITUDE_DELTA },
-            searchResultData: users,
+            //searchResultData: users,
             modalSearchFilterVisible: false,
             age: 18,
             hackHeight: height,
@@ -714,7 +713,7 @@ export default class SearchScreen extends React.Component {
                     }}
                 >
                     <View style={{
-                        backgroundColor: '#a4d227', padding: 5, borderRadius: 10, width: 32,
+                        backgroundColor: '#8fb722', padding: 5, borderRadius: 10, width: 32,
                         height: 32, justifyContent: 'center',
                         alignItems: 'center', elevation: 2
                     }}>
@@ -731,7 +730,7 @@ export default class SearchScreen extends React.Component {
                     }}
                 >
                     <View style={{
-                        backgroundColor: '#a4d227', padding: 5, borderRadius: 10,
+                        backgroundColor: '#73aa2a', padding: 5, borderRadius: 10,
                         width: 32, height: 32, justifyContent: 'center', alignItems: 'center', elevation: 2
                     }}>
                         <Ionicons style={{ fontSize: 25, color: '#fff', textAlign: 'center' }} name='ios-locate-outline' />
@@ -846,7 +845,7 @@ export default class SearchScreen extends React.Component {
                                                 <Text
                                                     style={{
                                                         fontSize: responsiveFontSize(1.5),
-                                                        color: item.IsHighlight ? 'red' : '#6c6d6d'
+                                                        color: item.IsHighlight ? 'red' : '#515151'
                                                     }}
                                                     key={i}>{y.CatName}</Text>
                                             )

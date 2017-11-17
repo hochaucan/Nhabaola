@@ -27,7 +27,6 @@ import { MonoText } from '../components/StyledText';
 import ActionButton from 'react-native-action-button';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { Ionicons } from '@expo/vector-icons';
-import { users } from '../components/examples/data';
 import PopupDialog, { SlideAnimation, ScaleAnimation, DialogTitle, DialogButton } from 'react-native-popup-dialog';
 import { CheckBox, Rating, Button, FormLabel, FormInput, SocialIcon, FormValidationMessage } from 'react-native-elements'
 import StarRating from 'react-native-star-rating';
@@ -518,6 +517,7 @@ export default class HomeScreen extends React.Component {
 
             this._getWalletAsync();
             ToastAndroid.showWithGravity('Đăng nhập thành công!', ToastAndroid.SHORT, ToastAndroid.TOP);
+
           }
           else { // Login False
             if (Platform.OS === 'android') {
@@ -579,8 +579,12 @@ export default class HomeScreen extends React.Component {
               sessionKey: responseJson.obj.UpdatedBy
             })
 
-            this._getWalletAsync();
+            //this._getWalletAsync();
             ToastAndroid.showWithGravity('Đăng nhập thành công!', ToastAndroid.SHORT, ToastAndroid.TOP);
+            // if (this.state.wallet != '0') {
+            //   this.popupCongraForNewAccount.show()
+            // }
+
           }
           else { // Login False
             if (Platform.OS === 'android') {
@@ -602,6 +606,11 @@ export default class HomeScreen extends React.Component {
         catch((error) => { console.log(error) });
     } catch (error) {
       console.log(error)
+    }
+
+    await this._getWalletAsync();
+    if (this.state.wallet != '0') {
+      setTimeout(() => this.popupCongraForNewAccount.show(), 500)
     }
   }
 
@@ -2172,6 +2181,23 @@ export default class HomeScreen extends React.Component {
             size="large"
             color="#73aa2a"
           />
+        </PopupDialog>
+
+        {/* Popup Congratulation For New Account */}
+        <PopupDialog
+          ref={(popupCongraForNewAccount) => { this.popupCongraForNewAccount = popupCongraForNewAccount; }}
+          //dialogTitle={<DialogTitle title="Chúc Mừng Bạn" titleStyle={{}} titleTextStyle={{ color: '#73aa2a' }} />}
+          dialogAnimation={new ScaleAnimation()}
+          dialogStyle={{ marginBottom: 100, width: responsiveWidth(90), height: 100, justifyContent: 'center', padding: 20 }}
+        //dismissOnTouchOutside={false}
+        >
+          <View style={{ justifyContent: 'center', alignItems: 'center' }}>
+            {/* <Image
+              style={{ position: 'absolute', width: responsiveWidth(90), height: responsiveHeight(30) }}
+              source={require('../assets/images/nbl-highlight.gif')} /> */}
+            <Text style={{ fontSize: responsiveFontSize(2), color: '#73aa2a', marginBottom: 10, }}>Chúc Mừng Bạn</Text>
+            <Text>Bạn được tặng {numberWithCommas(this.state.wallet)} đồng vào Ví Tiền</Text>
+          </View>
         </PopupDialog>
       </View >
     );

@@ -22,7 +22,6 @@ import { Constants, ImagePicker } from 'expo';
 import { Ionicons } from '@expo/vector-icons';
 import PopupDialog, { SlideAnimation, ScaleAnimation, DialogTitle, DialogButton } from 'react-native-popup-dialog';
 import { CheckBox, Rating, Button, FormLabel, FormInput, SocialIcon, FormValidationMessage } from 'react-native-elements'
-import { users } from '../components/examples/data';
 import Accordion from 'react-native-collapsible/Accordion';
 import saveStorageAsync from '../components/saveStorageAsync';
 import HomeScreen from './HomeScreen';
@@ -98,7 +97,7 @@ export default class ProfileScreen extends React.Component {
             modalPostedRoomHistory: false,
 
             // Posted Room History
-            postedRoomHistoryData: users,
+            postedRoomHistoryData: '',
 
             // Update Account
             updateAccountImage: null,

@@ -19,11 +19,6 @@ import { Constants, Location, Permissions } from 'expo';
 import MapView from 'react-native-maps';
 import ActionButton from 'react-native-action-button';
 import Icon from 'react-native-vector-icons/Ionicons';
-import FlatListDemo from '../components/examples/FlatListDemo';
-import FloatingButtonDemo from '../components/examples/FloatingButtonDemo';
-import PostDemo from '../components/examples/PostDemo';
-import AsyncStorageDemo from '../components/examples/AsyncStorageDemo';
-import MyLocationMapMarker from '../components/examples/MyLocationMapMakerDemo';
 import { GooglePlacesAutocomplete, } from 'react-native-google-places-autocomplete'; // 1.2.12
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import KeyboardSpacer from 'react-native-keyboard-spacer';
@@ -88,8 +83,8 @@ export default class Testing extends React.Component {
       <View style={styles.container}>
         <KeyboardAwareScrollView
           innerRef={ref => { this.scroll = ref }}
-          //extraHeight={50}
-          //extraScrollHeight={50}
+        //extraHeight={50}
+        //extraScrollHeight={50}
         >
           <View>
 
