@@ -18,7 +18,7 @@ import {
     AsyncStorage,
 
 } from 'react-native';
-import { ExpoLinksView } from '@expo/samples';
+//import { ExpoLinksView } from '@expo/samples';
 import { Constants, Location, Permissions } from 'expo';
 import { Ionicons } from '@expo/vector-icons';
 import { Button, FormLabel, FormInput, SocialIcon, Icon } from 'react-native-elements'
@@ -26,8 +26,9 @@ import MapView from 'react-native-maps';
 import MultiSlider from '@ptomasroos/react-native-multi-slider';
 import PopupDialog, { SlideAnimation, ScaleAnimation, DialogTitle, DialogButton } from 'react-native-popup-dialog';
 import { GooglePlacesAutocomplete, } from 'react-native-google-places-autocomplete'; // 1.2.12
-import { TextInputMask, TextMask } from 'react-native-masked-text'; import { responsiveHeight, responsiveWidth, responsiveFontSize } from 'react-native-responsive-dimensions';
-
+import { TextInputMask, TextMask } from 'react-native-masked-text';
+import { responsiveHeight, responsiveWidth, responsiveFontSize } from 'react-native-responsive-dimensions';
+import convertAmountToWording from '../api/convertAmountToWording'
 
 var { height, width } = Dimensions.get('window');
 
@@ -220,6 +221,29 @@ const MARKERS = [
     // createMarker(5),
 ];
 
+// function funcConvertAmountToWording(amount) {
+//     let result = amount;
+
+//     if (amount.match('.000.000.000')) {
+//         result = amount.replace('.000.000.000', ' Tỷ')
+//     }
+//     else if (amount.match('00.000.000')) {
+//         result = amount.replace('00.000.000', ' Tỷ')
+//     }
+//     else if (amount.match('.000.000')) {
+//         result = amount.replace('.000.000', ' Tr')
+//     }
+//     else if (amount.match('00.000')) {
+//         result = amount.replace('00.000', ' Tr')
+//     }
+//     else if (amount.match('.000')) {
+//         result = amount.replace('.000', ' K')
+//     }
+
+//     return result;
+// }
+
+
 const DEFAULT_PADDING = { top: 40, right: 40, bottom: 40, left: 40 };
 const roomBox = [];
 
@@ -369,14 +393,6 @@ export default class SearchScreen extends React.Component {
 
     componentDidMount() {
 
-        //mapRegion: { latitude: LATITUDE, longitude: LONGITUDE, latitudeDelta: LATITUDE_DELTA, longitudeDelta: LONGITUDE_DELTA },
-        // let mapRegion = {
-        //     latitude: this.state.location.coords.latitude,
-        //     longitude: this.state.location.coords.longitude,
-        //     latitudeDelta: LATITUDE_DELTA,
-        //     longitudeDelta: LONGITUDE_DELTA
-        // }
-        // this.setState({ mapRegion });
     }
 
     _getLocationAsync = async () => {
@@ -831,14 +847,14 @@ export default class SearchScreen extends React.Component {
                             >
                                 <View style={{ justifyContent: 'center', alignItems: 'center' }}>
                                     <Text style={{
-                                        backgroundColor: item.IsHighlight ? 'red' : '#9B9D9D',
+                                        backgroundColor: item.IsHighlight ? 'red' : '#6c6d6d',
                                         color: '#fff',
                                         padding: 5,
                                         fontSize: responsiveFontSize(1.2),
                                         borderRadius: 5,
                                         opacity: 0.7,
-                                    }}>{item.Price} đ</Text>
-                                    {
+                                    }}>{convertAmountToWording(item.Price)}</Text>
+                                    {/* {
                                         this.state.roomCategory.map((y, i) => {
                                             return (
                                                 y.ID == item.CategoryID &&
@@ -850,17 +866,19 @@ export default class SearchScreen extends React.Component {
                                                     key={i}>{y.CatName}</Text>
                                             )
                                         })
-                                    }
-                                    <Image
-                                        source={require('../assets/images/nbl-house_icon.png')}
-                                        style={{ height: height * 0.045, width: width * 0.075 }}
-                                        onLayout={() => {
-                                            this.setState({ initialRenderCurrenHouse: false })
-                                        }}
-                                        key={`${this.state.initialRenderCurrenHouse}`}
-                                    >
-                                    </Image>
+                                    } */}
 
+                                    {item.IsHighlight &&
+                                        <Image
+                                            source={require('../assets/images/nbl-house_icon.png')}
+                                            style={{ height: height * 0.045, width: width * 0.075 }}
+                                            onLayout={() => {
+                                                this.setState({ initialRenderCurrenHouse: false })
+                                            }}
+                                            key={`${this.state.initialRenderCurrenHouse}`}
+                                        >
+                                        </Image>
+                                    }
 
                                 </View>
                                 <MapView.Callout style={{}}
@@ -1198,7 +1216,7 @@ export default class SearchScreen extends React.Component {
 
                                             this.setState({
                                                 txtFilterResult: this.state.selectedBDS + ', ' + this.state.multiSliderPriceValue[0] + '-' + this.state.multiSliderPriceValue[1] + ' triệu đồng, '
-                                                + this.state.multiSliderAreaValue[0] + '-' + this.state.multiSliderAreaValue[1] + ' mét vuông',
+                                                    + this.state.multiSliderAreaValue[0] + '-' + this.state.multiSliderAreaValue[1] + ' mét vuông',
 
                                             })
 

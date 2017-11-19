@@ -39,7 +39,7 @@ import KeyboardSpacer from 'react-native-keyboard-spacer';
 import uploadImageAsync from '../api/uploadImageAsync';
 import saveStorageAsync from '../components/saveStorageAsync';
 import { responsiveHeight, responsiveWidth, responsiveFontSize } from 'react-native-responsive-dimensions';
-//import ProfileScreen from './ProfileScreen';
+import convertAmountToWording from '../api/convertAmountToWording'
 
 
 const homePlace = {
@@ -1450,12 +1450,12 @@ export default class HomeScreen extends React.Component {
 
                       Share.share({
                         message: "*Chia Sẻ từ Ứng Dụng Nhà Bao La*"
-                        + "\nCài đặt: " + "https://play.google.com/store/apps/details?id=vn.nhabaola.nhabaola"
-                        + "\n\nLiên hệ: " + item.AccountName + "\nĐiện thoại: " + item.AccountPhone
-                        + "\n\nLoại bất động sản: " + loadBDS
-                        + "\nGiá: " + item.Price + " đồng"
-                        + "\nDiện tích: " + item.Acreage + " mét vuông"
-                        + "\nĐịa chỉ: " + item.Address + "\n\nMô tả:\n" + item.Description,
+                          + "\nCài đặt: " + "https://play.google.com/store/apps/details?id=vn.nhabaola.nhabaola"
+                          + "\n\nLiên hệ: " + item.AccountName + "\nĐiện thoại: " + item.AccountPhone
+                          + "\n\nLoại bất động sản: " + loadBDS
+                          + "\nGiá: " + item.Price + " đồng"
+                          + "\nDiện tích: " + item.Acreage + " mét vuông"
+                          + "\nĐịa chỉ: " + item.Address + "\n\nMô tả:\n" + item.Description,
 
                         url: 'http://nhabaola.vn',
                         title: '*Chia Sẻ từ Ứng Dụng Nhà Bao La*'
