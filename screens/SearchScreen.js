@@ -321,7 +321,7 @@ export default class SearchScreen extends React.Component {
 
     fitAllMarkers() {
         this.map.fitToCoordinates(MARKERS, {
-            edgePadding: { top: responsiveHeight(10), right: responsiveWidth(65), bottom: responsiveHeight(80), left: responsiveWidth(65) },//DEFAULT_PADDING,
+            edgePadding: { top: 500, bottom: 900, right: responsiveWidth(65), left: responsiveWidth(65) },//DEFAULT_PADDING,
             animated: true,
         });
     }
@@ -845,14 +845,19 @@ export default class SearchScreen extends React.Component {
 
                             /* image={require('../images/nbl-house_icon.png')} */
                             >
-                                <View style={{ justifyContent: 'center', alignItems: 'center' }}>
+                                <View style={{
+                                    justifyContent: 'center', alignItems: 'center',
+                                }}>
                                     <Text style={{
                                         backgroundColor: item.IsHighlight ? 'red' : '#6c6d6d',
                                         color: '#fff',
                                         padding: 5,
                                         fontSize: responsiveFontSize(1.2),
                                         borderRadius: 5,
-                                        opacity: 0.7,
+                                        borderWidth: 1,
+                                        borderColor: '#fff'
+                                        //opacity: 0.8,
+
                                     }}>{convertAmountToWording(item.Price)}</Text>
                                     {/* {
                                         this.state.roomCategory.map((y, i) => {
