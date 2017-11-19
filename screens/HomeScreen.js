@@ -1346,6 +1346,15 @@ export default class HomeScreen extends React.Component {
                   source={require('../assets/images/nbl-highlight.gif')}
                 />
               }
+
+              <Image
+                style={{
+                  position: 'absolute', top: 270, right: 15, zIndex: 10, opacity: 0.5,
+                  width: responsiveWidth(15),
+                  height: responsiveWidth(15), borderRadius: 100,
+                }}
+                source={require('../images/app-icon.png')}
+              />
               <TouchableWithoutFeedback
                 style={styles.cardImageBox}
                 onPress={() => {
@@ -1362,6 +1371,9 @@ export default class HomeScreen extends React.Component {
                   //source={require('../images/1.jpg')}
                   source={item.Title !== "" ? { uri: item.Title } : require("../images/nha-bao-la.jpg")}
                 />
+
+
+
               </TouchableWithoutFeedback>
               <View style={{ flexDirection: 'row', paddingLeft: 20, paddingRight: 20, paddingTop: 5, paddingBottom: 5, marginTop: -50, backgroundColor: '#000', opacity: 0.6 }}>
                 <TextMask
