@@ -22,6 +22,7 @@ import Icon from 'react-native-vector-icons/Ionicons';
 import { GooglePlacesAutocomplete, } from 'react-native-google-places-autocomplete'; // 1.2.12
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import KeyboardSpacer from 'react-native-keyboard-spacer';
+import getDirections from 'react-native-google-maps-directions'
 
 
 
@@ -77,44 +78,32 @@ export default class Testing extends React.Component {
     //alert(reactNode)
   }
 
+  handleGetDirections = () => {
+    const data = {
+      source: {
+        latitude: -33.8356372,
+        longitude: 18.6947617
+      },
+      destination: {
+        latitude: -33.8600024,
+        longitude: 18.697459
+      },
+      params: [
+        {
+          key: "dirflg",
+          value: "w"
+        }
+      ]
+    }
+
+    getDirections(data)
+  }
+
   render() {
 
     return (
       <View style={styles.container}>
-        <KeyboardAwareScrollView
-          innerRef={ref => { this.scroll = ref }}
-        //extraHeight={50}
-        //extraScrollHeight={50}
-        >
-          <View>
-
-            <TextInput
-              style={{ height: 40, marginTop: 300, borderColor: 'gray', borderWidth: 1 }}
-              onChangeText={(text) => this.setState({ text })}
-              value={this.state.text}
-              onFocus={(event) => {
-                // `bind` the function if you're using ES6 classes
-                // alert(event.target)
-                this._scrollToInput(event.target)
-                //this._scrollToInput(ReactNative.findNodeHandle(event.target))
-              }}
-            />
-
-            <TextInput
-              style={{ marginTop: 500, borderColor: 'gray', borderWidth: 1 }}
-              onChangeText={(text) => this.setState({ text })}
-              value={this.state.text}
-              onFocus={(event) => {
-                //alert(findNodeHandle(event.target))
-                // this._scrollToInput(event.target)
-                // this._scrollToInput(findNodeHandle(event.target))
-                this._scrollToInput(event.target)
-
-              }}
-            />
-            <KeyboardSpacer />
-          </View>
-        </KeyboardAwareScrollView>
+        <Button onPress={this.handleGetDirections} title="Get Directions" />
 
       </View>
 

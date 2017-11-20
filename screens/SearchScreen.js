@@ -30,6 +30,7 @@ import { GooglePlacesAutocomplete, } from 'react-native-google-places-autocomple
 import { TextInputMask, TextMask } from 'react-native-masked-text';
 import { responsiveHeight, responsiveWidth, responsiveFontSize } from 'react-native-responsive-dimensions';
 import convertAmountToWording from '../api/convertAmountToWording'
+import getDirections from 'react-native-google-maps-directions'
 
 var { height, width } = Dimensions.get('window');
 
@@ -913,7 +914,7 @@ export default class SearchScreen extends React.Component {
 
                                                 <Text style={{
                                                     flex: 2,
-                                                    fontSize: 10,
+                                                    fontSize: responsiveFontSize(1.3),
                                                 }}>{item.Address}</Text>
 
                                                 <View style={{ flexDirection: 'row' }}>
@@ -927,25 +928,64 @@ export default class SearchScreen extends React.Component {
                                                             )
                                                         })
                                                     }
-                                                    <View style={{ flex: 1, flexDirection: 'row', }}>
 
 
-                                                        <Text style={{ fontSize: 10, }} >{item.Acreage} m</Text>
-                                                        <Text style={{ fontSize: 7, marginBottom: 5 }}>2</Text>
-                                                    </View>
+                                                    {/* Location Direction */}
+                                                    {/* <TouchableOpacity
+                                                        style={{
+                                                            flex: 1, justifyContent: 'center', alignItems: 'center',
+                                                        }}
+                                                        onPress={() => {
+                                                            const data = {
+                                                                source: {
+                                                                    latitude: parseFloat(this.state.location.coords.latitude), //10.791609,//-33.8356372,
+                                                                    longitude: parseFloat(this.state.location.coords.longitude), //106.702763,//18.6947617
+                                                                },
+                                                                destination: {
+                                                                    latitude: parseFloat(item.Latitude), //-33.8600024,
+                                                                    longitude: parseFloat(item.Longitude) //18.697459
+                                                                },
+                                                                params: [
+                                                                    {
+                                                                        key: "dirflg",
+                                                                        value: "d"
+                                                                    }
+                                                                ]
+                                                            }
+
+                                                            getDirections(data)
+                                                        }}
+                                                    >
+                                                        <Ionicons style={{
+                                                            color: '#fff', fontSize: responsiveFontSize(1.5),
+                                                            padding: 4, borderRadius: 5, backgroundColor: '#73aa2a',
+                                                            elevation: 2,
+
+                                                        }} name='md-return-right' >  Đi</Ionicons>
+                                                    </TouchableOpacity> */}
+
+
+
                                                 </View>
                                                 <View style={styles.searchCardPriceBox}>
 
-                                                    <TextMask
+                                                    {/* <TextMask
                                                         style={{ flex: 2, fontSize: 10 }}
                                                         value={item.Price}
                                                         type={'money'}
                                                         options={{ suffixUnit: ' đ', precision: 0, unit: ' ', separator: ' ' }}
-                                                    />
+                                                    /> */}
+                                                    <Text style={{ flex: 1, fontSize: responsiveFontSize(1.3) }}>{convertAmountToWording(item.Price)}</Text>
 
+                                                    <View style={{ flex: 1, flexDirection: 'row', }}>
+
+
+                                                        <Text style={{ fontSize: responsiveFontSize(1.3), }} >{item.Acreage} m</Text>
+                                                        <Text style={{ fontSize: 7, marginBottom: 5 }}>2</Text>
+                                                    </View>
                                                     <Ionicons style={{
                                                         flex: 1,
-                                                        fontSize: 10,
+                                                        fontSize: responsiveFontSize(1.3),
                                                         paddingTop: 2,
 
                                                     }} name='md-pin' >  {item.Distance} km</Ionicons>
@@ -1009,7 +1049,7 @@ export default class SearchScreen extends React.Component {
                                     <TouchableOpacity
                                         style={{}}
                                         onPress={() => {
-                                            this.props.navigation.navigate('RoomDetailScreen', { item });
+                                            // this.props.navigation.navigate('RoomDetailScreen', { item });
                                         }}
                                     >
                                         <View style={{
@@ -1020,13 +1060,19 @@ export default class SearchScreen extends React.Component {
                                             borderBottomWidth: 0.3,
                                             borderColor: '#9B9D9D',
                                         }}>
-                                            <Image
+                                            <TouchableOpacity
                                                 style={{
                                                     flex: 3,
-                                                    borderRadius: 5,
-                                                }}
-                                                source={{ uri: item.Title }} />
 
+                                                }}
+                                                onPress={() => {
+                                                    this.props.navigation.navigate('RoomDetailScreen', { item });
+                                                }}
+                                            >
+                                                <Image
+                                                    style={{ flex: 1, borderRadius: 5, }}
+                                                    source={{ uri: item.Title }} />
+                                            </TouchableOpacity>
                                             <View style={styles.searchCardTextBox}>
                                                 <Text style={{
                                                     flex: 2,
@@ -1042,29 +1088,71 @@ export default class SearchScreen extends React.Component {
                                                             return (
                                                                 y.ID == item.CategoryID &&
                                                                 <Text
-                                                                    style={{ flex: 2, color: '#73aa2a', }}
+                                                                    style={{ flex: 3, color: '#73aa2a', fontSize: responsiveFontSize(1.8) }}
                                                                     key={i}>{y.CatName}</Text>
                                                             )
                                                         })
                                                     }
 
-                                                    <View style={{ flex: 1, flexDirection: 'row', }}>
-                                                        <Text>{item.Acreage} m</Text>
-                                                        <Text style={{ fontSize: 8, marginBottom: 5 }}>2</Text>
-                                                    </View>
+                                                    {/* Location Direction */}
+                                                    <TouchableOpacity
+                                                        style={{
+                                                            flex: 1, justifyContent: 'center', alignItems: 'center',
+                                                        }}
+                                                        onPress={() => {
+                                                            const data = {
+                                                                source: {
+                                                                    latitude: parseFloat(this.state.location.coords.latitude), //10.791609,//-33.8356372,
+                                                                    longitude: parseFloat(this.state.location.coords.longitude), //106.702763,//18.6947617
+                                                                },
+                                                                destination: {
+                                                                    latitude: parseFloat(item.Latitude), //-33.8600024,
+                                                                    longitude: parseFloat(item.Longitude) //18.697459
+                                                                },
+                                                                params: [
+                                                                    {
+                                                                        key: "dirflg",
+                                                                        value: "d"
+                                                                    }
+                                                                ]
+                                                            }
+
+                                                            getDirections(data)
+                                                        }}
+                                                    >
+                                                        <Ionicons style={{
+                                                            color: '#fff', fontSize: responsiveFontSize(1.5),
+                                                            padding: 4, borderRadius: 5, backgroundColor: '#73aa2a',
+                                                            elevation: 2,
+
+                                                        }} name='md-return-right' >  Đi</Ionicons>
+                                                        {/* <Text style={{ color: '#fff', fontSize: responsiveFontSize(1.5) }}>Tìm đường</Text> */}
+                                                    </TouchableOpacity>
+
 
                                                 </View>
 
                                                 <View style={styles.searchCardPriceBox}>
-                                                    <TextMask
+                                                    {/* <TextMask
                                                         style={{ flex: 2, }}
                                                         value={item.Price}
                                                         type={'money'}
                                                         options={{ suffixUnit: ' đ', precision: 0, unit: ' ', separator: ' ' }}
-                                                    />
+                                                    /> */}
 
+                                                    <Text style={{ flex: 1 }}>{convertAmountToWording(item.Price)}</Text>
+                                                    <View style={{ flex: 1, flexDirection: 'row', }}>
+                                                        <Text>{item.Acreage} m</Text>
+                                                        <Text style={{ fontSize: 8, marginBottom: 5 }}>2</Text>
+                                                    </View>
                                                     <Ionicons style={styles.searCardDistanceIcon} name='md-pin' >  {item.Distance} km</Ionicons>
                                                 </View>
+
+
+
+
+
+
                                             </View>
                                         </View>
                                     </TouchableOpacity>

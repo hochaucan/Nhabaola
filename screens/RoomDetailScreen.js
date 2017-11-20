@@ -26,6 +26,7 @@ import { CheckBox, Rating, Button, FormLabel, FormInput, SocialIcon, FormValidat
 import KeyboardSpacer from 'react-native-keyboard-spacer';
 import { TextInputMask, TextMask } from 'react-native-masked-text';
 import { responsiveHeight, responsiveWidth, responsiveFontSize } from 'react-native-responsive-dimensions';
+import getDirections from 'react-native-google-maps-directions'
 
 var { height, width } = Dimensions.get('window');
 
@@ -353,6 +354,27 @@ export default class RoomDetailScreen extends React.Component {
 
     }
 
+    // _handleGetDirections = (sourceLat, sourceLong, desLat, desLong) => {
+    //     const data = {
+    //         source: {
+    //             latitude: sourceLat,// -33.8356372,
+    //             longitude: sourceLong,//18.6947617
+    //         },
+    //         destination: {
+    //             latitude: desLat,//-33.8600024,
+    //             longitude: desLong//18.697459
+    //         },
+    //         params: [
+    //             {
+    //                 key: "dirflg",
+    //                 value: "d"
+    //             }
+    //         ]
+    //     }
+
+    //     getDirections(data)
+    // }
+
     render() {
         //const { picture, name, email, phone, login, dob, location } = this.props.navigation.state.params;
         //const { item } = this.props.navigation.state.params;
@@ -636,6 +658,62 @@ export default class RoomDetailScreen extends React.Component {
 
                     <View style={styles.cardMapViewBox}>
                         <Text style={{ marginBottom: 5 }}>Địa chỉ:  {this.state.roomBox.Address}</Text>
+                        {/* <Button onPress={() => {
+
+
+                            const data = {
+                                source: {
+                                    latitude: -33.8356372,
+                                    longitude: 18.6947617
+                                },
+                                destination: {
+                                    latitude: -33.8600024,
+                                    longitude: 18.697459
+                                },
+                                params: [
+                                    {
+                                        key: "dirflg",
+                                        value: "d"
+                                    }
+                                ]
+                            }
+
+                            getDirections(data)
+                        }
+
+                        }
+                            title="Tìm đường" /> */}
+
+                        <TouchableOpacity
+                            style={{
+                                position: 'absolute', top: 70, left: 30, zIndex: 10,
+                                padding: 6, borderRadius: 5, backgroundColor: '#73aa2a',
+                                elevation: 2, opacity: 0.8,
+                            }}
+                            onPress={() => {
+                                const data = {
+                                    source: {
+                                        latitude: 10.791609,//-33.8356372,
+                                        longitude: 106.702763,//18.6947617
+                                    },
+                                    destination: {
+                                        latitude: parseFloat(this.state.roomBox.Latitude), //-33.8600024,
+                                        longitude: parseFloat(this.state.roomBox.Longitude) //18.697459
+                                    },
+                                    params: [
+                                        {
+                                            key: "dirflg",
+                                            value: "d"
+                                        }
+                                    ]
+                                }
+
+                                getDirections(data)
+                            }}
+                        >
+                            <Ionicons style={{ color: '#fff', fontSize: responsiveFontSize(1.5)}} name='md-return-right' > Tìm đường</Ionicons>
+                             {/* <Text style={{ color: '#fff', fontSize: responsiveFontSize(1.5) }}>Tìm đường</Text> */}
+                        </TouchableOpacity>
 
                         <MapView
                             style={styles.CardMapView}
