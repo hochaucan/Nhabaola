@@ -492,6 +492,15 @@ export default class RoomDetailScreen extends React.Component {
                                 }
                             </Swiper>
 
+                            {/* Wartermark */}
+                            <Image
+                                style={{
+                                    position: 'absolute', top: 185, right: 15, zIndex: 10, opacity: 0.5,
+                                    width: responsiveWidth(15),
+                                    height: responsiveWidth(15), borderRadius: 100,
+                                }}
+                                source={require('../images/app-icon.png')}
+                            />
 
 
                             <View style={{ flexDirection: 'row', paddingLeft: 20, paddingRight: 20, paddingTop: 5, paddingBottom: 5, marginTop: -50, backgroundColor: '#000', opacity: 0.6 }}>

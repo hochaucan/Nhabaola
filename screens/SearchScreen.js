@@ -16,6 +16,7 @@ import {
     Alert,
     ActivityIndicator,
     AsyncStorage,
+    Keyboard,
 
 } from 'react-native';
 //import { ExpoLinksView } from '@expo/samples';
@@ -291,6 +292,7 @@ export default class SearchScreen extends React.Component {
                 longitude: null,
             },
             isSearching: false,
+            isFocusSearchTextInput: false,
         }
     }
 
@@ -753,7 +755,8 @@ export default class SearchScreen extends React.Component {
                     </View>
                 </TouchableOpacity>
 
-                {this.state.mapRegion &&
+                {
+                    this.state.mapRegion &&
                     <MapView
                         ref={ref => { this.map = ref; }}
 
@@ -958,7 +961,8 @@ export default class SearchScreen extends React.Component {
                     </MapView>
                 }
 
-                {roomBox.length >= 1 &&
+                {
+                    roomBox.length >= 1 &&
                     <View style={{
                         width: width,
                         height: responsiveHeight(28),
@@ -1221,7 +1225,7 @@ export default class SearchScreen extends React.Component {
 
                                             this.setState({
                                                 txtFilterResult: this.state.selectedBDS + ', ' + this.state.multiSliderPriceValue[0] + '-' + this.state.multiSliderPriceValue[1] + ' triệu đồng, '
-                                                    + this.state.multiSliderAreaValue[0] + '-' + this.state.multiSliderAreaValue[1] + ' mét vuông',
+                                                + this.state.multiSliderAreaValue[0] + '-' + this.state.multiSliderAreaValue[1] + ' mét vuông',
 
                                             })
 
@@ -1247,6 +1251,12 @@ export default class SearchScreen extends React.Component {
                     ref={(popupSearching) => { this.popupSearching = popupSearching; }}
                     dialogAnimation={new ScaleAnimation()}
                     dialogStyle={{ marginBottom: 100, width: width * 0.9, height: height * 0.6, justifyContent: 'center', padding: 20 }}
+                    onDismissed={() => {
+                        Keyboard.dismiss();
+                    }}
+                    onShown={() => {
+
+                    }}
                 >
                     <GooglePlacesAutocomplete
                         placeholder="Vui lòng nhập địa chỉ"

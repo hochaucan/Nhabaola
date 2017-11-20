@@ -1341,6 +1341,7 @@ export default class HomeScreen extends React.Component {
                 </View>
               </View>
 
+              {/* Highlight */}
               {item.IsHighlight &&
                 <Image
                   style={{
@@ -1351,6 +1352,7 @@ export default class HomeScreen extends React.Component {
                 />
               }
 
+              {/* Wartermark */}
               <Image
                 style={{
                   position: 'absolute', top: 270, right: 15, zIndex: 10, opacity: 0.5,
@@ -1359,6 +1361,7 @@ export default class HomeScreen extends React.Component {
                 }}
                 source={require('../images/app-icon.png')}
               />
+              
               <TouchableWithoutFeedback
                 style={styles.cardImageBox}
                 onPress={() => {
@@ -1466,12 +1469,12 @@ export default class HomeScreen extends React.Component {
 
                       Share.share({
                         message: "*Chia Sẻ từ Ứng Dụng Nhà Bao La*"
-                          + "\nCài đặt: " + "https://play.google.com/store/apps/details?id=vn.nhabaola.nhabaola"
-                          + "\n\nLiên hệ: " + item.AccountName + "\nĐiện thoại: " + item.AccountPhone
-                          + "\n\nLoại bất động sản: " + loadBDS
-                          + "\nGiá: " + item.Price + " đồng"
-                          + "\nDiện tích: " + item.Acreage + " mét vuông"
-                          + "\nĐịa chỉ: " + item.Address + "\n\nMô tả:\n" + item.Description,
+                        + "\nCài đặt: " + "https://play.google.com/store/apps/details?id=vn.nhabaola.nhabaola"
+                        + "\n\nLiên hệ: " + item.AccountName + "\nĐiện thoại: " + item.AccountPhone
+                        + "\n\nLoại bất động sản: " + loadBDS
+                        + "\nGiá: " + item.Price + " đồng"
+                        + "\nDiện tích: " + item.Acreage + " mét vuông"
+                        + "\nĐịa chỉ: " + item.Address + "\n\nMô tả:\n" + item.Description,
 
                         url: 'http://nhabaola.vn',
                         title: '*Chia Sẻ từ Ứng Dụng Nhà Bao La*'
