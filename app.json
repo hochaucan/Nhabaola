@@ -16,7 +16,7 @@
     "loading": {
       "icon": "./assets/icons/app-icon.png",
       "hideExponentText": true,
-      "backgroundColor":"#a4d227"
+      "backgroundColor": "#a4d227"
       //"backgroundImage": "./assets/images/nbl-app_bg.png"
     },
     "packagerOpts": {
@@ -30,6 +30,7 @@
     },
     "android": {
       "package": "vn.nhabaola.nhabaola",
+      "versionCode": 2,
       "config": {
         "googleMaps": {
           "apiKey": "AIzaSyDjGSoHkMu6Q55FifG90l25DR8SfMo3quM"

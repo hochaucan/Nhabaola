@@ -15,7 +15,6 @@ import {
 import { AppLoading, Asset, Font } from 'expo';
 import { Ionicons } from '@expo/vector-icons';
 import RootNavigation from './navigation/RootNavigation';
-import FeedStack from './components/examples/NavigatorDemo'
 
 // var STRINGS = require('./components/Localisation');
 var GLOBAL = require('./components/Global');

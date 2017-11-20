@@ -17,7 +17,6 @@ import {
 import { ExpoLinksView } from '@expo/samples';
 import { Constants } from 'expo';
 import { Ionicons } from '@expo/vector-icons';
-import { users } from '../components/examples/data';
 import MapView from 'react-native-maps';
 
 var { height, width } = Dimensions.get('window');
