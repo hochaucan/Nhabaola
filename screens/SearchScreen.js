@@ -1023,7 +1023,7 @@ export default class SearchScreen extends React.Component {
                                 opacity: 0.9,
                             }}
                         >
-                            <Text style={{ color: '#73aa2a' }}>Tìm được {roomBox.length} Nhà</Text>
+                            <Text style={{ color: '#73aa2a',paddingBottom:4, }}>Tìm được {roomBox.length} Nhà</Text>
                             <FlatList
                                 //onScroll={this._onScroll}
                                 // ref='searchresult'
