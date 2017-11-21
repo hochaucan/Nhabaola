@@ -515,7 +515,7 @@ export default class HomeScreen extends React.Component {
               sessionKey: responseJson.obj.UpdatedBy
             })
 
-            //this._getWalletAsync();
+            this._getWalletAsync();
             ToastAndroid.showWithGravity('Đăng nhập thành công!', ToastAndroid.SHORT, ToastAndroid.TOP);
 
           }
@@ -540,10 +540,10 @@ export default class HomeScreen extends React.Component {
     } catch (error) {
       console.log(error)
     }
-    await this._getWalletAsync();
-    if (this.state.wallet != '0') {
-      setTimeout(() => this.popupCongraForNewAccount.show(), 500)
-    }
+    // await this._getWalletAsync();
+    // if (this.state.wallet != '0') {
+    //   setTimeout(() => this.popupCongraForNewAccount.show(), 500)
+    // }
   }
 
   // Login after register new Account
