@@ -27,6 +27,7 @@ import KeyboardSpacer from 'react-native-keyboard-spacer';
 import { TextInputMask, TextMask } from 'react-native-masked-text';
 import { responsiveHeight, responsiveWidth, responsiveFontSize } from 'react-native-responsive-dimensions';
 import getDirections from 'react-native-google-maps-directions'
+import globalVariable from '../components/Global'
 
 var { height, width } = Dimensions.get('window');
 
@@ -55,12 +56,6 @@ export default class RoomDetailScreen extends React.Component {
         header: null,
 
     };
-
-    // state = {
-    //     mapRegion: { latitude: 37.78825, longitude: -122.4324, latitudeDelta: 0.05, longitudeDelta: 0.0421 },
-
-    // };
-
 
     constructor(props) {
         super(props);
@@ -614,12 +609,12 @@ export default class RoomDetailScreen extends React.Component {
 
                                         Share.share({
                                             message: "*Chia Sẻ từ Ứng Dụng Nhà Bao La*"
-                                            + "\nCài đặt: " + "https://play.google.com/store/apps/details?id=vn.nhabaola.nhabaola"
-                                            + "\n\nLiên hệ: " + this.state.roomBox.AccountName + "\nĐiện thoại: " + this.state.roomBox.AccountPhone
-                                            + "\n\nLoại bất động sản: " + loadBDS
-                                            + "\nGiá: " + this.state.roomBox.Price + " đồng"
-                                            + "\nDiện tích: " + this.state.roomBox.Acreage + " mét vuông"
-                                            + "\nĐịa chỉ: " + this.state.roomBox.Address + "\n\nMô tả:\n" + this.state.roomBox.Description,
+                                                + "\nCài đặt: " + "https://play.google.com/store/apps/details?id=vn.nhabaola.nhabaola"
+                                                + "\n\nLiên hệ: " + this.state.roomBox.AccountName + "\nĐiện thoại: " + this.state.roomBox.AccountPhone
+                                                + "\n\nLoại bất động sản: " + loadBDS
+                                                + "\nGiá: " + this.state.roomBox.Price + " đồng"
+                                                + "\nDiện tích: " + this.state.roomBox.Acreage + " mét vuông"
+                                                + "\nĐịa chỉ: " + this.state.roomBox.Address + "\n\nMô tả:\n" + this.state.roomBox.Description,
                                             url: 'http://nhabaola.vn',
                                             title: '*Chia Sẻ từ Ứng Dụng Nhà Bao La*'
                                         }, {
@@ -693,12 +688,12 @@ export default class RoomDetailScreen extends React.Component {
                             onPress={() => {
                                 const data = {
                                     source: {
-                                        latitude: 10.791609,//-33.8356372,
-                                        longitude: 106.702763,//18.6947617
+                                        latitude: globalVariable.LOCATION.LATITUDE,//10.714326,//globalVariable.LOCATION.LATITUDE,
+                                        longitude: globalVariable.LOCATION.LONGITUDE, //106.610448,//globalVariable.LOCATION.LONGITUDE, 
                                     },
                                     destination: {
-                                        latitude: parseFloat(this.state.roomBox.Latitude), //-33.8600024,
-                                        longitude: parseFloat(this.state.roomBox.Longitude) //18.697459
+                                        latitude: parseFloat(this.state.roomBox.Latitude),
+                                        longitude: parseFloat(this.state.roomBox.Longitude),
                                     },
                                     params: [
                                         {
@@ -711,8 +706,8 @@ export default class RoomDetailScreen extends React.Component {
                                 getDirections(data)
                             }}
                         >
-                            <Ionicons style={{ color: '#fff', fontSize: responsiveFontSize(1.5)}} name='md-return-right' > Tìm đường</Ionicons>
-                             {/* <Text style={{ color: '#fff', fontSize: responsiveFontSize(1.5) }}>Tìm đường</Text> */}
+                            <Ionicons style={{ color: '#fff', fontSize: responsiveFontSize(1.5) }} name='md-return-right' > Tìm đường</Ionicons>
+                            {/* <Text style={{ color: '#fff', fontSize: responsiveFontSize(1.5) }}>Tìm đường</Text> */}
                         </TouchableOpacity>
 
                         <MapView

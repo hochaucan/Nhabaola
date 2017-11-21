@@ -31,6 +31,7 @@ import { TextInputMask, TextMask } from 'react-native-masked-text';
 import { responsiveHeight, responsiveWidth, responsiveFontSize } from 'react-native-responsive-dimensions';
 import convertAmountToWording from '../api/convertAmountToWording'
 import getDirections from 'react-native-google-maps-directions'
+import globalVariable from '../components/Global'
 
 var { height, width } = Dimensions.get('window');
 
@@ -379,7 +380,6 @@ export default class SearchScreen extends React.Component {
     }
     componentWillMount() {
         this._getLocationAsync();
-        // this._getRoomByFilter();
         this._getCategoryFromStorageAsync();
 
         // if (Platform.OS === 'android' && !Constants.isDevice) {
@@ -436,10 +436,9 @@ export default class SearchScreen extends React.Component {
         await this.setState({ mapRegion: region });
         this._getRoomByFilter();
 
-        // if (MARKERS != "") {
-        //     this.fitAllMarkers();
-        // }
-        // alert(this.state.mapRegion)
+        // Save current location to global variable
+        globalVariable.LOCATION.LATITUDE = location.coords.latitude;
+        globalVariable.LOCATION.LONGITUDE = location.coords.longitude;
     };
 
     _getCurrentPositionAsync() {
@@ -1123,7 +1122,7 @@ export default class SearchScreen extends React.Component {
                                                         <Ionicons style={{
                                                             color: '#fff', fontSize: responsiveFontSize(1.5),
                                                             padding: 4, borderRadius: 5, backgroundColor: '#73aa2a',
-                                                            elevation: 2,
+                                                            marginTop: 3, marginBottom: 2, elevation: 2,
 
                                                         }} name='md-return-right' >  Đi</Ionicons>
                                                         {/* <Text style={{ color: '#fff', fontSize: responsiveFontSize(1.5) }}>Tìm đường</Text> */}
@@ -1313,7 +1312,7 @@ export default class SearchScreen extends React.Component {
 
                                             this.setState({
                                                 txtFilterResult: this.state.selectedBDS + ', ' + this.state.multiSliderPriceValue[0] + '-' + this.state.multiSliderPriceValue[1] + ' triệu đồng, '
-                                                + this.state.multiSliderAreaValue[0] + '-' + this.state.multiSliderAreaValue[1] + ' mét vuông',
+                                                    + this.state.multiSliderAreaValue[0] + '-' + this.state.multiSliderAreaValue[1] + ' mét vuông',
 
                                             })
 

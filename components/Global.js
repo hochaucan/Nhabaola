@@ -7,4 +7,8 @@ module.exports = {
         LIGHTBLUE: '#6EA8DA',
         DARKGRAY: '#999',
     },
+    LOCATION: {
+        LATITUDE: null,
+        LONGITUDE: null,
+    }
 };
