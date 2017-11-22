@@ -28,6 +28,7 @@ import { TextInputMask, TextMask } from 'react-native-masked-text';
 import { responsiveHeight, responsiveWidth, responsiveFontSize } from 'react-native-responsive-dimensions';
 import getDirections from 'react-native-google-maps-directions'
 import globalVariable from '../components/Global'
+import convertAmountToWording from '../api/convertAmountToWording'
 
 var { height, width } = Dimensions.get('window');
 
@@ -521,12 +522,19 @@ export default class RoomDetailScreen extends React.Component {
 
 
                             <View style={{ flexDirection: 'row', paddingLeft: 20, paddingRight: 20, paddingTop: 5, paddingBottom: 5, marginTop: -50, backgroundColor: '#000', opacity: 0.6 }}>
-                                <TextMask
+                                {/* <TextMask
                                     style={{ flex: 1, color: '#fff', fontSize: 15 }}
                                     value={this.state.roomBox.Price}
                                     type={'money'}
                                     options={{ suffixUnit: ' đ', precision: 0, unit: 'Giá:   ', separator: ' ' }}
-                                />
+                                /> */}
+                                <Text
+                                    style={{
+                                        flex: 1, color: '#fff', fontWeight: '300',
+                                        fontSize: responsiveFontSize(2)
+                                    }}>
+                                    Giá: {convertAmountToWording(this.state.roomBox.Price)}
+                                </Text>
 
                                 {
 
@@ -534,7 +542,10 @@ export default class RoomDetailScreen extends React.Component {
                                         return (
                                             y.ID == this.state.roomBox.CategoryID &&
                                             <Text
-                                                style={{ flex: 1, fontSize: 15, textAlign: 'right', color: '#fff', }}
+                                                style={{
+                                                    flex: 2, color: '#fff', fontWeight: '300',
+                                                    fontSize: responsiveFontSize(2), textAlign: 'right'
+                                                }}
                                                 key={i}>{y.CatName}:  {this.state.roomBox.Acreage} m</Text>
                                             // : null
                                         )

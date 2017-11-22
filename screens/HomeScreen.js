@@ -1361,7 +1361,7 @@ export default class HomeScreen extends React.Component {
                 }}
                 source={require('../images/app-icon.png')}
               />
-              
+
               <TouchableWithoutFeedback
                 style={styles.cardImageBox}
                 onPress={() => {
@@ -1383,12 +1383,19 @@ export default class HomeScreen extends React.Component {
 
               </TouchableWithoutFeedback>
               <View style={{ flexDirection: 'row', paddingLeft: 20, paddingRight: 20, paddingTop: 5, paddingBottom: 5, marginTop: -50, backgroundColor: '#000', opacity: 0.6 }}>
-                <TextMask
+                {/* <TextMask
                   style={{ flex: 1, color: '#fff', fontSize: 15 }}
                   value={item.Price}
                   type={'money'}
                   options={{ suffixUnit: ' đ', precision: 0, unit: 'Giá:   ', separator: ' ' }}
-                />
+                /> */}
+                <Text
+                  style={{
+                    flex: 1, color: '#fff', fontWeight: '300',
+                    fontSize: responsiveFontSize(2)
+                  }}>
+                  Giá: {convertAmountToWording(item.Price)}
+                </Text>
 
                 {
 
@@ -1396,7 +1403,10 @@ export default class HomeScreen extends React.Component {
                     return (
                       y.ID == item.CategoryID &&
                       <Text
-                        style={{ flex: 1, fontSize: 15, textAlign: 'right', color: '#fff', }}
+                        style={{
+                          flex: 2, color: '#fff', fontWeight: '300',
+                          fontSize: responsiveFontSize(2), textAlign: 'right'
+                        }}
                         key={i}>{y.CatName}:  {item.Acreage} m</Text>
                       // : null
                     )
@@ -1469,12 +1479,12 @@ export default class HomeScreen extends React.Component {
 
                       Share.share({
                         message: "*Chia Sẻ từ Ứng Dụng Nhà Bao La*"
-                        + "\nCài đặt: " + "https://play.google.com/store/apps/details?id=vn.nhabaola.nhabaola"
-                        + "\n\nLiên hệ: " + item.AccountName + "\nĐiện thoại: " + item.AccountPhone
-                        + "\n\nLoại bất động sản: " + loadBDS
-                        + "\nGiá: " + item.Price + " đồng"
-                        + "\nDiện tích: " + item.Acreage + " mét vuông"
-                        + "\nĐịa chỉ: " + item.Address + "\n\nMô tả:\n" + item.Description,
+                          + "\nCài đặt: " + "https://play.google.com/store/apps/details?id=vn.nhabaola.nhabaola"
+                          + "\n\nLiên hệ: " + item.AccountName + "\nĐiện thoại: " + item.AccountPhone
+                          + "\n\nLoại bất động sản: " + loadBDS
+                          + "\nGiá: " + item.Price + " đồng"
+                          + "\nDiện tích: " + item.Acreage + " mét vuông"
+                          + "\nĐịa chỉ: " + item.Address + "\n\nMô tả:\n" + item.Description,
 
                         url: 'http://nhabaola.vn',
                         title: '*Chia Sẻ từ Ứng Dụng Nhà Bao La*'
