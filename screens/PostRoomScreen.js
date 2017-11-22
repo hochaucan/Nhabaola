@@ -16,6 +16,7 @@ import {
     Alert,
     Modal,
     Switch,
+    Keyboard,
 }
     from 'react-native';
 import { Constants, Location, Permissions, ImagePicker } from 'expo';
@@ -103,6 +104,7 @@ export default class PostRoomScreen extends React.Component {
             fromDateHighLight: minDate,
             toDateHighLight: topDate,
             isHighlight: false,
+            contactPhone: '',
         }
     }
 
@@ -141,9 +143,11 @@ export default class PostRoomScreen extends React.Component {
             var value = await AsyncStorage.getItem('FO_Account_Login');
 
             if (value !== null) {
-                this.setState({
+                await this.setState({
                     profile: JSON.parse(value)
                 })
+
+                this.setState({ contactPhone: this.state.profile.ContactPhone })
             }
             else {
                 this.setState({
@@ -154,6 +158,7 @@ export default class PostRoomScreen extends React.Component {
         } catch (e) {
             console.log(e);
         }
+
     }
 
     _getCategoryFromStorageAsync = async () => {
@@ -241,28 +246,36 @@ export default class PostRoomScreen extends React.Component {
                 // && this.state.postRoomImage5 === null
                 // && this.state.postRoomImage6 === null
             ) {
-                ToastAndroid.showWithGravity('Vui lòng chọn hình đại diện', ToastAndroid.SHORT, ToastAndroid.CENTER);
+                ToastAndroid.showWithGravity('Vui lòng chọn hình đại diện', ToastAndroid.SHORT, ToastAndroid.TOP);
                 return;
             }
             if (this.state.searchingMaker.latitude === null) {
-                ToastAndroid.showWithGravity('Vui lòng nhập địa chỉ', ToastAndroid.SHORT, ToastAndroid.CENTER);
+                ToastAndroid.showWithGravity('Vui lòng nhập địa chỉ', ToastAndroid.SHORT, ToastAndroid.TOP);
+                return;
+            }
+            if (this.state.contactPhone === '') {
+                ToastAndroid.showWithGravity('Vui lòng nhập Số điện thoại liên hệ', ToastAndroid.SHORT, ToastAndroid.TOP);
+                this.refs['contactPhoneInput'].getElement().focus();
                 return;
             }
             if (this.state.price === '') {
-                ToastAndroid.showWithGravity('Vui lòng nhập giá', ToastAndroid.SHORT, ToastAndroid.CENTER);
+                ToastAndroid.showWithGravity('Vui lòng nhập giá', ToastAndroid.SHORT, ToastAndroid.TOP);
+                this.refs['priceInput'].getElement().focus();
                 return;
             }
             if (this.state.acreage === '') {
-                ToastAndroid.showWithGravity('Vui lòng nhập diện tích', ToastAndroid.SHORT, ToastAndroid.CENTER);
+                ToastAndroid.showWithGravity('Vui lòng nhập diện tích', ToastAndroid.SHORT, ToastAndroid.TOP);
+                this.refs['acreageInput'].getElement().focus();
                 return;
             }
             if (this.state.selectedCategory === '0') {
-                ToastAndroid.showWithGravity('Vui lòng chọn loại BĐS', ToastAndroid.SHORT, ToastAndroid.CENTER);
+                ToastAndroid.showWithGravity('Vui lòng chọn loại BĐS', ToastAndroid.SHORT, ToastAndroid.TOP);
                 return;
             }
 
             if (this.state.detailInfo === '') {
-                ToastAndroid.showWithGravity('Vui lòng nhập thông tin chi tiết', ToastAndroid.SHORT, ToastAndroid.CENTER);
+                ToastAndroid.showWithGravity('Vui lòng nhập thông tin chi tiết', ToastAndroid.SHORT, ToastAndroid.TOP);
+                this.refs.roomInfoInput.focus();
                 return;
             }
         }
@@ -281,12 +294,19 @@ export default class PostRoomScreen extends React.Component {
                 Alert.alert('Vui lòng nhập địa chỉ');
                 return;
             }
+            if (this.state.contactPhone === '') {
+                Alert.alert('Vui lòng nhập Số điện thoại liên hệ');
+                this.refs['contactPhoneInput'].getElement().focus();
+                return;
+            }
             if (this.state.price === '') {
                 Alert.alert('Vui lòng nhập giá');
+                this.refs['priceInput'].getElement().focus();
                 return;
             }
             if (this.state.acreage === '') {
                 Alert.alert('Vui lòng nhập diện tích');
+                this.refs['acreageInput'].getElement().focus();
                 return;
             }
             if (this.state.selectedCategory === '0') {
@@ -295,6 +315,7 @@ export default class PostRoomScreen extends React.Component {
             }
             if (this.state.detailInfo === '') {
                 Alert.alert('Vui lòng nhập thông tin chi tiết');
+                this.refs.roomInfoInput.focus();
                 return;
             }
         }
@@ -366,7 +387,7 @@ export default class PostRoomScreen extends React.Component {
                     "Toilet": "",
                     "Bedroom": "",
                     "AirConditioner": "",
-                    "ContactPhone": "",
+                    "ContactPhone": this.state.contactPhone,
                     "FromDate": this.state.fromDate,
                     "ToDate": this.state.toDate,
                     "IsTop": "true",
@@ -591,7 +612,31 @@ export default class PostRoomScreen extends React.Component {
 
                     </View>
                     <View style={{ paddingBottom: 20 }}>
+                        {/* Contact Phone */}
+                        <View style={{ flexDirection: 'row', }}>
+                            <FormLabel style={{}}>Đ.Thoại LH</FormLabel>
+                            <TextInputMask
+                                //ref='acreage'
+                                ref='contactPhoneInput'
+                                returnKeyType={"next"}
+                                onSubmitEditing={(event) => {
+                                    //this.refs.priceInput.focus();
+                                    this.refs['priceInput'].getElement().focus();
+                                }}
+                                onFocus={(event) => {
+                                    this._scrollToInput(event.target)
+                                }}
+                                type={'only-numbers'}
+                                style={{ flex: 1, padding: 5, borderColor: '#73aa2a', marginLeft: -9, marginRight: 20, }}
+                                placeholder=''
+                                underlineColorAndroid='#73aa2a'
+                                blurOnSubmit={true}
+                                value={this.state.contactPhone}
+                                onChangeText={(contactPhone) => this.setState({ contactPhone })}
+                            />
 
+                            {/* <FormLabel>(mét vuông)</FormLabel> */}
+                        </View>
                         {/* Price */}
                         <View style={{ flexDirection: 'row', }}>
                             <FormLabel style={{}}>Giá:</FormLabel>
@@ -917,6 +962,9 @@ export default class PostRoomScreen extends React.Component {
                     dialogAnimation={new ScaleAnimation()}
                     dialogStyle={{ marginBottom: 100, width: 80, height: 80, justifyContent: 'center', padding: 20 }}
                     dismissOnTouchOutside={false}
+                    onDismissed={() => {
+                        Keyboard.dismiss();
+                    }}
                 >
                     <ActivityIndicator
                         style={{}}
@@ -969,7 +1017,7 @@ export default class PostRoomScreen extends React.Component {
 
                             this.map.animateToCoordinate(this.state.searchingMaker, 1000)
                             this.popupSearching.dismiss();
-                            this.refs['priceInput'].getElement().focus();
+                            this.refs['contactPhoneInput'].getElement().focus();
 
                             {/* 
                             let currentMaker = {

@@ -1333,10 +1333,10 @@ export default class HomeScreen extends React.Component {
                 <View style={styles.cardAvatarTextBox}>
                   <Text style={styles.cardAvatarName}>{item.AccountName}</Text>
                   <TouchableOpacity style={styles.cardAvatarPhoneBox}
-                    onPress={() => { Communications.phonecall(item.AccountPhone, true) }}
+                    onPress={() => { Communications.phonecall(item.ContactPhone, true) }}
                   >
                     <Ionicons style={styles.cardAvatarPhoneIcon} name='logo-whatsapp' />
-                    <Text style={styles.cardAvatarPhone}>: {item.AccountPhone}</Text>
+                    <Text style={styles.cardAvatarPhone}>: {item.ContactPhone}</Text>
                   </TouchableOpacity>
                 </View>
               </View>
