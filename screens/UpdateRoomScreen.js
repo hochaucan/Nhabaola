@@ -1116,6 +1116,9 @@ export default class UpdateRoomScreen extends React.Component {
                     ref={(popupSearching) => { this.popupSearching = popupSearching; }}
                     dialogAnimation={new ScaleAnimation()}
                     dialogStyle={{ marginBottom: 100, width: width * 0.9, height: height * 0.6, justifyContent: 'center', padding: 20 }}
+                    onDismissed={() => {
+                        Keyboard.dismiss();
+                    }}
                 >
                     <GooglePlacesAutocomplete
                         placeholder="Tìm kiếm địa chỉ"
