@@ -23,19 +23,12 @@ import { GooglePlacesAutocomplete, } from 'react-native-google-places-autocomple
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import KeyboardSpacer from 'react-native-keyboard-spacer';
 import getDirections from 'react-native-google-maps-directions'
-import SlidingUpPanel from 'react-native-sliding-up-panel';
-
 
 
 
 var date = new Date();
 var timeZone = (-1) * date.getTimezoneOffset() / 60;
 
-var deviceHeight = Dimensions.get('window').height;
-var deviceWidth = Dimensions.get('window').width;
-
-var MAXIMUM_HEIGHT = deviceHeight - 100;
-var MINUMUM_HEIGHT = 80;
 
 export default class Testing extends React.Component {
   static navigationOptions = {
@@ -50,7 +43,7 @@ export default class Testing extends React.Component {
       txt: 'Hoang Oanh',
       location: null,
       errorMessage: null,
-      containerHeight: 0
+
     }
   }
 
@@ -108,36 +101,14 @@ export default class Testing extends React.Component {
     getDirections(data)
   }
 
-  getContainerHeight = (height) => {
-    this.setState({
-      containerHeight: height
-    });
-  }
+
 
   render() {
 
     return (
       <View style={styles.container}>
         <Button onPress={this.handleGetDirections} title="Get Directions" />
-        <Text style={{
-          //color: 'white',
-          fontWeight: '700',
-        }}>Panel Height: {this.state.containerHeight}</Text>
 
-        <Image style={{ height: this.state.containerHeight }} source={require("../images/app-icon.png")} />
-
-        <SlidingUpPanel
-          ref={panel => { this.panel = panel; }}
-          containerMaximumHeight={MAXIMUM_HEIGHT}
-          containerBackgroundColor={'green'}
-          handlerHeight={MINUMUM_HEIGHT}
-          allowStayMiddle={false}
-          handlerDefaultView={<HandlerOne />}
-          getContainerHeight={this.getContainerHeight}>
-          <View style={{ flex: 1 }}>
-            <Text style={styles.panelText}>Hello guys!</Text>
-          </View>
-        </SlidingUpPanel>
 
       </View>
 

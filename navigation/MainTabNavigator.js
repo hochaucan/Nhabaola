@@ -7,10 +7,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { TabNavigator, TabBarBottom, TabBarTop } from 'react-navigation';
 
 import Colors from '../constants/Colors';
-
 import HomeScreen from '../screens/HomeScreen';
-import LinksScreen from '../screens/LinksScreen';
-//import SettingsScreen from '../screens/SettingsScreen';
 import Testing from '../screens/Testing';
 import ProfileScreen from '../screens/ProfileScreen';
 import SearchScreen from '../screens/SearchScreen';
