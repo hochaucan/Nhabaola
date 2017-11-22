@@ -413,9 +413,9 @@ export default class RoomDetailScreen extends React.Component {
                     backgroundColor: '#fff',
                     flexDirection: 'row',
                     paddingTop: 20,
-                    paddingLeft: 5,
+                    paddingLeft: 20,
                     paddingBottom: 20,
-                    justifyContent: 'center',
+                    //justifyContent: 'center',
                 }}>
 
                     {/* <TouchableOpacity
@@ -448,10 +448,10 @@ export default class RoomDetailScreen extends React.Component {
                     <View style={styles.cardAvatarTextBox}>
                         <Text style={styles.cardAvatarName}>{this.state.roomBox.AccountName}</Text>
                         <TouchableOpacity style={styles.cardAvatarPhoneBox}
-                            onPress={() => { Communications.phonecall(this.state.roomBox.AccountPhone, true) }}
+                            onPress={() => { Communications.phonecall(this.state.roomBox.ContactPhone, true) }}
                         >
                             <Ionicons style={styles.cardAvatarPhoneIcon} name='logo-whatsapp' />
-                            <Text style={styles.cardAvatarPhone}>: {this.state.roomBox.AccountPhone}</Text>
+                            <Text style={styles.cardAvatarPhone}>: {this.state.roomBox.ContactPhone}</Text>
                         </TouchableOpacity>
                     </View>
 
@@ -998,14 +998,14 @@ const styles = StyleSheet.create({
         width: 45,
     },
     cardAvatarTextBox: {
-        flex: 4,
+        // flex: 4,
         paddingLeft: 20,
     },
     cardAvatarName: {
-        fontSize: 17,
+        fontSize: responsiveFontSize(2),
     },
     cardAvatarPhoneBox: {
-        flex: 1,
+        //flex: 1,
         flexDirection: 'row',
         paddingTop: 5,
     },

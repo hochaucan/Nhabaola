@@ -17,6 +17,8 @@ import {
     ActivityIndicator,
     AsyncStorage,
     Keyboard,
+    Animated,
+    Easing,
 
 } from 'react-native';
 //import { ExpoLinksView } from '@expo/samples';
@@ -224,28 +226,6 @@ const MARKERS = [
     // createMarker(5),
 ];
 
-// function funcConvertAmountToWording(amount) {
-//     let result = amount;
-
-//     if (amount.match('.000.000.000')) {
-//         result = amount.replace('.000.000.000', ' Tỷ')
-//     }
-//     else if (amount.match('00.000.000')) {
-//         result = amount.replace('00.000.000', ' Tỷ')
-//     }
-//     else if (amount.match('.000.000')) {
-//         result = amount.replace('.000.000', ' Tr')
-//     }
-//     else if (amount.match('00.000')) {
-//         result = amount.replace('00.000', ' Tr')
-//     }
-//     else if (amount.match('.000')) {
-//         result = amount.replace('.000', ' K')
-//     }
-
-//     return result;
-// }
-
 
 const DEFAULT_PADDING = { top: 40, right: 40, bottom: 40, left: 40 };
 const roomBox = [];
@@ -274,8 +254,8 @@ export default class SearchScreen extends React.Component {
             initialRenderCurrenHouse: true,
 
             // Searching Filter
-            multiSliderPriceValue: [1, 10],
-            multiSliderAreaValue: [20, 200],
+            multiSliderPriceValue: [1, 9],
+            multiSliderAreaValue: [1, 9],
             txtFilterResult: null,
             selectedBDS: 'Tất cả BĐS',
 
@@ -295,6 +275,8 @@ export default class SearchScreen extends React.Component {
             },
             isSearching: false,
             isFocusSearchTextInput: false,
+            houseListHeigh: new Animated.Value(responsiveHeight(28)),
+            isHouseList: false,
         }
     }
 
@@ -325,9 +307,23 @@ export default class SearchScreen extends React.Component {
 
     fitAllMarkers() {
         this.map.fitToCoordinates(MARKERS, {
-            edgePadding: { top: 500, bottom: 900, right: responsiveWidth(65), left: responsiveWidth(65) },//DEFAULT_PADDING,
+            edgePadding: {
+                top: responsiveWidth(10),
+                bottom: responsiveHeight(50),
+                right: responsiveWidth(50),
+                left: responsiveWidth(50)
+            },//DEFAULT_PADDING,
             animated: true,
         });
+        // this.map.fitToCoordinates(MARKERS, {
+        //     edgePadding: {
+        //         top: responsiveHeight(10),
+        //         bottom: responsiveHeight(50),
+        //         right: responsiveHeight(50),
+        //         left: responsiveHeight(50)
+        //     },//DEFAULT_PADDING,
+        //     animated: true,
+        // });
     }
 
     _fitAllFindingHouseMakers() {
@@ -540,15 +536,22 @@ export default class SearchScreen extends React.Component {
         }
 
         if (MARKERS.length > 1) {
-            //alert(MARKERS.length)
-            //this.fitAllMarkers()
-
             setTimeout(() => { this.fitAllMarkers() }, 500)
         } else {
             // this._getLocationAsync();
         }
 
+        // Set isHouseList to false
+        Animated.timing(
+            this.state.houseListHeigh,
+            {
+                toValue: responsiveHeight(28),
+                easing: Easing.bounce,
+                duration: 1200,
+            }
+        ).start();
 
+        this.setState({ isHouseList: false })
 
     }
 
@@ -572,7 +575,7 @@ export default class SearchScreen extends React.Component {
     }
 
     render() {
-        let text = 'Waiting..';
+        //let text = 'Waiting..';
         let currentMaker = null;
         if (this.state.errorMessage) {
             text = this.state.errorMessage;
@@ -618,9 +621,9 @@ export default class SearchScreen extends React.Component {
                     alignItems: 'center',
                     elevation: 2,
                     //opacity: 0.8,
-                    width: responsiveWidth(46)
+                    width: 130,//responsiveWidth(40)
                 }}>
-                    <Text >Bán kính: </Text>
+                    <Text style={{ width: 30, paddingLeft: 5 }}>BK: </Text>
                     {Platform.OS === 'ios' ?
 
                         <TouchableOpacity
@@ -636,7 +639,8 @@ export default class SearchScreen extends React.Component {
                         :
                         <Picker
                             style={{
-                                width: responsiveWidth(30),
+                                //flex: 2,
+                                width: 110,
                             }}
                             mode='dropdown'
                             selectedValue={this.state.radius}
@@ -1002,9 +1006,9 @@ export default class SearchScreen extends React.Component {
 
                 {
                     roomBox.length >= 1 &&
-                    <View style={{
+                    < Animated.View style={{
                         width: width,
-                        height: responsiveHeight(28),
+                        height: this.state.houseListHeigh, //responsiveHeight(28),
                         backgroundColor: 'transparent',
                         zIndex: 10,
                         position: 'absolute',
@@ -1016,14 +1020,57 @@ export default class SearchScreen extends React.Component {
 
                         <View
                             style={{
+                                flex: 1,
                                 width: width * 0.9,
                                 backgroundColor: 'white',
                                 padding: 10,
                                 elevation: 2,
                                 opacity: 0.9,
+                                paddingTop: 0,
                             }}
                         >
-                            <Text style={{ color: '#73aa2a',paddingBottom:4, }}>Tìm được {roomBox.length} Nhà</Text>
+                            <TouchableOpacity
+                                style={{
+                                    elevation: 5,
+                                }}
+                                onPress={async () => {
+                                    // this.fitAllMarkers();
+                                    this.map.fitToCoordinates(MARKERS, {
+                                        edgePadding: {
+                                            top: this.state.isHouseList ? responsiveHeight(10) : responsiveWidth(100),
+                                            bottom: this.state.isHouseList ? responsiveHeight(50) : responsiveHeight(300),//900,
+                                            right: this.state.isHouseList ? responsiveHeight(50) : responsiveWidth(300),
+                                            left: this.state.isHouseList ? responsiveHeight(50) : responsiveWidth(300)
+                                        },//DEFAULT_PADDING,
+                                        animated: true,
+                                    });
+
+                                    Animated.timing(                  // Animate over time
+                                        this.state.houseListHeigh,            // The animated value to drive
+                                        {
+                                            toValue: this.state.isHouseList ? responsiveHeight(28) : responsiveHeight(60),
+                                            easing: Easing.bounce,
+                                            duration: 1200,              // Make it take a while
+                                        }
+                                    ).start();
+
+
+                                    this.setState({ isHouseList: !this.state.isHouseList })
+                                }}
+                            >
+                                {/* <Text>Keo len</Text> */}
+                                <Ionicons style={{
+                                    color: '#9B9D9D',
+                                    textAlign: 'center',
+                                    fontSize: responsiveFontSize(3),
+                                    //marginTop: -3,
+
+                                }} name={this.state.isHouseList ? 'ios-arrow-dropdown-circle-outline' : 'ios-arrow-dropup-circle-outline'} />
+                            </TouchableOpacity>
+                            <Text style={{
+                                color: '#73aa2a', paddingBottom: 4,
+                                fontSize: responsiveFontSize(2)
+                            }}>Tìm được {roomBox.length} Nhà</Text>
                             <FlatList
                                 //onScroll={this._onScroll}
                                 // ref='searchresult'
@@ -1161,7 +1208,7 @@ export default class SearchScreen extends React.Component {
 
                         </View>
 
-                    </View>
+                    </ Animated.View>
                 }
 
 

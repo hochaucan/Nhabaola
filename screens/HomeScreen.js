@@ -2314,14 +2314,14 @@ const styles = StyleSheet.create({
     width: 45,
   },
   cardAvatarTextBox: {
-    flex: 4,
+    //flex: 4,
     paddingLeft: 20,
   },
   cardAvatarName: {
-    fontSize: 17,
+    fontSize: responsiveFontSize(2),
   },
   cardAvatarPhoneBox: {
-    flex: 1,
+    //flex: 1,
     flexDirection: 'row',
     paddingTop: 5,
   },
