@@ -512,7 +512,7 @@ export default class RoomDetailScreen extends React.Component {
                             {/* Wartermark */}
                             <Image
                                 style={{
-                                    position: 'absolute', top: 185, right: 15, zIndex: 10, opacity: 0.5,
+                                    position: 'absolute', bottom: 50, right: 15, zIndex: 10, opacity: 0.5,
                                     width: responsiveWidth(15),
                                     height: responsiveWidth(15), borderRadius: 100,
                                 }}
@@ -681,9 +681,9 @@ export default class RoomDetailScreen extends React.Component {
 
                         <TouchableOpacity
                             style={{
-                                position: 'absolute', top: 70, left: 30, zIndex: 10,
+                                position: 'absolute', bottom: 25, left: 25, zIndex: 10,
                                 padding: 6, borderRadius: 5, backgroundColor: '#73aa2a',
-                                elevation: 2, opacity: 0.8,
+                                elevation: 2, opacity: 0.9,
                             }}
                             onPress={() => {
                                 const data = {
