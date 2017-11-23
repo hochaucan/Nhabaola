@@ -254,6 +254,8 @@ export default class SearchScreen extends React.Component {
             initialRenderCurrenHouse: true,
 
             // Searching Filter
+            selectedUnitPrice: '',
+            selectedUnitAcreage: '',
             multiSliderPriceValue: [0, 10],
             multiSliderAreaValue: [0, 10],
             txtFilterResult: null,
@@ -308,10 +310,10 @@ export default class SearchScreen extends React.Component {
     fitAllMarkers() {
         this.map.fitToCoordinates(MARKERS, {
             edgePadding: {
-                top: responsiveWidth(10),
-                bottom: responsiveHeight(60),
-                right: responsiveWidth(60),
-                left: responsiveWidth(60)
+                top: responsiveWidth(60),
+                bottom: responsiveHeight(100),
+                right: responsiveWidth(100),
+                left: responsiveWidth(100)
             },//DEFAULT_PADDING,
             animated: true,
         });
@@ -326,12 +328,12 @@ export default class SearchScreen extends React.Component {
         // });
     }
 
-    _fitAllFindingHouseMakers() {
-        this.map.fitToCoordinates(this.state.findingHouseMakers, {
-            edgePadding: DEFAULT_PADDING,
-            animated: true,
-        });
-    }
+    // _fitAllFindingHouseMakers() {
+    //     this.map.fitToCoordinates(this.state.findingHouseMakers, {
+    //         edgePadding: DEFAULT_PADDING,
+    //         animated: true,
+    //     });
+    // }
 
     _createTempMarker(modifier = 1, lat, long) {
         return {
@@ -478,6 +480,45 @@ export default class SearchScreen extends React.Component {
             })
         }
 
+        // Unit Price
+        let unitPrice = '';
+        if (this.state.selectedUnitPrice == 'ptr') {
+            unitPrice = '000000'
+        }
+        else if (this.state.selectedUnitPrice == 'pctr') {
+            unitPrice = '0000000'
+        }
+        else if (this.state.selectedUnitPrice == 'pttr') {
+            unitPrice = '00000000'
+        }
+        else if (this.state.selectedUnitPrice == 'pt') {
+            unitPrice = '000000000'
+        }
+        else if (this.state.selectedUnitPrice == 'pct') {
+            unitPrice = '0000000000'
+        }
+        else if (this.state.selectedUnitPrice == 'ptt') {
+            unitPrice = '00000000000'
+        }
+        else {
+            unitPrice = '000000'
+        }
+
+        // Unit Acreage
+        let unitAcreage = '0';
+        if (this.state.selectedUnitAcreage == 'acmv') {
+            unitAcreage = '0'
+        }
+        else if (this.state.selectedUnitAcreage == 'atmv') {
+            unitAcreage = '00'
+        }
+        else if (this.state.selectedUnitAcreage == 'anmv') {
+            unitAcreage = '000'
+        } else {
+            unitAcreage: '0000'
+        }
+        // alert(unitPrice + '  ' + unitAcreage)
+
         //Add current location to fix maker
         MARKERS.push(this.state.houseCoords);
 
@@ -493,10 +534,10 @@ export default class SearchScreen extends React.Component {
                     "Latitude": this.state.isSearching === true ? this.state.searchingMaker.latitude : this.state.location.coords.latitude, //"10.7143264",
                     "Longitude": this.state.isSearching === true ? this.state.searchingMaker.longitude : this.state.location.coords.longitude,//"106.6104477",
                     "Radius": this.state.radius,
-                    "RoomPriceMin": this.state.txtFilterResult != null ? this.state.multiSliderPriceValue[0] + '000000' : '0',
-                    "RoomPriceMax": this.state.txtFilterResult != null ? this.state.multiSliderPriceValue[1] + '000000' : '999999999999',
-                    "AcreageMin": this.state.txtFilterResult != null ? this.state.multiSliderAreaValue[0] : '0',
-                    "AcreageMax": this.state.txtFilterResult != null ? this.state.multiSliderAreaValue[1] : '500',
+                    "RoomPriceMin": this.state.txtFilterResult != null ? this.state.multiSliderPriceValue[0] + unitPrice : '0',
+                    "RoomPriceMax": this.state.txtFilterResult != null ? this.state.multiSliderPriceValue[1] + unitPrice : '999999999999',
+                    "AcreageMin": this.state.txtFilterResult != null ? this.state.multiSliderAreaValue[0] + unitAcreage : '0',
+                    "AcreageMax": this.state.txtFilterResult != null ? this.state.multiSliderAreaValue[1] + unitAcreage : '500000',
                     "SortOptionKey": "SortDistance",
                     "PageIndex": "0",
                     "PageCount": "100"
@@ -575,7 +616,7 @@ export default class SearchScreen extends React.Component {
     }
 
     render() {
-        //let text = 'Waiting..';
+
         let currentMaker = null;
         if (this.state.errorMessage) {
             text = this.state.errorMessage;
@@ -1037,10 +1078,10 @@ export default class SearchScreen extends React.Component {
                                     // this.fitAllMarkers();
                                     this.map.fitToCoordinates(MARKERS, {
                                         edgePadding: {
-                                            top: this.state.isHouseList ? responsiveHeight(10) : responsiveWidth(100),
-                                            bottom: this.state.isHouseList ? responsiveHeight(60) : responsiveHeight(300),//900,
-                                            right: this.state.isHouseList ? responsiveHeight(60) : responsiveWidth(300),
-                                            left: this.state.isHouseList ? responsiveHeight(60) : responsiveWidth(300)
+                                            top: this.state.isHouseList ? responsiveHeight(60) : responsiveWidth(100),
+                                            bottom: this.state.isHouseList ? responsiveHeight(65) : responsiveHeight(300),//900,
+                                            right: this.state.isHouseList ? responsiveHeight(65) : responsiveWidth(300),
+                                            left: this.state.isHouseList ? responsiveHeight(65) : responsiveWidth(300)
                                         },//DEFAULT_PADDING,
                                         animated: true,
                                     });
@@ -1257,32 +1298,42 @@ export default class SearchScreen extends React.Component {
                                 </View>
 
                                 {/* Price */}
+                                <View
+                                    style={{
+                                        //flex: 1,
+                                        flexDirection: 'row',
+                                        justifyContent: 'center',
+                                        alignItems: 'center',
+                                        //paddingLeft: 25,
+                                    }}
+                                >
+                                    <FormLabel style={{ marginBottom: 13 }}>Giá: </FormLabel>
+                                    {
+                                        this.state.multiSliderPriceValue[0] == 0 && this.state.multiSliderPriceValue[1] == 10
+                                            ?
+                                            <Text style={{ flex: 2 }}>Tất cả </Text>
+                                            : this.state.multiSliderPriceValue[0] > 0 && this.state.multiSliderPriceValue[1] == 10
+                                                ? <Text style={{ flex: 2 }}>Lớn hơn  {this.state.multiSliderPriceValue[0]}</Text>
+                                                : this.state.multiSliderPriceValue[0] == 0 && this.state.multiSliderPriceValue[1] < 10
+                                                    ? <Text style={{ flex: 2 }}>Nhỏ hơn  {this.state.multiSliderPriceValue[1]}</Text>
+                                                    : <Text style={{ flex: 2 }}>{this.state.multiSliderPriceValue[0]} đến {this.state.multiSliderPriceValue[1]}</Text>
+                                    }
 
-                                {
-                                    this.state.multiSliderPriceValue[0] == 0 && this.state.multiSliderPriceValue[1] == 10
-                                        ?
-                                        <Text style={{ marginBottom: 20 }}>Giá: Tất cả </Text>
-                                        : this.state.multiSliderPriceValue[0] > 0 && this.state.multiSliderPriceValue[1] == 10
-                                            ? <Text style={{ marginBottom: 20 }}>Giá: Lớn hơn  {this.state.multiSliderPriceValue[0]}</Text>
-                                            : this.state.multiSliderPriceValue[0] == 0 && this.state.multiSliderPriceValue[1] < 10
-                                                ? <Text style={{ marginBottom: 20 }}>Giá: Nhỏ hơn  {this.state.multiSliderPriceValue[1]}</Text>
-                                                : <Text style={{ marginBottom: 20 }}>Giá:  {this.state.multiSliderPriceValue[0]} - {this.state.multiSliderPriceValue[1]}</Text>
-                                }
-
-                                {/* <FormLabel style={{ marginBottom: 20 }}>
-
-                                    Giá:
-                                    {this.state.multiSliderPriceValue[0] == 1 && this.state.multiSliderPriceValue[1] == 9}
-                                    ? "Tất cả"
-                                    : {this.state.multiSliderPriceValue[0] > 1 && this.state.multiSliderPriceValue[1] == 9}
-                                    ? "Lớn hơn " {this.state.multiSliderPriceValue[0]}
-                                    : {this.state.multiSliderPriceValue[0] == 1 && this.state.multiSliderPriceValue[1] < 9}
-                                    ? "Nhỏ hơn "  {this.state.multiSliderPriceValue[1]}
-                                    : {this.state.multiSliderPriceValue[0]} - {this.state.multiSliderPriceValue[1]}
-
-                                    Triệu đồng
-
-                                </FormLabel> */}
+                                    <Picker // Android
+                                        style={{ flex: 5, marginBottom: 3 }}
+                                        mode='dropdown'
+                                        selectedValue={this.state.selectedUnitPrice}
+                                        onValueChange={(itemValue, itemIndex) => {
+                                            this.setState({ selectedUnitPrice: itemValue })
+                                        }}>
+                                        <Picker.Item label='triệu' value='ptr' />
+                                        <Picker.Item label='chục triệu' value='pctr' />
+                                        <Picker.Item label='trăm triệu' value='pttr' />
+                                        <Picker.Item label='tỷ' value='pt' />
+                                        <Picker.Item label='chục tỷ' value='pct' />
+                                        <Picker.Item label='trăm tỷ' value='ptt' />
+                                    </Picker>
+                                </View>
                                 <MultiSlider
                                     values={[this.state.multiSliderPriceValue[0], this.state.multiSliderPriceValue[1]]}
                                     // sliderLength={250}
@@ -1302,16 +1353,41 @@ export default class SearchScreen extends React.Component {
                                 />
 
                                 {/* Acreage */}
-                                {
-                                    this.state.multiSliderAreaValue[0] == 0 && this.state.multiSliderAreaValue[1] == 10
-                                        ?
-                                        <Text style={{ marginBottom: 20 }}>Diện tích: Tất cả </Text>
-                                        : this.state.multiSliderAreaValue[0] > 0 && this.state.multiSliderAreaValue[1] == 10
-                                            ? <Text style={{ marginBottom: 20 }}>Diện tích: Lớn hơn  {this.state.multiSliderAreaValue[0]}</Text>
-                                            : this.state.multiSliderAreaValue[0] == 0 && this.state.multiSliderAreaValue[1] < 10
-                                                ? <Text style={{ marginBottom: 20 }}>Diện tích: Nhỏ hơn  {this.state.multiSliderAreaValue[1]}</Text>
-                                                : <Text style={{ marginBottom: 20 }}>Diện tích:  {this.state.multiSliderAreaValue[0]} - {this.state.multiSliderAreaValue[1]}</Text>
-                                }
+
+                                <View
+                                    style={{
+                                        //flex: 1,
+                                        flexDirection: 'row',
+                                        justifyContent: 'center',
+                                        alignItems: 'center',
+                                        //paddingLeft: 25,
+                                    }}
+                                >
+                                    <FormLabel style={{ marginBottom: 13 }}>Diện tích: </FormLabel>
+
+                                    {
+                                        this.state.multiSliderAreaValue[0] == 0 && this.state.multiSliderAreaValue[1] == 10
+                                            ?
+                                            <Text style={{ flex: 2 }}>Tất cả </Text>
+                                            : this.state.multiSliderAreaValue[0] > 0 && this.state.multiSliderAreaValue[1] == 10
+                                                ? <Text style={{ flex: 2 }}>Lớn hơn  {this.state.multiSliderAreaValue[0]}</Text>
+                                                : this.state.multiSliderAreaValue[0] == 0 && this.state.multiSliderAreaValue[1] < 10
+                                                    ? <Text style={{ flex: 2 }}>Nhỏ hơn  {this.state.multiSliderAreaValue[1]}</Text>
+                                                    : <Text style={{ flex: 2 }}>{this.state.multiSliderAreaValue[0]} đến {this.state.multiSliderAreaValue[1]}</Text>
+                                    }
+
+                                    <Picker // Android
+                                        style={{ flex: 5, marginBottom: 3 }}
+                                        mode='dropdown'
+                                        selectedValue={this.state.selectedUnitAcreage}
+                                        onValueChange={(itemValue, itemIndex) => {
+                                            this.setState({ selectedUnitAcreage: itemValue })
+                                        }}>
+                                        <Picker.Item label='chục mét vuông' value='acmv' />
+                                        <Picker.Item label='trăm mét vuông' value='atmv' />
+                                        <Picker.Item label='nghìn mét vuông' value='anmv' />
+                                    </Picker>
+                                </View>
 
                                 {/* <FormLabel style={{ marginBottom: 20, marginTop: 10, }}>Diện tích: {this.state.multiSliderAreaValue[0]} - {this.state.multiSliderAreaValue[1]} mét vuông</FormLabel> */}
                                 <MultiSlider
