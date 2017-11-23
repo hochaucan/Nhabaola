@@ -254,8 +254,8 @@ export default class SearchScreen extends React.Component {
             initialRenderCurrenHouse: true,
 
             // Searching Filter
-            multiSliderPriceValue: [1, 9],
-            multiSliderAreaValue: [1, 9],
+            multiSliderPriceValue: [0, 10],
+            multiSliderAreaValue: [0, 10],
             txtFilterResult: null,
             selectedBDS: 'Tất cả BĐS',
 
@@ -309,9 +309,9 @@ export default class SearchScreen extends React.Component {
         this.map.fitToCoordinates(MARKERS, {
             edgePadding: {
                 top: responsiveWidth(10),
-                bottom: responsiveHeight(50),
-                right: responsiveWidth(50),
-                left: responsiveWidth(50)
+                bottom: responsiveHeight(60),
+                right: responsiveWidth(60),
+                left: responsiveWidth(60)
             },//DEFAULT_PADDING,
             animated: true,
         });
@@ -1038,9 +1038,9 @@ export default class SearchScreen extends React.Component {
                                     this.map.fitToCoordinates(MARKERS, {
                                         edgePadding: {
                                             top: this.state.isHouseList ? responsiveHeight(10) : responsiveWidth(100),
-                                            bottom: this.state.isHouseList ? responsiveHeight(50) : responsiveHeight(300),//900,
-                                            right: this.state.isHouseList ? responsiveHeight(50) : responsiveWidth(300),
-                                            left: this.state.isHouseList ? responsiveHeight(50) : responsiveWidth(300)
+                                            bottom: this.state.isHouseList ? responsiveHeight(60) : responsiveHeight(300),//900,
+                                            right: this.state.isHouseList ? responsiveHeight(60) : responsiveWidth(300),
+                                            left: this.state.isHouseList ? responsiveHeight(60) : responsiveWidth(300)
                                         },//DEFAULT_PADDING,
                                         animated: true,
                                     });
@@ -1256,12 +1256,38 @@ export default class SearchScreen extends React.Component {
 
                                 </View>
 
-                                <FormLabel style={{ marginBottom: 20 }}>Giá: {this.state.multiSliderPriceValue[0]} - {this.state.multiSliderPriceValue[1]} triệu đồng</FormLabel>
+                                {/* Price */}
+
+                                {
+                                    this.state.multiSliderPriceValue[0] == 0 && this.state.multiSliderPriceValue[1] == 10
+                                        ?
+                                        <Text style={{ marginBottom: 20 }}>Giá: Tất cả </Text>
+                                        : this.state.multiSliderPriceValue[0] > 0 && this.state.multiSliderPriceValue[1] == 10
+                                            ? <Text style={{ marginBottom: 20 }}>Giá: Lớn hơn  {this.state.multiSliderPriceValue[0]}</Text>
+                                            : this.state.multiSliderPriceValue[0] == 0 && this.state.multiSliderPriceValue[1] < 10
+                                                ? <Text style={{ marginBottom: 20 }}>Giá: Nhỏ hơn  {this.state.multiSliderPriceValue[1]}</Text>
+                                                : <Text style={{ marginBottom: 20 }}>Giá:  {this.state.multiSliderPriceValue[0]} - {this.state.multiSliderPriceValue[1]}</Text>
+                                }
+
+                                {/* <FormLabel style={{ marginBottom: 20 }}>
+
+                                    Giá:
+                                    {this.state.multiSliderPriceValue[0] == 1 && this.state.multiSliderPriceValue[1] == 9}
+                                    ? "Tất cả"
+                                    : {this.state.multiSliderPriceValue[0] > 1 && this.state.multiSliderPriceValue[1] == 9}
+                                    ? "Lớn hơn " {this.state.multiSliderPriceValue[0]}
+                                    : {this.state.multiSliderPriceValue[0] == 1 && this.state.multiSliderPriceValue[1] < 9}
+                                    ? "Nhỏ hơn "  {this.state.multiSliderPriceValue[1]}
+                                    : {this.state.multiSliderPriceValue[0]} - {this.state.multiSliderPriceValue[1]}
+
+                                    Triệu đồng
+
+                                </FormLabel> */}
                                 <MultiSlider
                                     values={[this.state.multiSliderPriceValue[0], this.state.multiSliderPriceValue[1]]}
                                     // sliderLength={250}
                                     onValuesChange={this._multiSliderPriceValuesChange}
-                                    min={1}
+                                    min={0}
                                     max={10}
                                     //step={1}
 
@@ -1275,13 +1301,25 @@ export default class SearchScreen extends React.Component {
 
                                 />
 
-                                <FormLabel style={{ marginBottom: 20, marginTop: 10, }}>Diện tích: {this.state.multiSliderAreaValue[0]} - {this.state.multiSliderAreaValue[1]} mét vuông</FormLabel>
+                                {/* Acreage */}
+                                {
+                                    this.state.multiSliderAreaValue[0] == 0 && this.state.multiSliderAreaValue[1] == 10
+                                        ?
+                                        <Text style={{ marginBottom: 20 }}>Diện tích: Tất cả </Text>
+                                        : this.state.multiSliderAreaValue[0] > 0 && this.state.multiSliderAreaValue[1] == 10
+                                            ? <Text style={{ marginBottom: 20 }}>Diện tích: Lớn hơn  {this.state.multiSliderAreaValue[0]}</Text>
+                                            : this.state.multiSliderAreaValue[0] == 0 && this.state.multiSliderAreaValue[1] < 10
+                                                ? <Text style={{ marginBottom: 20 }}>Diện tích: Nhỏ hơn  {this.state.multiSliderAreaValue[1]}</Text>
+                                                : <Text style={{ marginBottom: 20 }}>Diện tích:  {this.state.multiSliderAreaValue[0]} - {this.state.multiSliderAreaValue[1]}</Text>
+                                }
+
+                                {/* <FormLabel style={{ marginBottom: 20, marginTop: 10, }}>Diện tích: {this.state.multiSliderAreaValue[0]} - {this.state.multiSliderAreaValue[1]} mét vuông</FormLabel> */}
                                 <MultiSlider
                                     values={[this.state.multiSliderAreaValue[0], this.state.multiSliderAreaValue[1]]}
                                     //  sliderLength={250}
                                     onValuesChange={this._multiSliderAreaValuesChange}
-                                    min={20}
-                                    max={200}
+                                    min={0}
+                                    max={10}
                                     // step={1}
                                     //allowOverlap
                                     //snapped
