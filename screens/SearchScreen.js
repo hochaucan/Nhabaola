@@ -254,8 +254,14 @@ export default class SearchScreen extends React.Component {
             initialRenderCurrenHouse: true,
 
             // Searching Filter
-            selectedUnitPrice: '',
-            selectedUnitAcreage: '',
+            //selectedUnitPrice: '',
+            // selectedUnitAcreage: '',
+            minPrice: '0',
+            maxPrice: '999999999999',
+            unitPrice: '000000',
+            minAcreage: '0',
+            maxAcreage: '500000',
+            unitAcreage: '0',
             multiSliderPriceValue: [0, 10],
             multiSliderAreaValue: [0, 10],
             txtFilterResult: null,
@@ -279,18 +285,73 @@ export default class SearchScreen extends React.Component {
             isFocusSearchTextInput: false,
             houseListHeigh: new Animated.Value(responsiveHeight(28)),
             isHouseList: false,
+
         }
     }
 
-    _multiSliderPriceValuesChange = (values) => {
-        this.setState({
+    _multiSliderPriceValuesChange = async (values) => {
+        await this.setState({
             multiSliderPriceValue: values,
         });
+
+
+
+        if (this.state.multiSliderPriceValue[0] == 0 && this.state.multiSliderPriceValue[1] == 10) {
+            this.setState({
+                minPrice: '0',
+                maxPrice: '999999999999'
+            })
+        }
+        else if (this.state.multiSliderPriceValue[0] > 0 && this.state.multiSliderPriceValue[1] == 10) {
+            this.setState({
+                minPrice: this.state.multiSliderPriceValue[0] + this.state.unitPrice,
+                maxPrice: '999999999999'
+            })
+        }
+        else if (this.state.multiSliderPriceValue[0] == 0 && this.state.multiSliderPriceValue[1] < 10) {
+            this.setState({
+                minPrice: '0',
+                maxPrice: this.state.multiSliderPriceValue[1] + this.state.unitPrice,
+            })
+        }
+        else {
+            this.setState({
+                minPrice: this.state.multiSliderPriceValue[0] + this.state.unitPrice,
+                maxPrice: this.state.multiSliderPriceValue[1] + this.state.unitPrice,
+            })
+        }
     }
-    _multiSliderAreaValuesChange = (values) => {
-        this.setState({
+
+    _multiSliderAreaValuesChange = async (values) => {
+        await this.setState({
             multiSliderAreaValue: values,
         });
+
+
+        if (this.state.multiSliderAreaValue[0] == 0 && this.state.multiSliderAreaValue[1] == 10) {
+            this.setState({
+                minAcreage: '0',
+                maxAcreage: '500000'
+            })
+        }
+        else if (this.state.multiSliderAreaValue[0] > 0 && this.state.multiSliderAreaValue[1] == 10) {
+            this.setState({
+                minAcreage: this.state.multiSliderAreaValue[0] + this.state.unitAcreage,
+                maxAcreage: '500000'
+            })
+        }
+        else if (this.state.multiSliderAreaValue[0] == 0 && this.state.multiSliderAreaValue[1] < 10) {
+            this.setState({
+                minAcreage: '0',
+                maxAcreage: this.state.multiSliderAreaValue[1] + this.state.unitAcreage,
+            })
+        }
+        else {
+            this.setState({
+                minAcreage: this.state.multiSliderAreaValue[0] + this.state.unitAcreage,
+                maxAcreage: this.state.multiSliderAreaValue[1] + this.state.unitAcreage,
+            })
+        }
     }
 
     onMapPress(e) {
@@ -455,8 +516,7 @@ export default class SearchScreen extends React.Component {
 
     _getRoomByFilter = async () => {
         await this.setState({ refreshFlatlist: true })
-
-        // alert(JSON.stringify(this.state.mapRegion))
+        this.popupLoadingIndicator.show()
 
         roomBox = await [];
         MARKERS = await [];
@@ -481,43 +541,43 @@ export default class SearchScreen extends React.Component {
         }
 
         // Unit Price
-        let unitPrice = '';
-        if (this.state.selectedUnitPrice == 'ptr') {
-            unitPrice = '000000'
-        }
-        else if (this.state.selectedUnitPrice == 'pctr') {
-            unitPrice = '0000000'
-        }
-        else if (this.state.selectedUnitPrice == 'pttr') {
-            unitPrice = '00000000'
-        }
-        else if (this.state.selectedUnitPrice == 'pt') {
-            unitPrice = '000000000'
-        }
-        else if (this.state.selectedUnitPrice == 'pct') {
-            unitPrice = '0000000000'
-        }
-        else if (this.state.selectedUnitPrice == 'ptt') {
-            unitPrice = '00000000000'
-        }
-        else {
-            unitPrice = '000000'
-        }
+        // let unitPrice = '';
+        // if (this.state.selectedUnitPrice == 'ptr') {
+        //     unitPrice = '000000'
+        // }
+        // else if (this.state.selectedUnitPrice == 'pctr') {
+        //     unitPrice = '0000000'
+        // }
+        // else if (this.state.selectedUnitPrice == 'pttr') {
+        //     unitPrice = '00000000'
+        // }
+        // else if (this.state.selectedUnitPrice == 'pt') {
+        //     unitPrice = '000000000'
+        // }
+        // else if (this.state.selectedUnitPrice == 'pct') {
+        //     unitPrice = '0000000000'
+        // }
+        // else if (this.state.selectedUnitPrice == 'ptt') {
+        //     unitPrice = '00000000000'
+        // }
+        // else {
+        //     unitPrice = '000000'
+        // }
 
-        // Unit Acreage
-        let unitAcreage = '0';
-        if (this.state.selectedUnitAcreage == 'acmv') {
-            unitAcreage = '0'
-        }
-        else if (this.state.selectedUnitAcreage == 'atmv') {
-            unitAcreage = '00'
-        }
-        else if (this.state.selectedUnitAcreage == 'anmv') {
-            unitAcreage = '000'
-        } else {
-            unitAcreage: '0000'
-        }
-        // alert(unitPrice + '  ' + unitAcreage)
+        // // Unit Acreage
+        // let unitAcreage = '0';
+        // if (this.state.selectedUnitAcreage == 'acmv') {
+        //     unitAcreage = '0'
+        // }
+        // else if (this.state.selectedUnitAcreage == 'atmv') {
+        //     unitAcreage = '00'
+        // }
+        // else if (this.state.selectedUnitAcreage == 'anmv') {
+        //     unitAcreage = '000'
+        // } else {
+        //     unitAcreage: '0000'
+        // }
+        alert(this.state.minPrice + '  ' + this.state.maxPrice + '  ' + this.state.minAcreage + '  ' + this.state.maxAcreage)
 
         //Add current location to fix maker
         MARKERS.push(this.state.houseCoords);
@@ -534,10 +594,10 @@ export default class SearchScreen extends React.Component {
                     "Latitude": this.state.isSearching === true ? this.state.searchingMaker.latitude : this.state.location.coords.latitude, //"10.7143264",
                     "Longitude": this.state.isSearching === true ? this.state.searchingMaker.longitude : this.state.location.coords.longitude,//"106.6104477",
                     "Radius": this.state.radius,
-                    "RoomPriceMin": this.state.txtFilterResult != null ? this.state.multiSliderPriceValue[0] + unitPrice : '0',
-                    "RoomPriceMax": this.state.txtFilterResult != null ? this.state.multiSliderPriceValue[1] + unitPrice : '999999999999',
-                    "AcreageMin": this.state.txtFilterResult != null ? this.state.multiSliderAreaValue[0] + unitAcreage : '0',
-                    "AcreageMax": this.state.txtFilterResult != null ? this.state.multiSliderAreaValue[1] + unitAcreage : '500000',
+                    "RoomPriceMin": this.state.minPrice, //this.state.txtFilterResult != null ? this.state.multiSliderPriceValue[0] + this.state.unitPrice : '0',
+                    "RoomPriceMax": this.state.maxPrice,//this.state.txtFilterResult != null ? this.state.multiSliderPriceValue[1] + this.state.unitPrice : '999999999999',
+                    "AcreageMin": this.state.minAcreage,//this.state.txtFilterResult != null ? this.state.multiSliderAreaValue[0] + this.state.unitAcreage : '0',
+                    "AcreageMax": this.state.maxAcreage, //this.state.txtFilterResult != null ? this.state.multiSliderAreaValue[1] + this.state.unitAcreage : '500000',
                     "SortOptionKey": "SortDistance",
                     "PageIndex": "0",
                     "PageCount": "100"
@@ -545,12 +605,6 @@ export default class SearchScreen extends React.Component {
             })
                 .then((response) => response.json())
                 .then((responseJson) => {
-                    //alert(JSON.stringify(responseJson.obj))
-
-                    //this._saveStorageAsync('FO_RoomBox_GetAllData', JSON.stringify(responseJson.obj))
-                    // responseJson.obj.map((y) => { return y.CatName })
-
-                    //alert(JSON.stringify(responseJson.obj))
 
                     responseJson.obj.map((y) => {
                         roomBox.push(y);
@@ -565,9 +619,7 @@ export default class SearchScreen extends React.Component {
                         MARKERS.push(this.state.houseCoords)
                     })
 
-                    // this.fitAllMarkers()
-
-                    //alert(JSON.stringify(MARKERS))
+                    this.popupLoadingIndicator.dismiss();
                     this.setState({ refresh: false })
 
                 }).
@@ -583,17 +635,18 @@ export default class SearchScreen extends React.Component {
         }
 
         // Set isHouseList to false
-        Animated.timing(
-            this.state.houseListHeigh,
-            {
-                toValue: responsiveHeight(28),
-                easing: Easing.bounce,
-                duration: 1200,
-            }
-        ).start();
+        if (this.state.isHouseList) {
+            Animated.timing(
+                this.state.houseListHeigh,
+                {
+                    toValue: responsiveHeight(28),
+                    easing: Easing.bounce,
+                    duration: 1200,
+                }
+            ).start();
 
-        this.setState({ isHouseList: false })
-
+            this.setState({ isHouseList: false })
+        }
     }
 
     _getCategoryFromStorageAsync = async () => {
@@ -921,7 +974,7 @@ export default class SearchScreen extends React.Component {
                                         })
                                     } */}
 
-                                    {item.IsHighlight &&
+                                    {/* {item.IsHighlight &&
                                         <Image
                                             source={require('../assets/images/nbl-house_icon.png')}
                                             style={{ height: height * 0.045, width: width * 0.075 }}
@@ -931,7 +984,7 @@ export default class SearchScreen extends React.Component {
                                             key={`${this.state.initialRenderCurrenHouse}`}
                                         >
                                         </Image>
-                                    }
+                                    } */}
 
                                 </View>
                                 <MapView.Callout style={{}}
@@ -1319,12 +1372,37 @@ export default class SearchScreen extends React.Component {
                                                     : <Text style={{ flex: 2 }}>{this.state.multiSliderPriceValue[0]} đến {this.state.multiSliderPriceValue[1]}</Text>
                                     }
 
-                                    <Picker // Android
-                                        style={{ flex: 5, marginBottom: 3 }}
+                                    <Picker
+                                        style={{ flex: 5, marginBottom: 2 }}
                                         mode='dropdown'
                                         selectedValue={this.state.selectedUnitPrice}
                                         onValueChange={(itemValue, itemIndex) => {
-                                            this.setState({ selectedUnitPrice: itemValue })
+                                            // this.setState({ selectedUnitPrice: itemValue })
+
+
+                                            // Unit Price
+                                            if (itemValue == 'ptr') {
+                                                this.setState({ unitPrice: '000000' })
+                                            }
+                                            else if (itemValue == 'pctr') {
+                                                this.setState({ unitPrice: '0000000' })
+                                            }
+                                            else if (itemValue == 'pttr') {
+                                                this.setState({ unitPrice: '00000000' })
+                                            }
+                                            else if (itemValue == 'pt') {
+                                                this.setState({ unitPrice: '000000000' })
+                                            }
+                                            else if (itemValue == 'pct') {
+                                                this.setState({ unitPrice: '0000000000' })
+                                            }
+                                            else if (itemValue == 'ptt') {
+                                                this.setState({ unitPrice: '00000000000' })
+                                            }
+                                            else {
+                                                this.setState({ unitPrice: '000000' })
+                                            }
+
                                         }}>
                                         <Picker.Item label='triệu' value='ptr' />
                                         <Picker.Item label='chục triệu' value='pctr' />
@@ -1381,7 +1459,21 @@ export default class SearchScreen extends React.Component {
                                         mode='dropdown'
                                         selectedValue={this.state.selectedUnitAcreage}
                                         onValueChange={(itemValue, itemIndex) => {
-                                            this.setState({ selectedUnitAcreage: itemValue })
+                                            //this.setState({ selectedUnitAcreage: itemValue })
+
+                                            // // Unit Acreage
+                                            if (itemValue == 'acmv') {
+                                                this.setState({ unitAcreage: '0' })
+                                            }
+                                            else if (itemValue == 'atmv') {
+                                                this.setState({ unitAcreage: '00' })
+                                            }
+                                            else if (itemValue == 'anmv') {
+                                                this.setState({ unitAcreage: '000' })
+                                            } else {
+                                                this.setState({ unitAcreage: '0000' })
+                                            }
+
                                         }}>
                                         <Picker.Item label='chục mét vuông' value='acmv' />
                                         <Picker.Item label='trăm mét vuông' value='atmv' />
