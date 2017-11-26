@@ -330,33 +330,33 @@ export default class PostRoomScreen extends React.Component {
         if (this.state.postRoomImage1 != null) {
             let uploadResponse = await uploadImageAsync(this.state.postRoomImage1);
             let uploadResult = await uploadResponse.json();
-            this.setState({ imageUrl: this.state.imageUrl + '|' + uploadResult.data.img_url })
+            this.setState({ imageUrl: this.state.imageUrl + '|' + uploadResult.data.thumb_url }) //thumb_url or img_url
         }
         if (this.state.postRoomImage2 != null) {
             let uploadResponse = await uploadImageAsync(this.state.postRoomImage2);
             let uploadResult = await uploadResponse.json();
-            this.setState({ imageUrl: this.state.imageUrl + '|' + uploadResult.data.img_url })
+            this.setState({ imageUrl: this.state.imageUrl + '|' + uploadResult.data.thumb_url })
         }
         if (this.state.postRoomImage3 != null) {
             let uploadResponse = await uploadImageAsync(this.state.postRoomImage3);
             let uploadResult = await uploadResponse.json();
-            this.setState({ imageUrl: this.state.imageUrl + '|' + uploadResult.data.img_url })
+            this.setState({ imageUrl: this.state.imageUrl + '|' + uploadResult.data.thumb_url })
         }
 
         if (this.state.postRoomImage4 != null) {
             let uploadResponse = await uploadImageAsync(this.state.postRoomImage4);
             let uploadResult = await uploadResponse.json();
-            this.setState({ imageUrl: this.state.imageUrl + '|' + uploadResult.data.img_url })
+            this.setState({ imageUrl: this.state.imageUrl + '|' + uploadResult.data.thumb_url })
         }
         if (this.state.postRoomImage5 != null) {
             let uploadResponse = await uploadImageAsync(this.state.postRoomImage5);
             let uploadResult = await uploadResponse.json();
-            this.setState({ imageUrl: this.state.imageUrl + '|' + uploadResult.data.img_url })
+            this.setState({ imageUrl: this.state.imageUrl + '|' + uploadResult.data.thumb_url })
         }
         if (this.state.postRoomImage6 != null) {
             let uploadResponse = await uploadImageAsync(this.state.postRoomImage6);
             let uploadResult = await uploadResponse.json();
-            this.setState({ imageUrl: this.state.imageUrl + '|' + uploadResult.data.img_url })
+            this.setState({ imageUrl: this.state.imageUrl + '|' + uploadResult.data.thumb_url })
         }
 
 
