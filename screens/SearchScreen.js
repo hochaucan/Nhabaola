@@ -45,167 +45,167 @@ const LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO;
 const SPACE = 0.01;
 let id = 0;
 
-const customStyle = [
-    {
-        elementType: 'geometry',
-        stylers: [
-            {
-                color: '#242f3e',
-            },
-        ],
-    },
-    {
-        elementType: 'labels.text.fill',
-        stylers: [
-            {
-                color: '#746855',
-            },
-        ],
-    },
-    {
-        elementType: 'labels.text.stroke',
-        stylers: [
-            {
-                color: '#242f3e',
-            },
-        ],
-    },
-    {
-        featureType: 'administrative.locality',
-        elementType: 'labels.text.fill',
-        stylers: [
-            {
-                color: '#d59563',
-            },
-        ],
-    },
-    {
-        featureType: 'poi',
-        elementType: 'labels.text.fill',
-        stylers: [
-            {
-                color: '#d59563',
-            },
-        ],
-    },
-    {
-        featureType: 'poi.park',
-        elementType: 'geometry',
-        stylers: [
-            {
-                color: '#263c3f',
-            },
-        ],
-    },
-    {
-        featureType: 'poi.park',
-        elementType: 'labels.text.fill',
-        stylers: [
-            {
-                color: '#6b9a76',
-            },
-        ],
-    },
-    {
-        featureType: 'road',
-        elementType: 'geometry',
-        stylers: [
-            {
-                color: '#38414e',
-            },
-        ],
-    },
-    {
-        featureType: 'road',
-        elementType: 'geometry.stroke',
-        stylers: [
-            {
-                color: '#212a37',
-            },
-        ],
-    },
-    {
-        featureType: 'road',
-        elementType: 'labels.text.fill',
-        stylers: [
-            {
-                color: '#9ca5b3',
-            },
-        ],
-    },
-    {
-        featureType: 'road.highway',
-        elementType: 'geometry',
-        stylers: [
-            {
-                color: '#746855',
-            },
-        ],
-    },
-    {
-        featureType: 'road.highway',
-        elementType: 'geometry.stroke',
-        stylers: [
-            {
-                color: '#1f2835',
-            },
-        ],
-    },
-    {
-        featureType: 'road.highway',
-        elementType: 'labels.text.fill',
-        stylers: [
-            {
-                color: '#f3d19c',
-            },
-        ],
-    },
-    {
-        featureType: 'transit',
-        elementType: 'geometry',
-        stylers: [
-            {
-                color: '#2f3948',
-            },
-        ],
-    },
-    {
-        featureType: 'transit.station',
-        elementType: 'labels.text.fill',
-        stylers: [
-            {
-                color: '#d59563',
-            },
-        ],
-    },
-    {
-        featureType: 'water',
-        elementType: 'geometry',
-        stylers: [
-            {
-                color: '#17263c',
-            },
-        ],
-    },
-    {
-        featureType: 'water',
-        elementType: 'labels.text.fill',
-        stylers: [
-            {
-                color: '#515c6d',
-            },
-        ],
-    },
-    {
-        featureType: 'water',
-        elementType: 'labels.text.stroke',
-        stylers: [
-            {
-                color: '#17263c',
-            },
-        ],
-    },
-];
+// const customStyle = [
+//     {
+//         elementType: 'geometry',
+//         stylers: [
+//             {
+//                 color: '#242f3e',
+//             },
+//         ],
+//     },
+//     {
+//         elementType: 'labels.text.fill',
+//         stylers: [
+//             {
+//                 color: '#746855',
+//             },
+//         ],
+//     },
+//     {
+//         elementType: 'labels.text.stroke',
+//         stylers: [
+//             {
+//                 color: '#242f3e',
+//             },
+//         ],
+//     },
+//     {
+//         featureType: 'administrative.locality',
+//         elementType: 'labels.text.fill',
+//         stylers: [
+//             {
+//                 color: '#d59563',
+//             },
+//         ],
+//     },
+//     {
+//         featureType: 'poi',
+//         elementType: 'labels.text.fill',
+//         stylers: [
+//             {
+//                 color: '#d59563',
+//             },
+//         ],
+//     },
+//     {
+//         featureType: 'poi.park',
+//         elementType: 'geometry',
+//         stylers: [
+//             {
+//                 color: '#263c3f',
+//             },
+//         ],
+//     },
+//     {
+//         featureType: 'poi.park',
+//         elementType: 'labels.text.fill',
+//         stylers: [
+//             {
+//                 color: '#6b9a76',
+//             },
+//         ],
+//     },
+//     {
+//         featureType: 'road',
+//         elementType: 'geometry',
+//         stylers: [
+//             {
+//                 color: '#38414e',
+//             },
+//         ],
+//     },
+//     {
+//         featureType: 'road',
+//         elementType: 'geometry.stroke',
+//         stylers: [
+//             {
+//                 color: '#212a37',
+//             },
+//         ],
+//     },
+//     {
+//         featureType: 'road',
+//         elementType: 'labels.text.fill',
+//         stylers: [
+//             {
+//                 color: '#9ca5b3',
+//             },
+//         ],
+//     },
+//     {
+//         featureType: 'road.highway',
+//         elementType: 'geometry',
+//         stylers: [
+//             {
+//                 color: '#746855',
+//             },
+//         ],
+//     },
+//     {
+//         featureType: 'road.highway',
+//         elementType: 'geometry.stroke',
+//         stylers: [
+//             {
+//                 color: '#1f2835',
+//             },
+//         ],
+//     },
+//     {
+//         featureType: 'road.highway',
+//         elementType: 'labels.text.fill',
+//         stylers: [
+//             {
+//                 color: '#f3d19c',
+//             },
+//         ],
+//     },
+//     {
+//         featureType: 'transit',
+//         elementType: 'geometry',
+//         stylers: [
+//             {
+//                 color: '#2f3948',
+//             },
+//         ],
+//     },
+//     {
+//         featureType: 'transit.station',
+//         elementType: 'labels.text.fill',
+//         stylers: [
+//             {
+//                 color: '#d59563',
+//             },
+//         ],
+//     },
+//     {
+//         featureType: 'water',
+//         elementType: 'geometry',
+//         stylers: [
+//             {
+//                 color: '#17263c',
+//             },
+//         ],
+//     },
+//     {
+//         featureType: 'water',
+//         elementType: 'labels.text.fill',
+//         stylers: [
+//             {
+//                 color: '#515c6d',
+//             },
+//         ],
+//     },
+//     {
+//         featureType: 'water',
+//         elementType: 'labels.text.stroke',
+//         stylers: [
+//             {
+//                 color: '#17263c',
+//             },
+//         ],
+//     },
+// ];
 
 function randomColor() {
     return `#${Math.floor(Math.random() * 16777215).toString(16)}`;
@@ -259,9 +259,11 @@ export default class SearchScreen extends React.Component {
             minPrice: '0',
             maxPrice: '999999999999',
             unitPrice: '000000',
+            unitPriceLable: 'triệu',
             minAcreage: '0',
             maxAcreage: '500000',
             unitAcreage: '0',
+            unitAcreageLable: 'chục mét vuông',
             multiSliderPriceValue: [0, 10],
             multiSliderAreaValue: [0, 10],
             txtFilterResult: null,
@@ -1329,22 +1331,22 @@ export default class SearchScreen extends React.Component {
 
                                                     // // Unit Price
                                                     if (itemValue == 'ptr') {
-                                                        this.setState({ unitPrice: '000000' })
+                                                        this.setState({ unitPrice: '000000', unitPriceLable: 'triệu' })
                                                     }
                                                     else if (itemValue == 'pctr') {
-                                                        this.setState({ unitPrice: '0000000' })
+                                                        this.setState({ unitPrice: '0000000', unitPriceLable: 'chục triệu' })
                                                     }
                                                     else if (itemValue == 'pttr') {
-                                                        this.setState({ unitPrice: '00000000' })
+                                                        this.setState({ unitPrice: '00000000', unitPriceLable: 'trăm triệu' })
                                                     }
                                                     else if (itemValue == 'pt') {
-                                                        this.setState({ unitPrice: '000000000' })
+                                                        this.setState({ unitPrice: '000000000', unitPriceLable: 'tỷ' })
                                                     }
                                                     else if (itemValue == 'pct') {
-                                                        this.setState({ unitPrice: '0000000000' })
+                                                        this.setState({ unitPrice: '0000000000', unitPriceLable: 'chục tỷ' })
                                                     }
                                                     else if (itemValue == 'ptt') {
-                                                        this.setState({ unitPrice: '00000000000' })
+                                                        this.setState({ unitPrice: '00000000000', unitPriceLable: 'trăm tỷ' })
                                                     }
                                                     else {
                                                         this.setState({ unitPrice: '000000' })
@@ -1409,15 +1411,15 @@ export default class SearchScreen extends React.Component {
 
                                                     // // Unit Acreage
                                                     if (itemValue == 'acmv') {
-                                                        this.setState({ unitAcreage: '0' })
+                                                        this.setState({ unitAcreage: '0', unitAcreageLable: 'chục mét vuông' })
                                                     }
                                                     else if (itemValue == 'atmv') {
-                                                        this.setState({ unitAcreage: '00' })
+                                                        this.setState({ unitAcreage: '00', unitAcreageLable: 'trăm mét vuông' })
                                                     }
                                                     else if (itemValue == 'anmv') {
-                                                        this.setState({ unitAcreage: '000' })
+                                                        this.setState({ unitAcreage: '000', unitAcreageLable: 'nghìn mét vuông' })
                                                     } else {
-                                                        this.setState({ unitAcreage: '0000' })
+                                                        this.setState({ unitAcreage: '0000', unitAcreageLable: 'chục nghìn mét vuông' })
                                                     }
 
                                                 }}>
@@ -1446,16 +1448,6 @@ export default class SearchScreen extends React.Component {
                                         }}
                                     />
                                 </View>
-                                {/* <Slider
-                                    style={{ width: 300 }}
-                                    step={1}
-                                    minimumValue={18}
-                                    maximumValue={71}
-                                    value={this.state.age}
-                                    onValueChange={val => this.setState({ age: val })}
-                                    onSlidingComplete={val => this.getVal(val)}
-                                /> */}
-
 
                             </View>
 
@@ -1513,8 +1505,10 @@ export default class SearchScreen extends React.Component {
 
 
                                             this.setState({
-                                                txtFilterResult: this.state.selectedBDS + ', ' + this.state.multiSliderPriceValue[0] + '-' + this.state.multiSliderPriceValue[1] + ' triệu đồng, '
-                                                    + this.state.multiSliderAreaValue[0] + '-' + this.state.multiSliderAreaValue[1] + ' mét vuông',
+                                                txtFilterResult: this.state.selectedBDS + ', ' + this.state.multiSliderPriceValue[0] + '-'
+                                                    + this.state.multiSliderPriceValue[1] + ' ' + this.state.unitPriceLable + ', '
+                                                    + this.state.multiSliderAreaValue[0] + '-' + this.state.multiSliderAreaValue[1] + ' '
+                                                    + this.state.unitAcreageLable
 
                                             })
 
