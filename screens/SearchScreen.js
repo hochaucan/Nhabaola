@@ -259,11 +259,13 @@ export default class SearchScreen extends React.Component {
             minPrice: '0',
             maxPrice: '999999999999',
             unitPrice: '000000',
-            unitPriceLable: 'triệu',
+            unitPriceLable: '',
+            unitPriceSuffixLable: 'triệu',
             minAcreage: '0',
             maxAcreage: '500000',
             unitAcreage: '0',
-            unitAcreageLable: 'chục mét vuông',
+            unitAcreageLable: '',
+            unitAcreageSuffixLable: 'chục mét vuông',
             multiSliderPriceValue: [0, 10],
             multiSliderAreaValue: [0, 10],
             txtFilterResult: null,
@@ -443,25 +445,29 @@ export default class SearchScreen extends React.Component {
         if (this.state.multiSliderPriceValue[0] == 0 && this.state.multiSliderPriceValue[1] == 10) {
             this.setState({
                 minPrice: '0',
-                maxPrice: '999999999999'
+                maxPrice: '999999999999',
+                unitPriceLable: ''
             })
         }
         else if (this.state.multiSliderPriceValue[0] > 0 && this.state.multiSliderPriceValue[1] == 10) {
             this.setState({
                 minPrice: this.state.multiSliderPriceValue[0] + this.state.unitPrice,
-                maxPrice: '999999999999'
+                maxPrice: '999999999999',
+                unitPriceLable: ', Lớn hơn ' + this.state.multiSliderPriceValue[0] + ' ' + this.state.unitPriceSuffixLable,
             })
         }
         else if (this.state.multiSliderPriceValue[0] == 0 && this.state.multiSliderPriceValue[1] < 10) {
             this.setState({
                 minPrice: '0',
                 maxPrice: this.state.multiSliderPriceValue[1] + this.state.unitPrice,
+                unitPriceLable: ', Nhỏ hơn ' + this.state.multiSliderPriceValue[1] + ' ' + this.state.unitPriceSuffixLable,
             })
         }
         else {
             this.setState({
                 minPrice: this.state.multiSliderPriceValue[0] + this.state.unitPrice,
                 maxPrice: this.state.multiSliderPriceValue[1] + this.state.unitPrice,
+                unitPriceLable: ', ' + this.state.multiSliderPriceValue[0] + '-' + this.state.multiSliderPriceValue[1] + ' ' + this.state.unitPriceSuffixLable,
             })
         }
     }
@@ -470,32 +476,36 @@ export default class SearchScreen extends React.Component {
         if (this.state.multiSliderAreaValue[0] == 0 && this.state.multiSliderAreaValue[1] == 10) {
             this.setState({
                 minAcreage: '0',
-                maxAcreage: '500000'
+                maxAcreage: '500000',
+                unitAcreageLable: '',
             })
         }
         else if (this.state.multiSliderAreaValue[0] > 0 && this.state.multiSliderAreaValue[1] == 10) {
             this.setState({
                 minAcreage: this.state.multiSliderAreaValue[0] + this.state.unitAcreage,
-                maxAcreage: '500000'
+                maxAcreage: '500000',
+                unitAcreageLable: ', Lớn hơn ' + this.state.multiSliderAreaValue[0] + ' ' + this.state.unitAcreageSuffixLable,
             })
         }
         else if (this.state.multiSliderAreaValue[0] == 0 && this.state.multiSliderAreaValue[1] < 10) {
             this.setState({
                 minAcreage: '0',
                 maxAcreage: this.state.multiSliderAreaValue[1] + this.state.unitAcreage,
+                unitAcreageLable: ', Nhỏ hơn ' + this.state.multiSliderAreaValue[1] + ' ' + this.state.unitAcreageSuffixLable,
             })
         }
         else {
             this.setState({
                 minAcreage: this.state.multiSliderAreaValue[0] + this.state.unitAcreage,
                 maxAcreage: this.state.multiSliderAreaValue[1] + this.state.unitAcreage,
+                unitAcreageLable: ', ' + this.state.multiSliderAreaValue[0] + '-' + this.state.multiSliderAreaValue[1] + ' ' + this.state.unitAcreageSuffixLable,
             })
         }
     }
 
     _getRoomByFilter = async () => {
-        await this.setState({ refreshFlatlist: true })
-        this.popupLoadingIndicator.show()
+        //await this.setState({ refreshFlatlist: true })
+        //this.popupLoadingIndicator.show()
 
         roomBox = await [];
         MARKERS = await [];
@@ -519,10 +529,14 @@ export default class SearchScreen extends React.Component {
             })
         }
 
+        // Filter condition
         this._getPriceByFilter();
         this._getAcreageByFilter();
+        this.setState({
+            txtFilterResult: this.state.selectedBDS + this.state.unitPriceLable + this.state.unitAcreageLable
+        })
 
-        //  alert(this.state.minPrice + '  ' + this.state.maxPrice + '  ' + this.state.minAcreage + '  ' + this.state.maxAcreage)
+        // alert(this.state.minPrice + '  ' + this.state.maxPrice + '  ' + this.state.minAcreage + '  ' + this.state.maxAcreage + '  ' + this.state.selectedCategory)
 
         //Add current location to fix maker
         MARKERS.push(this.state.houseCoords);
@@ -539,13 +553,13 @@ export default class SearchScreen extends React.Component {
                     "Latitude": this.state.isSearching === true ? this.state.searchingMaker.latitude : this.state.location.coords.latitude, //"10.7143264",
                     "Longitude": this.state.isSearching === true ? this.state.searchingMaker.longitude : this.state.location.coords.longitude,//"106.6104477",
                     "Radius": this.state.radius,
-                    "RoomPriceMin": this.state.minPrice, //this.state.txtFilterResult != null ? this.state.multiSliderPriceValue[0] + this.state.unitPrice : '0',
-                    "RoomPriceMax": this.state.maxPrice,//this.state.txtFilterResult != null ? this.state.multiSliderPriceValue[1] + this.state.unitPrice : '999999999999',
-                    "AcreageMin": this.state.minAcreage,//this.state.txtFilterResult != null ? this.state.multiSliderAreaValue[0] + this.state.unitAcreage : '0',
-                    "AcreageMax": this.state.maxAcreage, //this.state.txtFilterResult != null ? this.state.multiSliderAreaValue[1] + this.state.unitAcreage : '500000',
+                    "RoomPriceMin": this.state.minPrice,
+                    "RoomPriceMax": this.state.maxPrice,
+                    "AcreageMin": this.state.minAcreage,
+                    "AcreageMax": this.state.maxAcreage,
                     "SortOptionKey": "SortDistance",
                     "PageIndex": "0",
-                    "PageCount": "100"
+                    "PageCount": "1000"
                 }),
             })
                 .then((response) => response.json())
@@ -564,8 +578,8 @@ export default class SearchScreen extends React.Component {
                         MARKERS.push(this.state.houseCoords)
                     })
 
-                    this.popupLoadingIndicator.dismiss();
-                    this.setState({ refresh: false })
+                    // this.popupLoadingIndicator.dismiss();
+                    // this.setState({ refresh: false })
 
                 }).
                 catch((error) => { console.log(error) });
@@ -613,13 +627,26 @@ export default class SearchScreen extends React.Component {
         return prev.item !== next.item;
     }
 
+    // _renderPriceFilter = async () => {
+    //     let result = '';
+
+    //     this.state.multiSliderPriceValue[0] == 0 && this.state.multiSliderPriceValue[1] == 10
+    //     ?
+    //     <Text style={{ flex: 2, marginBottom: 15, marginTop: 20, marginLeft: 20 }}>Tất cả </Text>
+    //     : this.state.multiSliderPriceValue[0] > 0 && this.state.multiSliderPriceValue[1] == 10
+    //         ? <Text style={{ flex: 2, marginBottom: 15, marginTop: 20, marginLeft: 20 }}>Lớn hơn  {this.state.multiSliderPriceValue[0]}</Text>
+    //         : this.state.multiSliderPriceValue[0] == 0 && this.state.multiSliderPriceValue[1] < 10
+    //             ? <Text style={{ flex: 2, marginBottom: 15, marginTop: 20, marginLeft: 20 }}>Nhỏ hơn  {this.state.multiSliderPriceValue[1]}</Text>
+    //             : <Text style={{ flex: 2, marginBottom: 15, marginTop: 20, marginLeft: 20 }}>{this.state.multiSliderPriceValue[0]} đến {this.state.multiSliderPriceValue[1]}</Text>
+    // }
+
     render() {
 
         let currentMaker = null;
         if (this.state.errorMessage) {
-            text = this.state.errorMessage;
+            //text = this.state.errorMessage;
         } else if (this.state.location) {
-            text = JSON.stringify(this.state.location.coords);
+            // text = JSON.stringify(this.state.location.coords);
             currentMaker = {
                 latitude: this.state.location.coords.latitude,
                 longitude: this.state.location.coords.longitude
@@ -643,6 +670,7 @@ export default class SearchScreen extends React.Component {
                         fontSize: responsiveFontSize(1.6),
                         elevation: 2,
                         borderRadius: 10,
+                        opacity: 0.9,
                     }}>{this.state.txtFilterResult}</Text>
 
                 }
@@ -659,7 +687,7 @@ export default class SearchScreen extends React.Component {
                     justifyContent: 'center',
                     alignItems: 'center',
                     elevation: 2,
-                    //opacity: 0.8,
+                    opacity: 0.9,
                     width: 130,//responsiveWidth(40)
                 }}>
                     <Text style={{ width: 30, paddingLeft: 5 }}>BK: </Text>
@@ -749,7 +777,7 @@ export default class SearchScreen extends React.Component {
                 {/* Filter */}
                 <TouchableOpacity
                     style={{
-                        height: 40, position: 'absolute', top: responsiveHeight(30), zIndex: 10, right: 15,
+                        height: 40, position: 'absolute', top: responsiveHeight(2), zIndex: 10, right: 15,
                     }}
                     onPress={() => {
                         this.setState({ modalSearchFilterVisible: true })
@@ -767,7 +795,7 @@ export default class SearchScreen extends React.Component {
                 {/* Search location */}
                 <TouchableOpacity
                     style={{
-                        height: 40, position: 'absolute', top: responsiveHeight(40), zIndex: 10, right: 15,
+                        height: 40, position: 'absolute', top: responsiveHeight(10), zIndex: 10, right: 15,
                     }}
                     onPress={() => {
                         this.popupSearching.show();
@@ -784,7 +812,7 @@ export default class SearchScreen extends React.Component {
 
                 {/* Get current location */}
                 <TouchableOpacity
-                    style={{ height: 40, position: 'absolute', top: responsiveHeight(50), zIndex: 10, right: 15, backgroundColor: 'transparent' }}
+                    style={{ height: 40, position: 'absolute', top: responsiveHeight(18), zIndex: 10, right: 15, backgroundColor: 'transparent' }}
                     onPress={async () => {
                         await this.setState({ isSearching: false, searchingMaker: null, })
                         this._getLocationAsync();
@@ -885,6 +913,20 @@ export default class SearchScreen extends React.Component {
                                 coordinate={{
                                     latitude: parseFloat(item.Latitude),
                                     longitude: parseFloat(item.Longitude)
+                                }}
+                                onPress={() => {
+                                    if (this.state.isHouseList) {
+                                        Animated.timing(
+                                            this.state.houseListHeigh,
+                                            {
+                                                toValue: responsiveHeight(28),
+                                                easing: Easing.bounce,
+                                                duration: 1200,
+                                            }
+                                        ).start();
+
+                                        this.setState({ isHouseList: false })
+                                    }
                                 }}
                             // title='Im here'
                             // description='Home'
@@ -1043,212 +1085,212 @@ export default class SearchScreen extends React.Component {
                     </MapView>
                 }
 
-                {
-                    roomBox.length >= 1 &&
-                    < Animated.View style={{
-                        width: width,
-                        height: this.state.houseListHeigh, //responsiveHeight(28),
-                        backgroundColor: 'transparent',
-                        zIndex: 10,
-                        position: 'absolute',
-                        padding: 10,
-                        bottom: 0,
-                        justifyContent: 'center',
-                        alignItems: 'center',
-                    }}>
+                {/* {
+                    roomBox.length >= 1 && */}
+                < Animated.View style={{
+                    width: width,
+                    height: this.state.houseListHeigh, //responsiveHeight(28),
+                    backgroundColor: 'transparent',
+                    zIndex: 10,
+                    position: 'absolute',
+                    padding: 10,
+                    bottom: 0,
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                }}>
 
-                        <View
+                    <View
+                        style={{
+                            flex: 1,
+                            width: width * 0.9,
+                            backgroundColor: 'white',
+                            padding: 10,
+                            elevation: 2,
+                            opacity: 0.9,
+                            paddingTop: 0,
+                        }}
+                    >
+                        <TouchableOpacity
                             style={{
-                                flex: 1,
-                                width: width * 0.9,
-                                backgroundColor: 'white',
-                                padding: 10,
-                                elevation: 2,
-                                opacity: 0.9,
-                                paddingTop: 0,
+                                elevation: 5,
+                            }}
+                            onPress={async () => {
+                                // this.fitAllMarkers();
+                                this.map.fitToCoordinates(MARKERS, {
+                                    edgePadding: {
+                                        top: this.state.isHouseList ? responsiveHeight(70) : responsiveHeight(60),
+                                        bottom: this.state.isHouseList ? responsiveHeight(70) : responsiveHeight(250),//900,
+                                        right: this.state.isHouseList ? responsiveHeight(70) : responsiveHeight(230),
+                                        left: this.state.isHouseList ? responsiveHeight(70) : responsiveHeight(230)
+                                    },//DEFAULT_PADDING,
+                                    animated: true,
+                                });
+
+                                Animated.timing(                  // Animate over time
+                                    this.state.houseListHeigh,            // The animated value to drive
+                                    {
+                                        toValue: this.state.isHouseList ? responsiveHeight(28) : responsiveHeight(60),
+                                        easing: Easing.bounce,
+                                        duration: 1200,              // Make it take a while
+                                    }
+                                ).start();
+
+
+                                this.setState({ isHouseList: !this.state.isHouseList })
                             }}
                         >
-                            <TouchableOpacity
-                                style={{
-                                    elevation: 5,
-                                }}
-                                onPress={async () => {
-                                    // this.fitAllMarkers();
-                                    this.map.fitToCoordinates(MARKERS, {
-                                        edgePadding: {
-                                            top: this.state.isHouseList ? responsiveHeight(70) : responsiveHeight(60),
-                                            bottom: this.state.isHouseList ? responsiveHeight(70) : responsiveHeight(250),//900,
-                                            right: this.state.isHouseList ? responsiveHeight(70) : responsiveHeight(230),
-                                            left: this.state.isHouseList ? responsiveHeight(70) : responsiveHeight(230)
-                                        },//DEFAULT_PADDING,
-                                        animated: true,
-                                    });
+                            {/* <Text>Keo len</Text> */}
+                            <Ionicons style={{
+                                color: '#9B9D9D',
+                                textAlign: 'center',
+                                fontSize: responsiveFontSize(3),
+                                //marginTop: -3,
 
-                                    Animated.timing(                  // Animate over time
-                                        this.state.houseListHeigh,            // The animated value to drive
-                                        {
-                                            toValue: this.state.isHouseList ? responsiveHeight(28) : responsiveHeight(60),
-                                            easing: Easing.bounce,
-                                            duration: 1200,              // Make it take a while
-                                        }
-                                    ).start();
+                            }} name={this.state.isHouseList ? 'ios-arrow-dropdown-circle-outline' : 'ios-arrow-dropup-circle-outline'} />
+                        </TouchableOpacity>
+                        <Text style={{
+                            color: '#73aa2a', paddingBottom: 4,
+                            fontSize: responsiveFontSize(2)
+                        }}>Tìm được {roomBox.length} Nhà</Text>
+                        <FlatList
+                            //onScroll={this._onScroll}
+                            // ref='searchresult'
+                            refreshing={this.state.refreshFlatlist}
+                            keyboardShouldPersistTaps="always"
+                            removeClippedSubviews={true}
+                            initialNumToRender={2}
+                            shouldItemUpdate={this._shouldItemUpdate}
 
+                            // onRefresh={() => { this._refreshRoomBox() }}
 
-                                    this.setState({ isHouseList: !this.state.isHouseList })
-                                }}
-                            >
-                                {/* <Text>Keo len</Text> */}
-                                <Ionicons style={{
-                                    color: '#9B9D9D',
-                                    textAlign: 'center',
-                                    fontSize: responsiveFontSize(3),
-                                    //marginTop: -3,
+                            onEndReachedThreshold={0.2}
+                            onEndReached={() => {
+                                //alert("refreshing")
+                                // this._getRoomByFilter(false);
 
-                                }} name={this.state.isHouseList ? 'ios-arrow-dropdown-circle-outline' : 'ios-arrow-dropup-circle-outline'} />
-                            </TouchableOpacity>
-                            <Text style={{
-                                color: '#73aa2a', paddingBottom: 4,
-                                fontSize: responsiveFontSize(2)
-                            }}>Tìm được {roomBox.length} Nhà</Text>
-                            <FlatList
-                                //onScroll={this._onScroll}
-                                // ref='searchresult'
-                                refreshing={this.state.refreshFlatlist}
-                                keyboardShouldPersistTaps="always"
-                                removeClippedSubviews={true}
-                                initialNumToRender={2}
-                                shouldItemUpdate={this._shouldItemUpdate}
-
-                                // onRefresh={() => { this._refreshRoomBox() }}
-
-                                onEndReachedThreshold={0.2}
-                                onEndReached={() => {
-                                    //alert("refreshing")
-                                    // this._getRoomByFilter(false);
-
-                                }}
+                            }}
 
 
-                                data={roomBox}
-                                renderItem={({ item }) =>
-                                    <TouchableOpacity
-                                        style={{}}
-                                        onPress={() => {
-                                            // this.props.navigation.navigate('RoomDetailScreen', { item });
-                                        }}
-                                    >
-                                        <View style={{
-                                            flex: 1,
-                                            flexDirection: 'row',
-                                            paddingTop: 10,
-                                            paddingBottom: 10,
-                                            borderBottomWidth: 0.3,
-                                            borderColor: '#9B9D9D',
-                                        }}>
-                                            <TouchableOpacity
-                                                style={{
-                                                    flex: 3,
+                            data={roomBox}
+                            renderItem={({ item }) =>
+                                <TouchableOpacity
+                                    style={{}}
+                                    onPress={() => {
+                                        // this.props.navigation.navigate('RoomDetailScreen', { item });
+                                    }}
+                                >
+                                    <View style={{
+                                        flex: 1,
+                                        flexDirection: 'row',
+                                        paddingTop: 10,
+                                        paddingBottom: 10,
+                                        borderBottomWidth: 0.3,
+                                        borderColor: '#9B9D9D',
+                                    }}>
+                                        <TouchableOpacity
+                                            style={{
+                                                flex: 3,
 
-                                                }}
-                                                onPress={() => {
-                                                    this.props.navigation.navigate('RoomDetailScreen', { item });
-                                                }}
-                                            >
-                                                <Image
-                                                    style={{ flex: 1, borderRadius: 5, }}
-                                                    source={{ uri: item.Title }} />
-                                            </TouchableOpacity>
-                                            <View style={styles.searchCardTextBox}>
-                                                <Text style={{
-                                                    flex: 2,
-                                                    fontSize: responsiveFontSize(1.5),
-                                                }}>{item.Address}</Text>
-                                                {/* <Text style={styles.searchCardPostDate}>Ngày đăng: {item.UpdatedDate}</Text> */}
+                                            }}
+                                            onPress={() => {
+                                                this.props.navigation.navigate('RoomDetailScreen', { item });
+                                            }}
+                                        >
+                                            <Image
+                                                style={{ flex: 1, borderRadius: 5, }}
+                                                source={{ uri: item.Title }} />
+                                        </TouchableOpacity>
+                                        <View style={styles.searchCardTextBox}>
+                                            <Text style={{
+                                                flex: 2,
+                                                fontSize: responsiveFontSize(1.5),
+                                            }}>{item.Address}</Text>
+                                            {/* <Text style={styles.searchCardPostDate}>Ngày đăng: {item.UpdatedDate}</Text> */}
 
-                                                <View style={{
-                                                    flexDirection: 'row',
-                                                }}>
-                                                    {
-                                                        this.state.roomCategory.map((y, i) => {
-                                                            return (
-                                                                y.ID == item.CategoryID &&
-                                                                <Text
-                                                                    style={{ flex: 3, color: '#73aa2a', fontSize: responsiveFontSize(1.8) }}
-                                                                    key={i}>{y.CatName}</Text>
-                                                            )
-                                                        })
-                                                    }
+                                            <View style={{
+                                                flexDirection: 'row',
+                                            }}>
+                                                {
+                                                    this.state.roomCategory.map((y, i) => {
+                                                        return (
+                                                            y.ID == item.CategoryID &&
+                                                            <Text
+                                                                style={{ flex: 3, color: '#73aa2a', fontSize: responsiveFontSize(1.8) }}
+                                                                key={i}>{y.CatName}</Text>
+                                                        )
+                                                    })
+                                                }
 
-                                                    {/* Location Direction */}
-                                                    <TouchableOpacity
-                                                        style={{
-                                                            flex: 1, justifyContent: 'center', alignItems: 'center',
-                                                        }}
-                                                        onPress={() => {
-                                                            const data = {
-                                                                source: {
-                                                                    latitude: parseFloat(this.state.location.coords.latitude), //10.791609,//-33.8356372,
-                                                                    longitude: parseFloat(this.state.location.coords.longitude), //106.702763,//18.6947617
-                                                                },
-                                                                destination: {
-                                                                    latitude: parseFloat(item.Latitude), //-33.8600024,
-                                                                    longitude: parseFloat(item.Longitude) //18.697459
-                                                                },
-                                                                params: [
-                                                                    {
-                                                                        key: "dirflg",
-                                                                        value: "d"
-                                                                    }
-                                                                ]
-                                                            }
+                                                {/* Location Direction */}
+                                                <TouchableOpacity
+                                                    style={{
+                                                        flex: 1, justifyContent: 'center', alignItems: 'center',
+                                                    }}
+                                                    onPress={() => {
+                                                        const data = {
+                                                            source: {
+                                                                latitude: parseFloat(this.state.location.coords.latitude), //10.791609,//-33.8356372,
+                                                                longitude: parseFloat(this.state.location.coords.longitude), //106.702763,//18.6947617
+                                                            },
+                                                            destination: {
+                                                                latitude: parseFloat(item.Latitude), //-33.8600024,
+                                                                longitude: parseFloat(item.Longitude) //18.697459
+                                                            },
+                                                            params: [
+                                                                {
+                                                                    key: "dirflg",
+                                                                    value: "d"
+                                                                }
+                                                            ]
+                                                        }
 
-                                                            getDirections(data)
-                                                        }}
-                                                    >
-                                                        <Ionicons style={{
-                                                            color: '#fff', fontSize: responsiveFontSize(1.5),
-                                                            padding: 4, borderRadius: 5, backgroundColor: '#73aa2a',
-                                                            marginTop: 3, marginBottom: 2, elevation: 2,
+                                                        getDirections(data)
+                                                    }}
+                                                >
+                                                    <Ionicons style={{
+                                                        color: '#fff', fontSize: responsiveFontSize(1.5),
+                                                        padding: 4, borderRadius: 5, backgroundColor: '#73aa2a',
+                                                        marginTop: 3, marginBottom: 2, elevation: 2,
 
-                                                        }} name='md-return-right' >  Đi</Ionicons>
-                                                        {/* <Text style={{ color: '#fff', fontSize: responsiveFontSize(1.5) }}>Tìm đường</Text> */}
-                                                    </TouchableOpacity>
+                                                    }} name='md-return-right' >  Đi</Ionicons>
+                                                    {/* <Text style={{ color: '#fff', fontSize: responsiveFontSize(1.5) }}>Tìm đường</Text> */}
+                                                </TouchableOpacity>
 
 
-                                                </View>
+                                            </View>
 
-                                                <View style={styles.searchCardPriceBox}>
-                                                    {/* <TextMask
+                                            <View style={styles.searchCardPriceBox}>
+                                                {/* <TextMask
                                                         style={{ flex: 2, }}
                                                         value={item.Price}
                                                         type={'money'}
                                                         options={{ suffixUnit: ' đ', precision: 0, unit: ' ', separator: ' ' }}
                                                     /> */}
 
-                                                    <Text style={{ flex: 1 }}>{convertAmountToWording(item.Price)}</Text>
-                                                    <View style={{ flex: 1, flexDirection: 'row', }}>
-                                                        <Text>{item.Acreage} m</Text>
-                                                        <Text style={{ fontSize: 8, marginBottom: 5 }}>2</Text>
-                                                    </View>
-                                                    <Ionicons style={styles.searCardDistanceIcon} name='md-pin' >  {item.Distance} km</Ionicons>
+                                                <Text style={{ flex: 1 }}>{convertAmountToWording(item.Price)}</Text>
+                                                <View style={{ flex: 1, flexDirection: 'row', }}>
+                                                    <Text>{item.Acreage} m</Text>
+                                                    <Text style={{ fontSize: 8, marginBottom: 5 }}>2</Text>
                                                 </View>
-
-
-
-
-
-
+                                                <Ionicons style={styles.searCardDistanceIcon} name='md-pin' >  {item.Distance} km</Ionicons>
                                             </View>
+
+
+
+
+
+
                                         </View>
-                                    </TouchableOpacity>
-                                }
-                                keyExtractor={item => item.ID}
-                            />
+                                    </View>
+                                </TouchableOpacity>
+                            }
+                            keyExtractor={item => item.ID}
+                        />
 
-                        </View>
+                    </View>
 
-                    </ Animated.View>
-                }
+                </ Animated.View>
+                {/* } */}
 
 
 
@@ -1272,19 +1314,16 @@ export default class SearchScreen extends React.Component {
                         <View style={{ flex: 1, marginTop: 30, padding: 10, }}>
                             <View style={{ flex: 1, }}>
 
-                                {/* <FormLabel>Loại bất động sản:</FormLabel> */}
+                                <FormLabel>Loại bất động sản:</FormLabel>
                                 <View style={{ flexDirection: 'row', marginBottom: 30, }}>
-
-
-
                                     <Picker // Android
-                                        style={{ flex: 1, marginTop: -4, }}
+                                        style={{ flex: 1, marginTop: -4, marginLeft: 18 }}
                                         mode='dropdown'
                                         selectedValue={this.state.selectedCategory}
                                         onValueChange={(itemValue, itemIndex) => {
                                             this.setState({ selectedCategory: itemValue })
                                         }}>
-                                        <Picker.Item label='-- Tất cả Bất Động Sản --' value='0' />
+                                        <Picker.Item label='-- Tất cả --' value='' />
 
 
                                         {this.state.roomCategory.map((y, i) => {
@@ -1331,22 +1370,22 @@ export default class SearchScreen extends React.Component {
 
                                                     // // Unit Price
                                                     if (itemValue == 'ptr') {
-                                                        this.setState({ unitPrice: '000000', unitPriceLable: 'triệu' })
+                                                        this.setState({ unitPrice: '000000', unitPriceSuffixLable: 'triệu' })
                                                     }
                                                     else if (itemValue == 'pctr') {
-                                                        this.setState({ unitPrice: '0000000', unitPriceLable: 'chục triệu' })
+                                                        this.setState({ unitPrice: '0000000', unitPriceSuffixLable: 'chục triệu' })
                                                     }
                                                     else if (itemValue == 'pttr') {
-                                                        this.setState({ unitPrice: '00000000', unitPriceLable: 'trăm triệu' })
+                                                        this.setState({ unitPrice: '00000000', unitPriceSuffixLable: 'trăm triệu' })
                                                     }
                                                     else if (itemValue == 'pt') {
-                                                        this.setState({ unitPrice: '000000000', unitPriceLable: 'tỷ' })
+                                                        this.setState({ unitPrice: '000000000', unitPriceSuffixLable: 'tỷ' })
                                                     }
                                                     else if (itemValue == 'pct') {
-                                                        this.setState({ unitPrice: '0000000000', unitPriceLable: 'chục tỷ' })
+                                                        this.setState({ unitPrice: '0000000000', unitPriceSuffixLable: 'chục tỷ' })
                                                     }
                                                     else if (itemValue == 'ptt') {
-                                                        this.setState({ unitPrice: '00000000000', unitPriceLable: 'trăm tỷ' })
+                                                        this.setState({ unitPrice: '00000000000', unitPriceSuffixLable: 'trăm tỷ' })
                                                     }
                                                     else {
                                                         this.setState({ unitPrice: '000000' })
@@ -1411,15 +1450,15 @@ export default class SearchScreen extends React.Component {
 
                                                     // // Unit Acreage
                                                     if (itemValue == 'acmv') {
-                                                        this.setState({ unitAcreage: '0', unitAcreageLable: 'chục mét vuông' })
+                                                        this.setState({ unitAcreage: '0', unitAcreageSuffixLable: 'chục mét vuông' })
                                                     }
                                                     else if (itemValue == 'atmv') {
-                                                        this.setState({ unitAcreage: '00', unitAcreageLable: 'trăm mét vuông' })
+                                                        this.setState({ unitAcreage: '00', unitAcreageSuffixLable: 'trăm mét vuông' })
                                                     }
                                                     else if (itemValue == 'anmv') {
-                                                        this.setState({ unitAcreage: '000', unitAcreageLable: 'nghìn mét vuông' })
+                                                        this.setState({ unitAcreage: '000', unitAcreageSuffixLable: 'nghìn mét vuông' })
                                                     } else {
-                                                        this.setState({ unitAcreage: '0000', unitAcreageLable: 'chục nghìn mét vuông' })
+                                                        this.setState({ unitAcreage: '0000', unitAcreageSuffixLable: 'chục nghìn mét vuông' })
                                                     }
 
                                                 }}>
@@ -1490,9 +1529,17 @@ export default class SearchScreen extends React.Component {
                                     <Button
                                         buttonStyle={{ backgroundColor: '#73aa2a', padding: 15, borderRadius: 10 }}
                                         icon={{ name: 'md-checkmark', type: 'ionicon' }}
+                                        disabled={
+                                            (this.state.selectedCategory == '0'
+                                                && this.state.multiSliderPriceValue[0] == 0
+                                                && this.state.multiSliderPriceValue[1] == 10
+                                                && this.state.multiSliderAreaValue[0] == 0
+                                                && this.state.multiSliderAreaValue[1] == 10)
+                                                ? true : false
+                                        }
                                         title='Lọc'
                                         onPress={async () => {
-
+                                            this.setState({ modalSearchFilterVisible: false })
                                             await this.state.roomCategory.map((y, i) => {
 
                                                 if (y.ID == this.state.selectedCategory) {
@@ -1503,18 +1550,17 @@ export default class SearchScreen extends React.Component {
 
                                             })
 
-
-                                            this.setState({
-                                                txtFilterResult: this.state.selectedBDS + ', ' + this.state.multiSliderPriceValue[0] + '-'
-                                                    + this.state.multiSliderPriceValue[1] + ' ' + this.state.unitPriceLable + ', '
-                                                    + this.state.multiSliderAreaValue[0] + '-' + this.state.multiSliderAreaValue[1] + ' '
-                                                    + this.state.unitAcreageLable
-
-                                            })
-
                                             this._getRoomByFilter();
 
-                                            this.setState({ modalSearchFilterVisible: false })
+
+                                            // this.setState({
+                                            //     txtFilterResult: this.state.selectedBDS // Loai BDS
+                                            //         + ', ' + this.state.unitPriceLable
+                                            //         + ', ' + this.state.unitAcreageLable
+
+                                            // })
+
+
                                             // this.fitAllMarkers();
                                         }}
                                     />
