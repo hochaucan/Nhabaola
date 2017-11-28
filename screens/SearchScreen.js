@@ -658,7 +658,7 @@ export default class SearchScreen extends React.Component {
                 flex: 1,
             }}>
 
-                {this.state.txtFilterResult &&
+                {!(this.state.selectedCategory == '' && this.state.unitPriceLable == '' && this.state.unitAcreageLable == '') &&
                     <Text style={{
                         //color: '#73aa2a',
                         width: responsiveWidth(80),

@@ -30,7 +30,7 @@
     },
     "android": {
       "package": "vn.nhabaola.nhabaola",
-      "versionCode": 3,
+      "versionCode": 4,
       "config": {
         "googleMaps": {
           "apiKey": "AIzaSyDjGSoHkMu6Q55FifG90l25DR8SfMo3quM"
