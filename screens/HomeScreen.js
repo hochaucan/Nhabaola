@@ -1396,7 +1396,7 @@ export default class HomeScreen extends React.Component {
                 <Text
                   style={{
                     flex: 1, color: '#fff', fontWeight: '300',
-                    fontSize: responsiveFontSize(2)
+                    fontSize: responsiveFontSize(1.5)
                   }}>
                   Giá: {convertAmountToWording(item.Price)}
                 </Text>
@@ -1409,7 +1409,7 @@ export default class HomeScreen extends React.Component {
                       <Text
                         style={{
                           flex: 2, color: '#fff', fontWeight: '300',
-                          fontSize: responsiveFontSize(2), textAlign: 'right'
+                          fontSize: responsiveFontSize(1.5), textAlign: 'right'
                         }}
                         key={i}>{y.CatName}:  {item.Acreage} m</Text>
                       // : null
