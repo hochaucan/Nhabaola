@@ -323,10 +323,10 @@ export default class SearchScreen extends React.Component {
     fitAllMarkers() {
         this.map.fitToCoordinates(MARKERS, {
             edgePadding: {
-                top: responsiveHeight(70),
-                bottom: responsiveHeight(70),
-                right: responsiveHeight(70),
-                left: responsiveHeight(70)
+                top: responsiveHeight(40),
+                bottom: responsiveHeight(40),
+                right: responsiveHeight(40),
+                left: responsiveHeight(40)
             },//DEFAULT_PADDING,
             animated: true,
         });
@@ -1118,10 +1118,10 @@ export default class SearchScreen extends React.Component {
                                 // this.fitAllMarkers();
                                 this.map.fitToCoordinates(MARKERS, {
                                     edgePadding: {
-                                        top: this.state.isHouseList ? responsiveHeight(70) : responsiveHeight(60),
-                                        bottom: this.state.isHouseList ? responsiveHeight(70) : responsiveHeight(250),//900,
-                                        right: this.state.isHouseList ? responsiveHeight(70) : responsiveHeight(230),
-                                        left: this.state.isHouseList ? responsiveHeight(70) : responsiveHeight(230)
+                                        top: this.state.isHouseList ? responsiveHeight(40) : responsiveHeight(60),
+                                        bottom: this.state.isHouseList ? responsiveHeight(40) : responsiveHeight(250),//900,
+                                        right: this.state.isHouseList ? responsiveHeight(40) : responsiveHeight(230),
+                                        left: this.state.isHouseList ? responsiveHeight(40) : responsiveHeight(230)
                                     },//DEFAULT_PADDING,
                                     animated: true,
                                 });
@@ -1215,7 +1215,7 @@ export default class SearchScreen extends React.Component {
                                                         return (
                                                             y.ID == item.CategoryID &&
                                                             <Text
-                                                                style={{ flex: 3, color: '#73aa2a', fontSize: responsiveFontSize(1.8) }}
+                                                                style={{ flex: 3, color: '#73aa2a', fontSize: responsiveFontSize(1.5) }}
                                                                 key={i}>{y.CatName}</Text>
                                                         )
                                                     })
