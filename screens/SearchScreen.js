@@ -287,7 +287,7 @@ export default class SearchScreen extends React.Component {
             },
             isSearching: false,
             isFocusSearchTextInput: false,
-            houseListHeigh: new Animated.Value(responsiveHeight(28)),
+            houseListHeigh: new Animated.Value(responsiveHeight(10)),
             isHouseList: false,
 
         }
@@ -598,7 +598,7 @@ export default class SearchScreen extends React.Component {
             Animated.timing(
                 this.state.houseListHeigh,
                 {
-                    toValue: responsiveHeight(28),
+                    toValue: responsiveHeight(10),
                     easing: Easing.bounce,
                     duration: 1200,
                 }
@@ -919,7 +919,7 @@ export default class SearchScreen extends React.Component {
                                         Animated.timing(
                                             this.state.houseListHeigh,
                                             {
-                                                toValue: responsiveHeight(28),
+                                                toValue: responsiveHeight(10),
                                                 easing: Easing.bounce,
                                                 duration: 1200,
                                             }
@@ -937,7 +937,7 @@ export default class SearchScreen extends React.Component {
                                     justifyContent: 'center', alignItems: 'center',
                                 }}>
                                     <Text style={{
-                                        backgroundColor: item.IsHighlight ? 'red' : '#6c6d6d',
+                                        backgroundColor: item.IsHighlight ? 'red' : '#73aa2a',
                                         color: '#fff',
                                         padding: 5,
                                         fontSize: responsiveFontSize(1.2),
@@ -1129,7 +1129,7 @@ export default class SearchScreen extends React.Component {
                                 Animated.timing(                  // Animate over time
                                     this.state.houseListHeigh,            // The animated value to drive
                                     {
-                                        toValue: this.state.isHouseList ? responsiveHeight(28) : responsiveHeight(60),
+                                        toValue: this.state.isHouseList ? responsiveHeight(10) : responsiveHeight(60),
                                         easing: Easing.bounce,
                                         duration: 1200,              // Make it take a while
                                     }

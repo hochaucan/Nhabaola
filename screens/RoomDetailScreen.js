@@ -474,7 +474,7 @@ export default class RoomDetailScreen extends React.Component {
                     <View style={{
 
                         flex: 1,
-                        height: height * 0.6, //500,
+                        //height: height * 0.6, //500,
                         // borderBottomWidth: 0.5,
                         borderColor: '#d6d7da',
                         padding: 0,
@@ -482,7 +482,7 @@ export default class RoomDetailScreen extends React.Component {
                     }}>
 
                         <View
-                            style={{ flex: 1, }}
+                            style={{ flex: 1, height: responsiveHeight(50) }}
                         >
 
                             <Swiper

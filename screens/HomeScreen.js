@@ -1363,7 +1363,11 @@ export default class HomeScreen extends React.Component {
               />
 
               <TouchableWithoutFeedback
-                style={styles.cardImageBox}
+                style={{
+                  flex: 6,
+                  paddingLeft: 20,
+                  paddingRight: 20,
+                }}
                 onPress={() => {
                   //this._sendProps();
                   //this._moveToRoomDetail(item)
@@ -1420,8 +1424,19 @@ export default class HomeScreen extends React.Component {
 
 
 
-                <Text style={{}}>Địa chỉ:   {item.Address}</Text>
-                <Text style={{ marginTop: 10, color: '#9B9D9D' }}>{item.Description}</Text>
+                <Text style={{
+                  fontSize: responsiveFontSize(1.8)
+                }}
+                  ellipsizeMode='tail'
+                  numberOfLines={2}
+                >
+                  Địa chỉ:   {item.Address}</Text>
+                <Text
+                  style={{ marginTop: 10, color: '#9B9D9D', fontSize: responsiveFontSize(1.8) }}
+                  ellipsizeMode='tail'
+                  numberOfLines={2}
+                >
+                  {item.Description}</Text>
 
                 {/* <Text style={styles.cardDesText}>
                   {item.Description}
@@ -2334,13 +2349,13 @@ const styles = StyleSheet.create({
     fontSize: 13,
     paddingLeft: 8,
   },
-  cardImageBox: {
-    flex: 6,
-    paddingLeft: 20,
-    paddingRight: 20,
-    // borderWidth: 1,
-    // borderColor: 'blue',
-  },
+  // cardImageBox: {
+  //   flex: 6,
+  //   paddingLeft: 20,
+  //   paddingRight: 20,
+  //   // borderWidth: 1,
+  //   // borderColor: 'blue',
+  // },
   cardImage: {
     flex: 1,
 
