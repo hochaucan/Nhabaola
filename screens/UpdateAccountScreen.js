@@ -123,7 +123,7 @@ export default class UpdateAccountScreen extends React.Component {
                 let uploadResponse = await uploadImageAsync(this.state.registerAccountImage);
                 let uploadResult = await uploadResponse.json();
                 this.setState({
-                    registerAccountImage: uploadResult.data.img_url.match("http") ? uploadResult.data.img_url : ""
+                    registerAccountImage: uploadResult.ImagePath.match("http") ? uploadResult.ImagePath : ""
                 })
             }
         }

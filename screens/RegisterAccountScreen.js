@@ -151,7 +151,7 @@ export default class RegisterAccountScreen extends React.Component {
 
 
                 body: JSON.stringify({
-                    "Avarta": uploadResult.data.img_url.match("http") ? uploadResult.data.img_url : "",
+                    "Avarta": uploadResult.ImagePath.match("http") ? uploadResult.ImagePath : "",
                     "UserName": this.state.registerCellPhone,
                     "FullName": this.state.registerFullName,
                     "Email": this.state.registerEmail,

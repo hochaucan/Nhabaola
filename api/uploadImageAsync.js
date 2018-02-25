@@ -3,8 +3,8 @@ import { Permissions, Notifications } from 'expo';
 
 export default (async function uploadImageAsync(uri) {
     //let apiUrl = 'https://file-upload-example-backend-dkhqoilqqn.now.sh/upload';
-    let apiUrl = 'http://uploads.im/api?upload';
-
+    // let apiUrl = 'http://uploads.im/api?upload';
+    let apiUrl = 'http://nhabaola.vn/api/Images/FO_Images_Add';
 
     // Note:
     // Uncomment this if you want to experiment with local server

@@ -406,7 +406,7 @@ export default class UpdateRoomScreen extends React.Component {
             if (!this.state.postRoomImage1.match("http")) {
                 let uploadResponse = await uploadImageAsync(this.state.postRoomImage1);
                 let uploadResult = await uploadResponse.json();
-                this.setState({ imageUrl: this.state.imageUrl + '|' + uploadResult.data.img_url })
+                this.setState({ imageUrl: this.state.imageUrl + '|' + uploadResult.ImagePath })
             } else {
                 await this.setState({ imageUrl: this.state.imageUrl + '|' + this.state.postRoomImage1 })
 
@@ -423,7 +423,7 @@ export default class UpdateRoomScreen extends React.Component {
             if (!this.state.postRoomImage2.match("http")) {
                 let uploadResponse = await uploadImageAsync(this.state.postRoomImage2);
                 let uploadResult = await uploadResponse.json();
-                this.setState({ imageUrl: this.state.imageUrl + '|' + uploadResult.data.img_url })
+                this.setState({ imageUrl: this.state.imageUrl + '|' + uploadResult.ImagePath })
             } else {
                 this.setState({ imageUrl: this.state.imageUrl + '|' + this.state.postRoomImage2 })
             }
@@ -432,7 +432,7 @@ export default class UpdateRoomScreen extends React.Component {
             if (!this.state.postRoomImage3.match("http")) {
                 let uploadResponse = await uploadImageAsync(this.state.postRoomImage3);
                 let uploadResult = await uploadResponse.json();
-                this.setState({ imageUrl: this.state.imageUrl + '|' + uploadResult.data.img_url })
+                this.setState({ imageUrl: this.state.imageUrl + '|' + uploadResult.ImagePath })
             } else {
                 this.setState({ imageUrl: this.state.imageUrl + '|' + this.state.postRoomImage3 })
             }
@@ -442,7 +442,7 @@ export default class UpdateRoomScreen extends React.Component {
             if (!this.state.postRoomImage4.match("http")) {
                 let uploadResponse = await uploadImageAsync(this.state.postRoomImage4);
                 let uploadResult = await uploadResponse.json();
-                this.setState({ imageUrl: this.state.imageUrl + '|' + uploadResult.data.img_url })
+                this.setState({ imageUrl: this.state.imageUrl + '|' + uploadResult.ImagePath })
             } else {
                 this.setState({ imageUrl: this.state.imageUrl + '|' + this.state.postRoomImage4 })
             }
@@ -451,7 +451,7 @@ export default class UpdateRoomScreen extends React.Component {
             if (!this.state.postRoomImage5.match("http")) {
                 let uploadResponse = await uploadImageAsync(this.state.postRoomImage5);
                 let uploadResult = await uploadResponse.json();
-                this.setState({ imageUrl: this.state.imageUrl + '|' + uploadResult.data.img_url })
+                this.setState({ imageUrl: this.state.imageUrl + '|' + uploadResult.ImagePath })
             } else {
                 this.setState({ imageUrl: this.state.imageUrl + '|' + this.state.postRoomImage5 })
             }
@@ -460,7 +460,7 @@ export default class UpdateRoomScreen extends React.Component {
             if (!this.state.postRoomImage6.match("http")) {
                 let uploadResponse = await uploadImageAsync(this.state.postRoomImage6);
                 let uploadResult = await uploadResponse.json();
-                this.setState({ imageUrl: this.state.imageUrl + '|' + uploadResult.data.img_url })
+                this.setState({ imageUrl: this.state.imageUrl + '|' + uploadResult.ImagePath })
             } else {
                 this.setState({ imageUrl: this.state.imageUrl + '|' + this.state.postRoomImage6 })
             }
