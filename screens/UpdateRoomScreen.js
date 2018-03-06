@@ -256,12 +256,14 @@ export default class UpdateRoomScreen extends React.Component {
             result = await ImagePicker.launchImageLibraryAsync({
                 allowsEditing: true,
                 aspect: [4, 3],
+                quality :0.3,
             });
         }
         else {
             result = await ImagePicker.launchCameraAsync({
                 allowsEditing: true,
                 aspect: [4, 3],
+                quality :0.3,
             });
         }
 

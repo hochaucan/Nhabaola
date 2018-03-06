@@ -193,12 +193,14 @@ export default class PostRoomScreen extends React.Component {
             result = await ImagePicker.launchImageLibraryAsync({
                 allowsEditing: true,
                 aspect: [4, 3],
+                quality :0.3,
             });
         }
         else {
             result = await ImagePicker.launchCameraAsync({
                 allowsEditing: true,
                 aspect: [4, 3],
+                quality :0.3,
             });
         }
 
@@ -434,29 +436,29 @@ export default class PostRoomScreen extends React.Component {
 
 
 
-    _postImage = async (file) => {
-        // var tmp = file.replace('file://', '');
-        var postLink = 'http://uploads.im/api?upload=' + file
-        //console.log(postLink)
+    // _postImage = async (file) => {
+    //     // var tmp = file.replace('file://', '');
+    //     var postLink = 'http://uploads.im/api?upload=' + file
+    //     //console.log(postLink)
 
 
-        //Post to register account
-        try {
-            await fetch(postLink)
-                .then((response) => response.json())
-                .then((responseJson) => {
+    //     //Post to register account
+    //     try {
+    //         await fetch(postLink)
+    //             .then((response) => response.json())
+    //             .then((responseJson) => {
 
-                    this.setState({ imageUrl1: responseJson.data.img_url })
-                    console.log(responseJson.data.img_url)
+    //                 this.setState({ imageUrl1: responseJson.data.img_url })
+    //                 console.log(responseJson.data.img_url)
 
-                })
-                .catch((e) => { console.log(e) });
-        } catch (error) {
-            console.log(error)
-        }
+    //             })
+    //             .catch((e) => { console.log(e) });
+    //     } catch (error) {
+    //         console.log(error)
+    //     }
 
 
-    }
+    // }
 
     _scrollToInput(reactNode) {
         // Add a 'scroll' ref to your ScrollView

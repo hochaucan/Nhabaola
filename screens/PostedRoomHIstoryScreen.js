@@ -24,6 +24,7 @@ import { CheckBox, Rating, Button, FormLabel, FormInput, SocialIcon, FormValidat
 import { TextInputMask, TextMask } from 'react-native-masked-text';
 import DatePicker from 'react-native-datepicker'
 import { responsiveHeight, responsiveWidth, responsiveFontSize } from 'react-native-responsive-dimensions';
+import deleteImageAsync from '../api/deleteImageAsync'
 
 var { height, width } = Dimensions.get('window');
 
@@ -185,7 +186,7 @@ export default class PostedRoomHIstoryScreen extends React.Component {
         this._getRoomBoxByUserAsync(true);
     }
 
-    _deleteRoomBoxAsync = async (id) => {
+    _deleteRoomBoxAsync = async (item) => {
         //await this.setState({ refresh: true })
         //alert(this.state.profile)
 
@@ -197,7 +198,7 @@ export default class PostedRoomHIstoryScreen extends React.Component {
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify({
-                    "ID": id,
+                    "ID": item.ID,
                     "CreatedBy": this.state.profile.ID,
                     "UpdatedBy": this.state.profile.UpdatedBy//"437683ebe7416f0086c4c62be025fac1",
                 }),
@@ -212,7 +213,14 @@ export default class PostedRoomHIstoryScreen extends React.Component {
                         else {
                             Alert.alert('Xóa thành công!');
                         }
+
+                        // let deleteResponse =  deleteImageAsync(item.Images);
+                        // let deleteResult =  uploadResponse.json();
+                        // alert(deleteResult)
+
                         this._getRoomBoxByUserAsync(true);
+
+                    
                     }
                     //this.setState({ refresh: false })
                     //alert(JSON.stringify(responseJson))
@@ -275,7 +283,7 @@ export default class PostedRoomHIstoryScreen extends React.Component {
             <View style={styles.container}>
 
 
-                <View style={{ flexDirection: 'row', padding: 10, backgroundColor: '#a4d227',alignItems: 'center' }}>
+                <View style={{ flexDirection: 'row', padding: 10, backgroundColor: '#a4d227', alignItems: 'center' }}>
                     <TouchableOpacity
                         style={{}}
                         onPress={() => {
@@ -465,7 +473,7 @@ export default class PostedRoomHIstoryScreen extends React.Component {
                                                 [
                                                     {
                                                         text: 'Đồng ý', onPress: () => {
-                                                            this._deleteRoomBoxAsync(item.ID);
+                                                            this._deleteRoomBoxAsync(item);
                                                         }
                                                     },
                                                 ]

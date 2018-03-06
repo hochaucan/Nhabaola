@@ -206,12 +206,14 @@ export default class RegisterAccountScreen extends React.Component {
             result = await ImagePicker.launchImageLibraryAsync({
                 allowsEditing: true,
                 aspect: [4, 3],
+                quality :0.3,
             });
         }
         else { // Get image from Camera
             result = await ImagePicker.launchCameraAsync({
                 allowsEditing: true,
                 aspect: [4, 3],
+                quality :0.3,
             });
         }
         if (!result.cancelled) {
