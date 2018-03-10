@@ -2,32 +2,40 @@ import { Permissions, Notifications } from 'expo';
 
 
 export default (async function deleteImageAsync(imageName) {
-    //let apiUrl = 'https://file-upload-example-backend-dkhqoilqqn.now.sh/upload';
-    // let apiUrl = 'http://uploads.im/api?upload';
-    let apiUrl = 'http://nhabaola.vn/api/Images/FO_Images_Del';
+    try {
+        await fetch("http://nhabaola.vn/api/Images/FO_Images_Del", {
+            method: 'POST',
+            headers: {
+                Accept: 'application/json',
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                "ImageName": imageName
 
-    //let uriParts = uri.split('.');
-    // let fileType = uri[uri.length - 1];
+            }),
+        })
+            .then((response) => response.json())
+            .then((responseJson) => {
 
-    // alert(uri + "  " + fileType)
+                // if (JSON.stringify(responseJson.ErrorCode) === "12") {
+                //     if (Platform.OS === 'android') {
+                //         ToastAndroid.showWithGravity('Xóa thành công!', ToastAndroid.SHORT, ToastAndroid.CENTER);
+                //     }
+                //     else {
+                //         Alert.alert('Xóa thành công!');
+                //     }
 
-    // let formData = new FormData();
-    // formData.append('photo', {
-    //     uri,
-    //     name: 'photo.jpg',//`photo.${fileType}`,
-    //     type: `image/${fileType}`,
-    // });
-    //alert(uri + "  " + uri.length + "  " + fileType + "  " + JSON.stringify(formData))
-    let options = {
-        method: 'POST',
-        body: JSON.stringify({
-            "ImageName": imageName
-        }),
-        headers: {
-            Accept: 'application/json',
-            'Content-Type': 'application/json',
-        },
-    };
 
-    return fetch(apiUrl, options);
+
+                // }
+
+                alert(JSON.stringify(responseJson))
+                //return JSON.stringify(responseJson);
+
+
+            }).
+            catch((error) => { console.log(error) });
+    } catch (error) {
+        console.log(error)
+    }
 });

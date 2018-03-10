@@ -189,6 +189,14 @@ export default class PostedRoomHIstoryScreen extends React.Component {
     _deleteRoomBoxAsync = async (item) => {
         //await this.setState({ refresh: true })
         //alert(this.state.profile)
+        // alert(JSON.stringify(item.Images))
+
+        //let deleteResult = deleteResponse.json();
+
+
+        //alert( JSON.stringify(deleteResponse))
+
+        return;
 
         try {
             await fetch("http://nhabaola.vn/api/RoomBox/FO_RoomBox_Del", {
@@ -200,7 +208,7 @@ export default class PostedRoomHIstoryScreen extends React.Component {
                 body: JSON.stringify({
                     "ID": item.ID,
                     "CreatedBy": this.state.profile.ID,
-                    "UpdatedBy": this.state.profile.UpdatedBy//"437683ebe7416f0086c4c62be025fac1",
+                    "UpdatedBy": this.state.profile.UpdatedBy
                 }),
             })
                 .then((response) => response.json())
@@ -214,13 +222,9 @@ export default class PostedRoomHIstoryScreen extends React.Component {
                             Alert.alert('Xóa thành công!');
                         }
 
-                        // let deleteResponse =  deleteImageAsync(item.Images);
-                        // let deleteResult =  uploadResponse.json();
-                        // alert(deleteResult)
-
                         this._getRoomBoxByUserAsync(true);
+                        let deleteResponse = deleteImageAsync(item.Images);
 
-                    
                     }
                     //this.setState({ refresh: false })
                     //alert(JSON.stringify(responseJson))
