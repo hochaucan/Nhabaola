@@ -29,7 +29,7 @@ export default (async function deleteImageAsync(imageName) {
 
                 // }
 
-                alert(JSON.stringify(responseJson))
+                //alert(JSON.stringify(responseJson))
                 //return JSON.stringify(responseJson);
 
 
