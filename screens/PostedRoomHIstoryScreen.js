@@ -196,7 +196,7 @@ export default class PostedRoomHIstoryScreen extends React.Component {
 
         //alert( JSON.stringify(deleteResponse))
 
-        return;
+        //return;
 
         try {
             await fetch("http://nhabaola.vn/api/RoomBox/FO_RoomBox_Del", {
