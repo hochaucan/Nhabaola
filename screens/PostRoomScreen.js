@@ -193,14 +193,14 @@ export default class PostRoomScreen extends React.Component {
             result = await ImagePicker.launchImageLibraryAsync({
                 allowsEditing: true,
                 aspect: [4, 3],
-                quality :0.3,
+                quality: 0.3,
             });
         }
         else {
             result = await ImagePicker.launchCameraAsync({
                 allowsEditing: true,
                 aspect: [4, 3],
-                quality :0.3,
+                quality: 0.3,
             });
         }
 
@@ -332,33 +332,34 @@ export default class PostRoomScreen extends React.Component {
         if (this.state.postRoomImage1 != null) {
             let uploadResponse = await uploadImageAsync(this.state.postRoomImage1);
             let uploadResult = await uploadResponse.json();
-            this.setState({ imageUrl: this.state.imageUrl + '|' + uploadResult.ImagePath }) //thumb_url or img_url
+            // this.setState({ imageUrl: this.state.imageUrl + '|' + uploadResult.ImagePath }) //thumb_url or img_url
+            this.setState({ imageUrl: this.state.imageUrl + uploadResult.ImagePath }) //thumb_url or img_url
         }
         if (this.state.postRoomImage2 != null) {
             let uploadResponse = await uploadImageAsync(this.state.postRoomImage2);
             let uploadResult = await uploadResponse.json();
-            this.setState({ imageUrl: this.state.imageUrl + '|' + uploadResult.ImagePath })
+            this.setState({ imageUrl: this.state.imageUrl + uploadResult.ImagePath })
         }
         if (this.state.postRoomImage3 != null) {
             let uploadResponse = await uploadImageAsync(this.state.postRoomImage3);
             let uploadResult = await uploadResponse.json();
-            this.setState({ imageUrl: this.state.imageUrl + '|' + uploadResult.ImagePath })
+            this.setState({ imageUrl: this.state.imageUrl + uploadResult.ImagePath })
         }
 
         if (this.state.postRoomImage4 != null) {
             let uploadResponse = await uploadImageAsync(this.state.postRoomImage4);
             let uploadResult = await uploadResponse.json();
-            this.setState({ imageUrl: this.state.imageUrl + '|' + uploadResult.ImagePath })
+            this.setState({ imageUrl: this.state.imageUrl + uploadResult.ImagePath })
         }
         if (this.state.postRoomImage5 != null) {
             let uploadResponse = await uploadImageAsync(this.state.postRoomImage5);
             let uploadResult = await uploadResponse.json();
-            this.setState({ imageUrl: this.state.imageUrl + '|' + uploadResult.ImagePath })
+            this.setState({ imageUrl: this.state.imageUrl + uploadResult.ImagePath })
         }
         if (this.state.postRoomImage6 != null) {
             let uploadResponse = await uploadImageAsync(this.state.postRoomImage6);
             let uploadResult = await uploadResponse.json();
-            this.setState({ imageUrl: this.state.imageUrl + '|' + uploadResult.ImagePath })
+            this.setState({ imageUrl: this.state.imageUrl + uploadResult.ImagePath })
         }
 
 
@@ -905,6 +906,7 @@ export default class PostRoomScreen extends React.Component {
                             returnKeyType={"done"}
                             onSubmitEditing={(event) => {
                                 //this._postRoomAsync();
+                                Keyboard.dismiss();
                             }}
                             onFocus={(event) => {
                                 this._scrollToInput(event.target)
