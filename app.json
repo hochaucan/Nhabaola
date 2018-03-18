@@ -5,7 +5,7 @@
     "slug": "nhabaola-reactnative",
     "privacy": "public",
     "sdkVersion": "19.0.0",
-    "version": "1.0.3",
+    "version": "1.0.5",
     "orientation": "portrait",
     "primaryColor": "#cccccc",
     "icon": "./assets/icons/app-icon.png",
@@ -17,7 +17,6 @@
       "icon": "./assets/icons/app-icon.png",
       "hideExponentText": true,
       "backgroundColor": "#a4d227"
-      //"backgroundImage": "./assets/images/nbl-app_bg.png"
     },
     "packagerOpts": {
       "assetExts": [
@@ -30,7 +29,7 @@
     },
     "android": {
       "package": "vn.nhabaola.nhabaola",
-      "versionCode": 4,
+      "versionCode": 5,
       "config": {
         "googleMaps": {
           "apiKey": "AIzaSyDjGSoHkMu6Q55FifG90l25DR8SfMo3quM"
