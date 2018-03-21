@@ -123,7 +123,7 @@ export default class UpdateAccountScreen extends React.Component {
                 let uploadResponse = await uploadImageAsync(this.state.registerAccountImage);
                 let uploadResult = await uploadResponse.json();
                 this.setState({
-                    registerAccountImage: uploadResult.ImagePath.match("http") ? uploadResult.ImagePath : ""
+                    registerAccountImage: uploadResult.ImagePath.match("http") ? uploadResult.ImagePath.replace('|', '') : ""
                 })
             }
         }
@@ -215,14 +215,14 @@ export default class UpdateAccountScreen extends React.Component {
             result = await ImagePicker.launchImageLibraryAsync({
                 allowsEditing: true,
                 aspect: [4, 3],
-                quality :0.3,
+                quality: 0.3,
             });
         }
         else { // Get image from Camera
             result = await ImagePicker.launchCameraAsync({
                 allowsEditing: true,
                 aspect: [4, 3],
-                quality :0.3,
+                quality: 0.3,
             });
         }
         if (!result.cancelled) {
@@ -241,7 +241,7 @@ export default class UpdateAccountScreen extends React.Component {
     render() {
         return (
             <View style={{ flex: 1, backgroundColor: '#fff', paddingBottom: 20, }}>
-                <View style={{ flexDirection: 'row', padding: 10, backgroundColor: '#a4d227',alignItems: 'center' }}>
+                <View style={{ flexDirection: 'row', padding: 10, backgroundColor: '#a4d227', alignItems: 'center' }}>
                     <TouchableOpacity
                         style={{}}
                         onPress={() => {

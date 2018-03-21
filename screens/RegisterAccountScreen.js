@@ -151,7 +151,7 @@ export default class RegisterAccountScreen extends React.Component {
 
 
                 body: JSON.stringify({
-                    "Avarta": uploadResult.ImagePath.match("http") ? uploadResult.ImagePath : "",
+                    "Avarta": uploadResult.ImagePath.match("http") ? uploadResult.ImagePath.replace('|', '') : "",
                     "UserName": this.state.registerCellPhone,
                     "FullName": this.state.registerFullName,
                     "Email": this.state.registerEmail,
@@ -206,14 +206,14 @@ export default class RegisterAccountScreen extends React.Component {
             result = await ImagePicker.launchImageLibraryAsync({
                 allowsEditing: true,
                 aspect: [4, 3],
-                quality :0.3,
+                quality: 0.3,
             });
         }
         else { // Get image from Camera
             result = await ImagePicker.launchCameraAsync({
                 allowsEditing: true,
                 aspect: [4, 3],
-                quality :0.3,
+                quality: 0.3,
             });
         }
         if (!result.cancelled) {

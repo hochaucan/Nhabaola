@@ -107,6 +107,7 @@ export default class HomeScreen extends React.Component {
       roomPageCount: 10,
 
       // Login
+      modalLogin: false,
       profile: null,
       loginUsername: '',
       loginPassword: '',
@@ -482,7 +483,13 @@ export default class HomeScreen extends React.Component {
       }
     }
 
-    this.popupLoadingIndicator.show()
+    if (Platform.OS == 'ios') {
+      //      this.setState({ modalLogin: false })
+    }
+    else {
+      this.popupLoadingIndicator.show()
+    }
+
 
     try {
       await fetch("http://nhabaola.vn/api/Account/FO_Account_Login", {
@@ -502,7 +509,13 @@ export default class HomeScreen extends React.Component {
 
 
           if (responseJson.obj.UpdatedBy != "") { // Login successful
-            this.popupLogin.dismiss();
+
+            if (Platform.OS == 'ios') {
+              this.setState({ modalLogin: false })
+            }
+            else {
+              this.popupLogin.dismiss()
+            }
 
             saveStorageAsync('FO_Account_Login', JSON.stringify(responseJson.obj))
             saveStorageAsync('SessionKey', JSON.stringify(responseJson.obj.UpdatedBy))
@@ -1550,7 +1563,15 @@ export default class HomeScreen extends React.Component {
                 textContainerStyle={{ backgroundColor: '#73aa2a' }}
                 textStyle={{ color: '#fff' }}
                 title="Đăng nhập" onPress={() => {
-                  this.popupLogin.show()
+
+
+                  if (Platform.OS == 'ios') {
+                    this.setState({ modalLogin: true })
+                  } else {
+                    this.popupLogin.show()
+                  }
+
+                 
                   const timing = Animated.timing;
                   Animated.parallel([
                     timing(this.state.animation.usernamePostionLeft, {
@@ -1931,6 +1952,153 @@ export default class HomeScreen extends React.Component {
             </Animated.View> */}
           </View>
         </PopupDialog>
+
+        {/* Modal Login */}
+        <Modal
+          animationType={"slide"}
+          transparent={false}
+          visible={this.state.modalLogin}
+          onRequestClose={() => {
+            //alert("Modal has been closed.")
+          }}
+        >
+
+          <View>
+            {/* Username */}
+            <Animated.View style={{
+              position: 'relative',
+              left: this.state.animation.usernamePostionLeft,
+              flexDirection: 'row', padding: 10,
+              marginTop: responsiveHeight(10),
+            }}>
+              <Ionicons style={{ flex: 1, fontSize: 22, paddingTop: 12, textAlign: 'center', }} name='ios-person' />
+              <FormInput
+                ref='userNameInput'
+                returnKeyType={"next"}
+                onSubmitEditing={(event) => {
+                  this.refs.passwordInput.focus();
+                }}
+                containerStyle={{ flex: 15 }}
+                placeholder='Số điện thoại'
+                autoCapitalize='sentences'
+                keyboardType='phone-pad'
+                value={this.state.loginUsername}
+                underlineColorAndroid={'#73aa2a'}
+                onChangeText={(loginUsername) => this.setState({ loginUsername })}
+              />
+            </Animated.View>
+            {/* Password */}
+            <Animated.View style={{ position: 'relative', left: this.state.animation.passwordPositionLeft, flexDirection: 'row', padding: 10, paddingTop: 0, }}>
+              <Ionicons style={{ flex: 1, fontSize: 22, paddingTop: 12, textAlign: 'center', }} name='md-lock' />
+              <FormInput
+                ref='passwordInput'
+                returnKeyType={"done"}
+                onSubmitEditing={(event) => {
+                  this._loginAsync()
+                }}
+                containerStyle={{ flex: 15 }}
+                placeholder='Mật khẩu'
+                underlineColorAndroid={'#73aa2a'}
+                secureTextEntry={true}
+                value={this.state.loginPassword}
+                onChangeText={(loginPassword) => this.setState({ loginPassword })}
+              />
+            </Animated.View>
+            {/* Button */}
+            <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center', marginTop: 10, }}>
+              <Button
+                buttonStyle={{ backgroundColor: '#9B9D9D', padding: 10, borderRadius: 5, }}
+                raised={false}
+                icon={{ name: 'ios-backspace', type: 'ionicon' }}
+                title='Hủy'
+                onPress={() => {
+                  Keyboard.dismiss();
+                  if (Platform.OS == 'ios') {
+                    this.setState({ modalLogin: false })
+                  }
+                  else {
+                    this.popupLogin.dismiss()
+                  }
+
+                }}
+              />
+
+              <Button
+                buttonStyle={{ backgroundColor: '#73aa2a', padding: 10, borderRadius: 5, }}
+                raised={false}
+                icon={{ name: 'md-checkmark', type: 'ionicon' }}
+                title='Đăng nhập'
+                onPress={() => {
+                  Keyboard.dismiss();
+                  this._loginAsync()
+                }}
+              />
+            </View>
+
+
+
+            <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center', marginTop: 10, }}>
+              <TouchableOpacity style={{ flex: 1, }}
+                onPress={() => {
+                  this.popupLogin.dismiss();
+                  this.popupResetPassword.show();
+                }}
+              >
+                <Text style={{ padding: 15, textAlign: 'center', }}>Quên mật khẩu</Text>
+              </TouchableOpacity>
+              <TouchableOpacity style={{ flex: 1, }}
+                onPress={() => {
+                  this.popupLogin.dismiss();
+                  //this.setState({ modalRegisterAccount: true })
+                  this.props.navigation.navigate('RegisterAccountScreen', {
+                    onRefreshScreen: this.onRefreshScreen,
+                    login: this._loginAfterRegisterAccountAsync
+                  })
+                  {/* this.props.navigation.navigate('RegisterAccountScreen', {
+                    onRefreshScreen: this.onRefreshScreen,
+                    //login: this._loginAsync()
+                  }) */}
+                }}
+              >
+                <Text style={{ padding: 15, textAlign: 'center' }}>Đăng ký mới</Text>
+              </TouchableOpacity>
+            </View>
+
+
+            {/* <FormLabel
+              containerStyle={{
+                alignItems: 'center', justifyContent: 'center',
+                height: 50,
+              }}
+            >
+              ----- Hoặc đăng nhập bằng -----
+            </FormLabel>
+
+            <Animated.View style={{
+              position: 'relative',
+              top: this.state.animation.loginPositionTop, marginTop: 5, flexDirection: 'row',
+              alignItems: 'center', justifyContent: 'center'
+
+            }}>
+              <SocialIcon
+                type='facebook'
+                raised={false}
+                onPress={this._handleFacebookLogin}
+              />
+              <SocialIcon
+                type='youtube'
+                raised={false}
+                onPress={this._handleGoogleLogin}
+              />
+              <SocialIcon
+                type='twitter'
+                raised={false}
+                onPress={this._handleFacebookLogin}
+              />
+            </Animated.View> */}
+          </View>
+          <KeyboardSpacer />
+        </Modal>
 
         {/* Popup Report */}
         <PopupDialog

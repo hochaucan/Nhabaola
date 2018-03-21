@@ -110,7 +110,7 @@ export default TabNavigator(
       },
       showIcon: true,
       indicatorStyle: {
-        opacity: 1,
+        //opacity: 1,
         backgroundColor: '#fff'//'#a4d227'
       },
       upperCaseLabel: false,
@@ -118,8 +118,8 @@ export default TabNavigator(
       activeTintColor: '#a4d227',
       inactiveTintColor: '#000',
       iconStyle: {
-        //marginTop: Platform.OS === 'ios' ? -25 : 0,
-        //height: Platform.OS === 'ios' ? 40 : 30,
+        marginTop: Platform.OS === 'ios' ? -23 : 0,
+        height: Platform.OS === 'ios' ? 40 : 30,
       }
     }
   }
