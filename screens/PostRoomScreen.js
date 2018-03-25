@@ -597,14 +597,14 @@ export default class PostRoomScreen extends React.Component {
                                     description=''
                                 >
 
-                                    <Image
+                                    {/* <Image
                                         source={require('../assets/images/nbl-here-icon.png')}
                                         style={{ height: height * 0.07, width: width * 0.07 }}
                                         onLayout={() => {
                                             this.setState({ initialRenderCurrentMaker: false })
                                         }}
                                         key={`${this.state.initialRenderCurrentMaker}`}
-                                    />
+                                    /> */}
 
                                 </MapView.Marker>
                                 : null}
