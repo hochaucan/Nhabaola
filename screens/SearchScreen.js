@@ -257,7 +257,7 @@ export default class SearchScreen extends React.Component {
             selectedUnitPrice: '',
             selectedUnitAcreage: '',
             minPrice: '0',
-            maxPrice: '999999999999',
+            maxPrice: '9999999999',
             unitPrice: '000000',
             unitPriceLable: '',
             unitPriceSuffixLable: 'triệu',
@@ -554,17 +554,31 @@ export default class SearchScreen extends React.Component {
                     "Longitude": this.state.isSearching === true ? this.state.searchingMaker.longitude : this.state.location.coords.longitude,//"106.6104477",
                     "Radius": this.state.radius,
                     "RoomPriceMin": this.state.minPrice,
-                    "RoomPriceMax": this.state.maxPrice,
+                    "RoomPriceMax": "9999999999",//this.state.maxPrice,
                     "AcreageMin": this.state.minAcreage,
                     "AcreageMax": this.state.maxAcreage,
                     "SortOptionKey": "SortDistance",
                     "PageIndex": "0",
                     "PageCount": "1000"
+
+
+
+                    // "CategoryID": "",
+                    // "Longitude": "106.76549699999998",
+                    // "Latitude": "10.79129",
+                    // "Radius": "900",
+                    // "RoomPriceMin": "0",
+                    // "RoomPriceMax": "2800000000",
+                    // "AcreageMin": "0",
+                    // "AcreageMax": "1000",
+                    // "SortOptionKey": "SortDistance",
+                    // "PageIndex": "0",
+                    // "PageCount": "50"
                 }),
             })
                 .then((response) => response.json())
                 .then((responseJson) => {
-
+                    //alert(JSON.stringify(responseJson))
                     responseJson.obj.map((y) => {
                         roomBox.push(y);
 
@@ -577,6 +591,8 @@ export default class SearchScreen extends React.Component {
 
                         MARKERS.push(this.state.houseCoords)
                     })
+
+                    //alert(JSON.stringify(roomBox))
 
                     // this.popupLoadingIndicator.dismiss();
                     // this.setState({ refresh: false })
@@ -857,7 +873,7 @@ export default class SearchScreen extends React.Component {
                             /* image={require('../images/nbl-here-icon.png')} */
 
                             >
-                                <Image
+                                {/* <Image
                                     source={require('../assets/images/nbl-here-icon.png')}
                                     style={{ height: height * 0.07, width: width * 0.07 }}
                                     // onLoad={() => {
@@ -869,8 +885,8 @@ export default class SearchScreen extends React.Component {
                                     key={`${this.state.initialRenderCurrentMaker}`}
                                 >
 
-                                    {/* <Text style={{ width: 0, height: 0 }}>{Math.random()}</Text> */}
-                                </Image>
+                                 
+                                </Image> */}
                             </MapView.Marker>
                             :
                             null}
