@@ -8,6 +8,8 @@
  Carousel: https://github.com/archriss/react-native-snap-carousel
 react-native-elements: https://github.com/react-native-training/react-native-elements
 react-native-map: https://github.com/airbnb/react-native-maps
+Dropdownlist alert:  https://github.com/testshallpass/react-native-dropdownalert
+
 
 Android SDK Location: C:\Users\NickHo\AppData\Local\Android\Sdk
 

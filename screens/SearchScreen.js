@@ -34,6 +34,7 @@ import { responsiveHeight, responsiveWidth, responsiveFontSize } from 'react-nat
 import convertAmountToWording from '../api/convertAmountToWording'
 import getDirections from 'react-native-google-maps-directions'
 import globalVariable from '../components/Global'
+import SimplePicker from 'react-native-simple-picker';
 
 var { height, width } = Dimensions.get('window');
 
@@ -44,6 +45,9 @@ const LATITUDE_DELTA = 0.02;
 const LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO;
 const SPACE = 0.01;
 let id = 0;
+
+
+
 
 // const customStyle = [
 //     {
@@ -246,7 +250,7 @@ export default class SearchScreen extends React.Component {
             age: 18,
             hackHeight: height,
             radius: '2',
-            modalRadius: false,
+            // modalRadius: false,
             errorMessage: null,
             markers: [],
             findingHouseMakers: [],
@@ -270,6 +274,7 @@ export default class SearchScreen extends React.Component {
             multiSliderAreaValue: [0, 10],
             txtFilterResult: null,
             selectedBDS: 'Tất cả BĐS',
+            iosSelectedCategory: 'Tất cả BĐS',
 
             // Searhing address
             searchingMaker: null,
@@ -323,10 +328,10 @@ export default class SearchScreen extends React.Component {
     fitAllMarkers() {
         this.map.fitToCoordinates(MARKERS, {
             edgePadding: {
-                top: responsiveHeight(40),
-                bottom: responsiveHeight(40),
-                right: responsiveHeight(40),
-                left: responsiveHeight(40)
+                top: Platform.OS == 'ios' ? responsiveHeight(10) : responsiveHeight(40),
+                bottom: Platform.OS == 'ios' ? responsiveHeight(10) : responsiveHeight(40),
+                right: Platform.OS == 'ios' ? responsiveHeight(10) : responsiveHeight(40),
+                left: Platform.OS == 'ios' ? responsiveHeight(10) : responsiveHeight(40)
             },//DEFAULT_PADDING,
             animated: true,
         });
@@ -687,6 +692,10 @@ export default class SearchScreen extends React.Component {
                         elevation: 2,
                         borderRadius: 10,
                         opacity: 0.9,
+                        shadowColor: '#000',
+                        shadowOffset: { width: 0, height: 2 },
+                        shadowOpacity: 0.2,
+                        shadowRadius: 2,
                     }}>{this.state.txtFilterResult}</Text>
 
                 }
@@ -699,28 +708,38 @@ export default class SearchScreen extends React.Component {
                     zIndex: 10,
                     top: 45,
                     paddingLeft: 10,
+                    paddingTop: Platform.OS == 'ios' ? 5 : 0,
+                    paddingBottom: Platform.OS == 'ios' ? 5 : 0,
                     borderRadius: 10,
                     justifyContent: 'center',
                     alignItems: 'center',
                     elevation: 2,
                     opacity: 0.9,
                     width: 130,//responsiveWidth(40)
+
+                    shadowColor: '#000',
+                    shadowOffset: { width: 0, height: 2 },
+                    shadowOpacity: 0.2,
+                    shadowRadius: 2,
+
                 }}>
                     <Text style={{ width: 30, paddingLeft: 5 }}>BK: </Text>
                     {Platform.OS === 'ios' ?
 
                         <TouchableOpacity
                             onPress={() => {
-                                this.setState({
-                                    modalRadius: true
-                                })
+                                // this.setState({
+                                //     modalRadius: true
+                                // })
+
+                                this.refs.pickerRadius.show();
                             }}
                         >
 
                             <Text style={{}}>{this.state.radius} km</Text>
                         </TouchableOpacity>
                         :
-                        <Picker
+                        <Picker // Android
                             style={{
                                 //flex: 2,
                                 width: 110,
@@ -749,6 +768,24 @@ export default class SearchScreen extends React.Component {
 
                 </View>
 
+
+                <SimplePicker
+                    ref={'pickerRadius'}
+                    options={['2', '4', '6', '8', '10', '12', '14', '16', '18', '20', '30', '40', '50']}
+                    labels={['2 km', '4 km', '6 km', '8 km', '10 km', '12 km', '14 km', '16 km', '18 km', '20 km', '30 km', '40 km', '50 km']}
+                    confirmText='Đồng ý'
+                    cancelText='Hủy'
+                    itemStyle={{
+                        fontSize: 25,
+                        color: '#73aa2a',
+                        textAlign: 'center',
+                        fontWeight: 'bold',
+                    }}
+                    onSubmit={async (option) => {
+                        await this.setState({ radius: option, });
+                        this._getRoomByFilter();
+                    }}
+                />
 
                 {/* Filter */}
                 {/* <View style={{
@@ -1132,16 +1169,27 @@ export default class SearchScreen extends React.Component {
                             }}
                             onPress={async () => {
                                 // this.fitAllMarkers();
-                                this.map.fitToCoordinates(MARKERS, {
-                                    edgePadding: {
-                                        top: this.state.isHouseList ? responsiveHeight(40) : responsiveHeight(60),
-                                        bottom: this.state.isHouseList ? responsiveHeight(40) : responsiveHeight(250),//900,
-                                        right: this.state.isHouseList ? responsiveHeight(40) : responsiveHeight(230),
-                                        left: this.state.isHouseList ? responsiveHeight(40) : responsiveHeight(230)
-                                    },//DEFAULT_PADDING,
-                                    animated: true,
-                                });
-
+                                if (Platform.OS == 'ios') {
+                                    this.map.fitToCoordinates(MARKERS, {
+                                        edgePadding: {
+                                            top: this.state.isHouseList ? responsiveHeight(10) : responsiveHeight(10),
+                                            bottom: this.state.isHouseList ? responsiveHeight(10) : responsiveHeight(60),
+                                            right: this.state.isHouseList ? responsiveHeight(10) : responsiveHeight(15),
+                                            left: this.state.isHouseList ? responsiveHeight(10) : responsiveHeight(15)
+                                        },//DEFAULT_PADDING,
+                                        animated: true,
+                                    });
+                                } else { // Android
+                                    this.map.fitToCoordinates(MARKERS, {
+                                        edgePadding: {
+                                            top: this.state.isHouseList ? responsiveHeight(40) : responsiveHeight(60),
+                                            bottom: this.state.isHouseList ? responsiveHeight(40) : responsiveHeight(250),
+                                            right: this.state.isHouseList ? responsiveHeight(40) : responsiveHeight(230),
+                                            left: this.state.isHouseList ? responsiveHeight(40) : responsiveHeight(230)
+                                        },//DEFAULT_PADDING,
+                                        animated: true,
+                                    });
+                                }
                                 Animated.timing(                  // Animate over time
                                     this.state.houseListHeigh,            // The animated value to drive
                                     {
@@ -1283,9 +1331,9 @@ export default class SearchScreen extends React.Component {
                                                         options={{ suffixUnit: ' đ', precision: 0, unit: ' ', separator: ' ' }}
                                                     /> */}
 
-                                                <Text style={{ flex: 1 }}>{convertAmountToWording(item.Price)}</Text>
+                                                <Text style={{ flex: 1, fontSize: responsiveFontSize(1.8) }}>{convertAmountToWording(item.Price)}</Text>
                                                 <View style={{ flex: 1, flexDirection: 'row', }}>
-                                                    <Text>{item.Acreage} m</Text>
+                                                    <Text style={{ fontSize: responsiveFontSize(1.8) }} >{item.Acreage} m</Text>
                                                     <Text style={{ fontSize: 8, marginBottom: 5 }}>2</Text>
                                                 </View>
                                                 <Ionicons style={styles.searCardDistanceIcon} name='md-pin' >  {item.Distance} km</Ionicons>
@@ -1332,24 +1380,65 @@ export default class SearchScreen extends React.Component {
 
                                 <FormLabel>Loại bất động sản:</FormLabel>
                                 <View style={{ flexDirection: 'row', marginBottom: 30, }}>
-                                    <Picker // Android
-                                        style={{ flex: 1, marginTop: -4, marginLeft: 18 }}
-                                        mode='dropdown'
-                                        selectedValue={this.state.selectedCategory}
-                                        onValueChange={(itemValue, itemIndex) => {
-                                            this.setState({ selectedCategory: itemValue })
-                                        }}>
-                                        <Picker.Item label='-- Tất cả --' value='' />
+
+                                    {Platform.OS == 'ios' ?
+
+                                        <TouchableOpacity
+                                            onPress={() => {
+                                                // this.setState({
+                                                //     modalRadius: true
+                                                // })
+
+                                                this.refs.pickerCategory.show();
+                                            }}
+                                        >
+
+                                            <Text style={{ marginLeft: 20 }}>{this.state.iosSelectedCategory}</Text>
+                                        </TouchableOpacity>
+                                        :
+
+                                        <Picker // Android
+                                            style={{ flex: 1, marginTop: -4, marginLeft: 18 }}
+                                            mode='dropdown'
+                                            selectedValue={this.state.selectedCategory}
+                                            onValueChange={(itemValue, itemIndex) => {
+                                                this.setState({ selectedCategory: itemValue })
+                                            }}>
+                                            <Picker.Item label='-- Tất cả --' value='' />
 
 
-                                        {this.state.roomCategory.map((y, i) => {
-                                            return (
-                                                <Picker.Item key={i} label={y.CatName} value={y.ID} />
-                                            )
-                                        })}
+                                            {this.state.roomCategory.map((y, i) => {
+                                                return (
+                                                    <Picker.Item key={i} label={y.CatName} value={y.ID} />
+                                                )
+                                            })}
 
-                                    </Picker>
+                                        </Picker>
+                                    }
 
+                                    <SimplePicker
+                                        ref={'pickerCategory'}
+                                        options={this.state.roomCategory.map((y, i) => y.ID)}
+                                        labels={this.state.roomCategory.map((y, i) => y.CatName)}
+                                        confirmText='Đồng ý'
+                                        cancelText='Hủy'
+                                        itemStyle={{
+                                            fontSize: 25,
+                                            color: '#73aa2a',
+                                            textAlign: 'center',
+                                            fontWeight: 'bold',
+                                        }}
+                                        onSubmit={async (option) => {
+                                            await this.setState({ selectedCategory: option });
+                                            this.state.roomCategory.map((y, i) => {
+                                                if (y.ID === option) {
+                                                    this.setState({ iosSelectedCategory: y.CatName })
+                                                }
+                                            })
+
+                                            //this._getRoomByFilter();
+                                        }}
+                                    />
 
 
                                 </View>
@@ -1524,6 +1613,7 @@ export default class SearchScreen extends React.Component {
                                                     selectedBDS: 'Tất cả BĐS',
                                                     selectedUnitAcreage: 'acmv',
                                                     selectedUnitPrice: 'ptr',
+                                                    iosSelectedCategory: 'Tất cả BĐS',
                                                 })
                                                 this.setState({ modalSearchFilterVisible: false });
                                                 this._getRoomByFilter();
@@ -1697,7 +1787,7 @@ export default class SearchScreen extends React.Component {
                 </PopupDialog>
 
                 {/* Modal Radius Ios*/}
-                <Modal
+                {/* <Modal
                     style={{}}
                     animationType={"slide"}
                     transparent={true}
@@ -1707,12 +1797,6 @@ export default class SearchScreen extends React.Component {
                     }}
                 >
 
-                    {/* <TouchableOpacity
-                        style={{ backgroundColor: '#fff', paddingTop: height * 0.4 }}
-                        onPress={() => { this.setState({ modalRadius: false }) }}
-                    >
-                        <Text style={{ textAlign: 'right' }}>Chọn</Text>
-                    </TouchableOpacity> */}
                     <Picker
                         style={{
                             flex: 1,
@@ -1735,7 +1819,7 @@ export default class SearchScreen extends React.Component {
                         <Picker.Item label="10 km" value="10" />
                     </Picker>
 
-                </Modal>
+                </Modal> */}
 
                 {/* Popup Loading Indicator */}
                 <PopupDialog

@@ -13,6 +13,7 @@ import {
   Platform,
   TextInput,
   findNodeHandle,
+  
 }
   from 'react-native';
 import { Constants, Location, Permissions } from 'expo';
@@ -23,12 +24,15 @@ import { GooglePlacesAutocomplete, } from 'react-native-google-places-autocomple
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import KeyboardSpacer from 'react-native-keyboard-spacer';
 import getDirections from 'react-native-google-maps-directions'
+import SimplePicker from 'react-native-simple-picker';
 
 
 
 var date = new Date();
 var timeZone = (-1) * date.getTimezoneOffset() / 60;
-
+const options = ['Option1', 'Option2', 'Option3'];
+// Labels is optional
+const labels = ['Banana', 'Apple', 'Pear'];
 
 export default class Testing extends React.Component {
   static navigationOptions = {
@@ -43,7 +47,7 @@ export default class Testing extends React.Component {
       txt: 'Hoang Oanh',
       location: null,
       errorMessage: null,
-
+      selectedOption: '',
     }
   }
 
@@ -107,9 +111,53 @@ export default class Testing extends React.Component {
 
     return (
       <View style={styles.container}>
-        <Button onPress={this.handleGetDirections} title="Get Directions" />
+        <Text style={styles.paragraph}>Current Option: {this.state.selectedOption}</Text>
 
+        <Text
+          style={{ color: '#006381', marginTop: 20 }}
+          onPress={() => {
+            this.refs.picker.show();
+          }}
+        >
+            Click here to select your option
+        </Text>
 
+        <Text
+          style={{ color: '#006381', marginTop: 20 }}
+          onPress={() => {
+            this.refs.picker2.show();
+          }}
+        >
+            Click here to select your option with labels
+        </Text>
+
+        <SimplePicker
+          ref={'picker'}
+          options={options}
+          onSubmit={(option) => {
+            this.setState({
+              selectedOption: option,
+            });
+          }}
+        />
+
+        <SimplePicker
+          ref={'picker2'}
+          options={options}
+          labels={labels}
+          confirmText='Đồng ý'
+          itemStyle={{
+            fontSize: 25,
+            color: 'red',
+            textAlign: 'left',
+            fontWeight: 'bold',
+          }}
+          onSubmit={(option) => {
+            this.setState({
+              selectedOption: option,
+            });
+          }}
+        />
       </View>
 
     );
@@ -126,12 +174,23 @@ export default class Testing extends React.Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#efecc9',
   },
-  paragraph: {
-    margin: 24,
-    fontSize: 18,
+
+  welcome: {
+    fontSize: 20,
     textAlign: 'center',
+    margin: 10,
+  },
+
+  paragraph: {
+    textAlign: 'center',
+    color: '#002f2f',
+    marginBottom: 5,
+    fontWeight: 'bold',
+    fontSize: 18,
   },
 });
 
