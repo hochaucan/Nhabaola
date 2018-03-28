@@ -25,6 +25,7 @@ import { TextInputMask, TextMask } from 'react-native-masked-text';
 import DatePicker from 'react-native-datepicker'
 import { responsiveHeight, responsiveWidth, responsiveFontSize } from 'react-native-responsive-dimensions';
 import deleteImageAsync from '../api/deleteImageAsync'
+import convertAmountToWording from '../api/convertAmountToWording'
 
 var { height, width } = Dimensions.get('window');
 
@@ -357,7 +358,10 @@ export default class PostedRoomHIstoryScreen extends React.Component {
                                             source={{ uri: item.Title }} />
 
                                         <View style={styles.searchCardTextBox}>
-                                            <Text style={styles.searchCardAddress}>{item.Address}</Text>
+                                            <Text style={{
+                                                flex: 2,
+                                                fontSize: responsiveFontSize(1.8),
+                                            }}>{item.Address}</Text>
                                             {/* {
                                                 this.state.roomCategory.map((y, i) => {
                                                     return (
@@ -371,12 +375,14 @@ export default class PostedRoomHIstoryScreen extends React.Component {
                                             } */}
                                             <Text style={styles.searchCardPostDate}>Ngày đăng: {item.UpdatedDate}</Text>
                                             <View style={styles.searchCardPriceBox}>
-                                                <TextMask
+                                                {/* <TextMask
                                                     style={{ flex: 1, }}
-                                                    value={item.Price}
+                                                    value={convertAmountToWording(item.Price)}
                                                     type={'money'}
                                                     options={{ suffixUnit: ' đ', precision: 0, unit: ' ', separator: ' ' }}
-                                                />
+                                                /> */}
+
+                                                <Text style={{ flex: 1, fontSize: responsiveFontSize(1.8) }}>{convertAmountToWording(item.Price)}</Text>
 
                                                 {/* Category */}
                                                 {
@@ -386,14 +392,14 @@ export default class PostedRoomHIstoryScreen extends React.Component {
                                                             // <Text>{y.ID} {item.CategoryID}</Text>
                                                             y.ID == item.CategoryID &&
                                                             <Text
-                                                                style={{ flex: 1, fontSize: 15, textAlign: 'center', color: '#73aa2a' }}
+                                                                style={{ flex: 1, fontSize: responsiveFontSize(1.8), textAlign: 'center', color: '#73aa2a' }}
                                                                 key={i}>{y.CatName}</Text>
                                                         )
                                                     })
                                                 }
 
                                                 {!item.IsActive &&
-                                                    <Text style={{ flex: 1, color: 'red', textAlign: 'center' }}>Hết hạn</Text>
+                                                    <Text style={{ flex: 1, fontSize: responsiveFontSize(1.2), color: 'red', textAlign: 'center' }}>Hết hạn</Text>
                                                 }
 
                                             </View>
@@ -406,11 +412,11 @@ export default class PostedRoomHIstoryScreen extends React.Component {
                                         style={{ flex: 1, flexDirection: 'row', alignItems: 'center' }}
                                     >
                                         <Ionicons style={{ fontSize: 12, marginRight: 5 }} name="md-timer" />
-                                        <Text style={{}}>Ngày hiệu lực</Text>
+                                        <Text style={{ fontSize: responsiveFontSize(1.8), }}>Ngày hiệu lực</Text>
                                     </View>
-                                    <Text style={{ flex: 1, textAlign: 'center', color: '#9B9D9D' }}>{item.FromDate}</Text>
+                                    <Text style={{ flex: 1, fontSize: responsiveFontSize(1.8), textAlign: 'center', color: '#9B9D9D' }}>{item.FromDate}</Text>
                                     <Text style={{ color: '#9B9D9D' }}> - </Text>
-                                    <Text style={{ flex: 1, textAlign: 'center', color: '#9B9D9D' }}>{item.ToDate}</Text>
+                                    <Text style={{ flex: 1, fontSize: responsiveFontSize(1.8), textAlign: 'center', color: '#9B9D9D' }}>{item.ToDate}</Text>
                                 </View>
                                 {item.IsHighlight &&
                                     <View style={{ marginBottom: 5, marginTop: 2, flexDirection: 'row', justifyContent: 'space-between' }}>
@@ -418,11 +424,11 @@ export default class PostedRoomHIstoryScreen extends React.Component {
                                             style={{ flex: 1, flexDirection: 'row', alignItems: 'center' }}
                                         >
                                             <Ionicons style={{ fontSize: 12, marginRight: 5 }} name="md-sunny" />
-                                            <Text>Ngày nổi bật</Text>
+                                            <Text style={{ fontSize: responsiveFontSize(1.8), }}>Ngày nổi bật</Text>
                                         </View>
-                                        <Text style={{ flex: 1, textAlign: 'center', color: '#9B9D9D' }}>{item.HighlightFromDate}</Text>
+                                        <Text style={{ flex: 1, fontSize: responsiveFontSize(1.8), textAlign: 'center', color: '#9B9D9D' }}>{item.HighlightFromDate}</Text>
                                         <Text style={{ color: '#9B9D9D' }}> - </Text>
-                                        <Text style={{ flex: 1, textAlign: 'center', color: '#9B9D9D' }}>{item.HighlightToDate}</Text>
+                                        <Text style={{ flex: 1, fontSize: responsiveFontSize(1.8), textAlign: 'center', color: '#9B9D9D' }}>{item.HighlightToDate}</Text>
                                     </View>
                                 }
                                 <View style={{ marginBottom: 2, flexDirection: 'row', paddingTop: 10, paddingBottom: 10, justifyContent: 'space-between' }}>
@@ -434,8 +440,25 @@ export default class PostedRoomHIstoryScreen extends React.Component {
                                                 borderWidth: 0.8, borderColor: '#a4d227', padding: 10, borderRadius: 5,
                                             }}
                                             onPress={() => {
+                                                Alert.alert(
+                                                    'Thông báo',
+                                                    'Bạn muốn đưa Tin lên đầu trang?',
+                                                    [
+                                                        {
+                                                            text: 'Hủy', onPress: () => {
+                                                                // this._deleteRoomBoxAsync(item);
+                                                            }
+                                                        },
+                                                        {
+                                                            text: 'Đồng ý', onPress: () => {
+                                                                this._setTopAsync(item.ID)
+                                                            }
+                                                        },
+                                                    ]
+                                                );
 
-                                                this._setTopAsync(item.ID)
+
+
 
                                             }}
                                         >
@@ -475,6 +498,11 @@ export default class PostedRoomHIstoryScreen extends React.Component {
                                                 'Thông báo',
                                                 'Bạn chắc chắn xóa BĐS này?',
                                                 [
+                                                    {
+                                                        text: 'Hủy', onPress: () => {
+                                                            // this._deleteRoomBoxAsync(item);
+                                                        }
+                                                    },
                                                     {
                                                         text: 'Đồng ý', onPress: () => {
                                                             this._deleteRoomBoxAsync(item);
@@ -531,10 +559,7 @@ const styles = StyleSheet.create({
         // paddingTop: 10,
         fontSize: 12,
     },
-    searchCardAddress: {
-        flex: 2,
-        fontSize: 15,
-    },
+
     searchCardPriceBox: {
         flexDirection: 'row',
     },

@@ -19,6 +19,7 @@ import {
     AsyncStorage,
     ToastAndroid,
     ActivityIndicator,
+    Keyboard,
 } from 'react-native';
 import { WebBrowser, ImagePicker, Facebook } from 'expo';
 import { MonoText } from '../components/StyledText';
@@ -186,7 +187,11 @@ export default class RegisterAccountScreen extends React.Component {
                     }
 
                     if (JSON.stringify(responseJson.ErrorCode) === "20") { // Account is existing
-                        ToastAndroid.showWithGravity('Tài khoản này đã tồn tại', ToastAndroid.SHORT, ToastAndroid.TOP);
+                        if (Platform.OS == 'ios') {
+                            Alert.alert('Thông báo', 'Tài khoản này đã tồn tại');
+                        } else {
+                            ToastAndroid.showWithGravity('Tài khoản này đã tồn tại', ToastAndroid.SHORT, ToastAndroid.TOP);
+                        }
                         return;
                     }
                 }).
@@ -241,7 +246,7 @@ export default class RegisterAccountScreen extends React.Component {
                         }}>
                         <Ionicons style={{ fontSize: 28, color: '#fff', }} name='md-arrow-back'></Ionicons>
                     </TouchableOpacity>
-                    <Text style={{ marginLeft: 20, color: '#fff', fontSize: responsiveFontSize(2), justifyContent: 'center' }}>ĐK Tài khoản</Text>
+                    <Text style={{ marginLeft: 20, color: '#fff', fontSize: responsiveFontSize(1.8), justifyContent: 'center' }}>ĐK Tài khoản</Text>
                 </View>
 
                 <KeyboardAwareScrollView
@@ -366,7 +371,7 @@ export default class RegisterAccountScreen extends React.Component {
                                 // returnKeyType={"next"}
                                 returnKeyType={"done"}
                                 onSubmitEditing={(event) => {
-                                    //this.refs.verifyCellPhoneInput.focus();
+                                    Keyboard.dismiss()
                                     this._registerAccountAsync();
                                 }}
                                 containerStyle={{ flex: 15, marginLeft: Platform.OS === 'ios' ? 22 : 18 }}
@@ -416,6 +421,7 @@ export default class RegisterAccountScreen extends React.Component {
                             icon={{ name: 'ios-backspace', type: 'ionicon' }}
                             title='Hủy'
                             onPress={() => {
+                                Keyboard.dismiss()
                                 this.setState({
                                     registerCellPhone: '',
                                     registerPassword: '',
@@ -436,6 +442,7 @@ export default class RegisterAccountScreen extends React.Component {
                             icon={{ name: 'md-checkmark', type: 'ionicon' }}
                             title='Đăng ký'
                             onPress={() => {
+                                Keyboard.dismiss()
                                 this._registerAccountAsync();
                             }}
                         />

@@ -13,6 +13,7 @@ import {
     FlatList,
     AsyncStorage,
     ToastAndroid,
+    Modal,
 } from 'react-native';
 import { ExpoLinksView } from '@expo/samples';
 import { Constants, MapView } from 'expo';
@@ -75,6 +76,7 @@ export default class RoomDetailScreen extends React.Component {
             reportCall: false,
             reportHouse: false,
             isComment: false,
+            modalReport: false,
         }
     }
 
@@ -329,7 +331,9 @@ export default class RoomDetailScreen extends React.Component {
                             ToastAndroid.showWithGravity('Cảm ơn bạn đã báo cáo chúng tôi!', ToastAndroid.SHORT, ToastAndroid.TOP);
                         }
                         else {
-                            Alert.alert('Thông báo', 'Cảm ơn bạn đã báo cáo chúng tôi!');
+                            this.setState({ modalReport: false })
+
+                            // Alert.alert('Thông báo', 'Cảm ơn bạn đã báo cáo chúng tôi!');
                         }
 
                         this.setState({
@@ -649,7 +653,13 @@ export default class RoomDetailScreen extends React.Component {
                                             {/* await this.setState({
                                                 reportRoomId: item.ID,
                                             }) */}
-                                            this.popupReportNBL.show();
+
+                                            if (Platform.OS == 'ios') {
+                                                this.setState({ modalReport: true })
+                                            }
+                                            else {
+                                                this.popupReportNBL.show();
+                                            }
                                         }
                                     }}
                                 >
@@ -722,6 +732,7 @@ export default class RoomDetailScreen extends React.Component {
                         </TouchableOpacity>
 
                         <MapView
+                            provider='google'
                             style={styles.CardMapView}
                             region={roomLocation}
                             onRegionChange={this._handleMapRegionChange}
@@ -921,6 +932,90 @@ export default class RoomDetailScreen extends React.Component {
                         </View>
                     </View>
                 </PopupDialog>
+
+
+                {/* Modal Report */}
+                <Modal
+                    animationType={"slide"}
+                    transparent={false}
+                    visible={this.state.modalReport}
+                    onRequestClose={() => {
+                        //alert("Modal has been closed.")
+                    }}
+                >
+
+
+                    <View
+                        style={{ marginTop: 50 }}
+                    >
+                        <CheckBox
+                            title='Không đúng địa chỉ'
+                            checked={this.state.reportAddress}
+                            onPress={() => {
+                                this.setState({
+                                    reportAddress: !this.state.reportAddress
+                                })
+                            }}
+                        />
+                        <CheckBox
+                            title='Không gọi được'
+                            checked={this.state.reportCall}
+                            onPress={() => {
+                                this.setState({
+                                    reportCall: !this.state.reportCall
+                                })
+                            }}
+                        />
+                        <CheckBox
+                            title='Nhà đã cho thuê'
+                            checked={this.state.reportHouse}
+                            onPress={() => {
+                                this.setState({
+                                    reportHouse: !this.state.reportHouse
+                                })
+                            }}
+                        />
+
+                        {/* Button */}
+                        <View style={{ height: 80, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', paddingBottom: 20, }}>
+                            {/* <View style={{ height: 80, flexDirection: 'row', marginBottom: 15, }}> */}
+
+
+                            <Button
+                                buttonStyle={{ backgroundColor: '#9B9D9D', padding: 15, borderRadius: 10 }}
+                                icon={{ name: 'ios-backspace', type: 'ionicon' }}
+                                onPress={() => {
+
+                                    this.setState({
+                                        modalReport: false,
+                                        reportAddress: false,
+                                        reportCall: false,
+                                        reportHouse: false,
+                                    })
+                                }}
+                                title='Hủy' />
+
+                            <Button
+                                buttonStyle={{ backgroundColor: '#73aa2a', padding: 15, borderRadius: 10 }}
+                                icon={{ name: 'md-cloud-upload', type: 'ionicon' }}
+                                title='Gửi'
+                                onPress={() => {
+                                    if (this.state.reportAddress) {
+                                        this._reportNBLAsync(2, this.state.reportRoomId)
+                                    }
+                                    if (this.state.reportCall) {
+                                        this._reportNBLAsync(3, this.state.reportRoomId)
+                                    }
+                                    if (this.state.reportHouse) {
+                                        this._reportNBLAsync(5, this.state.reportRoomId)
+                                    }
+
+                                }}
+                            />
+                        </View>
+                    </View>
+
+                </Modal>
             </View>
         );
     }

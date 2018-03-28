@@ -95,6 +95,7 @@ export default class ProfileScreen extends React.Component {
             modalUpdateAccount: false,
             modalHelp: false,
             modalPostedRoomHistory: false,
+            modalChangePassword: false,
 
             // Posted Room History
             postedRoomHistoryData: '',
@@ -288,7 +289,8 @@ export default class ProfileScreen extends React.Component {
                             ToastAndroid.showWithGravity('Đổi mật khẩu thành công!', ToastAndroid.SHORT, ToastAndroid.TOP);
                         }
                         else {
-                            Alert.alert('Thông báo', 'Đổi mật khẩu thành công!');
+                            this.setState({ modalChangePassword: false })
+                            // Alert.alert('Thông báo', 'Đổi mật khẩu thành công!');
                         }
                     }
                     if (JSON.stringify(responseJson.ErrorCode) === "15") { // Change Password successful
@@ -399,7 +401,7 @@ export default class ProfileScreen extends React.Component {
                             >
                                 {this.state.profile === null
                                     ? <Image style={{ borderRadius: Platform.OS === 'ios' ? 23 : 50, height: 60, width: 60, }} source={require('../images/nha-bao-la.jpg')} />
-                                    : <Image source={{ uri: this.state.profile.Avarta }} style={{ width: 60, height: 60, borderRadius: 100, }} />
+                                    : <Image source={{ uri: this.state.profile.Avarta }} style={{ width: 60, height: 60, borderRadius: Platform.OS === 'ios' ? 30 : 100, }} />
                                 }
 
                             </TouchableOpacity>
@@ -481,7 +483,12 @@ export default class ProfileScreen extends React.Component {
                     </TouchableOpacity>
                     <TouchableOpacity style={styles.profileMenuItem}
                         onPress={() => {
-                            this.popupChangePassword.show();
+
+                            if (Platform.OS == 'ios') {
+                                this.setState({ modalChangePassword: true })
+                            } else {
+                                this.popupChangePassword.show();
+                            }
                             const timing = Animated.timing;
                             Animated.parallel([
                                 timing(this.state.animation.usernamePostionLeft, {
@@ -524,6 +531,11 @@ export default class ProfileScreen extends React.Component {
                                     'Thông báo',
                                     'Bạn chắc chắn Đăng xuất?',
                                     [
+                                        {
+                                            text: 'Hủy', onPress: () => {
+
+                                            }
+                                        },
                                         {
                                             text: 'Đồng ý', onPress: () => {
                                                 //BackHandler.exitApp()
@@ -635,6 +647,81 @@ export default class ProfileScreen extends React.Component {
                         />
                     </View>
                 </PopupDialog>
+
+                {/* Modal Change Password */}
+                <Modal
+                    animationType={"slide"}
+                    transparent={false}
+                    visible={this.state.modalChangePassword}
+                    onRequestClose={() => {
+                        //alert("Modal has been closed.")
+                    }}
+                >
+
+                    <View style={{ marginTop: 50 }}>
+                        <Animated.View style={{ position: 'relative', left: this.state.animation.usernamePostionLeft, flexDirection: 'row', padding: 10, }}>
+                            <Ionicons style={{ flex: 1, fontSize: 22, paddingTop: 12, textAlign: 'center', }} name='ios-lock-outline' />
+                            <FormInput
+                                containerStyle={{ flex: 15, }}
+                                placeholder='Mật khẩu củ'
+                                // autoCapitalize='sentences'
+                                secureTextEntry={true}
+                                //keyboardType='phone-pad'
+                                underlineColorAndroid={'#73aa2a'}
+                                onChangeText={(oldPassword) => this.setState({ oldPassword })}
+                                value={this.state.oldPassword}
+                            />
+
+
+                        </Animated.View>
+                        <Animated.View style={{ position: 'relative', left: this.state.animation.passwordPositionLeft, flexDirection: 'row', padding: 10, paddingTop: 0, }}>
+                            <Ionicons style={{ flex: 1, fontSize: 22, paddingTop: 12, textAlign: 'center', }} name='md-lock' />
+                            <FormInput
+                                containerStyle={{ flex: 15 }}
+                                placeholder='Mật khẩu mới'
+                                secureTextEntry={true}
+                                underlineColorAndroid={'#73aa2a'}
+                                onChangeText={(newPassword) => this.setState({ newPassword })}
+                                value={this.state.newPassword}
+                            />
+                        </Animated.View>
+                        <Animated.View style={{ position: 'relative', left: this.state.animation.passwordPositionLeft, flexDirection: 'row', padding: 10, paddingTop: 0, }}>
+                            <Ionicons style={{ flex: 1, fontSize: 22, paddingTop: 12, textAlign: 'center', }} name='md-checkmark' />
+                            <FormInput
+                                containerStyle={{ flex: 15 }}
+                                placeholder='Xác nhận mật khẩu mới'
+                                secureTextEntry={true}
+                                underlineColorAndroid={'#73aa2a'}
+                                onChangeText={(confirmNewPassword) => this.setState({ confirmNewPassword })}
+                                value={this.state.confirmNewPassword}
+                            />
+                        </Animated.View>
+
+                    </View>
+
+
+                    <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center', marginTop: 20, }}>
+                        <Button
+                            buttonStyle={{ backgroundColor: '#9B9D9D', padding: 10, borderRadius: 5, }}
+                            raised={false}
+                            icon={{ name: 'ios-backspace', type: 'ionicon' }}
+                            title='Hủy'
+                            onPress={() => { this.setState({ modalChangePassword: false }) }}
+                        />
+
+                        <Button
+                            buttonStyle={{ backgroundColor: '#73aa2a', padding: 10, borderRadius: 5, }}
+                            raised={false}
+                            icon={{ name: 'md-checkmark', type: 'ionicon' }}
+                            title='Đồng ý'
+                            onPress={() => {
+                                Keyboard.dismiss();
+                                this._changePassword();
+                            }}
+                        />
+                    </View>
+
+                </Modal>
 
                 {/* Modal Update Account*/}
                 <Modal

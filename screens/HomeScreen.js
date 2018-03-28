@@ -81,6 +81,9 @@ export default class HomeScreen extends React.Component {
       // txt: 'test threshole',
       isActionButtonVisible: true, // 1. Define a state variable for showing/hiding the action-button 
       modalVisible: false,
+      modalResetPassword1: false,
+      modalResetPassword2: false,
+      modalReport: false,
       reportAddress: false,
       reportCall: false,
       reportHouse: false,
@@ -429,7 +432,7 @@ export default class HomeScreen extends React.Component {
           }
           else {
             if (Platform.OS === 'android') {
-              ToastAndroid.showWithGravity('Tài khoản hoặc mật khẩu đã thay đổi', ToastAndroid.SHORT, ToastAndroid.CENTER);
+              ToastAndroid.showWithGravity('Tài khoản hoặc mật khẩu đã thay đổi', ToastAndroid.SHORT, ToastAndroid.TOP);
             }
             else {
               Alert.alert('Oops!', 'Tài khoản hoặc mật khẩu đã thay đổi');
@@ -484,7 +487,7 @@ export default class HomeScreen extends React.Component {
     }
 
     if (Platform.OS == 'ios') {
-      //      this.setState({ modalLogin: false })
+      //this.popupLoadingIndicator.show()
     }
     else {
       this.popupLoadingIndicator.show()
@@ -529,7 +532,13 @@ export default class HomeScreen extends React.Component {
             })
 
             this._getWalletAsync();
-            ToastAndroid.showWithGravity('Đăng nhập thành công!', ToastAndroid.SHORT, ToastAndroid.TOP);
+
+            if (Platform.OS === 'android') {
+              ToastAndroid.showWithGravity('Đăng nhập thành công!', ToastAndroid.SHORT, ToastAndroid.TOP);
+            } else {
+              // this.setState({ modalLogin: false })
+              //Alert.alert('Thông báo', 'Đăng nhập thành công!');
+            }
 
           }
           else { // Login False
@@ -562,9 +571,9 @@ export default class HomeScreen extends React.Component {
   // Login after register new Account
   _loginAfterRegisterAccountAsync = async () => {
 
-    //alert(this.state.loginUsername + '  ' + this.state.loginPassword)
-
-    this.popupLoadingIndicator.show()
+    if (Platform.OS == 'android') {
+      this.popupLoadingIndicator.show()
+    }
 
     try {
       await fetch("http://nhabaola.vn/api/Account/FO_Account_Login", {
@@ -596,11 +605,7 @@ export default class HomeScreen extends React.Component {
               sessionKey: responseJson.obj.UpdatedBy
             })
 
-            //this._getWalletAsync();
             ToastAndroid.showWithGravity('Đăng nhập thành công!', ToastAndroid.SHORT, ToastAndroid.TOP);
-            // if (this.state.wallet != '0') {
-            //   this.popupCongraForNewAccount.show()
-            // }
 
           }
           else { // Login False
@@ -627,7 +632,11 @@ export default class HomeScreen extends React.Component {
 
     await this._getWalletAsync();
     if (this.state.wallet != '0') {
-      setTimeout(() => this.popupCongraForNewAccount.show(), 500)
+      if (Platform.OS == 'ios') {
+        Alert.alert('Chúc mừng bạn! ', 'Bạn được tặng ' + numberWithCommas(this.state.wallet) + ' đồng vào Ví Tiền');
+      } else {
+        setTimeout(() => this.popupCongraForNewAccount.show(), 500)
+      }
     }
   }
 
@@ -716,23 +725,23 @@ export default class HomeScreen extends React.Component {
     //Form validation
     if (Platform.OS === 'android') {
       if (this.state.registerCellPhone === null) {
-        ToastAndroid.showWithGravity('Vui lòng nhập Số Điện Thoại', ToastAndroid.SHORT, ToastAndroid.CENTER);
+        ToastAndroid.showWithGravity('Vui lòng nhập Số Điện Thoại', ToastAndroid.SHORT, ToastAndroid.TOP);
         return;
       }
       if (this.state.registerPassword === null) {
-        ToastAndroid.showWithGravity('Vui lòng nhập mật khẩu', ToastAndroid.SHORT, ToastAndroid.CENTER);
+        ToastAndroid.showWithGravity('Vui lòng nhập mật khẩu', ToastAndroid.SHORT, ToastAndroid.TOP);
         return;
       }
       if (this.state.registerPassword != this.state.registerConfirmPassword) {
-        ToastAndroid.showWithGravity('Xác nhận mật khẩu không khớp với mật khẩu', ToastAndroid.SHORT, ToastAndroid.CENTER);
+        ToastAndroid.showWithGravity('Xác nhận mật khẩu không khớp với mật khẩu', ToastAndroid.SHORT, ToastAndroid.TOP);
         return;
       }
       if (this.state.registerFullName === null) {
-        ToastAndroid.showWithGravity('Vui lòng nhập Họ Tên', ToastAndroid.SHORT, ToastAndroid.CENTER);
+        ToastAndroid.showWithGravity('Vui lòng nhập Họ Tên', ToastAndroid.SHORT, ToastAndroid.TOP);
         return;
       }
       if (this.state.registerConfirmCellPhone === null) {
-        ToastAndroid.showWithGravity('Vui lòng nhập mã xác nhận Số Điện Thoại', ToastAndroid.SHORT, ToastAndroid.CENTER);
+        ToastAndroid.showWithGravity('Vui lòng nhập mã xác nhận Số Điện Thoại', ToastAndroid.SHORT, ToastAndroid.TOP);
         return;
       }
     }
@@ -985,14 +994,15 @@ export default class HomeScreen extends React.Component {
         .then((response) => response.json())
         .then((responseJson) => {
 
-          if (JSON.stringify(responseJson.ErrorCode) === "0") { // Rating successful
+          if (JSON.stringify(responseJson.ErrorCode) === "0") { // Report successful
             this.popupReportNBL.dismiss();
 
             if (Platform.OS === 'android') {
               ToastAndroid.showWithGravity('Cảm ơn bạn đã báo cáo chúng tôi!', ToastAndroid.SHORT, ToastAndroid.TOP);
             }
             else {
-              Alert.alert('Thông báo', 'Cảm ơn bạn đã báo cáo chúng tôi!');
+              this.setState({ modalReport: false, })
+              //Alert.alert('Thông báo', 'Cảm ơn bạn đã báo cáo chúng tôi!');
             }
 
             this.setState({
@@ -1171,15 +1181,27 @@ export default class HomeScreen extends React.Component {
 
           // this._saveStorageAsync('FO_Category_GetAllData', JSON.stringify(responseJson.obj))
           if (JSON.stringify(responseJson.ErrorCode) === "23") {
-            Alert.alert('Thông báo', 'Tài khoản này không tồn tại');
+
+            if (Platform.OS == 'ios') {
+              Alert.alert('Thông báo', 'Tài khoản này không tồn tại');
+            } else {
+              ToastAndroid.showWithGravity('Tài khoản này không tồn tại', ToastAndroid.SHORT, ToastAndroid.TOP);
+            }
+
             this.popupLoadingIndicator.dismiss()
             return;
           }
-          if (JSON.stringify(responseJson.ErrorCode) === "24") {
-            this.popupLoadingIndicator.dismiss()
-            this.popupResetPassword.dismiss();
-            this.popupActiveNewPassword.show();
-            //this.setState({ resetPasswordUsername: '' })
+          if (JSON.stringify(responseJson.ErrorCode) === "24") { //Account is exist
+
+            if (Platform.OS == 'ios') {
+              this.popupLoadingIndicator.dismiss()
+              this.setState({ modalResetPassword1: false, modalResetPassword2: true })
+
+            } else {
+              this.popupLoadingIndicator.dismiss()
+              this.popupResetPassword.dismiss();
+              this.popupActiveNewPassword.show();
+            }
           }
 
           this.popupLoadingIndicator.dismiss()
@@ -1311,7 +1333,6 @@ export default class HomeScreen extends React.Component {
 
           onEndReachedThreshold={0.2}
           onEndReached={() => {
-            //alert("refreshing")
 
             this._getRoomBoxAsync(false);
             {/* this.setState({
@@ -1527,6 +1548,8 @@ export default class HomeScreen extends React.Component {
                     }}>
                     <Ionicons style={styles.cardBottomIcon} name='md-share' />
                   </TouchableOpacity>
+
+                  {/* Report Admin */}
                   <TouchableOpacity
                     onPress={async () => {
                       if (this.state.profile === null) {
@@ -1536,7 +1559,13 @@ export default class HomeScreen extends React.Component {
                         await this.setState({
                           reportRoomId: item.ID,
                         })
-                        this.popupReportNBL.show();
+
+                        if (Platform.OS == 'ios') {
+                          this.setState({ modalReport: true })
+                        } else {
+                          this.popupReportNBL.show();
+                        }
+
                       }
                     }}
                   >
@@ -1571,7 +1600,7 @@ export default class HomeScreen extends React.Component {
                     this.popupLogin.show()
                   }
 
-                 
+
                   const timing = Animated.timing;
                   Animated.parallel([
                     timing(this.state.animation.usernamePostionLeft, {
@@ -1727,6 +1756,66 @@ export default class HomeScreen extends React.Component {
 
         </PopupDialog>
 
+        {/* Modal Reset Password Step 1 */}
+        <Modal
+          animationType={"slide"}
+          transparent={false}
+          visible={this.state.modalResetPassword1}
+          onRequestClose={() => {
+            //alert("Modal has been closed.")
+          }}
+        >
+
+          <View style={{
+            padding: 20,
+            marginTop: responsiveHeight(30)
+          }}>
+            {/* Username */}
+            <Animated.View style={{
+              position: 'relative', left: this.state.animation.usernamePostionLeft,
+              flexDirection: 'row',
+            }}>
+              <Ionicons style={{ flex: 1, fontSize: 22, paddingTop: 12, textAlign: 'center', }} name='md-call' />
+              <FormInput
+                ref='userNameInput'
+                returnKeyType={"done"}
+                onSubmitEditing={(event) => {
+                  this._resetPasswordStep1();
+                }}
+                containerStyle={{ flex: 15 }}
+                placeholder='Số điện thoại'
+                autoCapitalize='sentences'
+                keyboardType='phone-pad'
+                underlineColorAndroid={'#73aa2a'}
+                onChangeText={(resetPasswordUsername) => this.setState({ resetPasswordUsername })}
+                value={this.state.resetPasswordUsername}
+              />
+            </Animated.View>
+          </View>
+          {/* Button */}
+          <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center', marginTop: 15, }}>
+            <Button
+              buttonStyle={{ backgroundColor: '#9B9D9D', padding: 10, borderRadius: 5, }}
+              raised={false}
+              icon={{ name: 'ios-backspace', type: 'ionicon' }}
+              title='Hủy'
+              onPress={() => {
+                Keyboard.dismiss();
+                this.setState({ resetPasswordUsername: '', modalResetPassword1: false })
+              }}
+            />
+
+            <Button
+              buttonStyle={{ backgroundColor: '#73aa2a', padding: 10, borderRadius: 5, }}
+              raised={false}
+              icon={{ name: 'md-checkmark', type: 'ionicon' }}
+              onPress={() => {
+                Keyboard.dismiss();
+                this._resetPasswordStep1();
+              }}
+              title='Đồng ý' />
+          </View>
+        </Modal>
 
         {/* Popup Reset Password Step 2 */}
         <PopupDialog
@@ -1817,6 +1906,95 @@ export default class HomeScreen extends React.Component {
           </View>
         </PopupDialog>
 
+
+        {/* Modal Reset Password Step 2 */}
+        <Modal
+          animationType={"slide"}
+          transparent={false}
+          visible={this.state.modalResetPassword2}
+          onRequestClose={() => {
+            //alert("Modal has been closed.")
+          }}
+        >
+
+          <View style={{
+            padding: 15,
+            marginTop: 50,
+          }}>
+            <Text style={{ textAlign: 'center', color: '#73aa2a' }}>Bạn vui lòng kiểm tra Email để lấy Mã Kích Hoạt mật khẩu mới!</Text>
+            {/* Active Key */}
+            <Animated.View style={{
+              position: 'relative', left: this.state.animation.usernamePostionLeft,
+              flexDirection: 'row',
+              marginTop: 5,
+            }}>
+              <Ionicons style={{ flex: 1, fontSize: 22, paddingTop: 12, textAlign: 'center', }} name='md-key' />
+              <FormInput
+                ref='ActiveKeyInput'
+                returnKeyType={"next"}
+                onSubmitEditing={(event) => {
+                  this.refs.newPasswordInput.focus();
+                }}
+                containerStyle={{ flex: 15 }}
+                placeholder='Mã kích hoạt mật khẩu mới'
+                autoCapitalize='sentences'
+                keyboardType='numeric'
+                underlineColorAndroid={'#73aa2a'}
+                onChangeText={(resetPasswordActiveKey) => this.setState({ resetPasswordActiveKey })}
+                value={this.state.resetPasswordActiveKey}
+              />
+            </Animated.View>
+            {/* New password  */}
+            <Animated.View style={{
+              position: 'relative', left: this.state.animation.usernamePostionLeft,
+              flexDirection: 'row',
+            }}>
+              <Ionicons style={{ flex: 1, fontSize: 22, paddingTop: 12, textAlign: 'center', }} name='md-lock' />
+              <FormInput
+                ref='newPasswordInput'
+                returnKeyType={"done"}
+                onSubmitEditing={(event) => {
+                  this._resetPasswordStep2();
+                }}
+                containerStyle={{ flex: 15 }}
+                placeholder='Mật khẩu mới'
+                autoCapitalize='sentences'
+                //keyboardType='email-address'
+                secureTextEntry={true}
+                underlineColorAndroid={'#73aa2a'}
+                onChangeText={(resetPasswordNewPassword) => this.setState({ resetPasswordNewPassword })}
+                value={this.state.resetPasswordNewPassword}
+              />
+            </Animated.View>
+
+
+
+          </View>
+          {/* Button */}
+          <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center', marginTop: 15, }}>
+            <Button
+              buttonStyle={{ backgroundColor: '#9B9D9D', padding: 10, borderRadius: 5, }}
+              raised={false}
+              icon={{ name: 'ios-backspace', type: 'ionicon' }}
+              title='Hủy'
+              onPress={() => {
+                Keyboard.dismiss();
+                this.setState({ modalResetPassword2: false })
+              }}
+            />
+
+            <Button
+              buttonStyle={{ backgroundColor: '#73aa2a', padding: 10, borderRadius: 5, }}
+              raised={false}
+              icon={{ name: 'md-checkmark', type: 'ionicon' }}
+              onPress={() => {
+                Keyboard.dismiss();
+                this._resetPasswordStep2();
+              }}
+              title='Đồng ý' />
+          </View>
+
+        </Modal>
 
         {/* Popup Login */}
         <PopupDialog
@@ -1994,6 +2172,7 @@ export default class HomeScreen extends React.Component {
                 ref='passwordInput'
                 returnKeyType={"done"}
                 onSubmitEditing={(event) => {
+                  Keyboard.dismiss()
                   this._loginAsync()
                 }}
                 containerStyle={{ flex: 15 }}
@@ -2038,18 +2217,22 @@ export default class HomeScreen extends React.Component {
 
 
             <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center', marginTop: 10, }}>
+
+              {/* Forget password */}
               <TouchableOpacity style={{ flex: 1, }}
                 onPress={() => {
-                  this.popupLogin.dismiss();
-                  this.popupResetPassword.show();
+                  Keyboard.dismiss()
+                  this.setState({ modalLogin: false, modalResetPassword1: true })
                 }}
               >
                 <Text style={{ padding: 15, textAlign: 'center', }}>Quên mật khẩu</Text>
               </TouchableOpacity>
+
+              {/* Register new account */}
               <TouchableOpacity style={{ flex: 1, }}
                 onPress={() => {
-                  this.popupLogin.dismiss();
-                  //this.setState({ modalRegisterAccount: true })
+                  Keyboard.dismiss()
+                  this.setState({ modalLogin: false })
                   this.props.navigation.navigate('RegisterAccountScreen', {
                     onRefreshScreen: this.onRefreshScreen,
                     login: this._loginAfterRegisterAccountAsync
@@ -2176,6 +2359,91 @@ export default class HomeScreen extends React.Component {
             </View>
           </View>
         </PopupDialog>
+
+
+        {/* Modal Report */}
+        <Modal
+          animationType={"slide"}
+          transparent={false}
+          visible={this.state.modalReport}
+          onRequestClose={() => {
+            //alert("Modal has been closed.")
+          }}
+        >
+
+
+          <View
+            style={{ marginTop: 50 }}
+          >
+            <CheckBox
+              title='Không đúng địa chỉ'
+              checked={this.state.reportAddress}
+              onPress={() => {
+                this.setState({
+                  reportAddress: !this.state.reportAddress
+                })
+              }}
+            />
+            <CheckBox
+              title='Không gọi được'
+              checked={this.state.reportCall}
+              onPress={() => {
+                this.setState({
+                  reportCall: !this.state.reportCall
+                })
+              }}
+            />
+            <CheckBox
+              title='Nhà đã cho thuê'
+              checked={this.state.reportHouse}
+              onPress={() => {
+                this.setState({
+                  reportHouse: !this.state.reportHouse
+                })
+              }}
+            />
+
+            {/* Button */}
+            <View style={{ height: 80, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', paddingBottom: 20, }}>
+              {/* <View style={{ height: 80, flexDirection: 'row', marginBottom: 15, }}> */}
+
+
+              <Button
+                buttonStyle={{ backgroundColor: '#9B9D9D', padding: 15, borderRadius: 10 }}
+                icon={{ name: 'ios-backspace', type: 'ionicon' }}
+                onPress={() => {
+
+                  this.setState({
+                    modalReport: false,
+                    reportAddress: false,
+                    reportCall: false,
+                    reportHouse: false,
+                  })
+                }}
+                title='Hủy' />
+
+              <Button
+                buttonStyle={{ backgroundColor: '#73aa2a', padding: 15, borderRadius: 10 }}
+                icon={{ name: 'md-cloud-upload', type: 'ionicon' }}
+                title='Gửi'
+                onPress={() => {
+                  if (this.state.reportAddress) {
+                    this._reportNBLAsync(2, this.state.reportRoomId)
+                  }
+                  if (this.state.reportCall) {
+                    this._reportNBLAsync(3, this.state.reportRoomId)
+                  }
+                  if (this.state.reportHouse) {
+                    this._reportNBLAsync(5, this.state.reportRoomId)
+                  }
+
+                }}
+              />
+            </View>
+          </View>
+
+        </Modal>
+
 
         {/* Popup Rating */}
         <PopupDialog

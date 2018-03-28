@@ -253,7 +253,7 @@ export default class UpdateAccountScreen extends React.Component {
                         }}>
                         <Ionicons style={{ fontSize: 28, color: '#fff', }} name='md-arrow-back'></Ionicons>
                     </TouchableOpacity>
-                    <Text style={{ marginLeft: 20, color: '#fff', fontSize: responsiveFontSize(2.2), justifyContent: 'center' }}></Text>
+                    <Text style={{ marginLeft: 20, color: '#fff', fontSize: responsiveFontSize(2), justifyContent: 'center' }}>Cập nhật</Text>
                 </View>
                 <KeyboardAwareScrollView
                     innerRef={ref => { this.scroll = ref }}
@@ -269,7 +269,7 @@ export default class UpdateAccountScreen extends React.Component {
                             <Ionicons style={{ opacity: 0.7, fontSize: 100, color: '#73aa2a', flex: 1, textAlign: 'center', }} name='ios-contact' />
                             {this.state.registerAccountImage
                                 && <Image source={{ uri: this.state.registerAccountImage }}
-                                    style={{ width: 80, height: 80, borderRadius: Platform.OS === 'ios' ? 25 : 100, marginTop: Platform.OS === 'ios' ? -99 : -90, marginLeft: Platform.OS === 'ios' ? 7 : 1, marginBottom: 10, }}
+                                    style={{ width: 80, height: 80, borderRadius: Platform.OS === 'ios' ? 40 : 100, marginTop: Platform.OS === 'ios' ? -99 : -90, marginLeft: Platform.OS === 'ios' ? 7 : 1, marginBottom: 10, }}
                                 />
                             }
                             <Text style={{}}>Hình đại diện</Text>

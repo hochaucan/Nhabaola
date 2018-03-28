@@ -559,7 +559,7 @@ export default class SearchScreen extends React.Component {
                     "Longitude": this.state.isSearching === true ? this.state.searchingMaker.longitude : this.state.location.coords.longitude,//"106.6104477",
                     "Radius": this.state.radius,
                     "RoomPriceMin": this.state.minPrice,
-                    "RoomPriceMax": "9999999999",//this.state.maxPrice,
+                    "RoomPriceMax": this.state.maxPrice,//"9999999999",//this.state.maxPrice,
                     "AcreageMin": this.state.minAcreage,
                     "AcreageMax": this.state.maxAcreage,
                     "SortOptionKey": "SortDistance",
@@ -1393,7 +1393,8 @@ export default class SearchScreen extends React.Component {
                                             }}
                                         >
 
-                                            <Text style={{ marginLeft: 20 }}>{this.state.iosSelectedCategory}</Text>
+                                            <Text style={{ marginLeft: 20, marginTop: 10 }}>{this.state.iosSelectedCategory}  <Ionicons style={{ fontSize: responsiveFontSize(2.5) }} name='ios-arrow-dropdown-outline' /> </Text>
+
                                         </TouchableOpacity>
                                         :
 
@@ -1464,9 +1465,13 @@ export default class SearchScreen extends React.Component {
                                                         ? <Text style={{ flex: 2, marginBottom: 15, marginTop: 20, marginLeft: 20 }}>Nhỏ hơn  {this.state.multiSliderPriceValue[1]}</Text>
                                                         : <Text style={{ flex: 2, marginBottom: 15, marginTop: 20, marginLeft: 20 }}>{this.state.multiSliderPriceValue[0]} đến {this.state.multiSliderPriceValue[1]}</Text>
                                         }
-                                        {!(this.state.multiSliderPriceValue[0] == 0 && this.state.multiSliderPriceValue[1] == 10) &&
+
+                                        {!(this.state.multiSliderPriceValue[0] == 0 && this.state.multiSliderPriceValue[1] == 10) && Platform.OS == 'android' &&
                                             <Picker
-                                                style={{ flex: 5, marginBottom: -2 }}
+                                                style={{
+                                                    flex: 5,
+                                                    marginBottom: -2
+                                                }}
                                                 mode='dropdown'
                                                 selectedValue={this.state.selectedUnitPrice}
                                                 onValueChange={(itemValue, itemIndex) => {
@@ -1504,6 +1509,62 @@ export default class SearchScreen extends React.Component {
                                                 <Picker.Item label='chục tỷ' value='pct' />
                                                 <Picker.Item label='trăm tỷ' value='ptt' />
                                             </Picker>
+                                        }
+
+                                        {!(this.state.multiSliderPriceValue[0] == 0 && this.state.multiSliderPriceValue[1] == 10) && Platform.OS == 'ios' &&
+                                            <View>
+                                                <TouchableOpacity
+                                                    style={{ width: responsiveWidth(50), }}
+                                                    onPress={() => {
+                                                        this.refs.pickerPriceUnitLable.show();
+                                                    }}
+                                                >
+                                                    <Text style={{ marginBottom: -4 }}>{this.state.unitPriceSuffixLable + '  '}
+                                                        <Ionicons style={{ fontSize: responsiveFontSize(2.5), marginLeft: 15 }} name='ios-arrow-dropdown-outline' />
+                                                    </Text>
+                                                </TouchableOpacity>
+
+                                                <SimplePicker
+                                                    ref={'pickerPriceUnitLable'}
+                                                    options={['ptr', 'pctr', 'pttr', 'pt', 'pct', 'ptt']}
+                                                    labels={['triệu', 'chục triệu', 'trăm triệu', 'tỷ', 'chục tỷ', 'trăm tỷ']}
+                                                    confirmText='Đồng ý'
+                                                    cancelText='Hủy'
+                                                    itemStyle={{
+                                                        fontSize: 25,
+                                                        color: '#73aa2a',
+                                                        textAlign: 'center',
+                                                        fontWeight: 'bold',
+                                                    }}
+                                                    onSubmit={(option) => {
+
+                                                        this.setState({ selectedUnitPrice: option })
+
+                                                        // // Unit Price
+                                                        if (option == 'ptr') {
+                                                            this.setState({ unitPrice: '000000', unitPriceSuffixLable: 'triệu' })
+                                                        }
+                                                        else if (option == 'pctr') {
+                                                            this.setState({ unitPrice: '0000000', unitPriceSuffixLable: 'chục triệu' })
+                                                        }
+                                                        else if (option == 'pttr') {
+                                                            this.setState({ unitPrice: '00000000', unitPriceSuffixLable: 'trăm triệu' })
+                                                        }
+                                                        else if (option == 'pt') {
+                                                            this.setState({ unitPrice: '000000000', unitPriceSuffixLable: 'tỷ' })
+                                                        }
+                                                        else if (option == 'pct') {
+                                                            this.setState({ unitPrice: '0000000000', unitPriceSuffixLable: 'chục tỷ' })
+                                                        }
+                                                        else if (option == 'ptt') {
+                                                            this.setState({ unitPrice: '00000000000', unitPriceSuffixLable: 'trăm tỷ' })
+                                                        }
+                                                        else {
+                                                            this.setState({ unitPrice: '000000' })
+                                                        }
+                                                    }}
+                                                />
+                                            </View>
                                         }
                                     </View>
                                     <MultiSlider
@@ -1545,7 +1606,7 @@ export default class SearchScreen extends React.Component {
                                                         ? <Text style={{ flex: 2, marginBottom: 15, marginTop: 20, marginLeft: 20 }}>Nhỏ hơn  {this.state.multiSliderAreaValue[1]}</Text>
                                                         : <Text style={{ flex: 2, marginBottom: 15, marginTop: 20, marginLeft: 20 }}>{this.state.multiSliderAreaValue[0]} đến {this.state.multiSliderAreaValue[1]}</Text>
                                         }
-                                        {!(this.state.multiSliderAreaValue[0] == 0 && this.state.multiSliderAreaValue[1] == 10) &&
+                                        {!(this.state.multiSliderAreaValue[0] == 0 && this.state.multiSliderAreaValue[1] == 10) && Platform.OS == 'android' &&
                                             <Picker // Android
                                                 style={{ flex: 5, marginBottom: -1 }}
                                                 mode='dropdown'
@@ -1571,6 +1632,52 @@ export default class SearchScreen extends React.Component {
                                                 <Picker.Item label='trăm mét vuông' value='atmv' />
                                                 <Picker.Item label='nghìn mét vuông' value='anmv' />
                                             </Picker>
+                                        }
+
+                                        {!(this.state.multiSliderAreaValue[0] == 0 && this.state.multiSliderAreaValue[1] == 10) && Platform.OS == 'ios' &&
+                                            <View>
+                                                <TouchableOpacity
+                                                    style={{ width: responsiveWidth(50), }}
+                                                    onPress={() => {
+                                                        this.refs.pickerAcreageUnitLable.show();
+                                                    }}
+                                                >
+                                                    <Text style={{ marginBottom: -4 }}>{this.state.unitAcreageSuffixLable + '  '}
+                                                        <Ionicons style={{ fontSize: responsiveFontSize(2.5), marginLeft: 15 }} name='ios-arrow-dropdown-outline' />
+                                                    </Text>
+                                                </TouchableOpacity>
+
+                                                <SimplePicker
+                                                    ref={'pickerAcreageUnitLable'}
+                                                    options={['acmv', 'atmv', 'anmv']}
+                                                    labels={['chục mét vuông', 'trăm mét vuông', 'nghìn mét vuông']}
+                                                    confirmText='Đồng ý'
+                                                    cancelText='Hủy'
+                                                    itemStyle={{
+                                                        fontSize: 25,
+                                                        color: '#73aa2a',
+                                                        textAlign: 'center',
+                                                        fontWeight: 'bold',
+                                                    }}
+                                                    onSubmit={(option) => {
+
+                                                        this.setState({ selectedUnitAcreage: option })
+
+                                                        // // Unit Acreage
+                                                        if (option == 'acmv') {
+                                                            this.setState({ unitAcreage: '0', unitAcreageSuffixLable: 'chục mét vuông' })
+                                                        }
+                                                        else if (option == 'atmv') {
+                                                            this.setState({ unitAcreage: '00', unitAcreageSuffixLable: 'trăm mét vuông' })
+                                                        }
+                                                        else if (option == 'anmv') {
+                                                            this.setState({ unitAcreage: '000', unitAcreageSuffixLable: 'nghìn mét vuông' })
+                                                        } else {
+                                                            this.setState({ unitAcreage: '0000', unitAcreageSuffixLable: 'chục nghìn mét vuông' })
+                                                        }
+                                                    }}
+                                                />
+                                            </View>
                                         }
                                     </View>
 

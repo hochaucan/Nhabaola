@@ -146,10 +146,11 @@ export default class Testing extends React.Component {
           options={options}
           labels={labels}
           confirmText='Đồng ý'
+          cancelText='Hủy'
           itemStyle={{
             fontSize: 25,
-            color: 'red',
-            textAlign: 'left',
+            color: '#73aa2a',
+            textAlign: 'center',
             fontWeight: 'bold',
           }}
           onSubmit={(option) => {
