@@ -22,7 +22,7 @@ import ActionButton from 'react-native-action-button';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { GooglePlacesAutocomplete, } from 'react-native-google-places-autocomplete'; // 1.2.12
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
-import KeyboardSpacer from 'react-native-keyboard-spacer';
+// import KeyboardSpacer from 'react-native-keyboard-spacer';
 import getDirections from 'react-native-google-maps-directions'
 import SimplePicker from 'react-native-simple-picker';
 

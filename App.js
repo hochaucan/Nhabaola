@@ -50,7 +50,7 @@ export default class App extends React.Component {
 
   componentWillMount() {
     NetInfo.addEventListener(
-      'change',
+      'connectionChange',
       handleFirstConnectivityChange
     );
 
@@ -120,13 +120,20 @@ export default class App extends React.Component {
           require('./assets/images/nbl-here-icon.png'),
 
         ]),
-        Font.loadAsync([
+        Font.loadAsync({
           // This is the font that we are using for our tab bar
-          Ionicons.font,
+          ...Ionicons.font,
           // We include SpaceMono because we use it in HomeScreen.js. Feel free
           // to remove this if you are not using it in your app
-          { 'space-mono': require('./assets/fonts/SpaceMono-Regular.ttf') },
-        ]),
+          'space-mono': require('./assets/fonts/SpaceMono-Regular.ttf'),
+        }),
+        // Font.loadAsync([
+        //   // This is the font that we are using for our tab bar
+        //   Ionicons.font,
+        //   // We include SpaceMono because we use it in HomeScreen.js. Feel free
+        //   // to remove this if you are not using it in your app
+        //   { 'space-mono': require('./assets/fonts/SpaceMono-Regular.ttf') },
+        // ]),
       ]);
     } catch (e) {
       // In this case, you might want to report the error to your error

@@ -20,6 +20,10 @@ Android SDK Location: C:\Users\NickHo\AppData\Local\Android\Sdk
 this.props.navigation.navigate('PostRoomScreen', { onRefreshScreen: this.onRefreshScreen })
 this.props.navigation.state.params.onRefreshScreen({ refreshScreen: true, profile: null });
 
+
+*Check version of Exp SDK, React-Native SDK, React SDK 
+https://github.com/react-community/create-react-native-app/blob/master/VERSIONS.md
+
 setTimeout(
       ()=>{this.setState({
         data: this.state.data,
@@ -295,8 +299,62 @@ function DocTienBangChu(SoTien) {
 
 
 
-
-
+*app.json
+{
+  "expo": {
+    "name": "Expo APIs",
+    "description": "This demonstrates a bunch of the native components that you can use in React Native core and Expo.",
+    "slug": "native-component-list",
+    "sdkVersion": "24.0.0",
+    "version": "24.0.0",
+    "orientation": "portrait",
+    "primaryColor": "#cccccc",
+    "privacy": "public",
+    "icon": "./assets/icons/icon.png",
+    "scheme": "ncl",
+    "notification": {
+      "icon": "./assets/icons/notificationIcon.png",
+      "color": "#000000"
+    },
+    "splash": {
+      "image": "./assets/icons/loadingIcon.png"
+    },
+    "packagerOpts": {
+      "assetExts": ["ttf", "mp4"]
+    },
+    "facebookScheme": "fb1201211719949057",
+    "facebookAppId": "1201211719949057",
+    "facebookDisplayName": "Expo APIs",
+    "androidShowExponentNotificationInShellApp": true,
+    "android": {
+      "package": "host.exp.nclexp",
+      "versionCode": 11,
+      "config": {
+        "googleSignIn": {
+          "apiKey": "AIzaSyC2kse8d0rFfi27jff5nD14cSNcPBQC4Tk",
+          "certificateHash": "1746BECB2497593B3296903145793BC0BE8C426B"
+        },
+        "googleMaps": {
+          "apiKey": "AIzaSyC2kse8d0rFfi27jff5nD14cSNcPBQC4Tk",
+        }
+      }
+    },
+    "ios": {
+      "bundleIdentifier": "host.exp.nclexp",
+      "config": {
+        "usesNonExemptEncryption": false,
+        "googleSignIn": {
+          "reservedClientId": "com.googleusercontent.apps.603386649315-1b2o2gole94qc6h4prj6lvoiueq83se4"
+        }
+      }
+    },
+    "assetBundlePatterns": [
+      "assets/**",
+      "node_modules/react-navigation/src/**/*.png",
+      "node_modules/@expo/vector-icons/fonts/*.ttf"
+    ]
+  }
+}
 
 
 

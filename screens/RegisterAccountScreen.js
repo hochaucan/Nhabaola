@@ -29,7 +29,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { CheckBox, Rating, Button, FormLabel, FormInput, SocialIcon, FormValidationMessage } from 'react-native-elements'
 import PopupDialog, { SlideAnimation, ScaleAnimation, DialogTitle, DialogButton } from 'react-native-popup-dialog';
 import uploadImageAsync from '../api/uploadImageAsync';
-import KeyboardSpacer from 'react-native-keyboard-spacer';
+// import KeyboardSpacer from 'react-native-keyboard-spacer';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import { responsiveHeight, responsiveWidth, responsiveFontSize } from 'react-native-responsive-dimensions';
 
@@ -449,7 +449,7 @@ export default class RegisterAccountScreen extends React.Component {
                     </View>
 
                     {/* The view that will animate to match the keyboards height */}
-                    <KeyboardSpacer />
+                    {/* <KeyboardSpacer /> */}
                 </KeyboardAwareScrollView>
 
 

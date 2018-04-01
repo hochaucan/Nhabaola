@@ -23,7 +23,7 @@ import MapView from 'react-native-maps';
 import { Ionicons } from '@expo/vector-icons';
 import { CheckBox, Rating, Button, FormLabel, FormInput, SocialIcon, FormValidationMessage } from 'react-native-elements'
 import { TextInputMask } from 'react-native-masked-text';
-import KeyboardSpacer from 'react-native-keyboard-spacer';
+// import KeyboardSpacer from 'react-native-keyboard-spacer';
 import PopupDialog, { SlideAnimation, ScaleAnimation, DialogTitle, DialogButton } from 'react-native-popup-dialog';
 import uploadImageAsync from '../api/uploadImageAsync'
 

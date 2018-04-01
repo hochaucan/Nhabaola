@@ -4,7 +4,11 @@
     "description": "Nhabaola",
     "slug": "nhabaola-reactnative",
     "privacy": "public",
-    "sdkVersion": "19.0.0",
+    "sdkVersion": "26.0.0",
+    "platforms": [
+      "ios",
+      "android"
+    ],
     "version": "1.0.5",
     "orientation": "portrait",
     "primaryColor": "#cccccc",
@@ -13,6 +17,12 @@
       "icon": "./assets/icons/notification-icon.png",
       "color": "#000000"
     },
+    "updates": {
+      "fallbackToCacheTimeout": 0
+    },
+    "assetBundlePatterns": [
+      "**/*"
+    ],
     "loading": {
       "icon": "./assets/icons/app-icon.png",
       "hideExponentText": true,

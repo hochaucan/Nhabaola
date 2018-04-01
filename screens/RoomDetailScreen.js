@@ -14,9 +14,11 @@ import {
     AsyncStorage,
     ToastAndroid,
     Modal,
+    KeyboardAvoidingView,
 } from 'react-native';
 import { ExpoLinksView } from '@expo/samples';
-import { Constants, MapView } from 'expo';
+import { Constants } from 'expo';
+import MapView from 'react-native-maps';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { Ionicons } from '@expo/vector-icons';
 import Swiper from 'react-native-swiper';
@@ -24,12 +26,13 @@ import Communications from 'react-native-communications';
 import StarRating from 'react-native-star-rating';
 import PopupDialog, { SlideAnimation, ScaleAnimation, DialogTitle, DialogButton } from 'react-native-popup-dialog';
 import { CheckBox, Rating, Button, FormLabel, FormInput, SocialIcon, FormValidationMessage } from 'react-native-elements'
-import KeyboardSpacer from 'react-native-keyboard-spacer';
+// import KeyboardSpacer from 'react-native-keyboard-spacer';
 import { TextInputMask, TextMask } from 'react-native-masked-text';
 import { responsiveHeight, responsiveWidth, responsiveFontSize } from 'react-native-responsive-dimensions';
 import getDirections from 'react-native-google-maps-directions'
 import globalVariable from '../components/Global'
 import convertAmountToWording from '../api/convertAmountToWording'
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 
 var { height, width } = Dimensions.get('window');
 
@@ -302,6 +305,13 @@ export default class RoomDetailScreen extends React.Component {
 
     }
 
+    _scrollToInput(reactNode) {
+        // Add a 'scroll' ref to your ScrollView
+        this.scroll.props.scrollToFocusedInput(reactNode)
+        //this.scroll.props.scrollToPosition(0, 20)
+        //alert(reactNode)
+    }
+
     _reportNBLAsync = async (_reportTypeId, _roomId) => {
 
         // alert(_roomId + "  " + _rate + "  " + this.state.profile.ID + "  " + this.state.sessionKey)
@@ -475,6 +485,7 @@ export default class RoomDetailScreen extends React.Component {
                     ref={scrollView => this.scrollView = scrollView}
                     style={styles.container}>
 
+
                     <View style={{
 
                         flex: 1,
@@ -484,6 +495,8 @@ export default class RoomDetailScreen extends React.Component {
                         padding: 0,
                         flexDirection: 'column',
                     }}>
+
+
 
                         <View
                             style={{ flex: 1, height: responsiveHeight(50) }}
@@ -535,7 +548,7 @@ export default class RoomDetailScreen extends React.Component {
                                 <Text
                                     style={{
                                         flex: 1, color: '#fff', fontWeight: '300',
-                                        fontSize: responsiveFontSize(1.5)
+                                        fontSize: responsiveFontSize(1.7)
                                     }}>
                                     Giá: {convertAmountToWording(this.state.roomBox.Price)}
                                 </Text>
@@ -548,7 +561,7 @@ export default class RoomDetailScreen extends React.Component {
                                             <Text
                                                 style={{
                                                     flex: 2, color: '#fff', fontWeight: '300',
-                                                    fontSize: responsiveFontSize(1.5), textAlign: 'right'
+                                                    fontSize: responsiveFontSize(1.7), textAlign: 'right'
                                                 }}
                                                 key={i}>{y.CatName}:  {this.state.roomBox.Acreage} m</Text>
                                             // : null
@@ -622,24 +635,46 @@ export default class RoomDetailScreen extends React.Component {
 
                                         })
 
-                                        Share.share({
-                                            message: "*Chia Sẻ từ Ứng Dụng Nhà Bao La*"
-                                                + "\nCài đặt: " + "https://play.google.com/store/apps/details?id=vn.nhabaola.nhabaola"
-                                                + "\n\nLiên hệ: " + this.state.roomBox.AccountName + "\nĐiện thoại: " + this.state.roomBox.AccountPhone
-                                                + "\n\nLoại bất động sản: " + loadBDS
-                                                + "\nGiá: " + this.state.roomBox.Price + " đồng"
-                                                + "\nDiện tích: " + this.state.roomBox.Acreage + " mét vuông"
-                                                + "\nĐịa chỉ: " + this.state.roomBox.Address + "\n\nMô tả:\n" + this.state.roomBox.Description,
-                                            url: 'http://nhabaola.vn',
-                                            title: '*Chia Sẻ từ Ứng Dụng Nhà Bao La*'
-                                        }, {
-                                                // Android only:
-                                                dialogTitle: '*Chia Sẻ từ Ứng Dụng Nhà Bao La*',
-                                                // iOS only:
-                                                excludedActivityTypes: [
-                                                    'http://nhabaola.vn'
-                                                ]
-                                            })
+                                        if (Platform.OS == 'ios') {
+                                            Share.share({
+                                                message: "*Chia Sẻ từ Ứng Dụng Nhà Bao La*"
+                                                    + "\n\nLiên hệ: " + this.state.roomBox.AccountName + "\nĐiện thoại: " + this.state.roomBox.ContactPhone
+                                                    + "\n\nLoại bất động sản: " + loadBDS
+                                                    + "\nGiá: " + this.state.roomBox.Price + " đồng"
+                                                    + "\nDiện tích: " + this.state.roomBox.Acreage + " mét vuông"
+                                                    + "\nĐịa chỉ: " + this.state.roomBox.Address + "\n\nMô tả:\n" + this.state.roomBox.Description
+                                                    + "\n\nCài đặt: " + "\n",
+                                                url: 'http://nhabaola.vn',
+                                                title: '*Chia Sẻ từ Ứng Dụng Nhà Bao La*'
+                                            }, {
+                                                    // Android only:
+                                                    dialogTitle: '*Chia Sẻ từ Ứng Dụng Nhà Bao La*',
+                                                    // iOS only:
+                                                    excludedActivityTypes: [
+                                                        'http://nhabaola.vn'
+                                                    ]
+                                                })
+                                        }
+                                        else { //Android
+                                            Share.share({
+                                                message: "*Chia Sẻ từ Ứng Dụng Nhà Bao La*"
+                                                    + "\n\nLiên hệ: " + this.state.roomBox.AccountName + "\nĐiện thoại: " + this.state.roomBox.ContactPhone
+                                                    + "\n\nLoại bất động sản: " + loadBDS
+                                                    + "\nGiá: " + this.state.roomBox.Price + " đồng"
+                                                    + "\nDiện tích: " + this.state.roomBox.Acreage + " mét vuông"
+                                                    + "\nĐịa chỉ: " + this.state.roomBox.Address + "\n\nMô tả:\n" + this.state.roomBox.Description
+                                                    + "\n\nCài đặt: " + "\nhttps://play.google.com/store/apps/details?id=vn.nhabaola.nhabaola",
+                                                url: 'http://nhabaola.vn',
+                                                title: '*Chia Sẻ từ Ứng Dụng Nhà Bao La*'
+                                            }, {
+                                                    // Android only:
+                                                    dialogTitle: '*Chia Sẻ từ Ứng Dụng Nhà Bao La*',
+                                                    // iOS only:
+                                                    excludedActivityTypes: [
+                                                        'http://nhabaola.vn'
+                                                    ]
+                                                })
+                                        }
                                     }}
                                 >
                                     <Ionicons style={styles.cardBottomIcon} name='md-share' />
@@ -751,89 +786,100 @@ export default class RoomDetailScreen extends React.Component {
                     {/* <View style={styles.cardCommentBar}>
                     <Text style={styles.cardCommentBarText}>Bình luận</Text>
                 </View> */}
-                    <View style={{
-                        flex: 1,
-                        flexDirection: 'row',
-                        //height: 300,
-                        paddingTop: 20, paddingRight: 20, paddingLeft: 20,
-                        //marginTop: 5,
-                    }}>
-                        <TextInput
-                            style={{
-                                flex: 3,
-                                borderWidth: 0.8,
-                                borderColor: '#a4d227',
-                                height: 40,
-                                padding: 5,
-                                borderRadius: 5,
-                            }}
-                            ref='commentInput'
-                            returnKeyType={"done"}
-                            onSubmitEditing={(event) => {
-                                this._postCommentsAsync();
-                            }}
+                    <KeyboardAwareScrollView
+                        innerRef={ref => { this.scroll = ref }}
+                        style={{ paddingTop: 10, marginTop: 20, }}
+                    >
+                        <View style={{
+                            flex: 1,
+                            flexDirection: 'row',
+                            //height: 300,
+                            paddingTop: 20, paddingRight: 20, paddingLeft: 20,
+                            //marginTop: 5,
+                        }}>
+                            <TextInput
+                                style={{
+                                    flex: 3,
+                                    borderWidth: 0.8,
+                                    borderColor: '#a4d227',
+                                    height: 40,
+                                    padding: 5,
+                                    borderRadius: 5,
+                                }}
+                                ref='commentInput'
+                                returnKeyType={"done"}
+                                onFocus={(event) => {
+                                    this._scrollToInput(event.target)
+                                }}
+                                onSubmitEditing={(event) => {
+                                    this._postCommentsAsync();
+                                }}
 
-                            placeholder='Bình luận'
-                            underlineColorAndroid='transparent'
-                            value={this.state.commentContent}
-                            onChangeText={(commentContent) => this.setState({ commentContent })}
-                        ></TextInput>
-                        <TouchableOpacity style={styles.cardCommentSubmit}
-                            onPress={async () => {
-                                this._postCommentsAsync();
-                            }}
-                        >
-                            <Text style={styles.cardCommentSubmitText}>Gửi</Text>
-                        </TouchableOpacity>
-                    </View>
-                    {/* COMMENTS */}
-                    <View style={{ marginBottom: 20, marginTop: 20 }}>
-                        <FlatList
-                            style={{ paddingLeft: 20, paddingRight: 20, paddingBottom: 20, }}
-                            //onScroll={this._onScroll}
-                            ref='comments'
+                                placeholder='Bình luận'
+                                underlineColorAndroid='transparent'
+                                value={this.state.commentContent}
+                                onChangeText={(commentContent) => this.setState({ commentContent })}
+                            ></TextInput>
+                            <TouchableOpacity style={styles.cardCommentSubmit}
+                                onPress={async () => {
+                                    this._postCommentsAsync();
+                                }}
+                            >
+                                <Text style={styles.cardCommentSubmitText}>Gửi</Text>
+                            </TouchableOpacity>
+                        </View>
+                        {/* COMMENTS */}
 
-                            // refreshing={this.state.refreshFlatlist}
-                            // onRefresh={() => { this._refreshRoomBox() }}
+                        <View style={{ marginBottom: 20, marginTop: 20 }}>
 
-                            //onEndReachedThreshold={0.2}
-                            //onEndReached={() => {
-                            //alert("refreshing")
-                            // this._getRoomByFilter(false);
+                            <FlatList
+                                style={{ paddingLeft: 20, paddingRight: 20, paddingBottom: 20, }}
+                                //onScroll={this._onScroll}
+                                ref='comments'
 
-                            //}}
+                                // refreshing={this.state.refreshFlatlist}
+                                // onRefresh={() => { this._refreshRoomBox() }}
+
+                                //onEndReachedThreshold={0.2}
+                                //onEndReached={() => {
+                                //alert("refreshing")
+                                // this._getRoomByFilter(false);
+
+                                //}}
 
 
-                            data={this.state.comments}
-                            renderItem={({ item }) =>
-                                <View style={{
-                                    flexDirection: 'row',
-                                    paddingTop: 10,
-                                    paddingBottom: 10,
-                                    borderBottomWidth: 0.3,
-                                    borderColor: '#9B9D9D',
-                                }}>
-                                    <View style={{ flex: 2 }}>
-                                        <Image
-                                            style={{ width: 40, height: 40, borderRadius: 100, }}
-                                            source={{ uri: item.Avarta }}
-                                        //source={require('../images/app-icon.png')}
-                                        />
+                                data={this.state.comments}
+                                renderItem={({ item }) =>
+                                    <View style={{
+                                        flexDirection: 'row',
+                                        paddingTop: 10,
+                                        paddingBottom: 10,
+                                        borderBottomWidth: 0.3,
+                                        borderColor: '#9B9D9D',
+                                    }}>
+                                        <View style={{ flex: 2 }}>
+                                            <Image
+                                                style={{ width: 40, height: 40, borderRadius: 100, }}
+                                                source={{ uri: item.Avarta }}
+                                            //source={require('../images/app-icon.png')}
+                                            />
+                                        </View>
+                                        <View style={{ flex: 8 }}>
+                                            <Text style={{ color: '#73aa2a', fontSize: responsiveFontSize(1.6), marginLeft: -3 }} > {item.FullName}</Text>
+                                            <Text style={{ color: '#9B9D9D', fontSize: 10 }}>{item.UpdatedDate}</Text>
+                                            <Text>{item.Content}</Text>
+                                        </View>
+
                                     </View>
-                                    <View style={{ flex: 8 }}>
-                                        <Text style={{ color: '#73aa2a', fontSize: responsiveFontSize(1.6), marginLeft: -3 }} > {item.FullName}</Text>
-                                        <Text style={{ color: '#9B9D9D', fontSize: 10 }}>{item.UpdatedDate}</Text>
-                                        <Text>{item.Content}</Text>
-                                    </View>
+                                }
+                                keyExtractor={item => item.Content + item.UpdatedDate}
+                            />
 
-                                </View>
-                            }
-                            keyExtractor={item => item.Content + item.UpdatedDate}
-                        />
-                    </View>
+                        </View>
+                    </KeyboardAwareScrollView>
                 </ScrollView>
                 {/* The view that will animate to match the keyboards height */}
-                <KeyboardSpacer />
+                {/* <KeyboardSpacer /> */}
 
                 {/* Popup Rating */}
                 <PopupDialog

@@ -1348,7 +1348,7 @@ export default class SearchScreen extends React.Component {
                                     </View>
                                 </TouchableOpacity>
                             }
-                            keyExtractor={item => item.ID}
+                            keyExtractor={item => item.ID + 'nhabaola'}
                         />
 
                     </View>

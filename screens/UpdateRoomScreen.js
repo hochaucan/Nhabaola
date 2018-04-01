@@ -25,7 +25,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { CheckBox, Rating, Button, FormLabel, FormInput, SocialIcon, FormValidationMessage } from 'react-native-elements'
 import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete'; // 1.2.12
 import { TextInputMask } from 'react-native-masked-text';
-import KeyboardSpacer from 'react-native-keyboard-spacer';
+// import KeyboardSpacer from 'react-native-keyboard-spacer';
 import PopupDialog, { SlideAnimation, ScaleAnimation, DialogTitle, DialogButton } from 'react-native-popup-dialog';
 import uploadImageAsync from '../api/uploadImageAsync'
 import HomeScreen from './HomeScreen';
@@ -1064,7 +1064,7 @@ export default class UpdateRoomScreen extends React.Component {
                             onChangeText={(detailInfo) => this.setState({ detailInfo })}
                         />
                     </View>
-                    <KeyboardSpacer />
+                    {/* <KeyboardSpacer /> */}
                 </KeyboardAwareScrollView>
                 {/* Button */}
                 <View style={{ marginTop: 20, }}>

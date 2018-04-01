@@ -35,7 +35,7 @@ import Communications from 'react-native-communications';
 import { TextInputMask, TextMask } from 'react-native-masked-text';
 import { GooglePlacesAutocomplete, } from 'react-native-google-places-autocomplete'; // 1.2.12
 import Swiper from 'react-native-swiper';
-import KeyboardSpacer from 'react-native-keyboard-spacer';
+// import KeyboardSpacer from 'react-native-keyboard-spacer';
 import uploadImageAsync from '../api/uploadImageAsync';
 import saveStorageAsync from '../components/saveStorageAsync';
 import { responsiveHeight, responsiveWidth, responsiveFontSize } from 'react-native-responsive-dimensions';
@@ -1319,6 +1319,7 @@ export default class HomeScreen extends React.Component {
     let { image } = this.state;
 
     return (
+      // <View style={styles.container} key={this.state.refreshScreen}>
       <View style={styles.container} key={this.state.refreshScreen}>
 
         <FlatList
@@ -1430,7 +1431,7 @@ export default class HomeScreen extends React.Component {
                 <Text
                   style={{
                     flex: 1, color: '#fff', fontWeight: '300',
-                    fontSize: responsiveFontSize(1.5)
+                    fontSize: responsiveFontSize(1.7)
                   }}>
                   Giá: {convertAmountToWording(item.Price)}
                 </Text>
@@ -1443,7 +1444,7 @@ export default class HomeScreen extends React.Component {
                       <Text
                         style={{
                           flex: 2, color: '#fff', fontWeight: '300',
-                          fontSize: responsiveFontSize(1.5), textAlign: 'right'
+                          fontSize: responsiveFontSize(1.7), textAlign: 'right'
                         }}
                         key={i}>{y.CatName}:  {item.Acreage} m</Text>
                       // : null
@@ -1526,25 +1527,45 @@ export default class HomeScreen extends React.Component {
 
                       })
 
-                      Share.share({
-                        message: "*Chia Sẻ từ Ứng Dụng Nhà Bao La*"
-                          + "\nCài đặt: " + "https://play.google.com/store/apps/details?id=vn.nhabaola.nhabaola"
-                          + "\n\nLiên hệ: " + item.AccountName + "\nĐiện thoại: " + item.AccountPhone
-                          + "\n\nLoại bất động sản: " + loadBDS
-                          + "\nGiá: " + item.Price + " đồng"
-                          + "\nDiện tích: " + item.Acreage + " mét vuông"
-                          + "\nĐịa chỉ: " + item.Address + "\n\nMô tả:\n" + item.Description,
-
-                        url: 'http://nhabaola.vn',
-                        title: '*Chia Sẻ từ Ứng Dụng Nhà Bao La*'
-                      }, {
-                          // Android only:
-                          dialogTitle: '*Chia Sẻ từ Ứng Dụng Nhà Bao La*',
-                          // iOS only:
-                          excludedActivityTypes: [
-                            'http://nhabaola.vn'
-                          ]
-                        })
+                      if (Platform.OS == 'ios') {
+                        Share.share({
+                          message: "*Chia Sẻ từ Ứng Dụng Nhà Bao La*"
+                            + "\n\nLiên hệ: " + item.AccountName + "\nĐiện thoại: " + item.ContactPhone
+                            + "\n\nLoại bất động sản: " + loadBDS
+                            + "\nGiá: " + item.Price + " đồng"
+                            + "\nDiện tích: " + item.Acreage + " mét vuông"
+                            + "\nĐịa chỉ: " + item.Address + "\n\nMô tả:\n" + item.Description
+                            + "\n\nCài đặt: " + "\n",
+                          url: 'http://nhabaola.vn',
+                          title: '*Chia Sẻ từ Ứng Dụng Nhà Bao La*'
+                        }, {
+                            // Android only:
+                            dialogTitle: '*Chia Sẻ từ Ứng Dụng Nhà Bao La*',
+                            // iOS only:
+                            excludedActivityTypes: [
+                              'http://nhabaola.vn'
+                            ]
+                          })
+                      } else { //Android
+                        Share.share({
+                          message: "*Chia Sẻ từ Ứng Dụng Nhà Bao La*"
+                            + "\n\nLiên hệ: " + item.AccountName + "\nĐiện thoại: " + item.ContactPhone
+                            + "\n\nLoại bất động sản: " + loadBDS
+                            + "\nGiá: " + item.Price + " đồng"
+                            + "\nDiện tích: " + item.Acreage + " mét vuông"
+                            + "\nĐịa chỉ: " + item.Address + "\n\nMô tả:\n" + item.Description
+                            + "\n\nCài đặt: " + "\nhttps://play.google.com/store/apps/details?id=vn.nhabaola.nhabaola",
+                          url: 'http://nhabaola.vn',
+                          title: '*Chia Sẻ từ Ứng Dụng Nhà Bao La*'
+                        }, {
+                            // Android only:
+                            dialogTitle: '*Chia Sẻ từ Ứng Dụng Nhà Bao La*',
+                            // iOS only:
+                            excludedActivityTypes: [
+                              'http://nhabaola.vn'
+                            ]
+                          })
+                      }
                     }}>
                     <Ionicons style={styles.cardBottomIcon} name='md-share' />
                   </TouchableOpacity>
@@ -1575,7 +1596,7 @@ export default class HomeScreen extends React.Component {
               </View>
             </View>
           }
-          keyExtractor={item => item.ID}
+          keyExtractor={item => item.ID + 'nhabaola'}
 
         /* horizontal={false}
         numColumns={3} */
@@ -2280,7 +2301,7 @@ export default class HomeScreen extends React.Component {
               />
             </Animated.View> */}
           </View>
-          <KeyboardSpacer />
+          {/* <KeyboardSpacer /> */}
         </Modal>
 
         {/* Popup Report */}
@@ -2576,7 +2597,7 @@ export default class HomeScreen extends React.Component {
                 />
               </Animated.View>
               {/* The view that will animate to match the keyboards height */}
-              {Platform.OS === 'ios' ? <KeyboardSpacer /> : null}
+              {/* {Platform.OS === 'ios' ? <KeyboardSpacer /> : null} */}
             </View>
 
             <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center', marginTop: 20, }}>
