@@ -84,6 +84,12 @@ GMAP Key: AIzaSyBIhOGDA4Cvocj02AYdnxYK5oGeg6VwetM
 � � src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBIhOGDA4Cvocj02AYdnxYK5oGeg6VwetM&callback=initMap">
 �</script>
 
+
+Apple ID: hochaucan@gmail.com
+Pass: Rongxanh1
+Team ID: FMVSD22NXF
+
+
 Facebook App ID: 485931318448821
 Facebook App Secret: 
 Facebook client token: 
