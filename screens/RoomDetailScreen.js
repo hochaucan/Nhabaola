@@ -15,6 +15,7 @@ import {
     ToastAndroid,
     Modal,
     KeyboardAvoidingView,
+    Alert,
 } from 'react-native';
 import { ExpoLinksView } from '@expo/samples';
 import { Constants } from 'expo';
@@ -409,6 +410,8 @@ export default class RoomDetailScreen extends React.Component {
 
         return (
             <View style={{ flex: 1 }}>
+
+                {/* Header */}
                 <View style={{ flexDirection: 'row', padding: 10, backgroundColor: '#a4d227', alignItems: 'center' }}>
                     <TouchableOpacity
                         style={{}}
@@ -423,29 +426,14 @@ export default class RoomDetailScreen extends React.Component {
                     <Text style={{ marginLeft: 20, color: '#fff', fontSize: responsiveFontSize(2.2), justifyContent: 'center' }}>Chi tiết</Text>
                 </View>
 
+                {/* Avatar */}
                 <View style={{
                     backgroundColor: '#fff',
                     flexDirection: 'row',
                     paddingTop: 20,
                     paddingLeft: 20,
                     paddingBottom: 20,
-                    //justifyContent: 'center',
                 }}>
-
-                    {/* <TouchableOpacity
-                        style={{
-                            marginRight: 8,
-                            justifyContent: 'center',
-                            padding: 8,
-                        }}
-                        onPress={() => this.props.navigation.goBack()}>
-                        <Ionicons style={{
-                            fontSize: 28,
-                            color: '#73aa2a',
-                        }}
-                            name='md-arrow-back'
-                        ></Ionicons>
-                    </TouchableOpacity> */}
 
                     <View style={styles.cardAvatarBox}>
                         <TouchableOpacity
@@ -481,10 +469,18 @@ export default class RoomDetailScreen extends React.Component {
                     }
 
                 </View>
-                <ScrollView
+                {/* <ScrollView
                     ref={scrollView => this.scrollView = scrollView}
-                    style={styles.container}>
-
+                    style={styles.container}> */}
+                <KeyboardAwareScrollView
+                    innerRef={ref => { this.scroll = ref }}
+                    style={{
+                        paddingTop: 10,
+                        // marginTop: 20,
+                        flex: 1,
+                        backgroundColor: '#fff',
+                    }}
+                >
 
                     <View style={{
 
@@ -589,8 +585,11 @@ export default class RoomDetailScreen extends React.Component {
                                 <TouchableOpacity
                                     onPress={async () => {
                                         if (this.state.profile === null) {
-                                            ToastAndroid.showWithGravity("Bạn vui lòng đăng nhập!", ToastAndroid.SHORT, ToastAndroid.TOP)
-
+                                            if (Platform.OS == 'ios') {
+                                                Alert('Thông Báo', 'Bạn vui lòng đăng nhập')
+                                            } else {
+                                                ToastAndroid.showWithGravity("Bạn vui lòng đăng nhập!", ToastAndroid.SHORT, ToastAndroid.TOP)
+                                            }
                                         } else {
                                             await this.setState({
                                                 //ratingRoomId: item.ID,
@@ -611,9 +610,11 @@ export default class RoomDetailScreen extends React.Component {
 
                                 {/* Comment */}
                                 <TouchableOpacity
-                                    onPress={() => {
-                                        this.scrollView.scrollTo({ x: 0, y: 200 })
+                                    onPress={(event) => {
+                                        // this.scrollView.scrollTo({ x: 0, y: 200 })
+                                        this._scrollToInput(event.target)
                                         this.refs.commentInput.focus();
+                                        // this.scroll.props.scrollToPosition(0, -50)
                                     }}
                                 >
                                     <Ionicons style={styles.cardBottomIcon} name='ios-chatbubbles' />
@@ -682,8 +683,11 @@ export default class RoomDetailScreen extends React.Component {
                                 <TouchableOpacity
                                     onPress={async () => {
                                         if (this.state.profile === null) {
-                                            ToastAndroid.showWithGravity("Bạn vui lòng đăng nhập!", ToastAndroid.SHORT, ToastAndroid.TOP)
-
+                                            if (Platform.OS == 'ios') {
+                                                Alert('Thông Báo', 'Bạn vui lòng đăng nhập')
+                                            } else {
+                                                ToastAndroid.showWithGravity("Bạn vui lòng đăng nhập!", ToastAndroid.SHORT, ToastAndroid.TOP)
+                                            }
                                         } else {
                                             {/* await this.setState({
                                                 reportRoomId: item.ID,
@@ -709,32 +713,6 @@ export default class RoomDetailScreen extends React.Component {
 
                     <View style={styles.cardMapViewBox}>
                         <Text style={{ marginBottom: 5 }}>Địa chỉ:  {this.state.roomBox.Address}</Text>
-                        {/* <Button onPress={() => {
-
-
-                            const data = {
-                                source: {
-                                    latitude: -33.8356372,
-                                    longitude: 18.6947617
-                                },
-                                destination: {
-                                    latitude: -33.8600024,
-                                    longitude: 18.697459
-                                },
-                                params: [
-                                    {
-                                        key: "dirflg",
-                                        value: "d"
-                                    }
-                                ]
-                            }
-
-                            getDirections(data)
-                        }
-
-                        }
-                            title="Tìm đường" /> */}
-
                         <TouchableOpacity
                             style={{
                                 position: 'absolute', bottom: 25, left: 25, zIndex: 10,
@@ -763,7 +741,6 @@ export default class RoomDetailScreen extends React.Component {
                             }}
                         >
                             <Ionicons style={{ color: '#fff', fontSize: responsiveFontSize(1.5) }} name='md-return-right' > Tìm đường</Ionicons>
-                            {/* <Text style={{ color: '#fff', fontSize: responsiveFontSize(1.5) }}>Tìm đường</Text> */}
                         </TouchableOpacity>
 
                         <MapView
@@ -786,10 +763,9 @@ export default class RoomDetailScreen extends React.Component {
                     {/* <View style={styles.cardCommentBar}>
                     <Text style={styles.cardCommentBarText}>Bình luận</Text>
                 </View> */}
-                    <KeyboardAwareScrollView
-                        innerRef={ref => { this.scroll = ref }}
-                        style={{ paddingTop: 10, marginTop: 20, }}
-                    >
+
+                    {/* COMMENTS */}
+                    <KeyboardAvoidingView behavior={Platform.OS == 'ios' ? 'height' : 'padding'} >
                         <View style={{
                             flex: 1,
                             flexDirection: 'row',
@@ -828,56 +804,58 @@ export default class RoomDetailScreen extends React.Component {
                                 <Text style={styles.cardCommentSubmitText}>Gửi</Text>
                             </TouchableOpacity>
                         </View>
-                        {/* COMMENTS */}
-
-                        <View style={{ marginBottom: 20, marginTop: 20 }}>
-
-                            <FlatList
-                                style={{ paddingLeft: 20, paddingRight: 20, paddingBottom: 20, }}
-                                //onScroll={this._onScroll}
-                                ref='comments'
-
-                                // refreshing={this.state.refreshFlatlist}
-                                // onRefresh={() => { this._refreshRoomBox() }}
-
-                                //onEndReachedThreshold={0.2}
-                                //onEndReached={() => {
-                                //alert("refreshing")
-                                // this._getRoomByFilter(false);
-
-                                //}}
+                    </KeyboardAvoidingView>
 
 
-                                data={this.state.comments}
-                                renderItem={({ item }) =>
-                                    <View style={{
-                                        flexDirection: 'row',
-                                        paddingTop: 10,
-                                        paddingBottom: 10,
-                                        borderBottomWidth: 0.3,
-                                        borderColor: '#9B9D9D',
-                                    }}>
-                                        <View style={{ flex: 2 }}>
-                                            <Image
-                                                style={{ width: 40, height: 40, borderRadius: 100, }}
-                                                source={{ uri: item.Avarta }}
-                                            //source={require('../images/app-icon.png')}
-                                            />
-                                        </View>
-                                        <View style={{ flex: 8 }}>
-                                            <Text style={{ color: '#73aa2a', fontSize: responsiveFontSize(1.6), marginLeft: -3 }} > {item.FullName}</Text>
-                                            <Text style={{ color: '#9B9D9D', fontSize: 10 }}>{item.UpdatedDate}</Text>
-                                            <Text>{item.Content}</Text>
-                                        </View>
+                    <View style={{ marginBottom: 20, marginTop: 20 }}>
 
+                        <FlatList
+                            style={{ paddingLeft: 20, paddingRight: 20, paddingBottom: 20, }}
+                            //onScroll={this._onScroll}
+                            ref='comments'
+
+                            // refreshing={this.state.refreshFlatlist}
+                            // onRefresh={() => { this._refreshRoomBox() }}
+
+                            //onEndReachedThreshold={0.2}
+                            //onEndReached={() => {
+                            //alert("refreshing")
+                            // this._getRoomByFilter(false);
+
+                            //}}
+
+
+                            data={this.state.comments}
+                            renderItem={({ item }) =>
+                                <View style={{
+                                    flexDirection: 'row',
+                                    paddingTop: 10,
+                                    paddingBottom: 10,
+                                    borderBottomWidth: 0.3,
+                                    borderColor: '#9B9D9D',
+                                }}>
+                                    <View style={{ flex: 2 }}>
+                                        <Image
+                                            style={{ width: 40, height: 40, borderRadius: 100, }}
+                                            source={{ uri: item.Avarta }}
+                                        //source={require('../images/app-icon.png')}
+                                        />
                                     </View>
-                                }
-                                keyExtractor={item => item.Content + item.UpdatedDate}
-                            />
+                                    <View style={{ flex: 8 }}>
+                                        <Text style={{ color: '#73aa2a', fontSize: responsiveFontSize(1.6), marginLeft: -3 }} > {item.FullName}</Text>
+                                        <Text style={{ color: '#9B9D9D', fontSize: 10 }}>{item.UpdatedDate}</Text>
+                                        <Text>{item.Content}</Text>
+                                    </View>
 
-                        </View>
-                    </KeyboardAwareScrollView>
-                </ScrollView>
+                                </View>
+                            }
+                            keyExtractor={item => item.Content + item.UpdatedDate}
+                        />
+
+                    </View>
+
+                </KeyboardAwareScrollView>
+                {/* </ScrollView> */}
                 {/* The view that will animate to match the keyboards height */}
                 {/* <KeyboardSpacer /> */}
 
@@ -1115,20 +1093,7 @@ const styles = StyleSheet.create({
     cardCommentBarText: {
 
     },
-    container: {
-        flex: 1,
-        // paddingTop: 5,
-        backgroundColor: '#fff',
-    },
 
-    // card: {
-    //     flex: 1,
-    //     height: height * 0.8, //500,
-    //     // borderBottomWidth: 0.5,
-    //     borderColor: '#d6d7da',
-    //     padding: 0,
-    //     flexDirection: 'column',
-    // },
 
     cardAvatarBox: {
         // flex: 1

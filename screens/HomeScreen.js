@@ -1486,8 +1486,11 @@ export default class HomeScreen extends React.Component {
                   <TouchableOpacity
                     onPress={async () => {
                       if (this.state.profile === null) {
-                        ToastAndroid.showWithGravity("Bạn vui lòng đăng nhập!", ToastAndroid.SHORT, ToastAndroid.TOP)
-
+                        if (Platform.OS == 'ios') {
+                          Alert('Thông Báo', 'Bạn vui lòng đăng nhập')
+                        } else {
+                          ToastAndroid.showWithGravity("Bạn vui lòng đăng nhập!", ToastAndroid.SHORT, ToastAndroid.TOP)
+                        }
                       } else {
                         await this.setState({
                           ratingRoomId: item.ID,
@@ -1574,8 +1577,11 @@ export default class HomeScreen extends React.Component {
                   <TouchableOpacity
                     onPress={async () => {
                       if (this.state.profile === null) {
-                        ToastAndroid.showWithGravity("Bạn vui lòng đăng nhập!", ToastAndroid.SHORT, ToastAndroid.TOP)
-
+                        if (Platform.OS == 'ios') {
+                          Alert('Thông Báo', 'Bạn vui lòng đăng nhập')
+                        } else {
+                          ToastAndroid.showWithGravity("Bạn vui lòng đăng nhập!", ToastAndroid.SHORT, ToastAndroid.TOP)
+                        }
                       } else {
                         await this.setState({
                           reportRoomId: item.ID,

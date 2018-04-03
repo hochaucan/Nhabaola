@@ -17,6 +17,7 @@ import {
     Modal,
     Switch,
     Keyboard,
+    KeyboardAvoidingView,
 }
     from 'react-native';
 import { Constants, Location, Permissions, ImagePicker } from 'expo';
@@ -31,6 +32,8 @@ import uploadImageAsync from '../api/uploadImageAsync'
 import HomeScreen from './HomeScreen';
 import DatePicker from 'react-native-datepicker'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
+import { responsiveHeight, responsiveWidth, responsiveFontSize } from 'react-native-responsive-dimensions';
+import SimplePicker from 'react-native-simple-picker';
 
 var { height, width } = Dimensions.get('window');
 
@@ -81,6 +84,7 @@ export default class PostRoomScreen extends React.Component {
             postRoomImage4: null,
             postRoomImage5: null,
             postRoomImage6: null,
+            iosSelectedCategory: '-- Chọn loại BĐS --',
             imageUrl: '',
             postRoomAddressMaker: {
                 latitude: null,
@@ -476,6 +480,7 @@ export default class PostRoomScreen extends React.Component {
                     innerRef={ref => { this.scroll = ref }}
                     style={{ paddingTop: 10, marginTop: 20, }}
                 >
+
                     {/* <ScrollView style={{ paddingTop: 10, marginTop: 20, }}> */}
                     <FormLabel>Hình ảnh</FormLabel>
                     <View style={{
@@ -621,7 +626,7 @@ export default class PostRoomScreen extends React.Component {
                             <TextInputMask
                                 //ref='acreage'
                                 ref='contactPhoneInput'
-                                returnKeyType={"next"}
+                                returnKeyType={Platform.OS == 'ios' ? "done" : "next"}
                                 onSubmitEditing={(event) => {
                                     //this.refs.priceInput.focus();
                                     this.refs['priceInput'].getElement().focus();
@@ -645,7 +650,7 @@ export default class PostRoomScreen extends React.Component {
                             <FormLabel style={{}}>Giá:</FormLabel>
                             <TextInputMask
                                 ref='priceInput'
-                                returnKeyType={"next"}
+                                returnKeyType={Platform.OS == 'ios' ? "done" : "next"}
                                 onSubmitEditing={(event) => {
                                     this.refs['acreageInput'].getElement().focus();
                                 }}
@@ -669,10 +674,15 @@ export default class PostRoomScreen extends React.Component {
                             <TextInputMask
                                 //ref='acreage'
                                 ref='acreageInput'
-                                returnKeyType={"next"}
-                                //onSubmitEditing={(event) => {
-                                //  this.refs.emailInput.focus();
-                                //}}
+                                returnKeyType={Platform.OS == 'ios' ? "done" : "next"}
+                                onSubmitEditing={(event) => {
+                                    // this.refs.emailInput.focus();
+                                    if (Platform.OS == 'ios') {
+                                        this.refs.pickerCategory.show();
+                                    } else {
+
+                                    }
+                                }}
                                 onFocus={(event) => {
                                     this._scrollToInput(event.target)
                                 }}
@@ -694,12 +704,18 @@ export default class PostRoomScreen extends React.Component {
                                 <TouchableOpacity
                                     style={{ marginTop: 12 }}
                                     onPress={() => {
-                                        this.setState({
-                                            modalBDS: true
-                                        })
+                                        this.refs.pickerCategory.show();
+
+                                        // this.setState({
+                                        //     modalBDS: true
+                                        // })
                                     }}
                                 >
-                                    {this.state.selectedCategory === '0'
+
+
+                                    <Text style={{ marginLeft: 5, }}>{this.state.iosSelectedCategory}  <Ionicons style={{ fontSize: responsiveFontSize(2.5) }} name='ios-arrow-dropdown-outline' /> </Text>
+
+                                    {/* {this.state.selectedCategory === '0'
                                         ?
                                         <Text> -- Chọn loại BĐS --</Text>
                                         :
@@ -713,7 +729,7 @@ export default class PostRoomScreen extends React.Component {
                                             )
                                         })
 
-                                    }
+                                    } */}
                                 </TouchableOpacity>
                                 :
                                 <Picker // Android
@@ -733,10 +749,34 @@ export default class PostRoomScreen extends React.Component {
 
                                 </Picker>
                             }
+
+                            <SimplePicker
+                                ref={'pickerCategory'}
+                                options={this.state.roomCategory.map((y, i) => y.ID)}
+                                labels={this.state.roomCategory.map((y, i) => y.CatName)}
+                                confirmText='Đồng ý'
+                                cancelText='Hủy'
+                                itemStyle={{
+                                    fontSize: 25,
+                                    color: '#73aa2a',
+                                    textAlign: 'center',
+                                    fontWeight: 'bold',
+                                }}
+                                onSubmit={async (option) => {
+                                    await this.setState({ selectedCategory: option });
+                                    this.state.roomCategory.map((y, i) => {
+                                        if (y.ID === option) {
+                                            this.setState({ iosSelectedCategory: y.CatName })
+                                        }
+                                    })
+
+                                    this.refs.roomInfoInput.focus();
+                                }}
+                            />
                         </View>
 
                         {/* From Effected Date */}
-                        <FormLabel labelStyle={{}}>Hiệu lực (5K/ngày):</FormLabel>
+                        <FormLabel labelStyle={{}}>Hiệu lực:</FormLabel>
                         <View style={{ flexDirection: 'row', marginTop: 8 }}>
                             <FormLabel labelStyle={{ color: '#fff' }}>Hiệu lực:</FormLabel>
                             <Text style={{ paddingTop: 10 }}>Từ</Text>
@@ -816,7 +856,7 @@ export default class PostRoomScreen extends React.Component {
                         <View
                             style={{ flexDirection: 'row', marginTop: 10, alignItems: 'center' }}
                         >
-                            <FormLabel style={{}}>Làm nổi bật (2K/ngày):</FormLabel>
+                            <FormLabel style={{}}>Làm nổi bật:</FormLabel>
                             <Switch
                                 style={{ marginTop: 12 }}
                                 onValueChange={() => {
@@ -898,35 +938,39 @@ export default class PostRoomScreen extends React.Component {
                                 </View>
                             </View>
                         }
-
-                        {/* Detail Room Information */}
-                        <FormLabel style={{ marginTop: 10, }}>Chi tiết:</FormLabel>
-                        <FormInput
-                            ref='roomInfoInput'
-                            returnKeyType={"done"}
-                            onSubmitEditing={(event) => {
-                                //this._postRoomAsync();
-                                Keyboard.dismiss();
-                            }}
-                            onFocus={(event) => {
-                                this._scrollToInput(event.target)
-                            }}
-                            containerStyle={{ borderWidth: 0.5, borderColor: '#73aa2a', borderRadius: 10, }}
-                            inputStyle={{ padding: 10, height: 120 }}
-                            placeholder='Vui lòng nhập thông tin chi tiết'
-                            multiline={true}
-                            //numberOfLines={5}
-                            //keyboardType='default'
-                            autoCapitalize='sentences'
-                            //maxLength={300}
-                            clearButtonMode='always'
-                            underlineColorAndroid='#fff'
-                            blurOnSubmit={false}
-                            value={this.state.detailInfo}
-                            onChangeText={(detailInfo) => this.setState({ detailInfo })}
-                        />
+                        <KeyboardAvoidingView behavior={Platform.OS == 'ios' ? 'height' : 'padding'}
+                            style={{ marginBottom: 40 }}
+                        >
+                            {/* Detail Room Information */}
+                            <FormLabel style={{ marginTop: 10, }}>Chi tiết:</FormLabel>
+                            <FormInput
+                                ref='roomInfoInput'
+                                returnKeyType={"done"}
+                                onSubmitEditing={(event) => {
+                                    //this._postRoomAsync();
+                                    Keyboard.dismiss();
+                                }}
+                                onFocus={(event) => {
+                                    this._scrollToInput(event.target)
+                                }}
+                                containerStyle={{ borderWidth: 0.5, borderColor: '#73aa2a', borderRadius: 10, }}
+                                inputStyle={{ padding: 10, height: 120 }}
+                                placeholder='Vui lòng nhập thông tin chi tiết'
+                                multiline={true}
+                                //numberOfLines={5}
+                                //keyboardType='default'
+                                autoCapitalize='sentences'
+                                //maxLength={300}
+                                clearButtonMode='always'
+                                underlineColorAndroid='#fff'
+                                blurOnSubmit={false}
+                                value={this.state.detailInfo}
+                                onChangeText={(detailInfo) => this.setState({ detailInfo })}
+                            />
+                        </KeyboardAvoidingView>
                     </View>
                     {/* <KeyboardSpacer /> */}
+
                 </KeyboardAwareScrollView>
                 {/* Button */}
                 <View style={{ marginTop: 20, }}>
@@ -1024,7 +1068,8 @@ export default class PostRoomScreen extends React.Component {
 
                             this.map.animateToCoordinate(this.state.searchingMaker, 1000)
                             this.popupSearching.dismiss();
-                            this.refs['contactPhoneInput'].getElement().focus();
+                            //this.refs['contactPhoneInput'].getElement().focus();
+                            this.refs['priceInput'].getElement().focus();
 
                             {/* 
                             let currentMaker = {
@@ -1127,7 +1172,7 @@ export default class PostRoomScreen extends React.Component {
                 </PopupDialog>
 
                 {/* Modal BDS Ios*/}
-                <Modal
+                {/* <Modal
                     style={{}}
                     animationType={"slide"}
                     transparent={true}
@@ -1150,7 +1195,7 @@ export default class PostRoomScreen extends React.Component {
                                 selectedCategory: itemValue,
                                 modalBDS: false,
                             })}>
-                        {/* <Picker.Item label='-- Chọn loại BĐS --' value='0' /> */}
+                        
                         {this.state.roomCategory.map((y, i) => {
                             return (
                                 <Picker.Item key={i} label={y.CatName} value={y.ID} />
@@ -1158,7 +1203,7 @@ export default class PostRoomScreen extends React.Component {
                         })}
 
                     </Picker>
-                </Modal>
+                </Modal> */}
 
             </View>
 

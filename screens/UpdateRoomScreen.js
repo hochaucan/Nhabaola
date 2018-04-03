@@ -31,6 +31,8 @@ import uploadImageAsync from '../api/uploadImageAsync'
 import HomeScreen from './HomeScreen';
 import DatePicker from 'react-native-datepicker'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
+import SimplePicker from 'react-native-simple-picker';
+import { responsiveHeight, responsiveWidth, responsiveFontSize } from 'react-native-responsive-dimensions';
 
 var { height, width } = Dimensions.get('window');
 
@@ -105,6 +107,7 @@ export default class UpdateRoomScreen extends React.Component {
             postRoomImage5: null,
             postRoomImage6: null,
             imageUrl: '',
+            iosSelectedCategory: '-- Chọn loại BĐS --',
             postRoomAddressMaker: {
                 latitude: null,
                 longitude: null,
@@ -751,7 +754,7 @@ export default class UpdateRoomScreen extends React.Component {
                             <TextInputMask
                                 //ref='acreage'
                                 ref='contactPhoneInput'
-                                returnKeyType={"next"}
+                                returnKeyType={Platform.OS == 'ios' ? "done" : "next"}
                                 onSubmitEditing={(event) => {
                                     //this.refs.priceInput.focus();
                                     this.refs['priceInput'].getElement().focus();
@@ -775,7 +778,7 @@ export default class UpdateRoomScreen extends React.Component {
                             <FormLabel style={{}}>Giá:</FormLabel>
                             <TextInputMask
                                 ref='priceInput'
-                                returnKeyType={"next"}
+                                returnKeyType={Platform.OS == 'ios' ? "done" : "next"}
                                 onSubmitEditing={(event) => {
                                     this.refs['acreageInput'].getElement().focus();
                                 }}
@@ -798,10 +801,15 @@ export default class UpdateRoomScreen extends React.Component {
                             <FormLabel style={{}}>Diện tích:</FormLabel>
                             <TextInputMask
                                 ref='acreageInput'
-                                returnKeyType={"next"}
-                                //onSubmitEditing={(event) => {
-                                //  this.refs.emailInput.focus();
-                                //}}
+                                returnKeyType={Platform.OS == 'ios' ? "done" : "next"}
+                                onSubmitEditing={(event) => {
+                                    //  this.refs.emailInput.focus();
+                                    if (Platform.OS == 'ios') {
+                                        this.refs.pickerCategory.show();
+                                    } else {
+
+                                    }
+                                }}
                                 onFocus={(event) => {
                                     this._scrollToInput(event.target)
                                 }}
@@ -823,12 +831,15 @@ export default class UpdateRoomScreen extends React.Component {
                                 <TouchableOpacity
                                     style={{ marginTop: 12 }}
                                     onPress={() => {
-                                        this.setState({
-                                            modalBDS: true
-                                        })
+                                        this.refs.pickerCategory.show();
+                                        // this.setState({
+                                        //     modalBDS: true
+                                        // })
                                     }}
                                 >
-                                    {this.state.selectedCategory === '0'
+
+                                    <Text style={{ marginLeft: 5, }}>{this.state.iosSelectedCategory}  <Ionicons style={{ fontSize: responsiveFontSize(2.5) }} name='ios-arrow-dropdown-outline' /> </Text>
+                                    {/* {this.state.selectedCategory === '0'
                                         ?
                                         <Text> -- Chọn loại BĐS --</Text>
                                         :
@@ -842,7 +853,7 @@ export default class UpdateRoomScreen extends React.Component {
                                             )
                                         })
 
-                                    }
+                                    } */}
                                 </TouchableOpacity>
                                 :
                                 <Picker // Android
@@ -862,10 +873,34 @@ export default class UpdateRoomScreen extends React.Component {
 
                                 </Picker>
                             }
+
+                            <SimplePicker
+                                ref={'pickerCategory'}
+                                options={this.state.roomCategory.map((y, i) => y.ID)}
+                                labels={this.state.roomCategory.map((y, i) => y.CatName)}
+                                confirmText='Đồng ý'
+                                cancelText='Hủy'
+                                itemStyle={{
+                                    fontSize: 25,
+                                    color: '#73aa2a',
+                                    textAlign: 'center',
+                                    fontWeight: 'bold',
+                                }}
+                                onSubmit={async (option) => {
+                                    await this.setState({ selectedCategory: option });
+                                    this.state.roomCategory.map((y, i) => {
+                                        if (y.ID === option) {
+                                            this.setState({ iosSelectedCategory: y.CatName })
+                                        }
+                                    })
+
+                                    this.refs.roomInfoInput.focus();
+                                }}
+                            />
                         </View>
 
                         {/* From Effected Date */}
-                        <FormLabel labelStyle={{}}>Hiệu lực (5K/ngày):</FormLabel>
+                        <FormLabel labelStyle={{}}>Hiệu lực:</FormLabel>
                         <View style={{ flexDirection: 'row', marginTop: 8 }}>
                             <FormLabel labelStyle={{ color: '#fff' }}>Hiệu lực:</FormLabel>
                             <Text style={{ paddingTop: 10 }}>Từ</Text>
@@ -952,7 +987,7 @@ export default class UpdateRoomScreen extends React.Component {
                         <View
                             style={{ flexDirection: 'row', marginTop: 10, alignItems: 'center' }}
                         >
-                            <FormLabel style={{}}>Làm nổi bật (2K/ngày):</FormLabel>
+                            <FormLabel style={{}}>Làm nổi bật:</FormLabel>
                             <Switch
                                 style={{ marginTop: 12 }}
                                 onValueChange={() => {
