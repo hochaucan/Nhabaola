@@ -70,6 +70,8 @@ export default class RegisterAccountScreen extends React.Component {
         // this.props.navigation.goBack();
         // return;
 
+        let emailReg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
+
         //Form validation
         if (Platform.OS === 'android') {
             if (this.state.registerAccountImage === null) {
@@ -78,18 +80,22 @@ export default class RegisterAccountScreen extends React.Component {
             }
             if (this.state.registerCellPhone === '') {
                 ToastAndroid.showWithGravity('Vui lòng nhập Số Điện Thoại', ToastAndroid.SHORT, ToastAndroid.TOP);
+                this.refs.phoneInput.focus();
                 return;
             }
             if (this.state.registerPassword === '') {
                 ToastAndroid.showWithGravity('Vui lòng nhập mật khẩu', ToastAndroid.SHORT, ToastAndroid.TOP);
+                this.refs.passwordInput.focus();
                 return;
             }
             if (this.state.registerPassword != this.state.registerConfirmPassword) {
                 ToastAndroid.showWithGravity('Xác nhận mật khẩu không đúng', ToastAndroid.SHORT, ToastAndroid.TOP);
+                this.refs.confirmPasswordInput.focus();
                 return;
             }
             if (this.state.registerFullName === '') {
                 ToastAndroid.showWithGravity('Vui lòng nhập Họ Tên', ToastAndroid.SHORT, ToastAndroid.TOP);
+                this.refs.fullNameInput.focus();
                 return;
             }
             // if (this.state.registerConfirmCellPhone === '') {
@@ -98,8 +104,15 @@ export default class RegisterAccountScreen extends React.Component {
             // }
             if (this.state.registerEmail === '') {
                 ToastAndroid.showWithGravity('Vui lòng nhập Email', ToastAndroid.SHORT, ToastAndroid.TOP);
+                this.refs.emailInput.focus();
                 return;
             }
+            if (emailReg.test(this.state.registerEmail) === false) {
+                ToastAndroid.showWithGravity('Email không đúng', ToastAndroid.SHORT, ToastAndroid.TOP);
+                this.refs.emailInput.focus();
+                return;
+            }
+
         }
         else {
             if (this.state.registerAccountImage === null) {
@@ -108,28 +121,36 @@ export default class RegisterAccountScreen extends React.Component {
             }
             if (this.state.registerCellPhone === '') {
                 Alert.alert('Thông báo', 'Vui lòng nhập Số Điện Thoại');
+                //this.refs.phoneInput.focus();
                 return;
             }
             if (this.state.registerPassword === '') {
                 Alert.alert('Thông báo', 'Vui lòng nhập mật khẩu');
+                //this.refs.passwordInput.focus();
                 return;
             }
             if (this.state.registerPassword != this.state.registerConfirmPassword) {
                 Alert.alert('Thông báo', 'Xác nhận mật khẩu không đúng');
+                //this.refs.confirmPasswordInput.focus();
                 return;
             }
             if (this.state.registerFullName === '') {
                 Alert.alert('Thông báo', 'Vui lòng nhập Họ Tên');
+                //this.refs.fullNameInput.focus();
                 return;
             }
             if (this.state.registerEmail === '') {
                 Alert.alert('Thông báo', 'Vui lòng nhập Email');
+                // this.refs.emailInput.focus();
                 return;
             }
-            // if (this.state.registerConfirmCellPhone === '') {
-            //     Alert.alert('Thông báo', 'Vui lòng nhập mã xác nhận Số Điện Thoại');
-            //     return;
-            // }
+
+            if (emailReg.test(this.state.registerEmail) === false) {
+                Alert.alert('Thông báo', 'Email không đúng');
+                //this.refs.emailInput.focus();
+                return;
+            }
+
         }
 
         this.popupLoadingIndicator.show();
@@ -224,7 +245,7 @@ export default class RegisterAccountScreen extends React.Component {
         if (!result.cancelled) {
             this.setState({ registerAccountImage: result.uri })
         }
-
+        this.refs.phoneInput.focus();
     };
 
     _scrollToInput(reactNode) {
@@ -257,6 +278,7 @@ export default class RegisterAccountScreen extends React.Component {
                             style={{}}
                             onPress={async () => {
                                 this.popupSelectedImage.show()
+
                             }
                             }
                         >
@@ -275,12 +297,13 @@ export default class RegisterAccountScreen extends React.Component {
                         <View style={{ position: 'relative', flexDirection: 'row', padding: 10, }}>
                             <Ionicons style={{ flex: 1, fontSize: 22, paddingTop: 12, textAlign: 'center', }} name='md-call' />
                             <FormInput
+                                ref='phoneInput'
                                 containerStyle={{ flex: 15, marginLeft: Platform.OS === 'ios' ? 20 : 10 }}
                                 inputStyle={{ paddingLeft: Platform.OS === 'android' ? 4 : 0 }}
                                 placeholder='Số điện thoại liên hệ'
                                 autoCapitalize='sentences'
                                 keyboardType='numeric'
-                                returnKeyType={"next"}
+                                returnKeyType={Platform.OS == 'ios' ? "done" : "next"}
                                 underlineColorAndroid={'#73aa2a'}
                                 onChangeText={(registerCellPhone) => this.setState({ registerCellPhone })}
                                 value={this.state.registerCellPhone}
@@ -372,7 +395,7 @@ export default class RegisterAccountScreen extends React.Component {
                                 returnKeyType={"done"}
                                 onSubmitEditing={(event) => {
                                     Keyboard.dismiss()
-                                    this._registerAccountAsync();
+                                    //this._registerAccountAsync();
                                 }}
                                 containerStyle={{ flex: 15, marginLeft: Platform.OS === 'ios' ? 22 : 18 }}
                                 inputStyle={{ paddingLeft: Platform.OS === 'android' ? 4 : 0 }}
@@ -380,7 +403,9 @@ export default class RegisterAccountScreen extends React.Component {
                                 keyboardType='email-address'
                                 underlineColorAndroid={'#73aa2a'}
                                 value={this.state.registerEmail}
-                                onChangeText={(registerEmail) => { this.setState({ registerEmail }) }}
+                                onChangeText={(registerEmail) => {
+                                    this.setState({ registerEmail })
+                                }}
                                 onFocus={(event) => {
                                     this._scrollToInput(event.target)
 

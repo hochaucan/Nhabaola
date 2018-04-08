@@ -19,6 +19,7 @@ import {
     AsyncStorage,
     ToastAndroid,
     ActivityIndicator,
+    Keyboard,
 } from 'react-native';
 import { WebBrowser, ImagePicker, Facebook } from 'expo';
 import { MonoText } from '../components/StyledText';
@@ -82,7 +83,7 @@ export default class UpdateAccountScreen extends React.Component {
 
 
     _updateAccountAsync = async () => {
-
+        let emailReg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
         //Form validation
         if (Platform.OS === 'android') {
             if (this.state.registerAccountImage === null) {
@@ -92,11 +93,18 @@ export default class UpdateAccountScreen extends React.Component {
 
             if (this.state.registerFullName === '') {
                 ToastAndroid.showWithGravity('Vui lòng nhập Họ Tên', ToastAndroid.SHORT, ToastAndroid.TOP);
+                this.refs.fullNameInput.focus();
                 return;
             }
 
             if (this.state.registerEmail === '') {
                 ToastAndroid.showWithGravity('Vui lòng nhập Email', ToastAndroid.SHORT, ToastAndroid.TOP);
+                this.refs.emailInput.focus();
+                return;
+            }
+            if (emailReg.test(this.state.registerEmail) === false) {
+                ToastAndroid.showWithGravity('Email không đúng', ToastAndroid.SHORT, ToastAndroid.TOP);
+                this.refs.emailInput.focus();
                 return;
             }
         }
@@ -106,12 +114,16 @@ export default class UpdateAccountScreen extends React.Component {
                 return;
             }
 
-            if (this.state.registerFullName === null) {
-                Alert.alert('Oops!', 'Vui lòng nhập Họ Tên');
+            if (this.state.registerFullName === '') {
+                Alert.alert('Thông báo', 'Vui lòng nhập Họ Tên');
                 return;
             }
-            if (this.state.registerEmail === null) {
-                Alert.alert('Oops!', 'Vui lòng nhập Email');
+            if (this.state.registerEmail === '') {
+                Alert.alert('Thông báo', 'Vui lòng nhập Email');
+                return;
+            }
+            if (emailReg.test(this.state.registerEmail) === false) {
+                Alert.alert('Thông báo', 'Email không đúng');
                 return;
             }
         }
@@ -332,7 +344,8 @@ export default class UpdateAccountScreen extends React.Component {
                                 ref='emailInput'
                                 returnKeyType={"done"}
                                 onSubmitEditing={(event) => {
-                                    this._updateAccountAsync();
+                                    Keyboard.dismiss();
+                                    //this._updateAccountAsync();
                                 }}
                                 onFocus={(event) => {
                                     this._scrollToInput(event.target)

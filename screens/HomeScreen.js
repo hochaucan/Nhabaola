@@ -1487,7 +1487,7 @@ export default class HomeScreen extends React.Component {
                     onPress={async () => {
                       if (this.state.profile === null) {
                         if (Platform.OS == 'ios') {
-                          Alert('Thông Báo', 'Bạn vui lòng đăng nhập')
+                          Alert.alert('Thông Báo', 'Bạn vui lòng đăng nhập')
                         } else {
                           ToastAndroid.showWithGravity("Bạn vui lòng đăng nhập!", ToastAndroid.SHORT, ToastAndroid.TOP)
                         }
@@ -1578,7 +1578,7 @@ export default class HomeScreen extends React.Component {
                     onPress={async () => {
                       if (this.state.profile === null) {
                         if (Platform.OS == 'ios') {
-                          Alert('Thông Báo', 'Bạn vui lòng đăng nhập')
+                          Alert.alert('Thông Báo', 'Bạn vui lòng đăng nhập')
                         } else {
                           ToastAndroid.showWithGravity("Bạn vui lòng đăng nhập!", ToastAndroid.SHORT, ToastAndroid.TOP)
                         }
