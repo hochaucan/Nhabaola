@@ -715,7 +715,7 @@ export default class SearchScreen extends React.Component {
                     alignItems: 'center',
                     elevation: 2,
                     opacity: 0.9,
-                    width: 130,//responsiveWidth(40)
+                    width: Platform.OS == 'ios' ? 100 : 130,//responsiveWidth(40)
 
                     shadowColor: '#000',
                     shadowOffset: { width: 0, height: 2 },
@@ -723,10 +723,11 @@ export default class SearchScreen extends React.Component {
                     shadowRadius: 2,
 
                 }}>
-                    <Text style={{ width: 30, paddingLeft: 5 }}>BK: </Text>
+                    <Text style={{ width: 30, paddingLeft: Platform.OS == 'ios' ? 0 : 5 }}>BK: </Text>
                     {Platform.OS === 'ios' ?
 
                         <TouchableOpacity
+                            style={{ padding: 5 }}
                             onPress={() => {
                                 // this.setState({
                                 //     modalRadius: true
@@ -900,7 +901,7 @@ export default class SearchScreen extends React.Component {
                         onPress={(e) => this.onMapPress(e)}
                     /* customMapStyle={customStyle} */
                     >
-                        {this.state.location
+                        {this.state.location && this.state.searchingMaker == null
                             ?
 
                             <MapView.Marker
