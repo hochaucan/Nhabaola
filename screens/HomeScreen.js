@@ -92,6 +92,7 @@ export default class HomeScreen extends React.Component {
       roomCategory: [],
       //roomBox: [],
       loadingIndicator: false,
+      modalLoading: false,
 
       // Post Room
       postRoomImage1: null,
@@ -487,7 +488,7 @@ export default class HomeScreen extends React.Component {
     }
 
     if (Platform.OS == 'ios') {
-      //this.popupLoadingIndicator.show()
+      //  this.setState({ modalLoading: true })
     }
     else {
       this.popupLoadingIndicator.show()
@@ -514,7 +515,7 @@ export default class HomeScreen extends React.Component {
           if (responseJson.obj.UpdatedBy != "") { // Login successful
 
             if (Platform.OS == 'ios') {
-              this.setState({ modalLogin: false })
+              this.setState({ modalLogin: false, })
             }
             else {
               this.popupLogin.dismiss()
@@ -1729,6 +1730,9 @@ export default class HomeScreen extends React.Component {
             marginBottom: 150, width: width * 0.9,
             height: 240,
           }}
+          onShown={() => {
+            this.refs.resetUserNameInput.focus()
+          }}
         >
 
           <View style={{
@@ -1741,7 +1745,7 @@ export default class HomeScreen extends React.Component {
             }}>
               <Ionicons style={{ flex: 1, fontSize: 22, paddingTop: 12, textAlign: 'center', }} name='md-call' />
               <FormInput
-                ref='userNameInput'
+                ref='resetUserNameInput'
                 returnKeyType={"done"}
                 onSubmitEditing={(event) => {
                   this._resetPasswordStep1();
@@ -1788,8 +1792,11 @@ export default class HomeScreen extends React.Component {
           animationType={"slide"}
           transparent={false}
           visible={this.state.modalResetPassword1}
-          onRequestClose={() => {
-            //alert("Modal has been closed.")
+          // onRequestClose={() => {
+          //   //alert("Modal has been closed.")
+          // }}
+          onShow={() => {
+            this.refs.iosResetUserNameInput.focus()
           }}
         >
 
@@ -1804,7 +1811,7 @@ export default class HomeScreen extends React.Component {
             }}>
               <Ionicons style={{ flex: 1, fontSize: 22, paddingTop: 12, textAlign: 'center', }} name='md-call' />
               <FormInput
-                ref='userNameInput'
+                ref='iosResetUserNameInput'
                 returnKeyType={"done"}
                 onSubmitEditing={(event) => {
                   this._resetPasswordStep1();
@@ -2030,7 +2037,9 @@ export default class HomeScreen extends React.Component {
           dialogTitle={<DialogTitle title="Đăng nhập" titleStyle={{}} titleTextStyle={{ color: '#73aa2a' }} />}
           dismissOnTouchOutside={false}
           dialogStyle={{ marginBottom: 150, width: width * 0.9, }}
-
+          onShown={() => {
+            this.refs.userNameInput.focus()
+          }}
 
         >
           <View>
@@ -2158,17 +2167,38 @@ export default class HomeScreen extends React.Component {
           </View>
         </PopupDialog>
 
+        {/* Modal Loading */}
+        <Modal
+          animationType={"slide"}
+          transparent={false}
+          visible={this.state.modalLoading}
+        >
+          <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+            <ActivityIndicator
+              style={{}}
+              animating={true}
+              size="large"
+              color="#73aa2a"
+            />
+
+          </View>
+        </Modal>
+
         {/* Modal Login */}
         <Modal
           animationType={"slide"}
           transparent={false}
           visible={this.state.modalLogin}
-          onRequestClose={() => {
-            //alert("Modal has been closed.")
+          // onRequestClose={() => {
+          //   //alert("Modal has been closed.")
+          // }}
+          onShow={() => {
+            this.refs.iosUserNameInput.focus()
           }}
         >
 
           <View>
+
             {/* Username */}
             <Animated.View style={{
               position: 'relative',
@@ -2178,8 +2208,8 @@ export default class HomeScreen extends React.Component {
             }}>
               <Ionicons style={{ flex: 1, fontSize: 22, paddingTop: 12, textAlign: 'center', }} name='ios-person' />
               <FormInput
-                ref='userNameInput'
-                returnKeyType={"next"}
+                ref='iosUserNameInput'
+                returnKeyType={Platform.OS == 'ios' ? 'done' : "next"}
                 onSubmitEditing={(event) => {
                   this.refs.passwordInput.focus();
                 }}

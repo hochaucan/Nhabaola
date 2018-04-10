@@ -20,6 +20,7 @@ import {
     ToastAndroid,
     ActivityIndicator,
     Keyboard,
+    KeyboardAvoidingView,
 } from 'react-native';
 import { WebBrowser, ImagePicker, Facebook } from 'expo';
 import { MonoText } from '../components/StyledText';
@@ -258,63 +259,64 @@ export default class RegisterAccountScreen extends React.Component {
     render() {
         return (
             <View style={{ flex: 1, backgroundColor: '#fff', paddingBottom: 20, }}>
-
-                <View style={{ flexDirection: 'row', padding: 10, backgroundColor: '#a4d227', alignItems: 'center' }}>
-                    <TouchableOpacity
-                        style={{}}
-                        onPress={() => {
-                            this.props.navigation.goBack()
-                        }}>
-                        <Ionicons style={{ fontSize: 28, color: '#fff', }} name='md-arrow-back'></Ionicons>
-                    </TouchableOpacity>
-                    <Text style={{ marginLeft: 20, color: '#fff', fontSize: responsiveFontSize(1.8), justifyContent: 'center' }}>ĐK Tài khoản</Text>
-                </View>
-
                 <KeyboardAwareScrollView
                     innerRef={ref => { this.scroll = ref }}
                 >
-                    <View style={{ flexDirection: 'row', padding: 20, justifyContent: 'center', alignItems: 'center' }}>
+                    <View style={{ flexDirection: 'row', padding: 10, backgroundColor: '#a4d227', alignItems: 'center' }}>
                         <TouchableOpacity
                             style={{}}
-                            onPress={async () => {
-                                this.popupSelectedImage.show()
-
-                            }
-                            }
-                        >
-                            <Ionicons style={{ opacity: 0.7, fontSize: 100, color: '#73aa2a', flex: 1, textAlign: 'center', }} name='ios-contact' />
-                            {this.state.registerAccountImage
-                                && <Image source={{ uri: this.state.registerAccountImage }}
-                                    style={{ width: 80, height: 80, borderRadius: Platform.OS === 'ios' ? 25 : 100, marginTop: Platform.OS === 'ios' ? -99 : -90, marginLeft: Platform.OS === 'ios' ? 7 : 1, marginBottom: 10, }}
-                                />
-                            }
-                            <Text style={{}}>Hình đại diện</Text>
+                            onPress={() => {
+                                this.props.navigation.goBack()
+                            }}>
+                            <Ionicons style={{ fontSize: 28, color: '#fff', }} name='md-arrow-back'></Ionicons>
                         </TouchableOpacity>
-
+                        <Text style={{ marginLeft: 20, color: '#fff', fontSize: responsiveFontSize(1.8), justifyContent: 'center' }}>ĐK Tài khoản</Text>
                     </View>
-                    <View>
-                        {/* Cellphone */}
-                        <View style={{ position: 'relative', flexDirection: 'row', padding: 10, }}>
-                            <Ionicons style={{ flex: 1, fontSize: 22, paddingTop: 12, textAlign: 'center', }} name='md-call' />
-                            <FormInput
-                                ref='phoneInput'
-                                containerStyle={{ flex: 15, marginLeft: Platform.OS === 'ios' ? 20 : 10 }}
-                                inputStyle={{ paddingLeft: Platform.OS === 'android' ? 4 : 0 }}
-                                placeholder='Số điện thoại liên hệ'
-                                autoCapitalize='sentences'
-                                keyboardType='numeric'
-                                returnKeyType={Platform.OS == 'ios' ? "done" : "next"}
-                                underlineColorAndroid={'#73aa2a'}
-                                onChangeText={(registerCellPhone) => this.setState({ registerCellPhone })}
-                                value={this.state.registerCellPhone}
-                                onSubmitEditing={(event) => {
-                                    this.refs.passwordInput.focus();
-                                }}
-                                onFocus={(event) => {
-                                    this._scrollToInput(event.target)
-                                }}
-                            />
-                            {/* <TouchableOpacity>
+
+
+                    <KeyboardAvoidingView behavior={Platform.OS == 'ios' ? 'height' : 'padding'}>
+                        <View style={{ flexDirection: 'row', padding: 20, justifyContent: 'center', alignItems: 'center' }}>
+                            <TouchableOpacity
+                                style={{}}
+                                onPress={async () => {
+                                    this.popupSelectedImage.show()
+
+                                }
+                                }
+                            >
+                                <Ionicons style={{ opacity: 0.7, fontSize: 100, color: '#73aa2a', flex: 1, textAlign: 'center', }} name='ios-contact' />
+                                {this.state.registerAccountImage
+                                    && <Image source={{ uri: this.state.registerAccountImage }}
+                                        style={{ width: 80, height: 80, borderRadius: Platform.OS === 'ios' ? 25 : 100, marginTop: Platform.OS === 'ios' ? -99 : -90, marginLeft: Platform.OS === 'ios' ? 7 : 1, marginBottom: 10, }}
+                                    />
+                                }
+                                <Text style={{}}>Hình đại diện</Text>
+                            </TouchableOpacity>
+
+                        </View>
+                        <View>
+                            {/* Cellphone */}
+                            <View style={{ position: 'relative', flexDirection: 'row', padding: 10, }}>
+                                <Ionicons style={{ flex: 1, fontSize: 22, paddingTop: 12, textAlign: 'center', }} name='md-call' />
+                                <FormInput
+                                    ref='phoneInput'
+                                    containerStyle={{ flex: 15, marginLeft: Platform.OS === 'ios' ? 20 : 10 }}
+                                    inputStyle={{ paddingLeft: Platform.OS === 'android' ? 4 : 0 }}
+                                    placeholder='Số điện thoại liên hệ'
+                                    autoCapitalize='sentences'
+                                    keyboardType='numeric'
+                                    returnKeyType={Platform.OS == 'ios' ? "done" : "next"}
+                                    underlineColorAndroid={'#73aa2a'}
+                                    onChangeText={(registerCellPhone) => this.setState({ registerCellPhone })}
+                                    value={this.state.registerCellPhone}
+                                    onSubmitEditing={(event) => {
+                                        this.refs.passwordInput.focus();
+                                    }}
+                                    onFocus={(event) => {
+                                        this._scrollToInput(event.target)
+                                    }}
+                                />
+                                {/* <TouchableOpacity>
                                 <FormLabel
                                     containerStyle={{
                                         alignItems: 'center', justifyContent: 'center',
@@ -324,97 +326,97 @@ export default class RegisterAccountScreen extends React.Component {
                                     (Xác nhận ĐT)
                             </FormLabel>
                             </TouchableOpacity> */}
-                        </View>
-                        {/* Password */}
-                        <View style={{ flexDirection: 'row', padding: 10, paddingTop: 0, }}>
-                            <Ionicons style={{ flex: 1, fontSize: 22, paddingTop: 12, textAlign: 'center', }} name='ios-lock' />
-                            <FormInput
-                                ref='passwordInput'
-                                returnKeyType={"next"}
-                                onSubmitEditing={(event) => {
-                                    this.refs.confirmPasswordInput.focus();
-                                }}
-                                containerStyle={{ flex: 15 }}
-                                inputStyle={{ paddingLeft: Platform.OS === 'android' ? 4 : 0 }}
-                                placeholder='Mật khẩu'
-                                secureTextEntry={true}
-                                underlineColorAndroid={'#73aa2a'}
-                                value={this.state.registerPassword}
-                                onChangeText={(registerPassword) => { this.setState({ registerPassword }) }}
-                                onFocus={(event) => {
-                                    this._scrollToInput(event.target)
-                                }}
-                            />
-                        </View>
-                        <View style={{ flexDirection: 'row', padding: 10, paddingTop: 0, }}>
-                            <FormInput
-                                ref='confirmPasswordInput'
-                                returnKeyType={"next"}
-                                onSubmitEditing={(event) => {
-                                    this.refs.fullNameInput.focus();
-                                }}
-                                containerStyle={{ flex: 15, marginLeft: 36 }}
-                                inputStyle={{ paddingLeft: Platform.OS === 'android' ? 4 : 0 }}
-                                placeholder='Xác nhận mật khẩu'
-                                secureTextEntry={true}
-                                underlineColorAndroid={'#73aa2a'}
-                                value={this.state.registerConfirmPassword}
-                                onChangeText={(registerConfirmPassword) => { this.setState({ registerConfirmPassword }) }}
-                                onFocus={(event) => {
-                                    this._scrollToInput(event.target)
-                                }}
-                            />
-                        </View>
-                        {/* Fulllname */}
-                        <View style={{ flexDirection: 'row', padding: 10, paddingTop: 0, }}>
-                            <Ionicons style={{ flex: 1, fontSize: 22, paddingTop: 12, textAlign: 'center', }} name='ios-person' />
-                            <FormInput
-                                ref='fullNameInput'
-                                returnKeyType={"next"}
-                                onSubmitEditing={(event) => {
-                                    this.refs.emailInput.focus();
-                                }}
-                                containerStyle={{ flex: 15, marginLeft: Platform.OS === 'ios' ? 22 : 18 }}
-                                inputStyle={{ paddingLeft: Platform.OS === 'android' ? 4 : 0 }}
-                                placeholder='Họ và tên'
-                                underlineColorAndroid={'#73aa2a'}
-                                value={this.state.registerFullName}
-                                onChangeText={(registerFullName) => { this.setState({ registerFullName }) }}
-                                onFocus={(event) => {
-                                    this._scrollToInput(event.target)
-                                }}
-                            />
+                            </View>
+                            {/* Password */}
+                            <View style={{ flexDirection: 'row', padding: 10, paddingTop: 0, }}>
+                                <Ionicons style={{ flex: 1, fontSize: 22, paddingTop: 12, textAlign: 'center', }} name='ios-lock' />
+                                <FormInput
+                                    ref='passwordInput'
+                                    returnKeyType={"next"}
+                                    onSubmitEditing={(event) => {
+                                        this.refs.confirmPasswordInput.focus();
+                                    }}
+                                    containerStyle={{ flex: 15 }}
+                                    inputStyle={{ paddingLeft: Platform.OS === 'android' ? 4 : 0 }}
+                                    placeholder='Mật khẩu'
+                                    secureTextEntry={true}
+                                    underlineColorAndroid={'#73aa2a'}
+                                    value={this.state.registerPassword}
+                                    onChangeText={(registerPassword) => { this.setState({ registerPassword }) }}
+                                    onFocus={(event) => {
+                                        this._scrollToInput(event.target)
+                                    }}
+                                />
+                            </View>
+                            <View style={{ flexDirection: 'row', padding: 10, paddingTop: 0, }}>
+                                <FormInput
+                                    ref='confirmPasswordInput'
+                                    returnKeyType={"next"}
+                                    onSubmitEditing={(event) => {
+                                        this.refs.fullNameInput.focus();
+                                    }}
+                                    containerStyle={{ flex: 15, marginLeft: 36 }}
+                                    inputStyle={{ paddingLeft: Platform.OS === 'android' ? 4 : 0 }}
+                                    placeholder='Xác nhận mật khẩu'
+                                    secureTextEntry={true}
+                                    underlineColorAndroid={'#73aa2a'}
+                                    value={this.state.registerConfirmPassword}
+                                    onChangeText={(registerConfirmPassword) => { this.setState({ registerConfirmPassword }) }}
+                                    onFocus={(event) => {
+                                        this._scrollToInput(event.target)
+                                    }}
+                                />
+                            </View>
+                            {/* Fulllname */}
+                            <View style={{ flexDirection: 'row', padding: 10, paddingTop: 0, }}>
+                                <Ionicons style={{ flex: 1, fontSize: 22, paddingTop: 12, textAlign: 'center', }} name='ios-person' />
+                                <FormInput
+                                    ref='fullNameInput'
+                                    returnKeyType={"next"}
+                                    onSubmitEditing={(event) => {
+                                        this.refs.emailInput.focus();
+                                    }}
+                                    containerStyle={{ flex: 15, marginLeft: Platform.OS === 'ios' ? 22 : 18 }}
+                                    inputStyle={{ paddingLeft: Platform.OS === 'android' ? 4 : 0 }}
+                                    placeholder='Họ và tên'
+                                    underlineColorAndroid={'#73aa2a'}
+                                    value={this.state.registerFullName}
+                                    onChangeText={(registerFullName) => { this.setState({ registerFullName }) }}
+                                    onFocus={(event) => {
+                                        this._scrollToInput(event.target)
+                                    }}
+                                />
 
-                        </View>
-                        {/* Email */}
-                        <View style={{ flexDirection: 'row', padding: 10, paddingTop: 0, }}>
-                            <Ionicons style={{ flex: 1, fontSize: 22, paddingTop: 12, textAlign: 'center', }} name='ios-mail' />
-                            <FormInput
-                                ref='emailInput'
-                                // returnKeyType={"next"}
-                                returnKeyType={"done"}
-                                onSubmitEditing={(event) => {
-                                    Keyboard.dismiss()
-                                    //this._registerAccountAsync();
-                                }}
-                                containerStyle={{ flex: 15, marginLeft: Platform.OS === 'ios' ? 22 : 18 }}
-                                inputStyle={{ paddingLeft: Platform.OS === 'android' ? 4 : 0 }}
-                                placeholder='Email (để lấy lại mật khẩu)'
-                                keyboardType='email-address'
-                                underlineColorAndroid={'#73aa2a'}
-                                value={this.state.registerEmail}
-                                onChangeText={(registerEmail) => {
-                                    this.setState({ registerEmail })
-                                }}
-                                onFocus={(event) => {
-                                    this._scrollToInput(event.target)
+                            </View>
+                            {/* Email */}
+                            <View style={{ flexDirection: 'row', padding: 10, paddingTop: 0, }}>
+                                <Ionicons style={{ flex: 1, fontSize: 22, paddingTop: 12, textAlign: 'center', }} name='ios-mail' />
+                                <FormInput
+                                    ref='emailInput'
+                                    // returnKeyType={"next"}
+                                    returnKeyType={"done"}
+                                    onSubmitEditing={(event) => {
+                                        Keyboard.dismiss()
+                                        //this._registerAccountAsync();
+                                    }}
+                                    containerStyle={{ flex: 15, marginLeft: Platform.OS === 'ios' ? 22 : 18 }}
+                                    inputStyle={{ paddingLeft: Platform.OS === 'android' ? 4 : 0 }}
+                                    placeholder='Email (để lấy lại mật khẩu)'
+                                    keyboardType='email-address'
+                                    underlineColorAndroid={'#73aa2a'}
+                                    value={this.state.registerEmail}
+                                    onChangeText={(registerEmail) => {
+                                        this.setState({ registerEmail })
+                                    }}
+                                    onFocus={(event) => {
+                                        this._scrollToInput(event.target)
 
-                                }}
-                            />
+                                    }}
+                                />
 
-                        </View>
-                        {/* Verify Cellphone */}
-                        {/* <View style={{ flexDirection: 'row', padding: 10, paddingTop: 0, }}>
+                            </View>
+                            {/* Verify Cellphone */}
+                            {/* <View style={{ flexDirection: 'row', padding: 10, paddingTop: 0, }}>
                             <FormInput
                                 ref='verifyCellPhoneInput'
                                 returnKeyType={"done"}
@@ -436,96 +438,100 @@ export default class RegisterAccountScreen extends React.Component {
                             />
                         </View> */}
 
-                    </View>
+                        </View>
 
-                    {/* Form Button */}
-                    <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center', marginTop: 20, }}>
-                        <Button
-                            buttonStyle={{ backgroundColor: '#9B9D9D', padding: 10, borderRadius: 5, }}
-                            raised={false}
-                            icon={{ name: 'ios-backspace', type: 'ionicon' }}
-                            title='Hủy'
-                            onPress={() => {
-                                Keyboard.dismiss()
-                                this.setState({
-                                    registerCellPhone: '',
-                                    registerPassword: '',
-                                    registerConfirmPassword: '',
-                                    registerAccountImage: null,
-                                    registerFullName: '',
-                                    registerConfirmCellPhone: '',
-                                    registerEmail: '',
-                                })
+                        {/* Form Button */}
+                        <View style={{ height: 80, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', paddingBottom: 20, }}>
+                            <Button
+                                buttonStyle={{ backgroundColor: '#9B9D9D', padding: 10, borderRadius: 5, }}
+                                raised={false}
+                                icon={{ name: 'ios-backspace', type: 'ionicon' }}
+                                title='Hủy'
+                                onPress={() => {
+                                    Keyboard.dismiss()
+                                    this.setState({
+                                        registerCellPhone: '',
+                                        registerPassword: '',
+                                        registerConfirmPassword: '',
+                                        registerAccountImage: null,
+                                        registerFullName: '',
+                                        registerConfirmCellPhone: '',
+                                        registerEmail: '',
+                                    })
 
-                                this.props.navigation.goBack();
-                            }}
+                                    this.props.navigation.goBack();
+                                }}
+                            />
+
+                            <Button
+                                buttonStyle={{ backgroundColor: '#73aa2a', padding: 10, borderRadius: 5, }}
+                                raised={false}
+                                icon={{ name: 'md-checkmark', type: 'ionicon' }}
+                                title='Đăng ký'
+                                onPress={() => {
+                                    Keyboard.dismiss()
+                                    this._registerAccountAsync();
+                                }}
+                            />
+                        </View>
+
+                        {/* The view that will animate to match the keyboards height */}
+                        {/* <KeyboardSpacer /> */}
+                    </KeyboardAvoidingView>
+
+
+
+
+
+
+                    {/* Popup select image library or camera */}
+                    <PopupDialog
+                        ref={(popupSelectedImage) => { this.popupSelectedImage = popupSelectedImage; }}
+                        dialogAnimation={new ScaleAnimation()}
+                        dialogStyle={{ marginBottom: 0, width: width * 0.9, height: 130, justifyContent: 'center', padding: 20 }}
+                        dismissOnTouchOutside={true}
+                    >
+                        <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'center', alignContent: 'center' }}>
+                            <TouchableOpacity
+                                style={{ flex: 2, justifyContent: 'center', alignContent: 'center' }}
+                                onPress={async () => {
+                                    this.popupSelectedImage.dismiss();
+                                    this._pickImageAsync('library')
+                                }}
+                            >
+                                <Ionicons style={{ fontSize: 40, borderRadius: 10, backgroundColor: '#a4d227', color: '#fff', textAlign: 'center', padding: 10 }} name='ios-folder-open' >
+                                </Ionicons>
+                                <Text style={{ textAlign: 'center', marginTop: 5 }}>Thư viện ảnh</Text>
+                            </TouchableOpacity>
+                            <View style={{ flex: 1 }}></View>
+                            <TouchableOpacity
+                                style={{ flex: 2, justifyContent: 'center', alignContent: 'center', }}
+                                onPress={async () => {
+                                    this.popupSelectedImage.dismiss();
+                                    this._pickImageAsync('camera')
+                                }}
+                            >
+                                <Ionicons style={{ fontSize: 40, borderRadius: 10, backgroundColor: '#a4d227', color: '#fff', textAlign: 'center', padding: 10 }} name='md-camera' />
+                                <Text style={{ textAlign: 'center', marginTop: 5 }}>Camera</Text>
+                            </TouchableOpacity>
+                        </View>
+                    </PopupDialog>
+
+                    {/* Popup Loading Indicator */}
+                    <PopupDialog
+                        ref={(popupLoadingIndicator) => { this.popupLoadingIndicator = popupLoadingIndicator; }}
+                        dialogAnimation={new ScaleAnimation()}
+                        dialogStyle={{ marginBottom: 100, width: 80, height: 80, justifyContent: 'center', padding: 20 }}
+                        dismissOnTouchOutside={false}
+                    >
+                        <ActivityIndicator
+                            style={{}}
+                            animating={true}
+                            size="large"
+                            color="#73aa2a"
                         />
-
-                        <Button
-                            buttonStyle={{ backgroundColor: '#73aa2a', padding: 10, borderRadius: 5, }}
-                            raised={false}
-                            icon={{ name: 'md-checkmark', type: 'ionicon' }}
-                            title='Đăng ký'
-                            onPress={() => {
-                                Keyboard.dismiss()
-                                this._registerAccountAsync();
-                            }}
-                        />
-                    </View>
-
-                    {/* The view that will animate to match the keyboards height */}
-                    {/* <KeyboardSpacer /> */}
+                    </PopupDialog>
                 </KeyboardAwareScrollView>
-
-
-
-                {/* Popup select image library or camera */}
-                <PopupDialog
-                    ref={(popupSelectedImage) => { this.popupSelectedImage = popupSelectedImage; }}
-                    dialogAnimation={new ScaleAnimation()}
-                    dialogStyle={{ marginBottom: 0, width: width * 0.9, height: 130, justifyContent: 'center', padding: 20 }}
-                    dismissOnTouchOutside={true}
-                >
-                    <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'center', alignContent: 'center' }}>
-                        <TouchableOpacity
-                            style={{ flex: 2, justifyContent: 'center', alignContent: 'center' }}
-                            onPress={async () => {
-                                this.popupSelectedImage.dismiss();
-                                this._pickImageAsync('library')
-                            }}
-                        >
-                            <Ionicons style={{ fontSize: 40, borderRadius: 10, backgroundColor: '#a4d227', color: '#fff', textAlign: 'center', padding: 10 }} name='ios-folder-open' >
-                            </Ionicons>
-                            <Text style={{ textAlign: 'center', marginTop: 5 }}>Thư viện ảnh</Text>
-                        </TouchableOpacity>
-                        <View style={{ flex: 1 }}></View>
-                        <TouchableOpacity
-                            style={{ flex: 2, justifyContent: 'center', alignContent: 'center', }}
-                            onPress={async () => {
-                                this.popupSelectedImage.dismiss();
-                                this._pickImageAsync('camera')
-                            }}
-                        >
-                            <Ionicons style={{ fontSize: 40, borderRadius: 10, backgroundColor: '#a4d227', color: '#fff', textAlign: 'center', padding: 10 }} name='md-camera' />
-                            <Text style={{ textAlign: 'center', marginTop: 5 }}>Camera</Text>
-                        </TouchableOpacity>
-                    </View>
-                </PopupDialog>
-
-                {/* Popup Loading Indicator */}
-                <PopupDialog
-                    ref={(popupLoadingIndicator) => { this.popupLoadingIndicator = popupLoadingIndicator; }}
-                    dialogAnimation={new ScaleAnimation()}
-                    dialogStyle={{ marginBottom: 100, width: 80, height: 80, justifyContent: 'center', padding: 20 }}
-                    dismissOnTouchOutside={false}
-                >
-                    <ActivityIndicator
-                        style={{}}
-                        animating={true}
-                        size="large"
-                        color="#73aa2a"
-                    />
-                </PopupDialog>
             </View>
         )
     }

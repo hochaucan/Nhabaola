@@ -801,6 +801,12 @@ export default class PostRoomScreen extends React.Component {
                                     dateInput: {
                                         marginLeft: 36
                                     },
+                                    btnTextConfirm: {
+                                        height: 20
+                                    },
+                                    btnTextCancel: {
+                                        height: 20
+                                    }
                                     //dateText:{
                                     //  color:'red'
                                     //}
@@ -830,8 +836,8 @@ export default class PostRoomScreen extends React.Component {
                                 format="YYYY-MM-DD"
                                 minDate={this.state.fromDate}
                                 //maxDate="2016-06-01"
-                                confirmBtnText="Confirm"
-                                cancelBtnText="Cancel"
+                                confirmBtnText="Chọn"
+                                cancelBtnText="Hủy"
                                 showIcon={true}
                                 customStyles={{
                                     dateIcon: {
@@ -842,6 +848,12 @@ export default class PostRoomScreen extends React.Component {
                                     },
                                     dateInput: {
                                         marginLeft: 36
+                                    },
+                                    btnTextConfirm: {
+                                        height: 20
+                                    },
+                                    btnTextCancel: {
+                                        height: 20
                                     }
                                     // ... You can check the source to find the other keys.
                                 }}
@@ -893,6 +905,12 @@ export default class PostRoomScreen extends React.Component {
                                             dateInput: {
                                                 marginLeft: 36
                                             },
+                                            btnTextConfirm: {
+                                                height: 20
+                                            },
+                                            btnTextCancel: {
+                                                height: 20
+                                            }
                                             //dateText:{
                                             //  color:'red'
                                             //}
@@ -915,8 +933,8 @@ export default class PostRoomScreen extends React.Component {
                                         format="YYYY-MM-DD"
                                         minDate={this.state.fromDate}
                                         maxDate={this.state.toDate}
-                                        confirmBtnText="Confirm"
-                                        cancelBtnText="Cancel"
+                                        confirmBtnText="Chọn"
+                                        cancelBtnText="Hủy"
                                         showIcon={true}
                                         customStyles={{
                                             dateIcon: {
@@ -927,6 +945,12 @@ export default class PostRoomScreen extends React.Component {
                                             },
                                             dateInput: {
                                                 marginLeft: 36
+                                            },
+                                            btnTextConfirm: {
+                                                height: 20
+                                            },
+                                            btnTextCancel: {
+                                                height: 20
                                             }
                                             // ... You can check the source to find the other keys.
                                         }}
