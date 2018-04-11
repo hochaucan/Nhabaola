@@ -294,6 +294,7 @@ export default class SearchScreen extends React.Component {
             isFocusSearchTextInput: false,
             houseListHeigh: new Animated.Value(responsiveHeight(10)),
             isHouseList: false,
+            searchLoading: false,
 
         }
     }
@@ -512,6 +513,8 @@ export default class SearchScreen extends React.Component {
         //await this.setState({ refreshFlatlist: true })
         //this.popupLoadingIndicator.show()
 
+        await this.setState({ searchLoading: true })
+
         roomBox = await [];
         MARKERS = await [];
 
@@ -601,7 +604,7 @@ export default class SearchScreen extends React.Component {
 
                     // this.popupLoadingIndicator.dismiss();
                     // this.setState({ refresh: false })
-
+                    this.setState({ searchLoading: false })
                 }).
                 catch((error) => { console.log(error) });
         } catch (error) {
@@ -678,7 +681,19 @@ export default class SearchScreen extends React.Component {
             <View style={{
                 flex: 1,
             }}>
-
+                {this.state.searchLoading &&
+                    <ActivityIndicator
+                        style={{
+                            position: 'absolute',
+                            top: responsiveHeight(20),
+                            left: responsiveWidth(45),
+                            zIndex: 10,
+                        }}
+                        animating={true}
+                        size="large"
+                        color="#73aa2a"
+                    />
+                }
                 {!(this.state.selectedCategory == '' && this.state.unitPriceLable == '' && this.state.unitAcreageLable == '') &&
                     <Text style={{
                         //color: '#73aa2a',
@@ -991,29 +1006,29 @@ export default class SearchScreen extends React.Component {
                                     justifyContent: 'center', alignItems: 'center',
                                 }}>
                                     <Text style={{
-                                        backgroundColor: item.IsHighlight ? 'red' : '#73aa2a',
+                                        backgroundColor: item.IsHighlight ? 'red' : '#5f8c23',
                                         color: '#fff',
                                         padding: 5,
                                         fontSize: responsiveFontSize(1.2),
-                                        borderRadius: 5,
+                                        borderRadius: Platform.OS == 'ios' ? 0 : 5,
                                         borderWidth: 1,
-                                        borderColor: '#fff'
+                                        borderColor: '#a4d227'
                                         //opacity: 0.8,
 
                                     }}>{convertAmountToWording(item.Price)}</Text>
-                                    {/* {
+                                    {
                                         this.state.roomCategory.map((y, i) => {
                                             return (
                                                 y.ID == item.CategoryID &&
                                                 <Text
                                                     style={{
-                                                        fontSize: responsiveFontSize(1.5),
-                                                        color: item.IsHighlight ? 'red' : '#515151'
+                                                        fontSize: responsiveFontSize(1),
+                                                        color: item.IsHighlight ? 'red' : '#5f8c23'
                                                     }}
                                                     key={i}>{y.CatName}</Text>
                                             )
                                         })
-                                    } */}
+                                    }
 
                                     {/* {item.IsHighlight &&
                                         <Image
@@ -1290,6 +1305,10 @@ export default class SearchScreen extends React.Component {
                                                 <TouchableOpacity
                                                     style={{
                                                         flex: 1, justifyContent: 'center', alignItems: 'center',
+                                                        shadowColor: '#000',
+                                                        shadowOffset: { width: 0, height: 2 },
+                                                        shadowOpacity: 0.2,
+                                                        shadowRadius: 2,
                                                     }}
                                                     onPress={() => {
                                                         const data = {

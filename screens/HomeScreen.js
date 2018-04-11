@@ -144,6 +144,7 @@ export default class HomeScreen extends React.Component {
 
       ratingRoomId: 0,
       reportRoomId: 0,
+      flatListIsEnd: false,
       //reportResult:'',
     }
 
@@ -1034,7 +1035,7 @@ export default class HomeScreen extends React.Component {
     }
     else { // Refresh page
       roomBox = [];
-      this.setState({ page: 1 })
+      this.setState({ page: 1, flatListIsEnd: false })
     }
 
     this.setState({ // Calculate page index
@@ -1058,7 +1059,8 @@ export default class HomeScreen extends React.Component {
       })
         .then((response) => response.json())
         .then((responseJson) => {
-          //alert(JSON.stringify(responseJson.obj))
+
+
 
           //this._saveStorageAsync('FO_RoomBox_GetAllData', JSON.stringify(responseJson.obj))
           // responseJson.obj.map((y) => { return y.CatName })
@@ -1084,7 +1086,21 @@ export default class HomeScreen extends React.Component {
           //   refresh: false,
           // })
 
-          this.setState({ refresh: false })
+         // this.setState({ refresh: false })
+
+          setTimeout(
+            () => {
+              this.setState({
+                refresh: false
+              })
+            },
+            1000);
+
+          // End Flatlist
+          if (JSON.stringify(responseJson.obj.length) == '0') {
+            this.setState({ flatListIsEnd: true, })
+            // alert(JSON.stringify(responseJson.obj.length))
+          }
 
         }).
         catch((error) => { console.log(error) });
@@ -1335,8 +1351,13 @@ export default class HomeScreen extends React.Component {
 
           onEndReachedThreshold={0.2}
           onEndReached={() => {
+            // this.setState({
+            //   refresh: true
+            // });
+            if (this.state.flatListIsEnd == false) {
+              this._getRoomBoxAsync(false);
+            }
 
-            this._getRoomBoxAsync(false);
             {/* this.setState({
               refresh: true
             }); */}
@@ -1608,7 +1629,16 @@ export default class HomeScreen extends React.Component {
         /* horizontal={false}
         numColumns={3} */
         />
-
+        {this.state.refresh && Platform.OS == 'ios' &&
+          <View style={{ height: 40, justifyContent: 'center', alignItems: 'center' }}>
+            <ActivityIndicator
+              style={{}}
+              animating={true}
+              size="small"
+              color="#73aa2a"
+            />
+          </View>
+        }
         {/* Action Button */}
         {this.state.isActionButtonVisible ?
           <ActionButton buttonColor="#73aa2a"
