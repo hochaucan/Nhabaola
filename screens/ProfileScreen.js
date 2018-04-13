@@ -16,6 +16,7 @@ import {
     AsyncStorage,
     ToastAndroid,
     Keyboard,
+    ActivityIndicator,
 } from 'react-native';
 import { ExpoLinksView } from '@expo/samples';
 import { Constants, ImagePicker } from 'expo';
@@ -107,6 +108,7 @@ export default class ProfileScreen extends React.Component {
             oldPassword: '',
             newPassword: '',
             confirmNewPassword: '',
+            modalLoading: false,
         }
 
 
@@ -263,6 +265,9 @@ export default class ProfileScreen extends React.Component {
             }
         }
 
+        //Loading
+        this.setState({ modalLoading: true })
+
 
         try {
             await fetch("http://nhabaola.vn/api/Account/FO_Account_ChangePassword", {
@@ -292,8 +297,14 @@ export default class ProfileScreen extends React.Component {
                             this.setState({ modalChangePassword: false })
                             // Alert.alert('Thông báo', 'Đổi mật khẩu thành công!');
                         }
+
+                        this.setState({
+                            oldPassword: '',
+                            newPassword: '',
+                            confirmNewPassword: '',
+                        })
                     }
-                    if (JSON.stringify(responseJson.ErrorCode) === "15") { // Change Password successful
+                    if (JSON.stringify(responseJson.ErrorCode) === "15") { // Change Password un-successful
 
                         if (Platform.OS === 'android') {
                             ToastAndroid.showWithGravity('Mật khẩu cũ không đúng!', ToastAndroid.SHORT, ToastAndroid.TOP);
@@ -301,7 +312,11 @@ export default class ProfileScreen extends React.Component {
                         else {
                             Alert.alert('Thông báo', 'Mật khẩu cũ không đúng!');
                         }
+
+
                     }
+
+                    this.setState({ modalLoading: false })
 
                 }).
                 catch((error) => { console.log(error) });
@@ -653,15 +668,32 @@ export default class ProfileScreen extends React.Component {
                     animationType={"slide"}
                     transparent={false}
                     visible={this.state.modalChangePassword}
-                    onRequestClose={() => {
-                        //alert("Modal has been closed.")
+                    // onRequestClose={() => {
+                    //     //alert("Modal has been closed.")
+                    // }}
+                    onShow={() => {
+                        this.refs.oldPasswordInput.focus()
                     }}
                 >
+
+                    {this.state.modalLoading &&
+
+                        <ActivityIndicator
+                            style={{ position: 'absolute', left: responsiveWidth(45), top: 30 }}
+                            animating={true}
+                            size="large"
+                            color="#73aa2a"
+                        />}
 
                     <View style={{ marginTop: 50 }}>
                         <Animated.View style={{ position: 'relative', left: this.state.animation.usernamePostionLeft, flexDirection: 'row', padding: 10, }}>
                             <Ionicons style={{ flex: 1, fontSize: 22, paddingTop: 12, textAlign: 'center', }} name='ios-lock-outline' />
                             <FormInput
+                                ref='oldPasswordInput'
+                                returnKeyType={"next"}
+                                onSubmitEditing={(event) => {
+                                    this.refs.newPasswordInput.focus()
+                                }}
                                 containerStyle={{ flex: 15, }}
                                 placeholder='Mật khẩu củ'
                                 // autoCapitalize='sentences'
@@ -677,6 +709,11 @@ export default class ProfileScreen extends React.Component {
                         <Animated.View style={{ position: 'relative', left: this.state.animation.passwordPositionLeft, flexDirection: 'row', padding: 10, paddingTop: 0, }}>
                             <Ionicons style={{ flex: 1, fontSize: 22, paddingTop: 12, textAlign: 'center', }} name='md-lock' />
                             <FormInput
+                                ref='newPasswordInput'
+                                returnKeyType={"next"}
+                                onSubmitEditing={(event) => {
+                                    this.refs.newConfirmPasswordInput.focus()
+                                }}
                                 containerStyle={{ flex: 15 }}
                                 placeholder='Mật khẩu mới'
                                 secureTextEntry={true}
@@ -688,6 +725,11 @@ export default class ProfileScreen extends React.Component {
                         <Animated.View style={{ position: 'relative', left: this.state.animation.passwordPositionLeft, flexDirection: 'row', padding: 10, paddingTop: 0, }}>
                             <Ionicons style={{ flex: 1, fontSize: 22, paddingTop: 12, textAlign: 'center', }} name='md-checkmark' />
                             <FormInput
+                                ref='newConfirmPasswordInput'
+                                returnKeyType={'done'}
+                                onSubmitEditing={(event) => {
+                                    this._changePassword();
+                                }}
                                 containerStyle={{ flex: 15 }}
                                 placeholder='Xác nhận mật khẩu mới'
                                 secureTextEntry={true}
@@ -706,7 +748,12 @@ export default class ProfileScreen extends React.Component {
                             raised={false}
                             icon={{ name: 'ios-backspace', type: 'ionicon' }}
                             title='Hủy'
-                            onPress={() => { this.setState({ modalChangePassword: false }) }}
+                            onPress={() => {
+                                this.setState({
+                                    modalChangePassword: false,
+                                    modalLoading: false,
+                                })
+                            }}
                         />
 
                         <Button

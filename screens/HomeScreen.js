@@ -489,7 +489,7 @@ export default class HomeScreen extends React.Component {
     }
 
     if (Platform.OS == 'ios') {
-      //  this.setState({ modalLoading: true })
+      this.setState({ modalLoading: true })
     }
     else {
       this.popupLoadingIndicator.show()
@@ -559,6 +559,8 @@ export default class HomeScreen extends React.Component {
           }
 
           this.popupLoadingIndicator.dismiss();
+          this.setState({ modalLoading: false })
+
         }).
         catch((error) => { console.log(error) });
     } catch (error) {
@@ -1086,7 +1088,7 @@ export default class HomeScreen extends React.Component {
           //   refresh: false,
           // })
 
-         // this.setState({ refresh: false })
+          // this.setState({ refresh: false })
 
           setTimeout(
             () => {
@@ -1179,7 +1181,12 @@ export default class HomeScreen extends React.Component {
       // }
     }
 
-    this.popupLoadingIndicator.show()
+    if (Platform.OS == 'ios') {
+      this.setState({ modalLoading: true })
+    } else {
+      this.popupLoadingIndicator.show()
+    }
+
 
     try {
       await fetch("http://nhabaola.vn/api/ForgetPassword/FO_ForgetPassword_Add/", {
@@ -1205,7 +1212,13 @@ export default class HomeScreen extends React.Component {
               ToastAndroid.showWithGravity('Tài khoản này không tồn tại', ToastAndroid.SHORT, ToastAndroid.TOP);
             }
 
-            this.popupLoadingIndicator.dismiss()
+            //Loading
+            if (Platform.OS == 'ios') {
+              this.setState({ modalLoading: false })
+            } else {
+              this.popupLoadingIndicator.dismiss()
+            }
+
             return;
           }
           if (JSON.stringify(responseJson.ErrorCode) === "24") { //Account is exist
@@ -1221,7 +1234,14 @@ export default class HomeScreen extends React.Component {
             }
           }
 
-          this.popupLoadingIndicator.dismiss()
+          // Loading
+          if (Platform.OS == 'ios') {
+            this.setState({ modalLoading: false })
+          } else {
+            this.popupLoadingIndicator.dismiss()
+          }
+
+
         }).
         catch((error) => { console.log(error) });
     } catch (error) {
@@ -1254,7 +1274,13 @@ export default class HomeScreen extends React.Component {
       }
     }
 
-    this.popupLoadingIndicator.show()
+    //Loading
+    if (Platform.OS == 'ios') {
+      this.setState({ modalLoading: true })
+    } else {
+      this.popupLoadingIndicator.show()
+    }
+
 
     // Get Username and new Password after Reset password
     await this.setState({
@@ -1304,7 +1330,12 @@ export default class HomeScreen extends React.Component {
             }
           }
 
-          this.popupLoadingIndicator.dismiss()
+          if (Platform.OS == 'ios') {
+            this.setState({ modalLoading: false })
+          } else {
+            this.popupLoadingIndicator.dismiss()
+          }
+
         }).
         catch((error) => { console.log(error) });
     } catch (error) {
@@ -1829,11 +1860,23 @@ export default class HomeScreen extends React.Component {
             this.refs.iosResetUserNameInput.focus()
           }}
         >
+          {this.state.modalLoading &&
+
+            <ActivityIndicator
+              style={{ position: 'absolute', left: responsiveWidth(45), top: 30 }}
+              animating={true}
+              size="large"
+              color="#73aa2a"
+            />
+
+          }
 
           <View style={{
             padding: 20,
             marginTop: responsiveHeight(30)
           }}>
+
+
             {/* Username */}
             <Animated.View style={{
               position: 'relative', left: this.state.animation.usernamePostionLeft,
@@ -1865,7 +1908,11 @@ export default class HomeScreen extends React.Component {
               title='Hủy'
               onPress={() => {
                 Keyboard.dismiss();
-                this.setState({ resetPasswordUsername: '', modalResetPassword1: false })
+                this.setState({
+                  resetPasswordUsername: '',
+                  modalResetPassword1: false,
+                  modalLoading: false,
+                })
               }}
             />
 
@@ -1976,26 +2023,37 @@ export default class HomeScreen extends React.Component {
           animationType={"slide"}
           transparent={false}
           visible={this.state.modalResetPassword2}
-          onRequestClose={() => {
-            //alert("Modal has been closed.")
+          // onRequestClose={() => {
+          //   //alert("Modal has been closed.")
+          // }}
+          onShow={() => {
+            this.refs.ActiveKeyInput.focus();
           }}
         >
 
+          {this.state.modalLoading &&
+            <ActivityIndicator
+              style={{ position: 'absolute', left: responsiveWidth(45), top: 30 }}
+              animating={true}
+              size="large"
+              color="#73aa2a"
+            />}
+
           <View style={{
             padding: 15,
-            marginTop: 50,
+            marginTop: 60,
           }}>
             <Text style={{ textAlign: 'center', color: '#73aa2a' }}>Bạn vui lòng kiểm tra Email để lấy Mã Kích Hoạt mật khẩu mới!</Text>
             {/* Active Key */}
             <Animated.View style={{
               position: 'relative', left: this.state.animation.usernamePostionLeft,
               flexDirection: 'row',
-              marginTop: 5,
+              marginTop: 10,
             }}>
               <Ionicons style={{ flex: 1, fontSize: 22, paddingTop: 12, textAlign: 'center', }} name='md-key' />
               <FormInput
                 ref='ActiveKeyInput'
-                returnKeyType={"next"}
+                returnKeyType={Platform.OS == 'ios' ? 'done' : "next"}
                 onSubmitEditing={(event) => {
                   this.refs.newPasswordInput.focus();
                 }}
@@ -2043,7 +2101,10 @@ export default class HomeScreen extends React.Component {
               title='Hủy'
               onPress={() => {
                 Keyboard.dismiss();
-                this.setState({ modalResetPassword2: false })
+                this.setState({
+                  modalResetPassword2: false,
+                  modalLoading: false,
+                })
               }}
             />
 
@@ -2067,9 +2128,9 @@ export default class HomeScreen extends React.Component {
           dialogTitle={<DialogTitle title="Đăng nhập" titleStyle={{}} titleTextStyle={{ color: '#73aa2a' }} />}
           dismissOnTouchOutside={false}
           dialogStyle={{ marginBottom: 150, width: width * 0.9, }}
-          onShown={() => {
-            this.refs.userNameInput.focus()
-          }}
+        // onShown={() => {
+        //   this.refs.userNameInput.focus()
+        // }}
 
         >
           <View>
@@ -2197,37 +2258,31 @@ export default class HomeScreen extends React.Component {
           </View>
         </PopupDialog>
 
-        {/* Modal Loading */}
-        <Modal
-          animationType={"slide"}
-          transparent={false}
-          visible={this.state.modalLoading}
-        >
-          <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-            <ActivityIndicator
-              style={{}}
-              animating={true}
-              size="large"
-              color="#73aa2a"
-            />
-
-          </View>
-        </Modal>
 
         {/* Modal Login */}
         <Modal
           animationType={"slide"}
           transparent={false}
           visible={this.state.modalLogin}
-          // onRequestClose={() => {
-          //   //alert("Modal has been closed.")
-          // }}
-          onShow={() => {
-            this.refs.iosUserNameInput.focus()
-          }}
+        // onRequestClose={() => {
+        //   //alert("Modal has been closed.")
+        // }}
+        // onShow={() => {
+        //   this.refs.iosUserNameInput.focus()
+        // }}
         >
 
           <View>
+
+            {this.state.modalLoading &&
+
+              <ActivityIndicator
+                style={{ position: 'absolute', left: responsiveWidth(45), top: 30 }}
+                animating={true}
+                size="large"
+                color="#73aa2a"
+              />
+            }
 
             {/* Username */}
             <Animated.View style={{
@@ -2280,7 +2335,7 @@ export default class HomeScreen extends React.Component {
                 onPress={() => {
                   Keyboard.dismiss();
                   if (Platform.OS == 'ios') {
-                    this.setState({ modalLogin: false })
+                    this.setState({ modalLogin: false, modalLoading: false })
                   }
                   else {
                     this.popupLogin.dismiss()
@@ -2296,6 +2351,7 @@ export default class HomeScreen extends React.Component {
                 title='Đăng nhập'
                 onPress={() => {
                   Keyboard.dismiss();
+                  //this.setState({ modalLoading: true })
                   this._loginAsync()
                 }}
               />
@@ -2453,9 +2509,9 @@ export default class HomeScreen extends React.Component {
           animationType={"slide"}
           transparent={false}
           visible={this.state.modalReport}
-          onRequestClose={() => {
-            //alert("Modal has been closed.")
-          }}
+        // onRequestClose={() => {
+        //   //alert("Modal has been closed.")
+        // }}
         >
 
 
@@ -2558,9 +2614,9 @@ export default class HomeScreen extends React.Component {
           animationType={"slide"}
           transparent={false}
           visible={this.state.modalRegisterAccount}
-          onRequestClose={() => {
-            //alert("Modal has been closed.")
-          }}
+        // onRequestClose={() => {
+        //   //alert("Modal has been closed.")
+        // }}
         >
           <ScrollView>
 
