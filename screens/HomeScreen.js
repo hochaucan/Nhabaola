@@ -1328,6 +1328,8 @@ export default class HomeScreen extends React.Component {
             else {
               Alert.alert('Thông báo', 'Mã kích hoạt không đúng');
             }
+
+            this.refs.ActiveKeyInput.focus()
           }
 
           if (Platform.OS == 'ios') {
@@ -1937,6 +1939,9 @@ export default class HomeScreen extends React.Component {
           dialogStyle={{
             marginBottom: 220, width: width * 0.9,
 
+          }}
+          onShown={() => {
+            this.refs.ActiveKeyInput.focus()
           }}
         >
 

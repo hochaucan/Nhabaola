@@ -238,14 +238,17 @@ export default class ProfileScreen extends React.Component {
         if (Platform.OS === 'android') {
             if (this.state.oldPassword === '') {
                 ToastAndroid.showWithGravity('Vui lòng nhập mật khẩu cũ', ToastAndroid.SHORT, ToastAndroid.TOP);
+                this.refs.popupOldPasswordInput.focus()
                 return;
             }
             if (this.state.newPassword === '') {
                 ToastAndroid.showWithGravity('Vu lòng nhập mật khẩu mới', ToastAndroid.SHORT, ToastAndroid.TOP);
+                this.refs.popupNewPasswordInput.focus()
                 return;
             }
             if (this.state.newPassword !== this.state.confirmNewPassword) {
                 ToastAndroid.showWithGravity('Xác nhận mật khẩu không đúng', ToastAndroid.SHORT, ToastAndroid.TOP);
+                this.refs.popupConfirmNewPasswordInput.focus()
                 return;
             }
 
@@ -266,7 +269,12 @@ export default class ProfileScreen extends React.Component {
         }
 
         //Loading
-        this.setState({ modalLoading: true })
+        if (Platform.OS == 'ios') {
+            this.setState({ modalLoading: true })
+        } else {
+            // this.popupLoadingIndicator.show()
+            this.setState({ modalLoading: true })
+        }
 
 
         try {
@@ -316,7 +324,12 @@ export default class ProfileScreen extends React.Component {
 
                     }
 
-                    this.setState({ modalLoading: false })
+                    //Loading
+                    if (Platform.OS == 'ios') {
+                        this.setState({ modalLoading: false })
+                    } else {
+                        this.setState({ modalLoading: false })
+                    }
 
                 }).
                 catch((error) => { console.log(error) });
@@ -587,6 +600,21 @@ export default class ProfileScreen extends React.Component {
                 </ScrollView>
 
 
+                {/* Popup Loading Indicator */}
+                <PopupDialog
+                    ref={(popupLoadingIndicator) => { this.popupLoadingIndicator = popupLoadingIndicator; }}
+                    dialogAnimation={new ScaleAnimation()}
+                    dialogStyle={{ marginBottom: 100, width: 80, height: 80, justifyContent: 'center', padding: 20 }}
+                    dismissOnTouchOutside={false}
+                >
+                    <ActivityIndicator
+                        style={{}}
+                        animating={true}
+                        size="large"
+                        color="#73aa2a"
+                    />
+                </PopupDialog>
+
 
                 {/* Popup Change Password*/}
                 <PopupDialog
@@ -595,14 +623,30 @@ export default class ProfileScreen extends React.Component {
                     dialogTitle={<DialogTitle title="Đổi mật khẩu" titleStyle={{}} titleTextStyle={{ color: '#73aa2a' }} />}
                     dismissOnTouchOutside={false}
                     dialogStyle={{ marginBottom: 150, width: width * 0.9, height: height * 0.5, }}
-
+                    onShown={() => {
+                        this.refs.popupOldPasswordInput.focus()
+                    }}
 
                 >
+
+                    {this.state.modalLoading &&
+
+                        <ActivityIndicator
+                            style={{ position: 'absolute', left: responsiveWidth(45), top: 30 }}
+                            animating={true}
+                            size="large"
+                            color="#73aa2a"
+                        />}
 
                     <View>
                         <Animated.View style={{ position: 'relative', left: this.state.animation.usernamePostionLeft, flexDirection: 'row', padding: 10, }}>
                             <Ionicons style={{ flex: 1, fontSize: 22, paddingTop: 12, textAlign: 'center', }} name='ios-lock-outline' />
                             <FormInput
+                                ref='popupOldPasswordInput'
+                                returnKeyType={"next"}
+                                onSubmitEditing={(event) => {
+                                    this.refs.popupNewPasswordInput.focus();
+                                }}
                                 containerStyle={{ flex: 15, }}
                                 placeholder='Mật khẩu củ'
                                 // autoCapitalize='sentences'
@@ -618,6 +662,11 @@ export default class ProfileScreen extends React.Component {
                         <Animated.View style={{ position: 'relative', left: this.state.animation.passwordPositionLeft, flexDirection: 'row', padding: 10, paddingTop: 0, }}>
                             <Ionicons style={{ flex: 1, fontSize: 22, paddingTop: 12, textAlign: 'center', }} name='md-lock' />
                             <FormInput
+                                ref='popupNewPasswordInput'
+                                returnKeyType={"next"}
+                                onSubmitEditing={(event) => {
+                                    this.refs.popupConfirmNewPasswordInput.focus();
+                                }}
                                 containerStyle={{ flex: 15 }}
                                 placeholder='Mật khẩu mới'
                                 secureTextEntry={true}
@@ -629,6 +678,12 @@ export default class ProfileScreen extends React.Component {
                         <Animated.View style={{ position: 'relative', left: this.state.animation.passwordPositionLeft, flexDirection: 'row', padding: 10, paddingTop: 0, }}>
                             <Ionicons style={{ flex: 1, fontSize: 22, paddingTop: 12, textAlign: 'center', }} name='md-checkmark' />
                             <FormInput
+                                ref='popupConfirmNewPasswordInput'
+                                returnKeyType={"done"}
+                                onSubmitEditing={(event) => {
+                                    Keyboard.dismiss();
+                                    this._changePassword();
+                                }}
                                 containerStyle={{ flex: 15 }}
                                 placeholder='Xác nhận mật khẩu mới'
                                 secureTextEntry={true}

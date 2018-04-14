@@ -130,7 +130,8 @@ export default TabNavigator(
       iconStyle: {
         marginTop: Platform.OS === 'ios' ? -23 : 0,
         height: Platform.OS === 'ios' ? 50 : 30,
-      }
+      },
+      lazy: false,
     }
   }
 );
