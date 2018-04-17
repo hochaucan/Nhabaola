@@ -102,6 +102,7 @@ export default TabNavigator(
     tabBarPosition: 'top',
     animationEnabled: true,
     swipeEnabled: true,
+    lazy: Platform.OS == 'ios' ? true : false,
     tabBarOptions: {
       labelStyle: {
         // fontSize: 10,
@@ -131,7 +132,7 @@ export default TabNavigator(
         marginTop: Platform.OS === 'ios' ? -23 : 0,
         height: Platform.OS === 'ios' ? 50 : 30,
       },
-      lazy: false,
+
     }
   }
 );

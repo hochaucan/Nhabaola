@@ -32,7 +32,21 @@ setTimeout(
       2000);
 
         
-      
+
+* PUSH NOTIFICATION
+Android Token: ExponentPushToken[X44MIVEIOHZdIZMVverA9J], ExponentPushToken[ycjiZbIzuZuk5oS0EhzWTB] 
+IOS Token:
+Expo Push Notifcation API: https://exp.host/--/api/v2/push/send
+Data: [{
+  "to": "ExponentPushToken[X44MIVEIOHZdIZMVverA9J]",
+  "sound": "default",
+  "body": "Hello world!"
+}, {
+  "to": "ExponentPushToken[X44MIVEIOHZdIZMVverA9J]",
+  "badge": 1,
+  "body": "You've got mail"
+}]
+
 
 * Scroll Animation
 https://github.com/Monte9/react-native-parallax-scrollview
