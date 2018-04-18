@@ -14,7 +14,7 @@
     "primaryColor": "#cccccc",
     "icon": "./assets/icons/app-icon.png",
     "notification": {
-      "icon": "./assets/icons/notification-icon.png",
+      "icon": "./assets/icons/app-icon.png",
       "color": "#000000"
     },
     "updates": {

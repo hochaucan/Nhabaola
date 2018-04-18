@@ -1012,25 +1012,13 @@ export default class SearchScreen extends React.Component {
                                         fontSize: responsiveFontSize(1.2),
                                         borderRadius: Platform.OS == 'ios' ? 0 : 5,
                                         borderWidth: 1,
-                                        borderColor: '#a4d227'
+                                        borderColor: item.IsHighlight ? '#fff' : '#a4d227'
                                         //opacity: 0.8,
 
                                     }}>{convertAmountToWording(item.Price)}</Text>
-                                    {
-                                        this.state.roomCategory.map((y, i) => {
-                                            return (
-                                                y.ID == item.CategoryID &&
-                                                <Text
-                                                    style={{
-                                                        fontSize: responsiveFontSize(1),
-                                                        color: item.IsHighlight ? 'red' : '#5f8c23'
-                                                    }}
-                                                    key={i}>{y.CatName}</Text>
-                                            )
-                                        })
-                                    }
+                                    ?
 
-                                    {/* {item.IsHighlight &&
+                                    {item.IsHighlight &&
                                         <Image
                                             source={require('../assets/images/nbl-house_icon.png')}
                                             style={{ height: height * 0.045, width: width * 0.075 }}
@@ -1040,7 +1028,7 @@ export default class SearchScreen extends React.Component {
                                             key={`${this.state.initialRenderCurrenHouse}`}
                                         >
                                         </Image>
-                                    } */}
+                                    }
 
                                 </View>
                                 <MapView.Callout style={{}}

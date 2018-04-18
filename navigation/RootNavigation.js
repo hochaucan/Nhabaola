@@ -112,6 +112,9 @@ export default class RootNavigator extends React.Component {
   }
 
   _handleNotification = ({ origin, data }) => {
+    // alert("can")
+    //this.props.navigation.navigate('SearchScreen');
+
     console.log(
       `Push notification ${origin} with data: ${JSON.stringify(data)}`
     );
