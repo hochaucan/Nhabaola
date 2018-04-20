@@ -16,6 +16,7 @@ import {
     Modal,
     KeyboardAvoidingView,
     Alert,
+    ActivityIndicator,
 } from 'react-native';
 import { ExpoLinksView } from '@expo/samples';
 import { Constants } from 'expo';
@@ -81,6 +82,7 @@ export default class RoomDetailScreen extends React.Component {
             reportHouse: false,
             isComment: false,
             modalReport: false,
+            modalLoading: false,
         }
     }
 
@@ -316,6 +318,12 @@ export default class RoomDetailScreen extends React.Component {
     _reportNBLAsync = async (_reportTypeId, _roomId) => {
 
         // alert(_roomId + "  " + _rate + "  " + this.state.profile.ID + "  " + this.state.sessionKey)
+        if (Platform.OS == 'ios') {
+            this.setState({ modalLoading: true })
+        }
+        else {
+            this.popupLoadingIndicator.show()
+        }
 
         try {
             await fetch("http://nhabaola.vn/api/ReportComment/FO_ReportComment_Add", {
@@ -355,7 +363,12 @@ export default class RoomDetailScreen extends React.Component {
 
                     }
 
-
+                    if (Platform.OS == 'ios') {
+                        this.setState({ modalLoading: false })
+                    }
+                    else {
+                        this.popupLoadingIndicator.dismiss()
+                    }
 
                 }).
                 catch((error) => { console.log(error) });
@@ -644,8 +657,8 @@ export default class RoomDetailScreen extends React.Component {
                                                     + "\nGiá: " + this.state.roomBox.Price + " đồng"
                                                     + "\nDiện tích: " + this.state.roomBox.Acreage + " mét vuông"
                                                     + "\nĐịa chỉ: " + this.state.roomBox.Address + "\n\nMô tả:\n" + this.state.roomBox.Description
-                                                    + "\n\nCài đặt: " + "\n",
-                                                url: 'http://nhabaola.vn',
+                                                    + "\n\nCài đặt: ",
+                                                url: 'https://itunes.apple.com/vn/app/nhabaola/id1287451307?mt=8',
                                                 title: '*Chia Sẻ từ Ứng Dụng Nhà Bao La*'
                                             }, {
                                                     // Android only:
@@ -880,6 +893,21 @@ export default class RoomDetailScreen extends React.Component {
                     />
                 </PopupDialog>
 
+                {/* Popup Loading Indicator */}
+                <PopupDialog
+                    ref={(popupLoadingIndicator) => { this.popupLoadingIndicator = popupLoadingIndicator; }}
+                    dialogAnimation={new ScaleAnimation()}
+                    dialogStyle={{ marginBottom: 100, width: 80, height: 80, justifyContent: 'center', padding: 20 }}
+                    dismissOnTouchOutside={false}
+                >
+                    <ActivityIndicator
+                        style={{}}
+                        animating={true}
+                        size="large"
+                        color="#73aa2a"
+                    />
+                </PopupDialog>
+
                 {/* Popup Report */}
                 <PopupDialog
                     ref={(popupReportNBL) => { this.popupReportNBL = popupReportNBL; }}
@@ -968,9 +996,19 @@ export default class RoomDetailScreen extends React.Component {
                     }}
                 >
 
+                    {this.state.modalLoading &&
+
+                        <ActivityIndicator
+                            style={{ position: 'absolute', left: responsiveWidth(45), top: 30 }}
+                            animating={true}
+                            size="large"
+                            color="#73aa2a"
+                        />
+
+                    }
 
                     <View
-                        style={{ marginTop: 50 }}
+                        style={{ marginTop: 70 }}
                     >
                         <CheckBox
                             title='Không đúng địa chỉ'
@@ -1015,6 +1053,7 @@ export default class RoomDetailScreen extends React.Component {
                                         reportAddress: false,
                                         reportCall: false,
                                         reportHouse: false,
+                                        modalLoading: false,
                                     })
                                 }}
                                 title='Hủy' />

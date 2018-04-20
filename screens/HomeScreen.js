@@ -22,7 +22,7 @@ import {
   AsyncStorage,
   Keyboard,
 } from 'react-native';
-import { WebBrowser, ImagePicker, Facebook, Google } from 'expo';
+import { WebBrowser, ImagePicker, Facebook, Google, Notifications } from 'expo';
 import { MonoText } from '../components/StyledText';
 import ActionButton from 'react-native-action-button';
 import Icon from 'react-native-vector-icons/Ionicons';
@@ -40,6 +40,7 @@ import uploadImageAsync from '../api/uploadImageAsync';
 import saveStorageAsync from '../components/saveStorageAsync';
 import { responsiveHeight, responsiveWidth, responsiveFontSize } from 'react-native-responsive-dimensions';
 import convertAmountToWording from '../api/convertAmountToWording'
+import registerForPushNotificationsAsync from '../api/registerForPushNotificationsAsync';
 
 
 const homePlace = {
@@ -234,7 +235,8 @@ export default class HomeScreen extends React.Component {
 
   componentDidMount() {
 
-
+    // Register Push Notification
+    this._notificationSubscription = this._registerForPushNotifications();
   }
 
   // shouldComponentUpdate(nextProps, nextState) {
@@ -256,11 +258,37 @@ export default class HomeScreen extends React.Component {
   //   //this._getRoomBoxAsync();
   // }
 
+  _registerForPushNotifications() {
+    // Send our push token over to our backend so we can receive notifications
+    // You can comment the following line out if you want to stop receiving
+    // a notification every time you open the app. Check out the source
+    // for this function in api/registerForPushNotificationsAsync.js
+
+    //registerForPushNotificationsAsync();
+
+    // Watch for incoming notifications
+    this._notificationSubscription = Notifications.addListener(
+      this._handleNotification
+    );
+  }
+
+  _handleNotification = ({ origin, data }) => {
+    //alert(JSON.stringify(data.params))
+    this.props.navigation.navigate(data.screen, data.params);
+
+    // console.log(
+    //   `Push notification ${origin} with data: ${JSON.stringify(data)}`
+    // );
+  };
+
   componentWillMount() {
     this._getCategoryAsync();
     this._getRoomBoxAsync(true);
     this._getProfileFromStorageAsync();
     this._getSessionKeyFromStorageAsync();
+
+    // Remove Push Notification
+    this._notificationSubscription && this._notificationSubscription.remove();
   }
 
   _onScroll = (event) => {
@@ -980,6 +1008,13 @@ export default class HomeScreen extends React.Component {
 
     // alert(_roomId + "  " + _rate + "  " + this.state.profile.ID + "  " + this.state.sessionKey)
 
+    if (Platform.OS == 'ios') {
+      this.setState({ modalLoading: true })
+    }
+    else {
+      this.popupLoadingIndicator.show()
+    }
+
     try {
       await fetch("http://nhabaola.vn/api/ReportComment/FO_ReportComment_Add", {
         method: 'POST',
@@ -1017,7 +1052,12 @@ export default class HomeScreen extends React.Component {
 
           }
 
-
+          if (Platform.OS == 'ios') {
+            this.setState({ modalLoading: false })
+          }
+          else {
+            this.popupLoadingIndicator.dismiss()
+          }
 
         }).
         catch((error) => { console.log(error) });
@@ -1593,8 +1633,8 @@ export default class HomeScreen extends React.Component {
                             + "\nGiá: " + item.Price + " đồng"
                             + "\nDiện tích: " + item.Acreage + " mét vuông"
                             + "\nĐịa chỉ: " + item.Address + "\n\nMô tả:\n" + item.Description
-                            + "\n\nCài đặt: " + "\n",
-                          url: 'http://nhabaola.vn',
+                            + "\n\nCài đặt: ",
+                          url: 'https://itunes.apple.com/vn/app/nhabaola/id1287451307?mt=8',
                           title: '*Chia Sẻ từ Ứng Dụng Nhà Bao La*'
                         }, {
                             // Android only:
@@ -2519,9 +2559,20 @@ export default class HomeScreen extends React.Component {
         // }}
         >
 
+          {this.state.modalLoading &&
+
+            <ActivityIndicator
+              style={{ position: 'absolute', left: responsiveWidth(45), top: 30 }}
+              animating={true}
+              size="large"
+              color="#73aa2a"
+            />
+
+          }
+
 
           <View
-            style={{ marginTop: 50 }}
+            style={{ marginTop: 70 }}
           >
             <CheckBox
               title='Không đúng địa chỉ'
@@ -2566,6 +2617,7 @@ export default class HomeScreen extends React.Component {
                     reportAddress: false,
                     reportCall: false,
                     reportHouse: false,
+                    modalLoading: false,
                   })
                 }}
                 title='Hủy' />
