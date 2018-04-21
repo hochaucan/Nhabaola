@@ -17,6 +17,7 @@ import {
     ToastAndroid,
     Keyboard,
     ActivityIndicator,
+    Linking,
 } from 'react-native';
 import { ExpoLinksView } from '@expo/samples';
 import { Constants, ImagePicker } from 'expo';
@@ -459,7 +460,11 @@ export default class ProfileScreen extends React.Component {
                         }
                     </View>
                 </View>
-                <ScrollView style={styles.profileMenuBox}>
+                <ScrollView style={{
+                    flex: 1,
+                    marginTop: 25,
+
+                }}>
                     <TouchableOpacity style={styles.profileMenuItem}
                         onPress={() => {
                             // this.props.navigation.navigate('PostRoomScreen')
@@ -490,6 +495,29 @@ export default class ProfileScreen extends React.Component {
                         </Ionicons>
                     </TouchableOpacity>
                     <View style={styles.profileMenuItemSeparator}></View>
+
+                    {/* Like Fanpage Facebook */}
+                    <TouchableOpacity style={styles.profileMenuItem}
+                        onPress={() => {
+                            const FANPAGE_ID = '1750146621679564'
+                            const FANPAGE_URL_FOR_APP = `fb://page/${FANPAGE_ID}`
+                            const FANPAGE_URL_FOR_BROWSER = `https://fb.com/${FANPAGE_ID}`
+                            Linking.canOpenURL(FANPAGE_URL_FOR_APP)
+                                .then((supported) => {
+                                    if (!supported) {
+                                        Linking.openURL(FANPAGE_URL_FOR_BROWSER)
+                                    } else {
+                                        Linking.openURL(FANPAGE_URL_FOR_APP)
+                                    }
+                                })
+                                .catch(err => console.error('An error occurred', err))
+
+                        }}
+                    >
+                        <Ionicons style={styles.profileMenuItemText} name='logo-facebook'>
+                            <Text>  Fanpage Facebook</Text>
+                        </Ionicons>
+                    </TouchableOpacity>
 
                     {/* Update Profile */}
                     <TouchableOpacity style={styles.profileMenuItem}
@@ -1091,10 +1119,6 @@ const styles = StyleSheet.create({
         // width: width,
         backgroundColor: '#a4d227',
         marginBottom: 10,
-    },
-    profileMenuBox: {
-        flex: 1,
-        marginTop: 25,
     },
     container: {
         flex: 1,

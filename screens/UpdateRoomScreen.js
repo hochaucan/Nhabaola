@@ -17,6 +17,7 @@ import {
     Modal,
     Switch,
     Keyboard,
+    KeyboardAvoidingView,
 }
     from 'react-native';
 import { Constants, Location, Permissions, ImagePicker } from 'expo';
@@ -1098,30 +1099,35 @@ export default class UpdateRoomScreen extends React.Component {
                             </View>
                         }
 
-                        {/* Detail Room Information */}
-                        <FormLabel style={{ marginTop: 10, }}>Chi tiết:</FormLabel>
-                        <FormInput
-                            ref='roomInfoInput'
-                            returnKeyType={"done"}
-                            onSubmitEditing={(event) => {
-                                // this._updateRoomAsync();
-                                Keyboard.dismiss();
-                            }}
-                            onFocus={(event) => {
-                                this._scrollToInput(event.target)
-                            }}
-                            containerStyle={{ borderWidth: 0.5, borderColor: '#73aa2a', borderRadius: 10, }}
-                            inputStyle={{ padding: 10, height: 140 }}
-                            placeholder='Vui lòng nhập thông tin chi tiết'
-                            multiline={true}
-                            autoCapitalize='sentences'
-                            //maxLength={300}
-                            clearButtonMode='always'
-                            underlineColorAndroid='#fff'
-                            //blurOnSubmit={true}
-                            value={this.state.detailInfo}
-                            onChangeText={(detailInfo) => this.setState({ detailInfo })}
-                        />
+                        <KeyboardAvoidingView behavior={Platform.OS == 'ios' ? 'height' : 'padding'}
+                            style={{ marginBottom: 40 }}
+                        >
+
+                            {/* Detail Room Information */}
+                            <FormLabel style={{ marginTop: 10, }}>Chi tiết:</FormLabel>
+                            <FormInput
+                                ref='roomInfoInput'
+                                returnKeyType={"done"}
+                                onSubmitEditing={(event) => {
+                                    // this._updateRoomAsync();
+                                    Keyboard.dismiss();
+                                }}
+                                onFocus={(event) => {
+                                    this._scrollToInput(event.target)
+                                }}
+                                containerStyle={{ borderWidth: 0.5, borderColor: '#73aa2a', borderRadius: 10, }}
+                                inputStyle={{ padding: 10, height: 140 }}
+                                placeholder='Vui lòng nhập thông tin chi tiết'
+                                multiline={true}
+                                autoCapitalize='sentences'
+                                //maxLength={300}
+                                clearButtonMode='always'
+                                underlineColorAndroid='#fff'
+                                //blurOnSubmit={true}
+                                value={this.state.detailInfo}
+                                onChangeText={(detailInfo) => this.setState({ detailInfo })}
+                            />
+                        </KeyboardAvoidingView>
                     </View>
                     {/* <KeyboardSpacer /> */}
                 </KeyboardAwareScrollView>
