@@ -261,7 +261,7 @@ export default class SearchScreen extends React.Component {
             selectedUnitPrice: '',
             selectedUnitAcreage: '',
             minPrice: '0',
-            maxPrice: '9999999999',
+            maxPrice: '999999999999',
             unitPrice: '000000',
             unitPriceLable: '',
             unitPriceSuffixLable: 'triệu',
@@ -1016,9 +1016,9 @@ export default class SearchScreen extends React.Component {
                                         //opacity: 0.8,
 
                                     }}>{convertAmountToWording(item.Price)}</Text>
-                                    ?
+                                    
 
-                                    {item.IsHighlight &&
+                                    {/* {item.IsHighlight &&
                                         <Image
                                             source={require('../assets/images/nbl-house_icon.png')}
                                             style={{ height: height * 0.045, width: width * 0.075 }}
@@ -1028,7 +1028,7 @@ export default class SearchScreen extends React.Component {
                                             key={`${this.state.initialRenderCurrenHouse}`}
                                         >
                                         </Image>
-                                    }
+                                    } */}
 
                                 </View>
                                 <MapView.Callout style={{}}

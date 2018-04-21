@@ -702,7 +702,11 @@ export default class ProfileScreen extends React.Component {
                             raised={false}
                             icon={{ name: 'ios-backspace', type: 'ionicon' }}
                             title='Hủy'
-                            onPress={() => { this.popupChangePassword.dismiss() }}
+                            onPress={() => {
+                                Keyboard.dismiss()
+                                this.popupChangePassword.dismiss()
+
+                            }}
                         />
 
                         <Button
