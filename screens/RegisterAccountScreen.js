@@ -72,6 +72,7 @@ export default class RegisterAccountScreen extends React.Component {
         // return;
 
         let emailReg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
+        let cellPhoneVN = /(09|01[2|6|8|9])+([0-9]{8})\b/;
 
         //Form validation
         if (Platform.OS === 'android') {
@@ -81,6 +82,11 @@ export default class RegisterAccountScreen extends React.Component {
             }
             if (this.state.registerCellPhone === '') {
                 ToastAndroid.showWithGravity('Vui lòng nhập Số Điện Thoại', ToastAndroid.SHORT, ToastAndroid.TOP);
+                this.refs.phoneInput.focus();
+                return;
+            }
+            if (cellPhoneVN.test(this.state.registerCellPhone) === false) {
+                ToastAndroid.showWithGravity('Vui lòng nhập đúng số Điện Thoại Di Động Việt Nam', ToastAndroid.SHORT, ToastAndroid.TOP);
                 this.refs.phoneInput.focus();
                 return;
             }
@@ -115,13 +121,18 @@ export default class RegisterAccountScreen extends React.Component {
             }
 
         }
-        else {
+        else { //IOS
             if (this.state.registerAccountImage === null) {
                 Alert.alert('Thông báo', 'Vui lòng chọn hình đại diện');
                 return;
             }
             if (this.state.registerCellPhone === '') {
                 Alert.alert('Thông báo', 'Vui lòng nhập Số Điện Thoại');
+                //this.refs.phoneInput.focus();
+                return;
+            }
+            if (cellPhoneVN.test(this.state.registerCellPhone) === false) {
+                Alert.alert('Thông báo', 'Vui lòng nhập đúng số Điện Thoại Di Động Việt Nam');
                 //this.refs.phoneInput.focus();
                 return;
             }

@@ -217,7 +217,7 @@ export default class PostedRoomHIstoryScreen extends React.Component {
 
                     if (JSON.stringify(responseJson.ErrorCode) === "12") {
                         if (Platform.OS === 'android') {
-                            ToastAndroid.showWithGravity('Xóa thành công!', ToastAndroid.SHORT, ToastAndroid.CENTER);
+                            ToastAndroid.showWithGravity('Xóa thành công!', ToastAndroid.SHORT, ToastAndroid.TOP);
                         }
                         else {
                             Alert.alert('Xóa thành công!');
