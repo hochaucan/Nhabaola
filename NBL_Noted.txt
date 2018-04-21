@@ -114,6 +114,7 @@ Facebook App ID: 485931318448821
 Facebook App Secret: 
 Facebook client token: 
 Facebook Code: 
+Facebook get fields: https://developers.facebook.com/docs/graph-api/using-graph-api/#fieldexpansion
 
 
 

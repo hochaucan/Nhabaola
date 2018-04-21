@@ -715,8 +715,8 @@ export default class HomeScreen extends React.Component {
   _handleFacebookLogin = async () => {
     try {
       const { type, token } = await Facebook.logInWithReadPermissionsAsync(
-        '1201211719949057', // Replace with your own app id in standalone app 485931318448821
-        { permissions: ['public_profile'] }
+        '485931318448821', // Replace with your own app id in standalone app 485931318448821, Test AppID: 1201211719949057
+        { permissions: ['public_profile', 'email'] }
       );
 
       switch (type) {
@@ -724,9 +724,14 @@ export default class HomeScreen extends React.Component {
           // Get the user's name using Facebook's Graph API
           const response = await fetch(`https://graph.facebook.com/me?access_token=${token}`);
           const profile = await response.json();
+          // Alert.alert(
+          //   'Logged in!',
+          //   `Hi ${profile.name}!`,
+          // );
+
           Alert.alert(
             'Logged in!',
-            `Hi ${profile.name}!`,
+            `${JSON.stringify(profile)}!`,
           );
           break;
         }
@@ -1633,8 +1638,10 @@ export default class HomeScreen extends React.Component {
                             + "\nGiá: " + item.Price + " đồng"
                             + "\nDiện tích: " + item.Acreage + " mét vuông"
                             + "\nĐịa chỉ: " + item.Address + "\n\nMô tả:\n" + item.Description
-                            + "\n\nCài đặt: ",
-                          url: 'https://itunes.apple.com/vn/app/nhabaola/id1287451307?mt=8',
+                            + "\n\nCài đặt: "
+                            + "\niOS: \nhttps://itunes.apple.com/vn/app/nhabaola/id1287451307?mt=8"
+                            + "\n\nAndroid: \nhttps://play.google.com/store/apps/details?id=vn.nhabaola.nhabaola",
+                          url: '',
                           title: '*Chia Sẻ từ Ứng Dụng Nhà Bao La*'
                         }, {
                             // Android only:
@@ -1652,7 +1659,9 @@ export default class HomeScreen extends React.Component {
                             + "\nGiá: " + item.Price + " đồng"
                             + "\nDiện tích: " + item.Acreage + " mét vuông"
                             + "\nĐịa chỉ: " + item.Address + "\n\nMô tả:\n" + item.Description
-                            + "\n\nCài đặt: " + "\nhttps://play.google.com/store/apps/details?id=vn.nhabaola.nhabaola",
+                            + "\n\nCài đặt: "
+                            + "\niOS: \nhttps://itunes.apple.com/vn/app/nhabaola/id1287451307?mt=8"
+                            + "\n\nAndroid: \nhttps://play.google.com/store/apps/details?id=vn.nhabaola.nhabaola",
                           url: 'http://nhabaola.vn',
                           title: '*Chia Sẻ từ Ứng Dụng Nhà Bao La*'
                         }, {

@@ -657,8 +657,10 @@ export default class RoomDetailScreen extends React.Component {
                                                     + "\nGiá: " + this.state.roomBox.Price + " đồng"
                                                     + "\nDiện tích: " + this.state.roomBox.Acreage + " mét vuông"
                                                     + "\nĐịa chỉ: " + this.state.roomBox.Address + "\n\nMô tả:\n" + this.state.roomBox.Description
-                                                    + "\n\nCài đặt: ",
-                                                url: 'https://itunes.apple.com/vn/app/nhabaola/id1287451307?mt=8',
+                                                    + "\n\nCài đặt: "
+                                                    + "\niOS: \nhttps://itunes.apple.com/vn/app/nhabaola/id1287451307?mt=8"
+                                                    + "\n\nAndroid: \nhttps://play.google.com/store/apps/details?id=vn.nhabaola.nhabaola",
+                                                url: '',
                                                 title: '*Chia Sẻ từ Ứng Dụng Nhà Bao La*'
                                             }, {
                                                     // Android only:
@@ -677,7 +679,9 @@ export default class RoomDetailScreen extends React.Component {
                                                     + "\nGiá: " + this.state.roomBox.Price + " đồng"
                                                     + "\nDiện tích: " + this.state.roomBox.Acreage + " mét vuông"
                                                     + "\nĐịa chỉ: " + this.state.roomBox.Address + "\n\nMô tả:\n" + this.state.roomBox.Description
-                                                    + "\n\nCài đặt: " + "\nhttps://play.google.com/store/apps/details?id=vn.nhabaola.nhabaola",
+                                                    + "\n\nCài đặt: "
+                                                    + "\niOS: \nhttps://itunes.apple.com/vn/app/nhabaola/id1287451307?mt=8"
+                                                    + "\n\nAndroid: \nhttps://play.google.com/store/apps/details?id=vn.nhabaola.nhabaola",
                                                 url: 'http://nhabaola.vn',
                                                 title: '*Chia Sẻ từ Ứng Dụng Nhà Bao La*'
                                             }, {
