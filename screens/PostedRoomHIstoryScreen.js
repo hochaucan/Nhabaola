@@ -14,6 +14,7 @@ import {
     AsyncStorage,
     ToastAndroid,
     Alert,
+    ActivityIndicator,
 } from 'react-native';
 import { ExpoLinksView } from '@expo/samples';
 import { Constants } from 'expo';
@@ -26,6 +27,7 @@ import DatePicker from 'react-native-datepicker'
 import { responsiveHeight, responsiveWidth, responsiveFontSize } from 'react-native-responsive-dimensions';
 import deleteImageAsync from '../api/deleteImageAsync'
 import convertAmountToWording from '../api/convertAmountToWording'
+import globalVariable from '../components/Global'
 
 var { height, width } = Dimensions.get('window');
 
@@ -241,6 +243,7 @@ export default class PostedRoomHIstoryScreen extends React.Component {
     _setTopAsync = async (id) => {
         //await this.setState({ refresh: true })
         //alert(this.state.profile)
+        this.popupLoadingIndicator.show();
 
         try {
             await fetch("http://nhabaola.vn//api/RoomBox/FO_RoomBox_SetTop", {
@@ -266,10 +269,9 @@ export default class PostedRoomHIstoryScreen extends React.Component {
                         else {
                             Alert.alert('Đưa tin lên đầu thành công!');
                         }
-                        //this._getRoomBoxByUserAsync(true);
+
+                        this.popupLoadingIndicator.dismiss();
                     }
-                    //this.setState({ refresh: false })
-                    //alert(JSON.stringify(responseJson))
 
                 }).
                 catch((error) => { console.log(error) });
@@ -282,6 +284,117 @@ export default class PostedRoomHIstoryScreen extends React.Component {
     _shouldItemUpdate = (prev, next) => {
         return prev.item !== next.item;
     }
+
+    _updateRoomAsync = async (room) => {
+        // // Calculate Images fields
+        // var isNotify = !room.Images.split('|')[1]
+        // var images = globalVariable.PHONE_TOKEN + '|' + isNotify + room.Images.substring(room.Images.indexOf("http") - 1)
+
+        //this._getRoomBoxByUserAsync(true)
+        //alert(images)
+        // return;
+
+        //Loading
+        this.popupLoadingIndicator.show();
+
+        // Calculate Images fields
+        var isNotify = room.Images.split('|')[1] == 'true' ? 'false' : 'true';
+        var images = globalVariable.PHONE_TOKEN + '|' + isNotify + room.Images.substring(room.Images.indexOf("http") - 1)
+
+        try {
+            await fetch("http://nhabaola.vn/api/RoomBox/FO_RoomBox_Edit", {
+                method: 'POST',
+                headers: {
+                    Accept: 'application/json',
+                    'Content-Type': 'application/json',
+                },
+
+                body: JSON.stringify({
+                    "ID": room.ID,
+                    "Title": room.Title,
+                    "Images": images,
+                    "CategoryID": room.CategoryID,
+                    "Address": room.Address,
+                    "Longitude": room.Longitude,
+                    "Latitude": room.Latitude,
+                    "Description": room.Description,
+                    "Price": room.Price.replace('.', '').replace('.', '').replace('.', '').replace('.', ''),
+                    "Acreage": room.Acreage,
+                    "Toilet": "",
+                    "Bedroom": "",
+                    "AirConditioner": "",
+                    "ContactPhone": room.ContactPhone,
+                    "FromDate": room.FromDate,
+                    "ToDate": room.ToDate,
+                    "IsTop": "true",
+                    "IsPinned": "false",
+                    "IsHighlight": room.IsHighlight,
+                    "HighlightFromDate": room.HighlightFromDate,
+                    "HighlightToDate": room.HighlightToDate,
+                    "IsActive": "true",
+                    "CreatedBy": this.state.profile.ID,
+                    "UpdatedBy": this.state.profile.UpdatedBy,
+                }),
+            })
+                .then((response) => response.json())
+                .then((responseJson) => {
+
+
+
+                    if (JSON.stringify(responseJson.ErrorCode) === "11") {//Update successful
+
+                        //Refresh Room
+                        this._getRoomBoxByUserAsync(true)
+
+                        // if (Platform.OS === 'android') {
+                        //     ToastAndroid.showWithGravity('Đăng ký nhận thông báo thành công!', ToastAndroid.SHORT, ToastAndroid.TOP);
+                        // }
+                        // else {
+                        //     Alert.alert('Đăng ký nhận thông báo thành công!');
+                        // }
+
+                    } else { // Lỗi
+
+                        if (Platform.OS === 'android') {
+                            ToastAndroid.showWithGravity('Lỗi, vui lòng liên hệ Admin trong mục Giúp Đỡ!', ToastAndroid.SHORT, ToastAndroid.TOP);
+                        }
+                        else {
+                            Alert.alert('Thông báo', 'Lỗi, vui lòng liên hệ Admin trong mục Giúp Đỡ!');
+                        }
+                    }
+                    // if (JSON.stringify(responseJson.ErrorCode) === "3") {
+
+                    //     if (Platform.OS === 'android') {
+                    //         ToastAndroid.showWithGravity('Ngày bắt đầu hiệu lực phải lớn hơn ngày hiện tại', ToastAndroid.SHORT, ToastAndroid.CENTER);
+                    //     }
+                    //     else {
+                    //         Alert.alert('Ngày bắt đầu hiệu lực phải lớn hơn ngày hiện tại');
+                    //     }
+                    //     //this._getRoomBoxByUserAsync(true);
+                    // }
+
+
+                    //alert(JSON.stringify(responseJson))
+
+                    //this.props.navigation.navigate('Home');
+                    // HomeScreen.refreshRoomBoxAfterPost();
+                    //this.props.navigation.state.params.onSelect({ selected: true });
+                    //this.props.navigation.goBack();
+                    //  this.props.navigation.state.params._getWalletAsync();
+                    // this.props.navigation.state.params.onRefreshScreen({ refreshScreen: true });
+
+
+                    this.popupLoadingIndicator.dismiss();
+
+                }).
+                catch((error) => { console.log(error) });
+        } catch (error) {
+            console.log(error)
+        }
+
+
+    }
+
 
     render() {
         return (
@@ -339,6 +452,8 @@ export default class PostedRoomHIstoryScreen extends React.Component {
                                 borderBottomWidth: 0.3,
                                 borderColor: '#9B9D9D',
                             }}>
+
+
                                 <TouchableOpacity
                                     style={styles.searchCardImage}
                                     onPress={() => this.props.navigation.navigate('RoomDetailScreen', { item })}
@@ -407,6 +522,63 @@ export default class PostedRoomHIstoryScreen extends React.Component {
                                     </View>
                                 </TouchableOpacity>
 
+                                {/* Register Comment Notification */}
+
+                                <TouchableOpacity
+                                    style={{ marginBottom: 3, marginTop: 3, paddingRight: 5, flexDirection: 'row', alignItems: "center", justifyContent: 'space-between' }}
+                                    onPress={() => {
+                                        if (item.Images.split('|')[1] == 'true') {
+
+                                            Alert.alert(
+                                                'Thông báo',
+                                                'Bạn muốn TẮT thông báo Bình Luận cho Tin này?',
+                                                [
+                                                    {
+                                                        text: 'Hủy', onPress: () => {
+                                                            // this._deleteRoomBoxAsync(item);
+                                                        }
+                                                    },
+                                                    {
+                                                        text: 'Đồng ý', onPress: () => {
+                                                            this._updateRoomAsync(item)
+                                                        }
+                                                    },
+                                                ]
+                                            );
+
+
+                                        } else {
+                                            Alert.alert(
+                                                'Thông báo',
+                                                'Bạn muốn NHẬN thông báo Bình Luận cho Tin này?',
+                                                [
+                                                    {
+                                                        text: 'Hủy', onPress: () => {
+                                                            // this._deleteRoomBoxAsync(item);
+                                                        }
+                                                    },
+                                                    {
+                                                        text: 'Đồng ý', onPress: () => {
+                                                            this._updateRoomAsync(item)
+                                                        }
+                                                    },
+                                                ]
+                                            );
+
+                                        }
+
+                                    }}
+                                >
+                                    <Text style={{ textAlign: "right", fontSize: responsiveFontSize(1.8), color: '#9B9D9D' }}>  Nhận thông báo Bình Luận</Text>
+                                    {item.Images.split('|')[1] == 'true' ?
+                                        <Ionicons style={{ fontSize: responsiveFontSize(4), textAlign: "right", color: "#a4d227" }} name="ios-notifications" />
+                                        :
+                                        <Ionicons style={{ fontSize: responsiveFontSize(4), textAlign: "right", color: "#6c6d6d" }} name="ios-notifications-off" />
+                                    }
+
+                                </TouchableOpacity>
+
+                                {/* Effected Date */}
                                 <View style={{ marginBottom: 0, flexDirection: 'row', justifyContent: 'space-between' }}>
                                     <View
                                         style={{ flex: 1, flexDirection: 'row', alignItems: 'center' }}
@@ -418,6 +590,8 @@ export default class PostedRoomHIstoryScreen extends React.Component {
                                     <Text style={{ color: '#9B9D9D' }}> - </Text>
                                     <Text style={{ flex: 1, fontSize: responsiveFontSize(1.8), textAlign: 'center', color: '#9B9D9D' }}>{item.ToDate}</Text>
                                 </View>
+
+                                {/* Highlight Date */}
                                 {item.IsHighlight &&
                                     <View style={{ marginBottom: 5, marginTop: 2, flexDirection: 'row', justifyContent: 'space-between' }}>
                                         <View
@@ -431,6 +605,9 @@ export default class PostedRoomHIstoryScreen extends React.Component {
                                         <Text style={{ flex: 1, fontSize: responsiveFontSize(1.8), textAlign: 'center', color: '#9B9D9D' }}>{item.HighlightToDate}</Text>
                                     </View>
                                 }
+
+
+
                                 <View style={{ marginBottom: 2, flexDirection: 'row', paddingTop: 10, paddingBottom: 10, justifyContent: 'space-between' }}>
                                     {item.IsActive &&
                                         <TouchableOpacity
@@ -525,9 +702,23 @@ export default class PostedRoomHIstoryScreen extends React.Component {
                     />
                 </View>
 
+                {/* Popup Loading Indicator */}
+                < PopupDialog
+                    ref={(popupLoadingIndicator) => { this.popupLoadingIndicator = popupLoadingIndicator; }}
+                    dialogAnimation={new ScaleAnimation()}
+                    dialogStyle={{ marginBottom: 100, width: 80, height: 80, justifyContent: 'center', padding: 20 }}
+                    dismissOnTouchOutside={false}
+                >
+                    <ActivityIndicator
+                        style={{}}
+                        animating={true}
+                        size="large"
+                        color="#73aa2a"
+                    />
+                </PopupDialog >
 
 
-            </View>
+            </View >
         );
     }
 }

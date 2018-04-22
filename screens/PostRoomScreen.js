@@ -34,6 +34,7 @@ import DatePicker from 'react-native-datepicker'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import { responsiveHeight, responsiveWidth, responsiveFontSize } from 'react-native-responsive-dimensions';
 import SimplePicker from 'react-native-simple-picker';
+import globalVariable from '../components/Global'
 
 var { height, width } = Dimensions.get('window');
 
@@ -241,7 +242,8 @@ export default class PostRoomScreen extends React.Component {
 
     _postRoomAsync = async () => {
         // alert(this.state.fromDate + '    ' + this.state.toDate)
-        // return
+        // alert(globalVariable.PHONE_TOKEN)
+        //return
 
         //Form validation
         if (Platform.OS === 'android') {
@@ -329,10 +331,6 @@ export default class PostRoomScreen extends React.Component {
         //Loading
         this.popupLoadingIndicator.show();
 
-        //await this._postImage('http://www.google.com/images/srpr/nav_logo66.png');
-        //console.log(this.state.postRoomImage1)
-        //await this._postImage(this.state.postRoomImage1);
-
         if (this.state.postRoomImage1 != null) {
             let uploadResponse = await uploadImageAsync(this.state.postRoomImage1);
             let uploadResult = await uploadResponse.json();
@@ -367,12 +365,6 @@ export default class PostRoomScreen extends React.Component {
         }
 
 
-        // this.setState({ image: uploadResult.location });
-
-        //alert(this.state.imageUrl)
-
-        //return
-
         try {
             await fetch("http://nhabaola.vn/api/RoomBox/FO_RoomBox_Add", {
                 method: 'POST',
@@ -383,7 +375,7 @@ export default class PostRoomScreen extends React.Component {
 
                 body: JSON.stringify({
                     "Title": this.state.imageUrl.split('|')[1],
-                    "Images": this.state.imageUrl,
+                    "Images": globalVariable.PHONE_TOKEN + '|true' + this.state.imageUrl,
                     "CategoryID": this.state.selectedCategory,
                     "Address": this.state.selectedAddress,
                     "Longitude": this.state.searchingMaker.longitude,

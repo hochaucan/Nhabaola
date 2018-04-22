@@ -34,20 +34,23 @@ setTimeout(
         
 
 * PUSH NOTIFICATION
-Android Token: ExponentPushToken[X44MIVEIOHZdIZMVverA9J], ExponentPushToken[ycjiZbIzuZuk5oS0EhzWTB] 
-ios Token: ExponentPushToken[vS58SIF376NWPW8QmPpnYV], 
+Android Token: ExponentPushToken[X44MIVEIOHZdIZMVverA9J], Release: ExponentPushToken[ycjiZbIzuZuk5oS0EhzWTB] 
+ios Token: ExponentPushToken[vS58SIF376NWPW8QmPpnYV], Release: 
 IOS Token:
 Expo Push Notifcation API: https://exp.host/--/api/v2/push/send
 Data: [{
-    "to": "ExponentPushToken[ycjiZbIzuZuk5oS0EhzWTB]",
-  "data": {"name":"can","age":"2"},
+   "to": "ExponentPushToken[vS58SIF376NWPW8QmPpnYV]",
+  "data": {"screen":"ProfileScreen","params":{"name":"can","age":"35"}},
   "sound": "default",
   "title":"Nhabaola",
   "body": "HO CHAU CAN"
 }, {
-  "to": "ExponentPushToken[X44MIVEIOHZdIZMVverA9J]",
+    "to": "ExponentPushToken[vS58SIF376NWPW8QmPpnYV]",
+  "data": {"screen":"ProfileScreen","params":{"name":"can","age":"35"}},
+  "sound": "default",
   "badge": 1,
-  "body": "You've got mail"
+  "title":"Nhabaola",
+  "body": "HO CHAU CAN"
 }]
 
 

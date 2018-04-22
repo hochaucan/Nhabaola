@@ -10,5 +10,7 @@ module.exports = {
     LOCATION: {
         LATITUDE: null,
         LONGITUDE: null,
-    }
+    },
+    PHONE_TOKEN: '',
+
 };

@@ -41,7 +41,7 @@ import saveStorageAsync from '../components/saveStorageAsync';
 import { responsiveHeight, responsiveWidth, responsiveFontSize } from 'react-native-responsive-dimensions';
 import convertAmountToWording from '../api/convertAmountToWording'
 import registerForPushNotificationsAsync from '../api/registerForPushNotificationsAsync';
-
+import globalVariable from '../components/Global'
 
 const homePlace = {
   description: 'Home',
@@ -237,6 +237,7 @@ export default class HomeScreen extends React.Component {
 
     // Register Push Notification
     this._notificationSubscription = this._registerForPushNotifications();
+
   }
 
   // shouldComponentUpdate(nextProps, nextState) {
@@ -273,7 +274,7 @@ export default class HomeScreen extends React.Component {
   }
 
   _handleNotification = ({ origin, data }) => {
-    //alert(JSON.stringify(data.params))
+    //alert(JSON.stringify(data.params.roomBox))
     this.props.navigation.navigate(data.screen, data.params);
 
     // console.log(

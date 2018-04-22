@@ -35,6 +35,7 @@ import getDirections from 'react-native-google-maps-directions'
 import globalVariable from '../components/Global'
 import convertAmountToWording from '../api/convertAmountToWording'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
+import notifyNBLAsync from '../api/notifyNBLAsync';
 
 var { height, width } = Dimensions.get('window');
 
@@ -83,6 +84,8 @@ export default class RoomDetailScreen extends React.Component {
             isComment: false,
             modalReport: false,
             modalLoading: false,
+            pushToken: '',
+            isPushNotification: 'true',
         }
     }
 
@@ -103,7 +106,9 @@ export default class RoomDetailScreen extends React.Component {
         await this.setState({
             roomBox: this.props.navigation.state.params.item,
             starView: this.props.navigation.state.params.item.Point,
-            isComment: this.props.navigation.state.params.isComment
+            isComment: this.props.navigation.state.params.isComment,
+            pushToken: this.props.navigation.state.params.item.Images.split('|')[0],
+            isPushNotification: this.props.navigation.state.params.item.Images.split('|')[1],
         })
         await this._getRoomCategoryFromStorageAsync();
         await this._getProfileFromStorageAsync();
@@ -175,7 +180,49 @@ export default class RoomDetailScreen extends React.Component {
         // console.log(rating);
     }
 
+
+    // _notifyCommentAsync = async () => {
+
+    //     //Loading
+    //     this.popupLoadingIndicator.show();
+
+
+
+    //     try {
+    //         await fetch("https://exp.host/--/api/v2/push/send", {
+    //             method: 'POST',
+    //             headers: {
+    //                 Accept: 'application/json',
+    //                 'Content-Type': 'application/json',
+    //             },
+
+    //             body: JSON.stringify({
+    //                 "to": "ExponentPushToken[X44MIVEIOHZdIZMVverA9J]",
+    //                 "data": { "screen": "ProfileScreen", "params": { "name": "can", "age": "35" } },
+    //                 "sound": "default",
+    //                 "title": "Nhabaola",
+    //                 "body": "HO CHAU CAN"
+    //             }),
+    //         })
+    //             .then((response) => response.json())
+    //             .then((responseJson) => {
+
+
+
+    //             }).
+    //             catch((error) => { console.log(error) });
+    //     } catch (error) {
+    //         console.log(error)
+    //     }
+
+
+    // }
+
+
     _postCommentsAsync = async () => {
+
+        // alert(this.state.pushToken + "   " + this.state.isPushNotification)
+        // return;
 
         //Form validation
         if (Platform.OS === 'android') {
@@ -194,7 +241,7 @@ export default class RoomDetailScreen extends React.Component {
         }
 
         //Loading
-        // this.popupLoadingIndicator.show();
+        this.popupLoadingIndicator.show();
 
 
 
@@ -217,14 +264,35 @@ export default class RoomDetailScreen extends React.Component {
                 .then((response) => response.json())
                 .then((responseJson) => {
 
-                    this.setState({
-                        comments: [],
-                        commentContent: ''
-                    })
-                    this._getCommentsAsync();
-                    // alert("success")
-                    //this.state.comments.push()
-                    //this.popupLoadingIndicator.dismiss();
+                    //alert(JSON.stringify(responseJson))
+                    if (JSON.stringify(responseJson.ErrorCode) === "0") { //Post comment successful
+                        this.setState({
+                            comments: [],
+                            commentContent: ''
+                        })
+                        this._getCommentsAsync();
+
+                        if (this.state.isPushNotification == 'true') {
+                            // notifyNBLAsync("ExponentPushToken[X44MIVEIOHZdIZMVverA9J]");
+                            notifyNBLAsync(this.state.pushToken
+                                , { "screen": "RoomDetailScreen", "params": { "roomBoxID": this.state.roomBox.ID } } //{ ...roombox }
+                                , "default"
+                                , "Nhabaola"
+                                , "Oanh"
+                            ); //pushToken, data, sound, title, body
+                        }
+                    }
+                    else { //Post Error
+                        if (Platform.OS === 'android') {
+                            ToastAndroid.showWithGravity('Lỗi, vui lòng liên hệ Admin trong mục Giúp Đỡ!', ToastAndroid.SHORT, ToastAndroid.TOP);
+                        }
+                        else {
+                            Alert.alert('Thông báo', 'Lỗi, vui lòng liên hệ Admin trong mục Giúp Đỡ!');
+                        }
+                    }
+
+                    //Loading
+                    this.popupLoadingIndicator.dismiss();
 
                 }).
                 catch((error) => { console.log(error) });
@@ -402,9 +470,10 @@ export default class RoomDetailScreen extends React.Component {
     render() {
         //const { picture, name, email, phone, login, dob, location } = this.props.navigation.state.params;
         //const { item } = this.props.navigation.state.params;
-        var images = this.state.roomBox.Images.replace('|', '').split('|');
-        //alert(JSON.stringify(this.state.roomBox.Images))
-        //alert(images)
+        //var images = this.state.roomBox.Images.replace('|', '').split('|');
+        var images = this.state.roomBox.Images.split('|').splice(2);
+        // alert(JSON.stringify(this.state.roomBox.Images.split('|').slice(1)))
+        // alert(JSON.stringify(images))
 
         const roomLocation = {
             latitude: parseFloat(this.state.roomBox.Latitude),

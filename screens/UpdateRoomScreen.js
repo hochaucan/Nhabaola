@@ -34,6 +34,7 @@ import DatePicker from 'react-native-datepicker'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import SimplePicker from 'react-native-simple-picker';
 import { responsiveHeight, responsiveWidth, responsiveFontSize } from 'react-native-responsive-dimensions';
+import globalVariable from '../components/Global'
 
 var { height, width } = Dimensions.get('window');
 
@@ -154,7 +155,8 @@ export default class UpdateRoomScreen extends React.Component {
         })
 
         //alert(JSON.stringify(this.state.roomBox))
-        var images = this.state.roomBox.Images.replace('|', '').split('|');
+        // var images = this.state.roomBox.Images.replace('|', '').split('|');
+        var images = this.state.roomBox.Images.split('|').splice(2);
         var _latitude = parseFloat(this.state.roomBox.Latitude)
         var _longitude = parseFloat(this.state.roomBox.Longitude)
         //  alert(images[3] == null ? images[3] : "khac")
@@ -493,7 +495,7 @@ export default class UpdateRoomScreen extends React.Component {
                 body: JSON.stringify({
                     "ID": this.state.roomBox.ID,
                     "Title": this.state.imageUrl.split('|')[1],
-                    "Images": this.state.imageUrl,
+                    "Images": globalVariable.PHONE_TOKEN + '|true' + this.state.imageUrl,
                     "CategoryID": this.state.selectedCategory,
                     "Address": this.state.selectedAddress,
                     "Longitude": this.state.searchingMaker.longitude,
