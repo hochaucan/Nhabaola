@@ -31,11 +31,11 @@ import globalVariable from '../components/Global'
 
 var { height, width } = Dimensions.get('window');
 
-// var today = new Date();
-// var dd = today.getDate();
-// var mm = today.getMonth() + 1;
-// var yyyy = today.getFullYear();
-// var minDate = yyyy + '-' + mm + '-' + dd
+var today = new Date();
+var dd = today.getDate() == 1 ? '01' : today.getDate();
+var mm = today.getMonth() + 1;
+var yyyy = today.getFullYear();
+var minDate = yyyy + '-' + mm + '-' + dd //== '1' ? '01' : dd
 
 // var newdate = new Date(today);
 // newdate.setDate(newdate.getDate() + 1);
@@ -295,12 +295,12 @@ export default class PostedRoomHIstoryScreen extends React.Component {
         // return;
 
         //Loading
-        this.popupLoadingIndicator.show();
+        // this.popupLoadingIndicator.show();
 
         // Calculate Images fields
         var isNotify = room.Images.split('|')[1] == 'true' ? 'false' : 'true';
         var images = globalVariable.PHONE_TOKEN + '|' + isNotify + room.Images.substring(room.Images.indexOf("http") - 1)
-
+        // alert(images)
         try {
             await fetch("http://nhabaola.vn/api/RoomBox/FO_RoomBox_Edit", {
                 method: 'POST',
@@ -324,12 +324,12 @@ export default class PostedRoomHIstoryScreen extends React.Component {
                     "Bedroom": "",
                     "AirConditioner": "",
                     "ContactPhone": room.ContactPhone,
-                    "FromDate": room.FromDate,
+                    "FromDate": minDate,//room.FromDate,
                     "ToDate": room.ToDate,
                     "IsTop": "true",
                     "IsPinned": "false",
                     "IsHighlight": room.IsHighlight,
-                    "HighlightFromDate": room.HighlightFromDate,
+                    "HighlightFromDate": minDate,//room.HighlightFromDate,
                     "HighlightToDate": room.HighlightToDate,
                     "IsActive": "true",
                     "CreatedBy": this.state.profile.ID,
@@ -339,7 +339,7 @@ export default class PostedRoomHIstoryScreen extends React.Component {
                 .then((response) => response.json())
                 .then((responseJson) => {
 
-
+                    //alert(JSON.stringify(responseJson))
 
                     if (JSON.stringify(responseJson.ErrorCode) === "11") {//Update successful
 
@@ -514,7 +514,7 @@ export default class PostedRoomHIstoryScreen extends React.Component {
                                                 }
 
                                                 {!item.IsActive &&
-                                                    <Text style={{ flex: 1, fontSize: responsiveFontSize(1.2), color: 'red', textAlign: 'center' }}>Hết hạn</Text>
+                                                    <Text style={{ flex: 1, fontSize: responsiveFontSize(1.8), color: 'red', textAlign: 'center' }}>Hết hạn</Text>
                                                 }
 
                                             </View>
@@ -523,60 +523,61 @@ export default class PostedRoomHIstoryScreen extends React.Component {
                                 </TouchableOpacity>
 
                                 {/* Register Comment Notification */}
+                                {item.IsActive &&
+                                    <TouchableOpacity
+                                        style={{ marginBottom: 3, marginTop: 3, paddingRight: 5, flexDirection: 'row', alignItems: "center", justifyContent: 'space-between' }}
+                                        onPress={() => {
+                                            if (item.Images.split('|')[1] == 'true') {
 
-                                <TouchableOpacity
-                                    style={{ marginBottom: 3, marginTop: 3, paddingRight: 5, flexDirection: 'row', alignItems: "center", justifyContent: 'space-between' }}
-                                    onPress={() => {
-                                        if (item.Images.split('|')[1] == 'true') {
-
-                                            Alert.alert(
-                                                'Thông báo',
-                                                'Bạn muốn TẮT thông báo Bình Luận cho Tin này?',
-                                                [
-                                                    {
-                                                        text: 'Hủy', onPress: () => {
-                                                            // this._deleteRoomBoxAsync(item);
-                                                        }
-                                                    },
-                                                    {
-                                                        text: 'Đồng ý', onPress: () => {
-                                                            this._updateRoomAsync(item)
-                                                        }
-                                                    },
-                                                ]
-                                            );
+                                                Alert.alert(
+                                                    'Thông báo',
+                                                    'Bạn muốn TẮT thông báo Bình Luận cho Tin này?',
+                                                    [
+                                                        {
+                                                            text: 'Hủy', onPress: () => {
+                                                                // this._deleteRoomBoxAsync(item);
+                                                            }
+                                                        },
+                                                        {
+                                                            text: 'Đồng ý', onPress: () => {
+                                                                this._updateRoomAsync(item)
+                                                            }
+                                                        },
+                                                    ]
+                                                );
 
 
-                                        } else {
-                                            Alert.alert(
-                                                'Thông báo',
-                                                'Bạn muốn NHẬN thông báo Bình Luận cho Tin này?',
-                                                [
-                                                    {
-                                                        text: 'Hủy', onPress: () => {
-                                                            // this._deleteRoomBoxAsync(item);
-                                                        }
-                                                    },
-                                                    {
-                                                        text: 'Đồng ý', onPress: () => {
-                                                            this._updateRoomAsync(item)
-                                                        }
-                                                    },
-                                                ]
-                                            );
+                                            } else {
+                                                Alert.alert(
+                                                    'Thông báo',
+                                                    'Bạn muốn NHẬN thông báo Bình Luận cho Tin này?',
+                                                    [
+                                                        {
+                                                            text: 'Hủy', onPress: () => {
+                                                                // this._deleteRoomBoxAsync(item);
+                                                            }
+                                                        },
+                                                        {
+                                                            text: 'Đồng ý', onPress: () => {
+                                                                this._updateRoomAsync(item)
+                                                            }
+                                                        },
+                                                    ]
+                                                );
 
+                                            }
+
+                                        }}
+                                    >
+                                        <Text style={{ textAlign: "right", fontSize: responsiveFontSize(1.8), color: '#9B9D9D' }}>  Nhận thông báo Bình Luận</Text>
+                                        {item.Images.split('|')[1] == 'true' ?
+                                            <Ionicons style={{ fontSize: responsiveFontSize(4), textAlign: "right", color: "#a4d227" }} name="ios-notifications" />
+                                            :
+                                            <Ionicons style={{ fontSize: responsiveFontSize(4), textAlign: "right", color: "#6c6d6d" }} name="ios-notifications-off" />
                                         }
 
-                                    }}
-                                >
-                                    <Text style={{ textAlign: "right", fontSize: responsiveFontSize(1.8), color: '#9B9D9D' }}>  Nhận thông báo Bình Luận</Text>
-                                    {item.Images.split('|')[1] == 'true' ?
-                                        <Ionicons style={{ fontSize: responsiveFontSize(4), textAlign: "right", color: "#a4d227" }} name="ios-notifications" />
-                                        :
-                                        <Ionicons style={{ fontSize: responsiveFontSize(4), textAlign: "right", color: "#6c6d6d" }} name="ios-notifications-off" />
-                                    }
-
-                                </TouchableOpacity>
+                                    </TouchableOpacity>
+                                }
 
                                 {/* Effected Date */}
                                 <View style={{ marginBottom: 0, flexDirection: 'row', justifyContent: 'space-between' }}>

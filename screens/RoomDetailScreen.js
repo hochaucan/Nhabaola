@@ -45,6 +45,10 @@ const LONGITUDE = -122.4324;
 const LATITUDE_DELTA = 0.02;
 const LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO;
 
+function numberWithCommas(x) {
+    return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+}
+
 export default class RoomDetailScreen extends React.Component {
     // static navigationOptions = ({ navigation }) => ({
 
@@ -102,7 +106,7 @@ export default class RoomDetailScreen extends React.Component {
     }
 
     _getRoomBoxDetailAsync = async () => {
-
+        // alert(numberWithCommas(JSON.stringify(this.props.navigation.state.params.item.Price)))
         await this.setState({
             roomBox: this.props.navigation.state.params.item,
             starView: this.props.navigation.state.params.item.Point,
@@ -266,10 +270,7 @@ export default class RoomDetailScreen extends React.Component {
 
                     //alert(JSON.stringify(responseJson))
                     if (JSON.stringify(responseJson.ErrorCode) === "0") { //Post comment successful
-                        this.setState({
-                            comments: [],
-                            commentContent: ''
-                        })
+
                         this._getCommentsAsync();
 
                         if (this.state.isPushNotification == 'true') {
@@ -277,10 +278,15 @@ export default class RoomDetailScreen extends React.Component {
                             notifyNBLAsync(this.state.pushToken
                                 , { "screen": "RoomDetailScreen", "params": { "roomBoxID": this.state.roomBox.ID } } //{ ...roombox }
                                 , "default"
-                                , "Nhabaola"
-                                , "Oanh"
+                                , this.state.profile.FullName + " Bình Luận:"
+                                , this.state.commentContent
                             ); //pushToken, data, sound, title, body
                         }
+
+                        this.setState({
+                            comments: [],
+                            commentContent: ''
+                        })
                     }
                     else { //Post Error
                         if (Platform.OS === 'android') {
@@ -628,7 +634,7 @@ export default class RoomDetailScreen extends React.Component {
                                         flex: 1, color: '#fff', fontWeight: '300',
                                         fontSize: responsiveFontSize(1.7)
                                     }}>
-                                    Giá: {convertAmountToWording(this.state.roomBox.Price)}
+                                    Giá: {convertAmountToWording(numberWithCommas(this.state.roomBox.Price))}
                                 </Text>
 
                                 {

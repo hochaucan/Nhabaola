@@ -841,7 +841,22 @@ export default class UpdateRoomScreen extends React.Component {
                                     }}
                                 >
 
-                                    <Text style={{ marginLeft: 5, }}>{this.state.iosSelectedCategory}  <Ionicons style={{ fontSize: responsiveFontSize(2.5) }} name='ios-arrow-dropdown-outline' /> </Text>
+                                    {/* <Text style={{ marginLeft: 5, }}>{this.state.iosSelectedCategory}  <Ionicons style={{ fontSize: responsiveFontSize(2.5) }} name='ios-arrow-dropdown-outline' /> </Text> */}
+
+                                    {
+                                        this.state.roomCategory.map((y, i) => {
+                                            return (
+                                                // <Text key={i}> {y.ID} {this.state.selectedCategory} </Text>
+                                                y.ID == this.state.selectedCategory ?
+                                                    // <Text key={i}> {y.CatName}</Text>
+                                                    <Text key={i} style={{ marginLeft: 5, }}>{y.CatName}  <Ionicons style={{ fontSize: responsiveFontSize(2.5) }} name='ios-arrow-dropdown-outline' /> </Text>
+                                                    : null
+
+                                                //<Picker.Item key={i} label={y.CatName} value={y.ID} />
+                                            )
+                                        })
+                                    }
+
                                     {/* {this.state.selectedCategory === '0'
                                         ?
                                         <Text> -- Chọn loại BĐS --</Text>

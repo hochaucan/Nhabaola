@@ -147,8 +147,6 @@ export default class HomeScreen extends React.Component {
       ratingRoomId: 0,
       reportRoomId: 0,
       flatListIsEnd: false,
-      roomBoxByID: null,
-      //reportResult:'',
     }
 
     // state = { selected: false };
@@ -279,8 +277,9 @@ export default class HomeScreen extends React.Component {
     //alert(JSON.stringify(data.params.roomBox))
 
     await this._getRoomByIDAsync(data.params.roomBoxID)
+    const item = roomBoxByID
     //alert(JSON.stringify(this.state.roomBoxByID))
-    this.props.navigation.navigate(data.screen, { roomBoxByID });
+    this.props.navigation.navigate(data.screen, { item });
 
     // console.log(
     //   `Push notification ${origin} with data: ${JSON.stringify(data)}`
