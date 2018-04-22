@@ -146,6 +146,7 @@ export default class HomeScreen extends React.Component {
       ratingRoomId: 0,
       reportRoomId: 0,
       flatListIsEnd: false,
+      roomBoxByID: null,
       //reportResult:'',
     }
 
@@ -273,9 +274,12 @@ export default class HomeScreen extends React.Component {
     );
   }
 
-  _handleNotification = ({ origin, data }) => {
+  _handleNotification = async ({ origin, data }) => {
     //alert(JSON.stringify(data.params.roomBox))
-    this.props.navigation.navigate(data.screen, data.params);
+
+    await this._getRoomByIDAsync(data.params.roomBoxID)
+    //alert(JSON.stringify(this.state.roomBoxByID))
+    this.props.navigation.navigate(data.screen, { ...this.state.roomBoxByID });
 
     // console.log(
     //   `Push notification ${origin} with data: ${JSON.stringify(data)}`
@@ -283,6 +287,7 @@ export default class HomeScreen extends React.Component {
   };
 
   componentWillMount() {
+
     this._getCategoryAsync();
     this._getRoomBoxAsync(true);
     this._getProfileFromStorageAsync();
@@ -365,6 +370,7 @@ export default class HomeScreen extends React.Component {
   }
 
   _moveToRoomDetail = (roombox) => {
+    //alert(roomBox);
     this.props.navigation.navigate('RoomDetailScreen', { ...roombox });
   };
 
@@ -909,6 +915,34 @@ export default class HomeScreen extends React.Component {
 
 
   // }
+
+  _getRoomByIDAsync = async (roomID) => {
+    try {
+      await fetch("http://nhabaola.vn//api/RoomBox/FO_RoomBox_Get/" + roomID, {
+        method: 'GET',
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
+        },
+        // body: JSON.stringify({
+        //   "PageIndex": "0",
+        //   "PageCount": "100",
+        //   "SessionKey": "Olala_SessionKey",
+        //   "UserLogon": "100"
+        // }),
+      })
+        .then((response) => response.json())
+        .then((responseJson) => {
+         // alert(JSON.stringify(responseJson))
+          this.setState({ roomBoxByID: responseJson.obj })
+
+        }).
+        catch((error) => { console.log(error) });
+    } catch (error) {
+      console.log(error)
+    }
+
+  }
 
   _getCategoryAsync = async () => {
     try {
@@ -1507,6 +1541,7 @@ export default class HomeScreen extends React.Component {
                 onPress={() => {
                   //this._sendProps();
                   //this._moveToRoomDetail(item)
+                  alert(JSON.stringify(item))
                   this.props.navigation.navigate('RoomDetailScreen', { item });
                 }
                 }
