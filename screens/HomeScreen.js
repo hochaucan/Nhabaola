@@ -61,6 +61,7 @@ const LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO;
 
 
 const roomBox = [];
+const roomBoxByID = null;
 function numberWithCommas(x) {
   return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
 }
@@ -279,7 +280,7 @@ export default class HomeScreen extends React.Component {
 
     await this._getRoomByIDAsync(data.params.roomBoxID)
     //alert(JSON.stringify(this.state.roomBoxByID))
-    this.props.navigation.navigate(data.screen, { ...this.state.roomBoxByID });
+    this.props.navigation.navigate(data.screen, { roomBoxByID });
 
     // console.log(
     //   `Push notification ${origin} with data: ${JSON.stringify(data)}`
@@ -933,8 +934,9 @@ export default class HomeScreen extends React.Component {
       })
         .then((response) => response.json())
         .then((responseJson) => {
-         // alert(JSON.stringify(responseJson))
-          this.setState({ roomBoxByID: responseJson.obj })
+          // alert(JSON.stringify(responseJson))
+          roomBoxByID = responseJson.obj;
+          //this.setState({ roomBoxByID: responseJson.obj })
 
         }).
         catch((error) => { console.log(error) });
@@ -1541,7 +1543,7 @@ export default class HomeScreen extends React.Component {
                 onPress={() => {
                   //this._sendProps();
                   //this._moveToRoomDetail(item)
-                  alert(JSON.stringify(item))
+                  //alert(JSON.stringify(item))
                   this.props.navigation.navigate('RoomDetailScreen', { item });
                 }
                 }
