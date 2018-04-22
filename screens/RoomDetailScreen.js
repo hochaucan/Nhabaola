@@ -700,7 +700,7 @@ export default class RoomDetailScreen extends React.Component {
                                 <TouchableOpacity
                                     onPress={(event) => {
                                         // this.scrollView.scrollTo({ x: 0, y: 200 })
-                                        this._scrollToInput(event.target)
+                                        // this._scrollToInput(event.target)
                                         this.refs.commentInput.focus();
                                         // this.scroll.props.scrollToPosition(0, -50)
                                     }}
@@ -878,6 +878,17 @@ export default class RoomDetailScreen extends React.Component {
                                 returnKeyType={"done"}
                                 onFocus={(event) => {
                                     this._scrollToInput(event.target)
+
+                                    // if (Platform.OS == 'ios') {
+                                    //     this._scrollToInput(event.target)
+                                    // }
+                                    // else {
+                                    //     this.scroll.props.scrollToEnd()
+                                    // }
+
+                                    //this.scroll.props.scrollToPosition(20, 20)
+                                    // this._scrollToInput(event.target)
+
                                 }}
                                 onSubmitEditing={(event) => {
                                     this._postCommentsAsync();
