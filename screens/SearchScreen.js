@@ -1016,7 +1016,7 @@ export default class SearchScreen extends React.Component {
                                         //opacity: 0.8,
 
                                     }}>{convertAmountToWording(item.Price)}</Text>
-                                    
+
 
                                     {/* {item.IsHighlight &&
                                         <Image
@@ -1380,7 +1380,7 @@ export default class SearchScreen extends React.Component {
                         transparent={false}
                         visible={this.state.modalSearchFilterVisible}
                         onRequestClose={() => {
-                            //alert("Modal has been closed.") 
+                            this.setState({ modalSearchFilterVisible: false })
                         }}
                     >
                         <View style={{ flex: 1, marginTop: 30, padding: 10, }}>
@@ -1901,40 +1901,7 @@ export default class SearchScreen extends React.Component {
 
                 </PopupDialog>
 
-                {/* Modal Radius Ios*/}
-                {/* <Modal
-                    style={{}}
-                    animationType={"slide"}
-                    transparent={true}
-                    visible={this.state.modalRadius}
-                    onRequestClose={() => {
-                        //alert("Modal has been closed.")
-                    }}
-                >
-
-                    <Picker
-                        style={{
-                            flex: 1,
-                            marginTop: height * 0.59,
-                            backgroundColor: '#fff',
-                        }}
-                        itemStyle={{ color: '#73aa2a' }}
-                        mode='dropdown'
-                        selectedValue={this.state.radius}
-                        onValueChange={(itemValue, itemIndex) => {
-                            this.setState({
-                                radius: itemValue,
-                                modalRadius: false,
-                            })
-                        }}>
-                        <Picker.Item label="2 km" value="2" />
-                        <Picker.Item label="4 km" value="4" />
-                        <Picker.Item label="6 km" value="6" />
-                        <Picker.Item label="8 km" value="8" />
-                        <Picker.Item label="10 km" value="10" />
-                    </Picker>
-
-                </Modal> */}
+               
 
                 {/* Popup Loading Indicator */}
                 <PopupDialog

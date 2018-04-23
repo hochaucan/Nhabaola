@@ -933,7 +933,9 @@ export default class ProfileScreen extends React.Component {
                     animationType={"slide"}
                     transparent={false}
                     visible={this.state.modalHelp}
-                    onRequestClose={() => { }}
+                    onRequestClose={() => {
+                        this.setState({ modalHelp: false })
+                    }}
                 >
                     <View style={{ flexDirection: 'row', padding: 20, marginTop: Platform.OS === 'ios' ? 20 : 0, }}>
                         <TouchableOpacity

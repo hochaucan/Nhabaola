@@ -1339,40 +1339,6 @@ export default class UpdateRoomScreen extends React.Component {
                     </View>
                 </PopupDialog>
 
-                {/* Modal BDS Ios*/}
-                <Modal
-                    style={{}}
-                    animationType={"slide"}
-                    transparent={true}
-                    visible={this.state.modalBDS}
-                    onRequestClose={() => {
-                        //alert("Modal has been closed.")
-                    }}
-                >
-
-                    <Picker // Android
-                        style={{
-                            flex: 1,
-                            marginTop: height * 0.58,
-                            backgroundColor: '#fff',
-                        }}
-                        mode='dropdown'
-                        selectedValue={this.state.selectedCategory}
-                        onValueChange={(itemValue, itemIndex) =>
-                            this.setState({
-                                selectedCategory: itemValue,
-                                modalBDS: false,
-                            })}>
-                        {/* <Picker.Item label='-- Chọn loại BĐS --' value='0' /> */}
-                        {this.state.roomCategory.map((y, i) => {
-                            return (
-                                <Picker.Item key={i} label={y.CatName} value={y.ID} />
-                            )
-                        })}
-
-                    </Picker>
-                </Modal>
-
             </View>
 
         );

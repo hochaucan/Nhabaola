@@ -1082,7 +1082,7 @@ export default class RoomDetailScreen extends React.Component {
                     transparent={false}
                     visible={this.state.modalReport}
                     onRequestClose={() => {
-                        //alert("Modal has been closed.")
+                        this.setState({ modalReport: false })
                     }}
                 >
 

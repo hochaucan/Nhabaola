@@ -1941,9 +1941,9 @@ export default class HomeScreen extends React.Component {
           animationType={"slide"}
           transparent={false}
           visible={this.state.modalResetPassword1}
-          // onRequestClose={() => {
-          //   //alert("Modal has been closed.")
-          // }}
+          onRequestClose={() => {
+            this.setState({ modalResetPassword1: false })
+          }}
           onShow={() => {
             this.refs.iosResetUserNameInput.focus()
           }}
@@ -2114,9 +2114,9 @@ export default class HomeScreen extends React.Component {
           animationType={"slide"}
           transparent={false}
           visible={this.state.modalResetPassword2}
-          // onRequestClose={() => {
-          //   //alert("Modal has been closed.")
-          // }}
+          onRequestClose={() => {
+            this.setState({ modalResetPassword2: false })
+          }}
           onShow={() => {
             this.refs.ActiveKeyInput.focus();
           }}
@@ -2355,9 +2355,9 @@ export default class HomeScreen extends React.Component {
           animationType={"slide"}
           transparent={false}
           visible={this.state.modalLogin}
-        // onRequestClose={() => {
-        //   //alert("Modal has been closed.")
-        // }}
+          onRequestClose={() => {
+            this.setState({ modalLogin: false })
+          }}
         // onShow={() => {
         //   this.refs.iosUserNameInput.focus()
         // }}
@@ -2600,9 +2600,9 @@ export default class HomeScreen extends React.Component {
           animationType={"slide"}
           transparent={false}
           visible={this.state.modalReport}
-        // onRequestClose={() => {
-        //   //alert("Modal has been closed.")
-        // }}
+          onRequestClose={() => {
+            this.setState({ modalReport: false })
+          }}
         >
 
           {this.state.modalLoading &&
@@ -2717,9 +2717,9 @@ export default class HomeScreen extends React.Component {
           animationType={"slide"}
           transparent={false}
           visible={this.state.modalRegisterAccount}
-        // onRequestClose={() => {
-        //   //alert("Modal has been closed.")
-        // }}
+          onRequestClose={() => {
+            this.setState({ modalRegisterAccount: false })
+          }}
         >
           <ScrollView>
 
