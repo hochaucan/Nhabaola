@@ -1133,7 +1133,7 @@ export default class UpdateRoomScreen extends React.Component {
                                     this._scrollToInput(event.target)
                                 }}
                                 containerStyle={{ borderWidth: 0.5, borderColor: '#73aa2a', borderRadius: 10, }}
-                                inputStyle={{ padding: 10, height: 140 }}
+                                inputStyle={{ padding: 10, height: 140, paddingRight: Platform.OS == 'ios' ? 50 : 0 }}
                                 placeholder='Vui lòng nhập thông tin chi tiết'
                                 multiline={true}
                                 autoCapitalize='sentences'

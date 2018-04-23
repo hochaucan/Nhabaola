@@ -970,7 +970,7 @@ export default class PostRoomScreen extends React.Component {
                                     this._scrollToInput(event.target)
                                 }}
                                 containerStyle={{ borderWidth: 0.5, borderColor: '#73aa2a', borderRadius: 10, }}
-                                inputStyle={{ padding: 10, height: 120 }}
+                                inputStyle={{ padding: 10, height: 120, paddingRight: Platform.OS == 'ios' ? 50 : 0 }}
                                 placeholder='Vui lòng nhập thông tin chi tiết'
                                 multiline={true}
                                 //numberOfLines={5}
@@ -1187,7 +1187,7 @@ export default class PostRoomScreen extends React.Component {
                     </View>
                 </PopupDialog>
 
-              
+
 
             </View>
 
