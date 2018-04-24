@@ -42,6 +42,7 @@ import { responsiveHeight, responsiveWidth, responsiveFontSize } from 'react-nat
 import convertAmountToWording from '../api/convertAmountToWording'
 import registerForPushNotificationsAsync from '../api/registerForPushNotificationsAsync';
 import globalVariable from '../components/Global'
+import notifyNBLAsync from '../api/notifyNBLAsync';
 
 const homePlace = {
   description: 'Home',
@@ -1073,7 +1074,7 @@ export default class HomeScreen extends React.Component {
       })
         .then((response) => response.json())
         .then((responseJson) => {
-
+          //alert(_reportTypeId)
           if (JSON.stringify(responseJson.ErrorCode) === "0") { // Report successful
             this.popupReportNBL.dismiss();
 
@@ -1085,12 +1086,28 @@ export default class HomeScreen extends React.Component {
               //Alert.alert('Thông báo', 'Cảm ơn bạn đã báo cáo chúng tôi!');
             }
 
+            // // Notify Admin 
+            // notifyNBLAsync('ExponentPushToken[ycjiZbIzuZuk5oS0EhzWTB]'
+            //   , { "screen": "RoomDetailScreen", "params": { "roomBoxID": _roomId} } //{ ...roombox }
+            //   , "default"
+            //   , this.state.profile.FullName + " Phàn nàn:"
+            //   , "Không đúng địa chỉ hoặc Không gọi được hoặc Nhà đã cho thuê"
+            // ); //pushToken, data, sound, title, body
+
             this.setState({
               reportAddress: false,
               reportCall: false,
               reportHouse: false,
             })
 
+          }
+          else { //Post Error
+            if (Platform.OS === 'android') {
+              ToastAndroid.showWithGravity('Lỗi, vui lòng liên hệ Admin trong mục Giúp Đỡ!', ToastAndroid.SHORT, ToastAndroid.TOP);
+            }
+            else {
+              Alert.alert('Thông báo', 'Lỗi, vui lòng liên hệ Admin trong mục Giúp Đỡ!');
+            }
           }
 
           if (Platform.OS == 'ios') {
@@ -2578,6 +2595,15 @@ export default class HomeScreen extends React.Component {
                 icon={{ name: 'md-cloud-upload', type: 'ionicon' }}
                 title='Gửi'
                 onPress={() => {
+
+                  // Notify Admin 
+                  notifyNBLAsync('ExponentPushToken[ycjiZbIzuZuk5oS0EhzWTB]'
+                    , { "screen": "RoomDetailScreen", "params": { "roomBoxID": this.state.reportRoomId } } //{ ...roombox }
+                    , "default"
+                    , this.state.profile.FullName + " phàn nàn:"
+                    , "Không đúng địa chỉ hoặc Không gọi được hoặc Nhà đã cho thuê"
+                  ); //pushToken, data, sound, title, body
+
                   if (this.state.reportAddress) {
                     this._reportNBLAsync(2, this.state.reportRoomId)
                   }
@@ -2587,6 +2613,7 @@ export default class HomeScreen extends React.Component {
                   if (this.state.reportHouse) {
                     this._reportNBLAsync(5, this.state.reportRoomId)
                   }
+
 
                 }}
               />
@@ -2673,6 +2700,16 @@ export default class HomeScreen extends React.Component {
                 icon={{ name: 'md-cloud-upload', type: 'ionicon' }}
                 title='Gửi'
                 onPress={() => {
+
+                  // Notify Admin 
+                  notifyNBLAsync('ExponentPushToken[ycjiZbIzuZuk5oS0EhzWTB]'
+                    , { "screen": "RoomDetailScreen", "params": { "roomBoxID": this.state.reportRoomId } } //{ ...roombox }
+                    , "default"
+                    , this.state.profile.FullName + " phàn nàn:"
+                    , "Không đúng địa chỉ hoặc Không gọi được hoặc Nhà đã cho thuê"
+                  ); //pushToken, data, sound, title, body
+
+
                   if (this.state.reportAddress) {
                     this._reportNBLAsync(2, this.state.reportRoomId)
                   }

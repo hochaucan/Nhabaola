@@ -1059,6 +1059,14 @@ export default class RoomDetailScreen extends React.Component {
                                 icon={{ name: 'md-cloud-upload', type: 'ionicon' }}
                                 title='Gửi'
                                 onPress={() => {
+                                    // Notify Admin 
+                                    notifyNBLAsync('ExponentPushToken[ycjiZbIzuZuk5oS0EhzWTB]'
+                                        , { "screen": "RoomDetailScreen", "params": { "roomBoxID": this.state.roomBox.ID} } //{ ...roombox }
+                                        , "default"
+                                        , this.state.profile.FullName + " phàn nàn:"
+                                        , "Không đúng địa chỉ hoặc Không gọi được hoặc Nhà đã cho thuê"
+                                    ); //pushToken, data, sound, title, body
+
                                     if (this.state.reportAddress) {
                                         this._reportNBLAsync(2, this.state.roomBox.ID)
                                     }
@@ -1153,14 +1161,23 @@ export default class RoomDetailScreen extends React.Component {
                                 icon={{ name: 'md-cloud-upload', type: 'ionicon' }}
                                 title='Gửi'
                                 onPress={() => {
+
+                                    // Notify Admin 
+                                    notifyNBLAsync('ExponentPushToken[ycjiZbIzuZuk5oS0EhzWTB]'
+                                        , { "screen": "RoomDetailScreen", "params": { "roomBoxID": this.state.roomBox.ID } } //{ ...roombox }
+                                        , "default"
+                                        , this.state.profile.FullName + " phàn nàn:"
+                                        , "Không đúng địa chỉ hoặc Không gọi được hoặc Nhà đã cho thuê"
+                                    ); //pushToken, data, sound, title, body
+
                                     if (this.state.reportAddress) {
-                                        this._reportNBLAsync(2, this.state.reportRoomId)
+                                        this._reportNBLAsync(2, this.state.roomBox.ID)
                                     }
                                     if (this.state.reportCall) {
-                                        this._reportNBLAsync(3, this.state.reportRoomId)
+                                        this._reportNBLAsync(3, this.state.roomBox.ID)
                                     }
                                     if (this.state.reportHouse) {
-                                        this._reportNBLAsync(5, this.state.reportRoomId)
+                                        this._reportNBLAsync(5, this.state.roomBox.ID)
                                     }
 
                                 }}
