@@ -371,7 +371,11 @@ export default class SearchScreen extends React.Component {
         // console.warn(val);
     }
     componentWillMount() {
-        this._getLocationAsync();
+
+        setTimeout(() => {
+            this._getLocationAsync();
+        }, 2000);
+
         this._getCategoryFromStorageAsync();
 
         // if (Platform.OS === 'android' && !Constants.isDevice) {
@@ -425,8 +429,14 @@ export default class SearchScreen extends React.Component {
             latitudeDelta: LATITUDE_DELTA,
             longitudeDelta: LONGITUDE_DELTA
         }
+
         await this.setState({ mapRegion: region });
-        this._getRoomByFilter();
+
+        await this._getRoomByFilter();
+        setTimeout(() => {
+            this._getRoomByFilter();
+        }, 2000);
+
 
         // Save current location to global variable
         globalVariable.LOCATION.LATITUDE = location.coords.latitude;
@@ -908,7 +918,7 @@ export default class SearchScreen extends React.Component {
                         onRegionChangeComplete={(mapRegion) => {
                             this.setState({ mapRegion })
                         }}
-                        provider='google'
+                        // provider='google'
                         showsUserLocation={false}
                         showsMyLocationButton={false}
                         followsUserLocation={false}
@@ -1901,7 +1911,7 @@ export default class SearchScreen extends React.Component {
 
                 </PopupDialog>
 
-               
+
 
                 {/* Popup Loading Indicator */}
                 <PopupDialog

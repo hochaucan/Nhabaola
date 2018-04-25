@@ -101,7 +101,12 @@ export default class RoomDetailScreen extends React.Component {
 
         if (this.state.isComment) {
             //setTimeout(() => this.scrollView.scrollTo({ x: 0, y: 500 }), 10);
-            this.refs.commentInput.focus();
+            if (Platform.OS == 'ios') {
+                this.refs.commentInput.focus();
+            } else {
+                this.refs.commentInput2.focus();
+            }
+
         }
     }
 
@@ -701,7 +706,11 @@ export default class RoomDetailScreen extends React.Component {
                                     onPress={(event) => {
                                         // this.scrollView.scrollTo({ x: 0, y: 200 })
                                         // this._scrollToInput(event.target)
-                                        this.refs.commentInput.focus();
+                                        if (Platform.OS == 'ios') {
+                                            this.refs.commentInput.focus();
+                                        } else {
+                                            this.refs.commentInput2.focus();
+                                        }
                                         // this.scroll.props.scrollToPosition(0, -50)
                                     }}
                                 >
@@ -836,8 +845,11 @@ export default class RoomDetailScreen extends React.Component {
                         </TouchableOpacity>
 
                         <MapView
-                            provider='google'
-                            style={styles.CardMapView}
+                            // provider='google'
+                            style={{
+                                alignSelf: 'stretch',
+                                height: 170,
+                            }}
                             region={roomLocation}
                             onRegionChange={this._handleMapRegionChange}
                         >
@@ -907,6 +919,57 @@ export default class RoomDetailScreen extends React.Component {
                                 <Text style={styles.cardCommentSubmitText}>Gửi</Text>
                             </TouchableOpacity>
                         </View>
+                        {Platform.OS == 'android' &&
+                            <View style={{
+                                flex: 1,
+                                flexDirection: 'row',
+                                height: 0,
+                                paddingTop: 20, paddingRight: 20, paddingLeft: 20,
+                                marginTop: 50,
+                            }}>
+                                <TextInput
+                                    style={{
+                                        flex: 3,
+                                        borderWidth: 0.8,
+                                        borderColor: '#a4d227',
+                                        height: 40,
+                                        padding: 5,
+                                        borderRadius: 5,
+                                    }}
+                                    ref='commentInput2'
+                                    returnKeyType={"done"}
+                                    onFocus={(event) => {
+                                        this._scrollToInput(event.target)
+
+                                        // if (Platform.OS == 'ios') {
+                                        //     this._scrollToInput(event.target)
+                                        // }
+                                        // else {
+                                        //     this.scroll.props.scrollToEnd()
+                                        // }
+
+                                        //this.scroll.props.scrollToPosition(20, 20)
+                                        // this._scrollToInput(event.target)
+
+                                    }}
+                                    onSubmitEditing={(event) => {
+                                        this._postCommentsAsync();
+                                    }}
+
+                                    placeholder='Bình luận'
+                                    underlineColorAndroid='transparent'
+                                    value={this.state.commentContent}
+                                    onChangeText={(commentContent) => this.setState({ commentContent })}
+                                ></TextInput>
+                                <TouchableOpacity style={styles.cardCommentSubmit}
+                                    onPress={async () => {
+                                        this._postCommentsAsync();
+                                    }}
+                                >
+                                    <Text style={styles.cardCommentSubmitText}>Gửi</Text>
+                                </TouchableOpacity>
+                            </View>
+                        }
                     </KeyboardAvoidingView>
 
 
@@ -1061,7 +1124,7 @@ export default class RoomDetailScreen extends React.Component {
                                 onPress={() => {
                                     // Notify Admin 
                                     notifyNBLAsync('ExponentPushToken[ycjiZbIzuZuk5oS0EhzWTB]'
-                                        , { "screen": "RoomDetailScreen", "params": { "roomBoxID": this.state.roomBox.ID} } //{ ...roombox }
+                                        , { "screen": "RoomDetailScreen", "params": { "roomBoxID": this.state.roomBox.ID } } //{ ...roombox }
                                         , "default"
                                         , this.state.profile.FullName + " phàn nàn:"
                                         , "Không đúng địa chỉ hoặc Không gọi được hoặc Nhà đã cho thuê"
@@ -1210,11 +1273,7 @@ const styles = StyleSheet.create({
     cardMapViewBox: {
         padding: 20,
     },
-    CardMapView: {
-        alignSelf: 'stretch',
-        height: 170,
-        // marginTop: 20
-    },
+
 
     cardMapBar: {
         height: 35,

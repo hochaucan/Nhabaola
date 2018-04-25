@@ -102,7 +102,7 @@ export default TabNavigator(
     tabBarPosition: 'top',
     animationEnabled: true,
     swipeEnabled: true,
-    lazy: Platform.OS == 'ios' ? true : false,
+    lazy: false,//Platform.OS == 'ios' ? false : false,
     tabBarOptions: {
       labelStyle: {
         // fontSize: 10,

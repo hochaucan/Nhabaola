@@ -596,7 +596,7 @@ export default class PostRoomScreen extends React.Component {
                             style={{ height: 150, alignSelf: 'stretch' }}
                             ref={ref => { this.map = ref; }}
                             region={this.state.mapRegion}
-                            provider='google'
+                            // provider='google'
                             showsUserLocation={false}
                             showsMyLocationButton={false}
                             followsUserLocation={false}
@@ -642,7 +642,11 @@ export default class PostRoomScreen extends React.Component {
                                     this._scrollToInput(event.target)
                                 }}
                                 type={'only-numbers'}
-                                style={{ flex: 1, padding: 5, borderColor: '#73aa2a', marginLeft: -9, marginRight: 20, }}
+                                style={{
+                                    flex: 1, padding: 5, borderColor: '#73aa2a',
+                                    marginLeft: -9, marginRight: 20,
+                                    // paddingTop: Platform.OS == 'ios' ? 5 : 0,
+                                }}
                                 placeholder=''
                                 underlineColorAndroid='#73aa2a'
                                 blurOnSubmit={true}
