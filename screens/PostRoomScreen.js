@@ -120,7 +120,13 @@ export default class PostRoomScreen extends React.Component {
     }
 
     componentDidMount() {
-        //alert(topDate)
+
+        // Auto popup to ask Address when post Room
+        setTimeout(
+            () => {
+                this.popupSearching.show()
+            },
+            1200);
     }
 
     _getSessionKeyFromStorageAsync = async () => {
@@ -245,6 +251,8 @@ export default class PostRoomScreen extends React.Component {
         // alert(globalVariable.PHONE_TOKEN)
         //return
 
+        let cellPhoneVN = /(09|01[2|6|8|9])+([0-9]{8})\b/;
+
         //Form validation
         if (Platform.OS === 'android') {
             if (this.state.postRoomImage1 === null
@@ -266,6 +274,13 @@ export default class PostRoomScreen extends React.Component {
                 this.refs['contactPhoneInput'].getElement().focus();
                 return;
             }
+
+            if (cellPhoneVN.test(this.state.contactPhone) === false) {
+                ToastAndroid.showWithGravity('Vui lòng nhập đúng số Điện Thoại Di Động Việt Nam', ToastAndroid.SHORT, ToastAndroid.TOP);
+                this.refs['contactPhoneInput'].getElement().focus();
+                return;
+            }
+
             if (this.state.price === '') {
                 ToastAndroid.showWithGravity('Vui lòng nhập giá', ToastAndroid.SHORT, ToastAndroid.TOP);
                 this.refs['priceInput'].getElement().focus();
@@ -307,6 +322,11 @@ export default class PostRoomScreen extends React.Component {
                 this.refs['contactPhoneInput'].getElement().focus();
                 return;
             }
+            if (cellPhoneVN.test(this.state.contactPhone) === false) {
+                Alert.alert('Vui lòng nhập đúng số Điện Thoại Di Động Việt Nam');
+                //this.refs['contactPhoneInput'].getElement().focus();
+                return;
+            }
             if (this.state.price === '') {
                 Alert.alert('Vui lòng nhập giá');
                 this.refs['priceInput'].getElement().focus();
@@ -323,7 +343,7 @@ export default class PostRoomScreen extends React.Component {
             }
             if (this.state.detailInfo === '') {
                 Alert.alert('Vui lòng nhập thông tin chi tiết');
-                this.refs.roomInfoInput.focus();
+                //this.refs.roomInfoInput.focus();
                 return;
             }
         }
@@ -556,12 +576,8 @@ export default class PostRoomScreen extends React.Component {
                     </View>
                     {/* <FormLabel style={{ borderBottomWidth: 0.7, borderColor: '#a4d227', marginTop: 15, }}>Địa chỉ</FormLabel> */}
                     <View style={{ height: 270, padding: 20, }}>
-                        {/* <FormInput
-                containerStyle={{ marginLeft: 0, marginRight: 0, }}
-                placeholder='Vui lòng nhập địa chỉ'
-                autoCapitalize='sentences'
-                maxLength={300}
-              /> */}
+
+                        {/* Address */}
                         <TouchableOpacity
                             style={{
                                 marginBottom: 10,
@@ -574,7 +590,6 @@ export default class PostRoomScreen extends React.Component {
                         >
                             <Text>{this.state.selectedAddress}</Text>
                         </TouchableOpacity>
-
 
 
                         <MapView
@@ -1046,11 +1061,16 @@ export default class PostRoomScreen extends React.Component {
                     onDismissed={() => {
                         Keyboard.dismiss();
                     }}
+                    onShown={() => {
+
+                        //this.refs['textInput'].getElement().focus();
+                        //this.refs.textInput.focus();
+                    }}
                 >
                     <GooglePlacesAutocomplete
-                        placeholder="Tìm kiếm địa chỉ"
+                        placeholder="Vui lòng nhập địa chỉ"
                         minLength={1} // minimum length of text to search
-                        autoFocus={false}
+                        autoFocus={true}
                         returnKeyType={'search'} // Can be left out for default return key https://facebook.github.io/react-native/docs/textinput.html#returnkeytype
                         listViewDisplayed="auto" // true/false/undefined
                         fetchDetails={true}

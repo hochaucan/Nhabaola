@@ -21,7 +21,6 @@ import {
   ActivityIndicator,
   AsyncStorage,
   Keyboard,
-  Easing,
 } from 'react-native';
 import { WebBrowser, ImagePicker, Facebook, Google, Notifications } from 'expo';
 import { MonoText } from '../components/StyledText';
@@ -68,7 +67,7 @@ function numberWithCommas(x) {
   return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
 }
 
-export default class HomeScreen extends React.Component {
+export default class RoomByCategoryScreen extends React.Component {
   static navigationOptions = {
     tabBarLabel: 'Trang chủ',
     title: 'Trang chủ',
@@ -82,7 +81,6 @@ export default class HomeScreen extends React.Component {
       sessionKey: null,
       //dataUsers: users,
       refresh: false,
-      refreshCategory: false,
       // txt: 'test threshole',
       isActionButtonVisible: true, // 1. Define a state variable for showing/hiding the action-button 
       modalVisible: false,
@@ -150,7 +148,6 @@ export default class HomeScreen extends React.Component {
       ratingRoomId: 0,
       reportRoomId: 0,
       flatListIsEnd: false,
-      roomByCatHeigh: new Animated.Value(40),
     }
 
     // state = { selected: false };
@@ -302,73 +299,28 @@ export default class HomeScreen extends React.Component {
   }
 
   _onScroll = (event) => {
-
-
-
-    // Simple fade-in / fade-out animation for Action Button
-    // const CustomLayoutLinear = {
-    //   duration: 100,
-    //   create: { type: LayoutAnimation.Types.linear, property: LayoutAnimation.Properties.opacity },
-    //   update: { type: LayoutAnimation.Types.linear, property: LayoutAnimation.Properties.opacity },
-    //   delete: { type: LayoutAnimation.Types.linear, property: LayoutAnimation.Properties.opacity }
-    // }
-    // // Check if the user is scrolling up or down by confronting the new scroll position with your own one
-    // const currentOffset = event.nativeEvent.contentOffset.y
-    // const direction = (currentOffset > 0 && currentOffset > this._listViewOffset)
-    //   ? 'down'
-    //   : 'up'
-    // // If the user is scrolling down (and the action-button is still visible) hide it
-    // const isActionButtonVisible = direction === 'up'
-    // if (isActionButtonVisible !== this.state.isActionButtonVisible) {
-    //   LayoutAnimation.configureNext(CustomLayoutLinear)
-    //   this.setState({ isActionButtonVisible })
-
-    // }
-    // // Update your scroll position
-    // this._listViewOffset = currentOffset
-
-    //alert(currentOffset)
-
-    // Hide and Show Category on Homepage
+    // Simple fade-in / fade-out animation
+    const CustomLayoutLinear = {
+      duration: 100,
+      create: { type: LayoutAnimation.Types.linear, property: LayoutAnimation.Properties.opacity },
+      update: { type: LayoutAnimation.Types.linear, property: LayoutAnimation.Properties.opacity },
+      delete: { type: LayoutAnimation.Types.linear, property: LayoutAnimation.Properties.opacity }
+    }
     // Check if the user is scrolling up or down by confronting the new scroll position with your own one
     const currentOffset = event.nativeEvent.contentOffset.y
     const direction = (currentOffset > 0 && currentOffset > this._listViewOffset)
       ? 'down'
       : 'up'
-
-    if (direction === 'up') {
-      //this.setState({ roomByCatHeigh: 40 })
-
-      Animated.timing( // Show
-        this.state.roomByCatHeigh,
-        {
-          toValue: 40,
-          easing: Easing.bounce,
-          duration: 200,
-        }
-      ).start();
-
-    } else {
-      //this.setState({ roomByCatHeigh: 0 })
-
-      Animated.timing( // Hide
-        this.state.roomByCatHeigh,
-        {
-          toValue: 0,
-          easing: Easing.bounce,
-          duration: 100,
-        }
-      ).start();
+    // If the user is scrolling down (and the action-button is still visible) hide it
+    const isActionButtonVisible = direction === 'up'
+    if (isActionButtonVisible !== this.state.isActionButtonVisible) {
+      LayoutAnimation.configureNext(CustomLayoutLinear)
+      this.setState({ isActionButtonVisible })
     }
+    // Update your scroll position
+    this._listViewOffset = currentOffset
 
-    //   Animated.timing(
-    //     this.state.roomByCatHeigh,
-    //     {
-    //         toValue: 20,
-    //         easing: Easing.bounce,
-    //         duration: 500,
-    //     }
-    // ).start();
+    //alert(currentOffset)
   }
 
   _getProfileFromStorageAsync = async () => {
@@ -1193,7 +1145,7 @@ export default class HomeScreen extends React.Component {
     //alert(this.state.roomPageIndex)
 
     try {
-      await fetch("http://nhabaola.vn/api/RoomBox/FO_RoomBox_GetAllData", {
+      await fetch("http://nhabaola.vn/api/RoomBox/FO_RoomBox_GetAllDataByCategory", {
         method: 'POST',
         headers: {
           Accept: 'application/json',
@@ -1201,8 +1153,8 @@ export default class HomeScreen extends React.Component {
         },
         body: JSON.stringify({
           "PageIndex": this.state.roomPageIndex,
-          "PageCount": this.state.roomPageCount
-
+          "PageCount": this.state.roomPageCount,
+          "CategoryID": this.props.navigation.state.params.CategoryID
         }),
       })
         .then((response) => response.json())
@@ -1517,100 +1469,30 @@ export default class HomeScreen extends React.Component {
     return (
       // <View style={styles.container} key={this.state.refreshScreen}>
       <View style={styles.container} key={this.state.refreshScreen}>
-        {/* Flatlist Category */}
 
-        <Animated.View style={{
-          // height: 100,
-          // backgroundColor: '#a4d227',
-          height: this.state.roomByCatHeigh,
-          marginTop: 12,
-          marginLeft: 2,
-          marginBottom: 5,
-        }}
-        >
-          <FlatList
-            //onScroll={this._onScroll}
-            // ref='homepage'
-            refreshing={this.state.refreshCategory}
-            keyboardShouldPersistTaps="always"
-            removeClippedSubviews={true}
-            initialNumToRender={2}
-            shouldItemUpdate={this._shouldItemUpdate}
-            onRefresh={() => {
-              //this._refreshRoomBox()
-            }}
-            horizontal={true}
-            onEndReachedThreshold={0.2}
-            onEndReached={() => {
-              // this.setState({
-              //   refresh: true
-              // });
-              // if (this.state.flatListIsEnd == false) {
-              //   this._getRoomBoxAsync(false);
-              // }
+        {/* Header */}
+        <View style={{ flexDirection: 'row', padding: 10, backgroundColor: '#a4d227', alignItems: 'center' }}>
+          <TouchableOpacity
+            style={{}}
+            onPress={() => {
+              this.props.navigation.goBack()
+              // this.props.navigation.state.params.onRefreshScreen({ refreshScreen: true });
+              //this.props.navigation.state.params._getWalletAsync();
 
-              {/* this.setState({
-              refresh: true
-            }); */}
-            }}
-
-            data={this.state.roomCategory}
-            extraData={this.state}
-            renderItem={({ item }) =>
-              <View style={{
-                // flex: 1,
-                // height: height * 0.8,
-                // borderColor: '#d6d7da',
-                // padding: 0,
-                // flexDirection: 'column',
-                marginRight: 10,
-                // paddingBottom: 10,
-              }}>
-
-                {/* <SocialIcon
-                  type='medium'
-                  raised={true}
-                  onPress={this._handleFacebookLogin}
-                /> */}
-                {/* <Icon
-                  raised
-                  name='ios-home'
-                  type='ionicon'
-                  color='#f50'
-                  onPress={() => this._handleFacebookLogin} /> */}
-                <TouchableOpacity
-                  onPress={() => {
-                    //alert("can")
-                    this.props.navigation.navigate('RoomByCategoryScreen', { CategoryID: item.ID, CategoryName: item.CatName })
-                    //this.props.navigation.navigate('ProfileScreen', { key: 'CanHo' });
-                  }}
-                >
-                  <Text style={{
-                    // marginTop: 5,
-                    fontSize: responsiveFontSize(1.5),
-                    color: '#73aa2a',//'#9B9D9D',
-                    // backgroundColor: '#a4d227',
-                    borderRadius: Platform.OS == 'ios' ? 10 : 50,
-                    borderWidth: 1,
-                    borderColor: '#a4d227',
-                    padding: 10,
-
-                  }}>{item.CatName}</Text>
-                </TouchableOpacity>
-              </View>
-
-            }
-            keyExtractor={item => item.ID + 'nhabaola'}
-
-          /* horizontal={false}
-          numColumns={3} */
-          />
-        </Animated.View>
+            }}>
+            <Ionicons style={{ fontSize: 28, color: '#fff', }} name='md-arrow-back'></Ionicons>
+          </TouchableOpacity>
+          <Text style={{
+            marginLeft: 20, color: '#fff',
+            fontSize: responsiveFontSize(2.2),
+            justifyContent: 'center'
+          }}>{this.props.navigation.state.params.CategoryName}</Text>
+        </View>
 
 
         {/* Flatlist RoomBox */}
         <FlatList
-          onScroll={this._onScroll}
+          //onScroll={this._onScroll}
           // ref='homepage'
           refreshing={this.state.refresh}
           keyboardShouldPersistTaps="always"

@@ -15,6 +15,7 @@ import {
     ToastAndroid,
     Alert,
     ActivityIndicator,
+    Keyboard,
 } from 'react-native';
 import { ExpoLinksView } from '@expo/samples';
 import { Constants } from 'expo';
@@ -65,6 +66,7 @@ export default class PostedRoomHIstoryScreen extends React.Component {
             refreshScreen: false,
             // fromDate: minDate,
             // toDate: topDate,
+            searchFlatlistKey: '',
 
         }
     }
@@ -433,6 +435,51 @@ export default class PostedRoomHIstoryScreen extends React.Component {
                 </View> */}
 
                 <View style={styles.searchRoolResultBox}>
+
+                    {/* Search Flatlist */}
+                    <View style={{
+                        paddingBottom: 5, flexDirection: 'row',
+                        alignItems: 'center',
+                        //justifyContent: 'space-between'
+                    }}>
+                        <Ionicons style={{ flex: 1, fontSize: 32, color: '#73aa2a' }} name='ios-search-outline' />
+                        <FormInput
+                            ref='searchFlatlistInput'
+                            returnKeyType={"done"}
+                            onSubmitEditing={(event) => {
+                                //this._postRoomAsync();
+                                Keyboard.dismiss();
+                            }}
+                            onFocus={(event) => {
+                                //this._scrollToInput(event.target)
+                            }}
+                            containerStyle={{
+                                flex: 12,
+                                borderWidth: 0.5, borderColor: '#73aa2a', borderRadius: 10,
+                                marginBottom: 10,
+                                height: 35,
+
+                            }}
+                            inputStyle={{
+                                paddingLeft: 10,
+                                paddingTop: Platform.OS == 'ios' ? 5 : 0,
+                                paddingBottom: Platform.OS == 'ios' ? 5 : 10,
+                                height: 30,
+                                // paddingRight: Platform.OS == 'ios' ? 50 : 0
+                            }}
+                            placeholder='Tìm kiếm...'
+                            //multiline={false}
+                            //numberOfLines={5}
+                            //keyboardType='default'
+                            autoCapitalize='sentences'
+                            //maxLength={300}
+                            clearButtonMode='always'
+                            underlineColorAndroid='#fff'
+                            blurOnSubmit={false}
+                            value={this.state.searchFlatlistKey}
+                            onChangeText={(searchFlatlistKey) => this.setState({ searchFlatlistKey })}
+                        />
+                    </View>
                     <FlatList
                         //onScroll={this._onScroll}
                         //ref='refPostedRoomHistory'
@@ -446,7 +493,7 @@ export default class PostedRoomHIstoryScreen extends React.Component {
                         onEndReached={() => {
                             this._getRoomBoxByUserAsync(false);
                         }}
-                        data={roomBox}
+                        data={roomBox.filter(item => item.Address.includes(this.state.searchFlatlistKey))}
                         renderItem={({ item }) =>
                             <View style={{
                                 borderBottomWidth: 0.3,

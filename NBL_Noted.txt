@@ -26,9 +26,11 @@ this.props.navigation.state.params.onRefreshScreen({ refreshScreen: true, profil
 https://github.com/react-community/create-react-native-app/blob/master/VERSIONS.md
 
 setTimeout(
-      ()=>{this.setState({
+      ()=>{
+          this.setState({
         data: this.state.data,
-      })},
+      })
+      },
       2000);
 
         
