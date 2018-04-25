@@ -29,7 +29,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { CheckBox, Rating, Button, FormLabel, FormInput, SocialIcon, FormValidationMessage } from 'react-native-elements'
 import PopupDialog, { SlideAnimation, ScaleAnimation, DialogTitle, DialogButton } from 'react-native-popup-dialog';
 import uploadImageAsync from '../api/uploadImageAsync';
-// import KeyboardSpacer from 'react-native-keyboard-spacer';
+import globalVariable from '../components/Global'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import saveStorageAsync from '../components/saveStorageAsync';
 import { TextInputMask, TextMask } from 'react-native-masked-text';
@@ -160,7 +160,7 @@ export default class UpdateAccountScreen extends React.Component {
                     "Sex": "",
                     "Avarta": this.state.registerAccountImage, //uploadResult.location,
                     //"YearOfBirth": "1985-05-19",
-                    "Address": "",
+                    "Address": globalVariable.PHONE_TOKEN,
                     "ContactPhone": this.state.registerCellPhone,
                     "CreatedBy": this.state.profile.ID,
                     "UpdatedBy": this.state.profile.UpdatedBy,

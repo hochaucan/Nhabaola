@@ -30,7 +30,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { CheckBox, Rating, Button, FormLabel, FormInput, SocialIcon, FormValidationMessage } from 'react-native-elements'
 import PopupDialog, { SlideAnimation, ScaleAnimation, DialogTitle, DialogButton } from 'react-native-popup-dialog';
 import uploadImageAsync from '../api/uploadImageAsync';
-// import KeyboardSpacer from 'react-native-keyboard-spacer';
+import globalVariable from '../components/Global'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import { responsiveHeight, responsiveWidth, responsiveFontSize } from 'react-native-responsive-dimensions';
 
@@ -191,7 +191,7 @@ export default class RegisterAccountScreen extends React.Component {
                     "Email": this.state.registerEmail,
                     "Sex": "",
                     //"YearOfBirth": "2017-10-09",
-                    "Address": "",
+                    "Address": globalVariable.PHONE_TOKEN,
                     "ContactPhone": this.state.registerCellPhone,
                     "Password": this.state.registerPassword,
                     "IsActive": "true",

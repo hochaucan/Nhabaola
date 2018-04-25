@@ -1916,7 +1916,7 @@ export default class HomeScreen extends React.Component {
         }
         {/* Action Button */}
         {this.state.isActionButtonVisible ?
-          <ActionButton buttonColor="#73aa2a"
+          <ActionButton buttonColor="#73aa2a" shadowStyle={{elevation:2}}
           //bgColor={"red"}
           >
 
