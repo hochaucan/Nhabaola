@@ -56,6 +56,24 @@ Data: [{
 }]
 
 
+* EASING
+step0
+step1
+linear
+ease
+quad
+cubic
+poly
+sin
+circle
+exp
+elastic
+back
+bounce
+bezier
+in
+out
+inOut
 
 
 * Scroll Animation

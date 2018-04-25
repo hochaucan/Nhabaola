@@ -343,7 +343,7 @@ export default class HomeScreen extends React.Component {
         this.state.roomByCatHeigh,
         {
           toValue: 40,
-          easing: Easing.bounce,
+          easing: Easing.linear,
           duration: 200,
         }
       ).start();
@@ -355,7 +355,7 @@ export default class HomeScreen extends React.Component {
         this.state.roomByCatHeigh,
         {
           toValue: 0,
-          easing: Easing.bounce,
+          easing: Easing.linear,
           duration: 100,
         }
       ).start();

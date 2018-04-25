@@ -101,11 +101,12 @@ export default class RoomDetailScreen extends React.Component {
 
         if (this.state.isComment) {
             //setTimeout(() => this.scrollView.scrollTo({ x: 0, y: 500 }), 10);
-            if (Platform.OS == 'ios') {
-                this.refs.commentInput.focus();
-            } else {
-                this.refs.commentInput2.focus();
-            }
+            this.refs.commentInput.focus();
+            // if (Platform.OS == 'ios') {
+            //     this.refs.commentInput.focus();
+            // } else {
+            //     this.refs.commentInput2.focus();
+            // }
 
         }
     }
@@ -706,11 +707,13 @@ export default class RoomDetailScreen extends React.Component {
                                     onPress={(event) => {
                                         // this.scrollView.scrollTo({ x: 0, y: 200 })
                                         // this._scrollToInput(event.target)
-                                        if (Platform.OS == 'ios') {
-                                            this.refs.commentInput.focus();
-                                        } else {
-                                            this.refs.commentInput2.focus();
-                                        }
+
+                                        this.refs.commentInput.focus();
+                                        // if (Platform.OS == 'ios') {
+                                        //     this.refs.commentInput.focus();
+                                        // } else {
+                                        //     this.refs.commentInput2.focus();
+                                        // }
                                         // this.scroll.props.scrollToPosition(0, -50)
                                     }}
                                 >
@@ -919,7 +922,7 @@ export default class RoomDetailScreen extends React.Component {
                                 <Text style={styles.cardCommentSubmitText}>Gửi</Text>
                             </TouchableOpacity>
                         </View>
-                        {Platform.OS == 'android' &&
+                        {/* {Platform.OS == 'android' &&
                             <View style={{
                                 flex: 1,
                                 flexDirection: 'row',
@@ -969,7 +972,7 @@ export default class RoomDetailScreen extends React.Component {
                                     <Text style={styles.cardCommentSubmitText}>Gửi</Text>
                                 </TouchableOpacity>
                             </View>
-                        }
+                        } */}
                     </KeyboardAvoidingView>
 
 
