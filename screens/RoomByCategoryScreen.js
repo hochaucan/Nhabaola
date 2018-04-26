@@ -150,29 +150,13 @@ export default class RoomByCategoryScreen extends React.Component {
       flatListIsEnd: false,
     }
 
-    // state = { selected: false };
   }
   // 2. Define a variable that will keep track of the current scroll position
   _listViewOffset = 0
 
   onRefreshScreen = async (data) => {
     await this.setState(data);
-
-    //alert(this.state.loginUsername)
   }
-
-  // static _onRefreshScreen = data => {
-  //   this.setState(data);
-  //   //alert(JSON.stringify(data))
-  // }
-
-  // onSelect = data => {
-  //   this.setState(data);
-  //   //this.data;
-  //   // alert(JSON.stringify(data))
-
-  //   // alert(this.state.selected)
-  // };
 
   static refreshRoomBoxAfterPost = async () => {
     // alert("can")
@@ -230,7 +214,11 @@ export default class RoomByCategoryScreen extends React.Component {
   }
 
   _refreshRoomBox() {
-    this._getRoomBoxAsync(true);
+    if (this.props.navigation.state.params.CategoryID == '0') {
+      this._getRoomBoxHighlightAsync(true);//Get RoomBox By Highlight
+    } else {
+      this._getRoomBoxByCategoryAsync(true);  // Get RoomBox By Category 
+    }
     this._getWalletAsync();
   }
 
@@ -266,8 +254,6 @@ export default class RoomByCategoryScreen extends React.Component {
     // a notification every time you open the app. Check out the source
     // for this function in api/registerForPushNotificationsAsync.js
 
-    //registerForPushNotificationsAsync();
-
     // Watch for incoming notifications
     this._notificationSubscription = Notifications.addListener(
       this._handleNotification
@@ -290,7 +276,14 @@ export default class RoomByCategoryScreen extends React.Component {
   componentWillMount() {
 
     this._getCategoryAsync();
-    this._getRoomBoxAsync(true);
+
+
+    if (this.props.navigation.state.params.CategoryID == '0') {
+      this._getRoomBoxHighlightAsync(true);//Get RoomBox By Highlight
+    } else {
+      this._getRoomBoxByCategoryAsync(true);  // Get RoomBox By Category 
+    }
+
     this._getProfileFromStorageAsync();
     this._getSessionKeyFromStorageAsync();
 
@@ -298,30 +291,30 @@ export default class RoomByCategoryScreen extends React.Component {
     this._notificationSubscription && this._notificationSubscription.remove();
   }
 
-  _onScroll = (event) => {
-    // Simple fade-in / fade-out animation
-    const CustomLayoutLinear = {
-      duration: 100,
-      create: { type: LayoutAnimation.Types.linear, property: LayoutAnimation.Properties.opacity },
-      update: { type: LayoutAnimation.Types.linear, property: LayoutAnimation.Properties.opacity },
-      delete: { type: LayoutAnimation.Types.linear, property: LayoutAnimation.Properties.opacity }
-    }
-    // Check if the user is scrolling up or down by confronting the new scroll position with your own one
-    const currentOffset = event.nativeEvent.contentOffset.y
-    const direction = (currentOffset > 0 && currentOffset > this._listViewOffset)
-      ? 'down'
-      : 'up'
-    // If the user is scrolling down (and the action-button is still visible) hide it
-    const isActionButtonVisible = direction === 'up'
-    if (isActionButtonVisible !== this.state.isActionButtonVisible) {
-      LayoutAnimation.configureNext(CustomLayoutLinear)
-      this.setState({ isActionButtonVisible })
-    }
-    // Update your scroll position
-    this._listViewOffset = currentOffset
+  // _onScroll = (event) => {
+  //   // Simple fade-in / fade-out animation
+  //   const CustomLayoutLinear = {
+  //     duration: 100,
+  //     create: { type: LayoutAnimation.Types.linear, property: LayoutAnimation.Properties.opacity },
+  //     update: { type: LayoutAnimation.Types.linear, property: LayoutAnimation.Properties.opacity },
+  //     delete: { type: LayoutAnimation.Types.linear, property: LayoutAnimation.Properties.opacity }
+  //   }
+  //   // Check if the user is scrolling up or down by confronting the new scroll position with your own one
+  //   const currentOffset = event.nativeEvent.contentOffset.y
+  //   const direction = (currentOffset > 0 && currentOffset > this._listViewOffset)
+  //     ? 'down'
+  //     : 'up'
+  //   // If the user is scrolling down (and the action-button is still visible) hide it
+  //   const isActionButtonVisible = direction === 'up'
+  //   if (isActionButtonVisible !== this.state.isActionButtonVisible) {
+  //     LayoutAnimation.configureNext(CustomLayoutLinear)
+  //     this.setState({ isActionButtonVisible })
+  //   }
+  //   // Update your scroll position
+  //   this._listViewOffset = currentOffset
 
-    //alert(currentOffset)
-  }
+  //   //alert(currentOffset)
+  // }
 
   _getProfileFromStorageAsync = async () => {
     try {
@@ -896,27 +889,6 @@ export default class RoomByCategoryScreen extends React.Component {
 
   }
 
-  // _postImage = async () => {
-  //   var can = 'http://uploads.im/api?upload=http://www.google.com/images/srpr/nav_logo66.png'
-  //   // console.log(JSON.stringify(this.state.objectRegisterAccount))
-  //   //Post to register account
-  //   try {
-  //     await fetch(can)
-  //       .then((response) => response.json())
-  //       .then((responseJson) => {
-
-  //         //alert(JSON.stringify(responseJson))
-  //         console.log(responseJson)
-
-  //       })
-  //       .catch((e) => { console.log(e) });
-  //   } catch (error) {
-  //     console.log(error)
-  //   }
-
-
-  // }
-
   _getRoomByIDAsync = async (roomID) => {
     try {
       await fetch("http://nhabaola.vn//api/RoomBox/FO_RoomBox_Get/" + roomID, {
@@ -936,7 +908,7 @@ export default class RoomByCategoryScreen extends React.Component {
         .then((responseJson) => {
           // alert(JSON.stringify(responseJson))
           roomBoxByID = responseJson.obj;
-          //this.setState({ roomBoxByID: responseJson.obj })
+
 
         }).
         catch((error) => { console.log(error) });
@@ -968,20 +940,10 @@ export default class RoomByCategoryScreen extends React.Component {
 
 
           this.setState({
-            //roomCategory: JSON.stringify(responseJson.obj)
-            // roomCategory: responseJson.obj.map((y) => { return y.CatName })
-            //roomCategory: JSON.parse(this._getCategoryAsync('roomCategory'))
+
             roomCategory: responseJson.obj
           })
 
-          //this._getStorageAsync('roomCategory')
-          // this._getStorageAsync('roomCategory')
-
-          // {
-          //   this.state.response.map((y) => {
-          //     return (<Text>{y.prnt_usernamez}</Text>);
-          //   })
-          // }
         }).
         catch((error) => { console.log(error) });
     } catch (error) {
@@ -1125,7 +1087,67 @@ export default class RoomByCategoryScreen extends React.Component {
 
   }
 
-  _getRoomBoxAsync = async (isNew) => {
+  _getRoomBoxHighlightAsync = async (isNew) => {
+    await this.setState({ refresh: true })
+
+    if (!isNew) { // Loading more page 
+      this.setState((prevState, props) => ({
+        page: prevState.page + 1,
+      }));
+    }
+    else { // Refresh page
+      roomBox = [];
+      this.setState({ page: 1, flatListIsEnd: false })
+    }
+
+    this.setState({ // Calculate page index
+      roomPageIndex: (this.state.page - 1) * this.state.roomPageCount
+    })
+
+
+    try {
+      await fetch("http://nhabaola.vn/api/RoomBox/FO_RoomBox_GetAllData", {
+        method: 'POST',
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          "PageIndex": this.state.roomPageIndex,
+          "PageCount": this.state.roomPageCount
+
+        }),
+      })
+        .then((response) => response.json())
+        .then((responseJson) => {
+          responseJson.obj.map((y) => {
+            if (y.IsHighlight) {
+              roomBox.push(y);
+            }
+          })
+
+          setTimeout(
+            () => {
+              this.setState({
+                refresh: false
+              })
+            },
+            1000);
+
+          // End Flatlist
+          if (JSON.stringify(responseJson.obj.length) == '0') {
+            this.setState({ flatListIsEnd: true, })
+          }
+
+        }).
+        catch((error) => { console.log(error) });
+    } catch (error) {
+      console.log(error)
+    }
+
+  }
+
+  _getRoomBoxByCategoryAsync = async (isNew) => {
     await this.setState({ refresh: true })
 
     if (!isNew) { // Loading more page 
@@ -1160,33 +1182,9 @@ export default class RoomByCategoryScreen extends React.Component {
         .then((response) => response.json())
         .then((responseJson) => {
 
-
-
-          //this._saveStorageAsync('FO_RoomBox_GetAllData', JSON.stringify(responseJson.obj))
-          // responseJson.obj.map((y) => { return y.CatName })
-
-
           responseJson.obj.map((y) => {
             roomBox.push(y);
           })
-          // if (isNew) {
-          //   responseJson.obj.map((y) => {
-          //     roomBox.unshift(y);
-          //   })
-          // } else {
-          //   responseJson.obj.map((y) => {
-          //     roomBox.push(y);
-          //   })
-          // }
-
-          //roomBox.push(responseJson.obj);
-
-          // this.setState({
-          //   roomBox: responseJson.obj,
-          //   refresh: false,
-          // })
-
-          // this.setState({ refresh: false })
 
           setTimeout(
             () => {
@@ -1199,7 +1197,6 @@ export default class RoomByCategoryScreen extends React.Component {
           // End Flatlist
           if (JSON.stringify(responseJson.obj.length) == '0') {
             this.setState({ flatListIsEnd: true, })
-            // alert(JSON.stringify(responseJson.obj.length))
           }
 
         }).
@@ -1507,7 +1504,12 @@ export default class RoomByCategoryScreen extends React.Component {
             //   refresh: true
             // });
             if (this.state.flatListIsEnd == false) {
-              this._getRoomBoxAsync(false);
+
+              if (this.props.navigation.state.params.CategoryID == '0') {
+                this._getRoomBoxHighlightAsync(false);//Get RoomBox By Highlight
+              } else {
+                this._getRoomBoxByCategoryAsync(false);  // Get RoomBox By Category 
+              }
             }
 
             {/* this.setState({
@@ -1518,6 +1520,7 @@ export default class RoomByCategoryScreen extends React.Component {
           data={roomBox}//{this.state.dataUsers}
           extraData={this.state}
           renderItem={({ item }) =>
+
             <View style={{
               flex: 1,
               height: height * 0.8,

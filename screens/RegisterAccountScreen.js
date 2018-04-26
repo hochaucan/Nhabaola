@@ -33,7 +33,6 @@ import uploadImageAsync from '../api/uploadImageAsync';
 import globalVariable from '../components/Global'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import { responsiveHeight, responsiveWidth, responsiveFontSize } from 'react-native-responsive-dimensions';
-import globalVariable from '../components/Global'
 import notifyNBLAsync from '../api/notifyNBLAsync';
 
 var { height, width } = Dimensions.get('window');
@@ -209,6 +208,14 @@ export default class RegisterAccountScreen extends React.Component {
                         // Login after register account
                         this.props.navigation.state.params.login();
                         this.props.navigation.goBack();
+
+                        // Notify Admin 
+                        notifyNBLAsync(globalVariable.ADMIN_PUSH_TOKEN
+                            , { "screen": "HomeScreen", "params": { "roomBoxID": 'DKTK' } }
+                            , "default"
+                            , this.state.registerFullName + " Đăng Ký Tài khoản NBL"
+                            , this.state.registerCellPhone + ' - ' + this.state.registerEmail
+                        ); //pushToken, data, sound, title, body
 
                         this.setState({
                             registerCellPhone: '',
@@ -487,14 +494,6 @@ export default class RegisterAccountScreen extends React.Component {
                                 onPress={() => {
                                     Keyboard.dismiss()
                                     this._registerAccountAsync();
-
-                                    // Notify Admin 
-                                    notifyNBLAsync(globalVariable.ADMIN_PUSH_TOKEN
-                                        , { "screen": "RoomDetailScreen", "params": { "roomBoxID": 'DKTK' } }
-                                        , "default"
-                                        , this.state.registerFullName + " Đăng Ký Tài khoản NBL"
-                                        , this.state.registerCellPhone + ' - ' + this.state.registerEmail
-                                    ); //pushToken, data, sound, title, body
                                 }}
                             />
                         </View>

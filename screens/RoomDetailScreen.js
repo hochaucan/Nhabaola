@@ -1005,7 +1005,7 @@ export default class RoomDetailScreen extends React.Component {
                                 }}>
                                     <View style={{ flex: 2 }}>
                                         <Image
-                                            style={{ width: 40, height: 40, borderRadius: 100, }}
+                                            style={{ width: 40, height: 40, borderRadius: Platform.OS == 'ios' ? 20 : 100, }}
                                             source={{ uri: item.Avarta }}
                                         //source={require('../images/app-icon.png')}
                                         />

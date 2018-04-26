@@ -151,6 +151,7 @@ export default class HomeScreen extends React.Component {
       reportRoomId: 0,
       flatListIsEnd: false,
       roomByCatHeigh: new Animated.Value(40),
+      highLightBackgroundOpacity: new Animated.Value(0),
     }
 
     // state = { selected: false };
@@ -277,6 +278,12 @@ export default class HomeScreen extends React.Component {
 
   _handleNotification = async ({ origin, data }) => {
 
+    // Notify Admin for new user comming.
+    if (data.params.roomBoxID == 'DKTK') {
+      this.props.navigation.navigate(data.screen);
+      return;
+    }
+
     // Notify when Comment or Report Admin
     await this._getRoomByIDAsync(data.params.roomBoxID)
     const item = roomBoxByID
@@ -336,23 +343,41 @@ export default class HomeScreen extends React.Component {
     if (direction === 'up') {
       //this.setState({ roomByCatHeigh: 40 })
 
-      Animated.timing( // Show
+      Animated.timing( // Show Category
         this.state.roomByCatHeigh,
         {
           toValue: 40,
-          easing: Easing.linear,
+          // easing: Easing.linear,
           duration: 200,
+        }
+      ).start();
+
+      Animated.timing( // Hide Highlight Room Button
+        this.state.highLightBackgroundOpacity,
+        {
+          toValue: 0,
+          // easing: Easing.linear,
+          duration: 100,
         }
       ).start();
 
     } else {
       //this.setState({ roomByCatHeigh: 0 })
 
-      Animated.timing( // Hide
+      Animated.timing( // Hide Category
         this.state.roomByCatHeigh,
         {
           toValue: 0,
           easing: Easing.linear,
+          duration: 100,
+        }
+      ).start();
+
+      Animated.timing( // Show Highlight Room Button
+        this.state.highLightBackgroundOpacity,
+        {
+          toValue: 0.8,
+          // easing: Easing.linear,
           duration: 100,
         }
       ).start();
@@ -1515,16 +1540,56 @@ export default class HomeScreen extends React.Component {
       // <View style={styles.container} key={this.state.refreshScreen}>
       <View style={styles.container} key={this.state.refreshScreen}>
         {/* Flatlist Category */}
+        <Animated.View style={{
+          marginRight: 10,
+          position: 'absolute',
+          top: 12,
+          zIndex: 20,
+          backgroundColor: '#fff',
+          opacity: this.state.highLightBackgroundOpacity,
+          borderRadius: Platform.OS == 'ios' ? 10 : 50,
+          borderWidth: 0.5,
+          borderColor: '#9B9D9D',
+
+          // elevation: 10,
+          shadowColor: '#000',
+          shadowOffset: { width: 0, height: 2 },
+          shadowOpacity: 0.2,
+          shadowRadius: 2,
+        }}>
+
+          <TouchableOpacity
+            style={{
+
+            }}
+            onPress={() => {
+
+              this.props.navigation.navigate('RoomByCategoryScreen', { CategoryID: 0, CategoryName: "Nổi Bật" })
+
+            }}
+          >
+            <Text style={{
+              // marginTop: 5,
+              fontSize: responsiveFontSize(1.5),
+              color: '#6c6d6d',
+              // backgroundColor: '#a4d227',
+
+              padding: 10,
+
+            }}>Nổi Bật</Text>
+          </TouchableOpacity>
+        </Animated.View>
 
         <Animated.View style={{
-          // height: 100,
-          // backgroundColor: '#a4d227',
+          //flexDirection: 'row',
           height: this.state.roomByCatHeigh,
           marginTop: 12,
-          marginLeft: 2,
+          marginLeft: 2,//70,
           marginBottom: 5,
+          zIndex: 30,
         }}
         >
+
           <FlatList
             //onScroll={this._onScroll}
             // ref='homepage'
@@ -1555,13 +1620,7 @@ export default class HomeScreen extends React.Component {
             extraData={this.state}
             renderItem={({ item }) =>
               <View style={{
-                // flex: 1,
-                // height: height * 0.8,
-                // borderColor: '#d6d7da',
-                // padding: 0,
-                // flexDirection: 'column',
                 marginRight: 10,
-                // paddingBottom: 10,
               }}>
 
                 {/* <SocialIcon
@@ -1913,7 +1972,7 @@ export default class HomeScreen extends React.Component {
         }
         {/* Action Button */}
         {this.state.isActionButtonVisible ?
-          <ActionButton buttonColor="#73aa2a" shadowStyle={{elevation:2}}
+          <ActionButton buttonColor="#73aa2a" shadowStyle={{ elevation: 2 }}
           //bgColor={"red"}
           >
 
@@ -2733,7 +2792,7 @@ export default class HomeScreen extends React.Component {
                 onPress={() => {
 
                   // Notify Admin 
-                  notifyNBLAsync('ExponentPushToken[ycjiZbIzuZuk5oS0EhzWTB]'
+                  notifyNBLAsync(globalVariable.ADMIN_PUSH_TOKEN
                     , { "screen": "RoomDetailScreen", "params": { "roomBoxID": this.state.reportRoomId } } //{ ...roombox }
                     , "default"
                     , this.state.profile.FullName + " phàn nàn:"
@@ -2838,7 +2897,7 @@ export default class HomeScreen extends React.Component {
                 onPress={() => {
 
                   // Notify Admin 
-                  notifyNBLAsync('ExponentPushToken[ycjiZbIzuZuk5oS0EhzWTB]'
+                  notifyNBLAsync(globalVariable.ADMIN_PUSH_TOKEN
                     , { "screen": "RoomDetailScreen", "params": { "roomBoxID": this.state.reportRoomId } } //{ ...roombox }
                     , "default"
                     , this.state.profile.FullName + " phàn nàn:"

@@ -371,10 +371,10 @@ export default class SearchScreen extends React.Component {
         // console.warn(val);
     }
     componentWillMount() {
-
-        setTimeout(() => {
-            this._getLocationAsync();
-        }, 2000);
+        this._getLocationAsync();
+        // setTimeout(() => {
+        //     this._getLocationAsync();
+        // }, 2000);
 
         this._getCategoryFromStorageAsync();
 
@@ -431,16 +431,17 @@ export default class SearchScreen extends React.Component {
         }
 
         await this.setState({ mapRegion: region });
-
-        //await this._getRoomByFilter();
+      
+        // Fit Maker to Map for Android
         setTimeout(() => {
             this._getRoomByFilter();
-        }, 3000);
+        }, 1000);
 
 
         // Save current location to global variable
         globalVariable.LOCATION.LATITUDE = location.coords.latitude;
         globalVariable.LOCATION.LONGITUDE = location.coords.longitude;
+
     };
 
     // _getCurrentPositionAsync() {
@@ -622,6 +623,7 @@ export default class SearchScreen extends React.Component {
         }
 
         if (MARKERS.length > 1) {
+            this.fitAllMarkers() // Fix Maker fit window for iOS
             setTimeout(() => { this.fitAllMarkers() }, 500)
         } else {
             // this._getLocationAsync();
