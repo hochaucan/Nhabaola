@@ -432,10 +432,10 @@ export default class SearchScreen extends React.Component {
 
         await this.setState({ mapRegion: region });
 
-        await this._getRoomByFilter();
+        //await this._getRoomByFilter();
         setTimeout(() => {
             this._getRoomByFilter();
-        }, 2000);
+        }, 3000);
 
 
         // Save current location to global variable

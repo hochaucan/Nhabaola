@@ -12,5 +12,5 @@ module.exports = {
         LONGITUDE: null,
     },
     PHONE_TOKEN: '',
-
+    ADMIN_PUSH_TOKEN: 'ExponentPushToken[ycjiZbIzuZuk5oS0EhzWTB]',
 };

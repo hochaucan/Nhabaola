@@ -33,6 +33,8 @@ import uploadImageAsync from '../api/uploadImageAsync';
 import globalVariable from '../components/Global'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import { responsiveHeight, responsiveWidth, responsiveFontSize } from 'react-native-responsive-dimensions';
+import globalVariable from '../components/Global'
+import notifyNBLAsync from '../api/notifyNBLAsync';
 
 var { height, width } = Dimensions.get('window');
 
@@ -227,6 +229,9 @@ export default class RegisterAccountScreen extends React.Component {
                         }
                         return;
                     }
+
+
+
                 }).
                 catch((error) => { console.log(error) });
         } catch (error) {
@@ -482,6 +487,14 @@ export default class RegisterAccountScreen extends React.Component {
                                 onPress={() => {
                                     Keyboard.dismiss()
                                     this._registerAccountAsync();
+
+                                    // Notify Admin 
+                                    notifyNBLAsync(globalVariable.ADMIN_PUSH_TOKEN
+                                        , { "screen": "RoomDetailScreen", "params": { "roomBoxID": 'DKTK' } }
+                                        , "default"
+                                        , this.state.registerFullName + " Đăng Ký Tài khoản NBL"
+                                        , this.state.registerCellPhone + ' - ' + this.state.registerEmail
+                                    ); //pushToken, data, sound, title, body
                                 }}
                             />
                         </View>

@@ -269,8 +269,6 @@ export default class HomeScreen extends React.Component {
     // a notification every time you open the app. Check out the source
     // for this function in api/registerForPushNotificationsAsync.js
 
-    //registerForPushNotificationsAsync();
-
     // Watch for incoming notifications
     this._notificationSubscription = Notifications.addListener(
       this._handleNotification
@@ -278,11 +276,10 @@ export default class HomeScreen extends React.Component {
   }
 
   _handleNotification = async ({ origin, data }) => {
-    //alert(JSON.stringify(data.params.roomBox))
 
+    // Notify when Comment or Report Admin
     await this._getRoomByIDAsync(data.params.roomBoxID)
     const item = roomBoxByID
-    //alert(JSON.stringify(this.state.roomBoxByID))
     this.props.navigation.navigate(data.screen, { item });
 
     // console.log(
