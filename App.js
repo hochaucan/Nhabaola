@@ -59,14 +59,14 @@ export default class App extends React.Component {
 
   componentDidMount() {
     // Animate NBL Logo
-    Animated.timing(                  // Animate over time
-      this.state.topLogo,            // The animated value to drive
-      {
-        toValue: 40,                   // Animate to opacity: 1 (opaque)
-        duration: 3000,
-        easing: Easing.bounce,         // Make it take a while
-      }
-    ).start();
+    // Animated.timing(                  // Animate over time
+    //   this.state.topLogo,            // The animated value to drive
+    //   {
+    //     toValue: 40,                   // Animate to opacity: 1 (opaque)
+    //     duration: 3000,
+    //     easing: Easing.bounce,         // Make it take a while
+    //   }
+    // ).start();
   }
 
   render() {
@@ -94,7 +94,7 @@ export default class App extends React.Component {
               top: 28,//topLogo,//3
               left: width / 2 - 20,
               zIndex: 2,
-              borderRadius: Platform.OS === 'ios' ? 10 : 100,
+              borderRadius: Platform.OS === 'ios' ? 20 : 100,
 
             }}
             /* source={{ uri: 'https://facebook.github.io/react/img/logo_og.png' }} */

@@ -479,6 +479,11 @@ export default class RoomDetailScreen extends React.Component {
     //     getDirections(data)
     // }
 
+    onRefreshScreen = data => {
+        this.setState(data);
+
+    }
+
     render() {
         //const { picture, name, email, phone, login, dob, location } = this.props.navigation.state.params;
         //const { item } = this.props.navigation.state.params;
@@ -518,6 +523,27 @@ export default class RoomDetailScreen extends React.Component {
                         <Ionicons style={{ fontSize: 28, color: '#fff', }} name='md-arrow-back'></Ionicons>
                     </TouchableOpacity>
                     <Text style={{ marginLeft: 20, color: '#fff', fontSize: responsiveFontSize(2.2), justifyContent: 'center' }}>Chi tiết</Text>
+
+                    {/* Update in Room Detail */}
+                    {/* {this.state.roomBox.CreatedBy == this.state.profile.ID &&
+                        <TouchableOpacity
+                            style={{
+                                position: 'absolute',
+                                right: 15, top: 15,
+                            }}
+
+                            onPress={() => {
+                                this.props.navigation.navigate('UpdateRoomScreen', {
+                                    onRefreshScreen: this.onRefreshScreen,
+                                    item: this.state.roomBox,
+                                })
+                            }}
+                        >
+                            <Ionicons style={{
+                                color: '#fff', fontSize: responsiveFontSize(3.5)
+                            }} name='md-settings' />
+                        </TouchableOpacity>
+                    } */}
                 </View>
 
                 {/* Avatar */}

@@ -151,7 +151,7 @@ export default class HomeScreen extends React.Component {
       reportRoomId: 0,
       flatListIsEnd: false,
       roomByCatHeigh: new Animated.Value(40),
-      highLightBackgroundOpacity: new Animated.Value(0),
+      highLightBackgroundOpacity: new Animated.Value(-100),
     }
 
     // state = { selected: false };
@@ -348,14 +348,14 @@ export default class HomeScreen extends React.Component {
         {
           toValue: 40,
           // easing: Easing.linear,
-          duration: 200,
+          duration: 150,
         }
       ).start();
 
       Animated.timing( // Hide Highlight Room Button
         this.state.highLightBackgroundOpacity,
         {
-          toValue: 0,
+          toValue: -100,
           // easing: Easing.linear,
           duration: 100,
         }
@@ -368,7 +368,7 @@ export default class HomeScreen extends React.Component {
         this.state.roomByCatHeigh,
         {
           toValue: 0,
-          easing: Easing.linear,
+          // easing: Easing.linear,
           duration: 100,
         }
       ).start();
@@ -376,8 +376,8 @@ export default class HomeScreen extends React.Component {
       Animated.timing( // Show Highlight Room Button
         this.state.highLightBackgroundOpacity,
         {
-          toValue: 0.8,
-          // easing: Easing.linear,
+          toValue: 1,
+        //  easing: Easing.linear,
           duration: 100,
         }
       ).start();
@@ -1543,10 +1543,11 @@ export default class HomeScreen extends React.Component {
         <Animated.View style={{
           marginRight: 10,
           position: 'absolute',
+          left:this.state.highLightBackgroundOpacity,//2,
           top: 12,
           zIndex: 20,
           backgroundColor: '#fff',
-          opacity: this.state.highLightBackgroundOpacity,
+          opacity: 0.85,//this.state.highLightBackgroundOpacity,
           borderRadius: Platform.OS == 'ios' ? 10 : 50,
           borderWidth: 0.5,
           borderColor: '#9B9D9D',

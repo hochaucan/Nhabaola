@@ -624,7 +624,7 @@ export default class SearchScreen extends React.Component {
 
         if (MARKERS.length > 1) {
             this.fitAllMarkers() // Fix Maker fit window for iOS
-            setTimeout(() => { this.fitAllMarkers() }, 500)
+            setTimeout(() => { this.fitAllMarkers() }, 700)
         } else {
             // this._getLocationAsync();
         }
