@@ -35,6 +35,8 @@ import convertAmountToWording from '../api/convertAmountToWording'
 import getDirections from 'react-native-google-maps-directions'
 import globalVariable from '../components/Global'
 import SimplePicker from 'react-native-simple-picker';
+import notifyNBLAsync from '../api/notifyNBLAsync';
+import saveStorageAsync from '../components/saveStorageAsync';
 
 var { height, width } = Dimensions.get('window');
 
@@ -295,7 +297,7 @@ export default class SearchScreen extends React.Component {
             houseListHeigh: new Animated.Value(responsiveHeight(10)),
             isHouseList: false,
             searchLoading: false,
-
+            profile: null,
         }
     }
 
@@ -377,6 +379,7 @@ export default class SearchScreen extends React.Component {
         // }, 2000);
 
         this._getCategoryFromStorageAsync();
+        // this._getProfileFromStorageAsync();
 
         // if (Platform.OS === 'android' && !Constants.isDevice) {
         //     this.setState({
@@ -431,7 +434,7 @@ export default class SearchScreen extends React.Component {
         }
 
         await this.setState({ mapRegion: region });
-      
+
         // Fit Maker to Map for Android
         setTimeout(() => {
             this._getRoomByFilter();
@@ -676,6 +679,28 @@ export default class SearchScreen extends React.Component {
     //             : <Text style={{ flex: 2, marginBottom: 15, marginTop: 20, marginLeft: 20 }}>{this.state.multiSliderPriceValue[0]} đến {this.state.multiSliderPriceValue[1]}</Text>
     // }
 
+    _getProfileFromStorageAsync = async () => {
+        try {
+            var value = await AsyncStorage.getItem('FO_Account_Login');
+
+            if (value !== null) {
+                this.setState({
+                    profile: JSON.parse(value)
+                })
+
+                this._getWalletAsync();
+            }
+            else {
+                this.setState({
+                    profile: null
+                })
+            }
+
+        } catch (e) {
+            console.log(e);
+        }
+    }
+
     render() {
 
         let currentMaker = null;
@@ -693,6 +718,8 @@ export default class SearchScreen extends React.Component {
             <View style={{
                 flex: 1,
             }}>
+
+                {/* Loading Indicator */}
                 {this.state.searchLoading &&
                     <ActivityIndicator
                         style={{
@@ -706,6 +733,7 @@ export default class SearchScreen extends React.Component {
                         color="#73aa2a"
                     />
                 }
+                {/* Filter lable */}
                 {!(this.state.selectedCategory == '' && this.state.unitPriceLable == '' && this.state.unitAcreageLable == '') &&
                     <Text style={{
                         //color: '#73aa2a',
@@ -855,10 +883,15 @@ export default class SearchScreen extends React.Component {
                 /> */}
 
 
+
                 {/* Filter */}
                 <TouchableOpacity
                     style={{
-                        height: 40, position: 'absolute', top: responsiveHeight(2), zIndex: 10, right: 15,
+                        height: 40, position: 'absolute',
+                        top: 10,//responsiveHeight(2),
+                        zIndex: 10,
+                        right: 15,
+                        //left: 10,
                     }}
                     onPress={() => {
                         this.setState({ modalSearchFilterVisible: true })
@@ -867,16 +900,90 @@ export default class SearchScreen extends React.Component {
                     <View style={{
                         backgroundColor: '#a4d227', padding: 5, borderRadius: 10, width: 32,
                         height: 32, justifyContent: 'center',
-                        alignItems: 'center', elevation: 2
+                        alignItems: 'center', elevation: 2,
+                        shadowColor: '#000',
+                        shadowOffset: { width: 0, height: 2 },
+                        shadowOpacity: 0.2,
+                        shadowRadius: 2,
                     }}>
                         <Ionicons style={{ fontSize: 25, color: '#fff', textAlign: 'center' }} name='ios-funnel-outline' />
+                    </View>
+                </TouchableOpacity>
+
+                {/* Broachcast */}
+                <TouchableOpacity
+                    style={{
+                        height: 40, position: 'absolute',
+                        top: 50,//responsiveHeight(2),
+                        zIndex: 10,
+                        right: 15,
+
+                    }}
+                    onPress={async () => {
+                        //this.setState({ modalSearchFilterVisible: true })
+                        // roomBox.map((y) => {
+                        await this._getProfileFromStorageAsync();
+
+                        if (this.state.profile == null) {
+                            if (Platform.OS == 'ios') {
+                                Alert.alert('Thông Báo', 'Bạn vui lòng đăng nhập')
+                            } else {
+                                ToastAndroid.showWithGravity("Bạn vui lòng đăng nhập!", ToastAndroid.SHORT, ToastAndroid.TOP)
+                            }
+
+                        } else {
+                            Alert.alert(
+                                'Thông báo',
+                                'Bạn muốn gửi thông báo đến tất cả người Đăng Tin tìm kiếm được trên Bản Đồ?',
+                                [
+                                    {
+                                        text: 'Hủy', onPress: () => {
+
+                                        }
+                                    },
+                                    {
+                                        text: 'Đồng ý', onPress: () => {
+                                            roomBox.map((y) => {
+                                                // Notify Landlord 
+                                                notifyNBLAsync(y.Images.split('|')[0]//globalVariable.ADMIN_PUSH_TOKEN
+                                                    , { "screen": "RoomDetailScreen", "params": { "roomBoxID": y.ID } } //{ ...roombox }
+                                                    , "default"
+                                                    , this.state.profile.FullName + "-" + this.state.profile.UserName + " tìm kiếm:"
+                                                    , this.state.txtFilterResult
+                                                    + ", bán kính trong vòng " + this.state.radius + " km từ vị trí "
+                                                    + y.Address
+                                                ); //pushToken, data, sound, title, body
+                                            })
+                                        }
+                                    },
+                                ]
+                            );
+                        }
+
+                        // })
+
+
+                    }}
+                >
+                    <View style={{
+                        backgroundColor: '#a4d227', padding: 5, borderRadius: 10, width: 32,
+                        height: 32, justifyContent: 'center',
+                        alignItems: 'center', elevation: 2,
+                        shadowColor: '#000',
+                        shadowOffset: { width: 0, height: 2 },
+                        shadowOpacity: 0.2,
+                        shadowRadius: 2,
+                    }}>
+                        <Ionicons style={{ fontSize: 25, color: '#fff', textAlign: 'center' }} name='md-megaphone' />
                     </View>
                 </TouchableOpacity>
 
                 {/* Search location */}
                 <TouchableOpacity
                     style={{
-                        height: 40, position: 'absolute', top: responsiveHeight(10), zIndex: 10, right: 15,
+                        height: 40, position: 'absolute',
+                        top: 90,//responsiveHeight(10),
+                        zIndex: 10, right: 15,
                     }}
                     onPress={() => {
                         this.popupSearching.show();
@@ -885,7 +992,11 @@ export default class SearchScreen extends React.Component {
                     <View style={{
                         backgroundColor: '#8fb722', padding: 5, borderRadius: 10, width: 32,
                         height: 32, justifyContent: 'center',
-                        alignItems: 'center', elevation: 2
+                        alignItems: 'center', elevation: 2,
+                        shadowColor: '#000',
+                        shadowOffset: { width: 0, height: 2 },
+                        shadowOpacity: 0.2,
+                        shadowRadius: 2,
                     }}>
                         <Ionicons style={{ fontSize: 25, color: '#fff', textAlign: 'center' }} name='ios-search-outline' />
                     </View>
@@ -893,17 +1004,38 @@ export default class SearchScreen extends React.Component {
 
                 {/* Get current location */}
                 <TouchableOpacity
-                    style={{ height: 40, position: 'absolute', top: responsiveHeight(18), zIndex: 10, right: 15, backgroundColor: 'transparent' }}
+                    style={{
+                        height: 40, position: 'absolute',
+                        //top: responsiveHeight(18), 
+                        bottom: 55,
+                        zIndex: 20,
+                        opacity: 0.9,
+                        right: 15, backgroundColor: 'transparent'
+                    }}
                     onPress={async () => {
                         await this.setState({ isSearching: false, searchingMaker: null, })
                         this._getLocationAsync();
                     }}
                 >
                     <View style={{
-                        backgroundColor: '#73aa2a', padding: 5, borderRadius: 10,
-                        width: 32, height: 32, justifyContent: 'center', alignItems: 'center', elevation: 2
+                        backgroundColor: '#fff',//'#73aa2a', 
+                        padding: 6,
+                        borderRadius: 20,
+                        width: 35, height: 35,
+                        justifyContent: 'center',
+                        alignItems: 'center', elevation: 2,
+                        shadowColor: '#000',
+                        shadowOffset: { width: 0, height: 2 },
+                        shadowOpacity: 0.2,
+                        shadowRadius: 2,
+                        borderWidth: 0.7,
+                        borderColor: '#a4d227',
                     }}>
-                        <Ionicons style={{ fontSize: 25, color: '#fff', textAlign: 'center' }} name='ios-locate-outline' />
+                        <Ionicons style={{
+                            fontSize: 25, color: '#73aa2a',
+                            textAlign: 'center',
+                            marginTop: Platform.OS == 'ios' ? -1.5 : 0,
+                        }} name='ios-locate-outline' />
                     </View>
                 </TouchableOpacity>
 

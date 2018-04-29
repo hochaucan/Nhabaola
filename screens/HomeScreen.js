@@ -2792,14 +2792,6 @@ export default class HomeScreen extends React.Component {
                 title='Gửi'
                 onPress={() => {
 
-                  // Notify Admin 
-                  notifyNBLAsync(globalVariable.ADMIN_PUSH_TOKEN
-                    , { "screen": "RoomDetailScreen", "params": { "roomBoxID": this.state.reportRoomId } } //{ ...roombox }
-                    , "default"
-                    , this.state.profile.FullName + " phàn nàn:"
-                    , "Không đúng địa chỉ hoặc Không gọi được hoặc Nhà đã cho thuê"
-                  ); //pushToken, data, sound, title, body
-
                   if (this.state.reportAddress) {
                     this._reportNBLAsync(2, this.state.reportRoomId)
                   }
@@ -2810,6 +2802,13 @@ export default class HomeScreen extends React.Component {
                     this._reportNBLAsync(5, this.state.reportRoomId)
                   }
 
+                    // Notify Admin 
+                    notifyNBLAsync(globalVariable.ADMIN_PUSH_TOKEN
+                      , { "screen": "RoomDetailScreen", "params": { "roomBoxID": this.state.reportRoomId } } //{ ...roombox }
+                      , "default"
+                      , this.state.profile.FullName + " phàn nàn:"
+                      , "Không đúng địa chỉ hoặc Không gọi được hoặc Nhà đã cho thuê"
+                    ); //pushToken, data, sound, title, body
 
                 }}
               />
