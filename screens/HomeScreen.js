@@ -1889,9 +1889,9 @@ export default class HomeScreen extends React.Component {
                             + "\nDiện tích: " + item.Acreage + " mét vuông"
                             + "\nĐịa chỉ: " + item.Address + "\n\nMô tả:\n" + item.Description
                             + "\n\nCài đặt: "
-                            + "\niOS: \nhttps://itunes.apple.com/vn/app/nhabaola/id1287451307?mt=8"
-                            + "\n\nAndroid: \nhttps://play.google.com/store/apps/details?id=vn.nhabaola.nhabaola",
-                          url: '',
+                            + "\nAndroid: \nhttps://play.google.com/store/apps/details?id=vn.nhabaola.nhabaola"
+                            + "\n\niOS:",
+                          url: 'https://itunes.apple.com/vn/app/nhabaola/id1287451307?mt=8',
                           title: '*Chia Sẻ từ Ứng Dụng Nhà Bao La*'
                         }, {
                             // Android only:
@@ -1912,7 +1912,7 @@ export default class HomeScreen extends React.Component {
                             + "\n\nCài đặt: "
                             + "\niOS: \nhttps://itunes.apple.com/vn/app/nhabaola/id1287451307?mt=8"
                             + "\n\nAndroid: \nhttps://play.google.com/store/apps/details?id=vn.nhabaola.nhabaola",
-                          url: 'http://nhabaola.vn',
+                          url: 'https://play.google.com/store/apps/details?id=vn.nhabaola.nhabaola',
                           title: '*Chia Sẻ từ Ứng Dụng Nhà Bao La*'
                         }, {
                             // Android only:
