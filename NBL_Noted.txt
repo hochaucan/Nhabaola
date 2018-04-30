@@ -55,6 +55,22 @@ Data: [{
   "body": "HO CHAU CAN"
 }]
 
+* POST ERROR
+if (Platform.OS === 'android') {
+              ToastAndroid.showWithGravity('Lỗi ' + JSON.stringify(responseJson.ErrorCode) + ', vui lòng liên hệ Admin trong mục Giúp Đỡ!', ToastAndroid.SHORT, ToastAndroid.TOP);
+            }
+            else {
+              Alert.alert('Thông báo', 'Lỗi ' + JSON.stringify(responseJson.ErrorCode) + ', vui lòng liên hệ Admin trong mục Giúp Đỡ!');
+            }
+
+* MESSAGE
+ if (Platform.OS === 'android') {
+                            ToastAndroid.showWithGravity('Bình luận thành công!', ToastAndroid.SHORT, ToastAndroid.TOP);
+                        }
+                        else {
+                            Alert.alert('Thông báo', 'Bình luận thành công!');
+                        }
+
 
 * EASING
 step0

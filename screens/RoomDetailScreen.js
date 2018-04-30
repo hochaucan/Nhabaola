@@ -278,6 +278,12 @@ export default class RoomDetailScreen extends React.Component {
                     if (JSON.stringify(responseJson.ErrorCode) === "0") { //Post comment successful
 
                         this._getCommentsAsync();
+                        if (Platform.OS === 'android') {
+                            ToastAndroid.showWithGravity('Bình luận thành công!', ToastAndroid.SHORT, ToastAndroid.TOP);
+                        }
+                        else {
+                            Alert.alert('Thông báo', 'Bình luận thành công!');
+                        }
 
                         if (this.state.isPushNotification == 'true') {
                             // notifyNBLAsync("ExponentPushToken[X44MIVEIOHZdIZMVverA9J]");
@@ -296,10 +302,10 @@ export default class RoomDetailScreen extends React.Component {
                     }
                     else { //Post Error
                         if (Platform.OS === 'android') {
-                            ToastAndroid.showWithGravity('Lỗi, vui lòng liên hệ Admin trong mục Giúp Đỡ!', ToastAndroid.SHORT, ToastAndroid.TOP);
+                            ToastAndroid.showWithGravity('Lỗi ' + JSON.stringify(responseJson.ErrorCode) + ', vui lòng liên hệ Admin trong mục Giúp Đỡ!', ToastAndroid.SHORT, ToastAndroid.TOP);
                         }
                         else {
-                            Alert.alert('Thông báo', 'Lỗi, vui lòng liên hệ Admin trong mục Giúp Đỡ!');
+                            Alert.alert('Thông báo', 'Lỗi ' + JSON.stringify(responseJson.ErrorCode) + ', vui lòng liên hệ Admin trong mục Giúp Đỡ!');
                         }
                     }
 
