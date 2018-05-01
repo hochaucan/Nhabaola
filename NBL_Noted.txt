@@ -148,12 +148,19 @@ Apple ID: hochaucan@gmail.com
 Pass: Rongxanh1
 Team ID: FMVSD22NXF
 
-
+* FACEBOOK
 Facebook App ID: 485931318448821
 Facebook App Secret: 
 Facebook client token: 
 Facebook Code: 
 Facebook get fields: https://developers.facebook.com/docs/graph-api/using-graph-api/#fieldexpansion
+Facebook Permission: https://developers.facebook.com/docs/facebook-login/permissions/v2.12
+Facebook User ID - Can HO: 1550074775013689
+Facebook GRAPH Explorer
+https://developers.facebook.com/tools/explorer/485931318448821?method=GET&path=1550074775013689%2Fphotos&version=v2.12
+Facebook Test User: {"id":"109653393236472","access_token":"EAAG587OfErUBAEQZAIsllv8ZBDZAhfrzZBfWx2J2LvGGb6usSZA8SCgMvGhFNRO3ttuyDZAnqFdkora89lZC4Rr1u5c5o33jLs9ZCoMQaH1KM6fmqhGPjwGn6QcXRHwJMZCZBI6ZBZCoRJvPtjpPbsFQZAqxWzmx7e0g07OJeOf8oFu6eeje0ht0xvU32i00YpK2U85ZBKZB5uQRdScvWJZBoWGkCV3o","login_url":"https://developers.facebook.com/checkpoint/test-user-login/109653393236472/","email":"eljhxyadmo_1525182920@tfbnw.net","password":"1792583172"}
+
+
 
 
 

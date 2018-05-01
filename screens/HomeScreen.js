@@ -790,47 +790,163 @@ export default class HomeScreen extends React.Component {
     }
   };
 
-  _handleFacebookLogin = async () => {
+  _handleFacebookLogin = async (image, message) => {
+
+    // this.popupLoadingIndicator.show()
+
+    // try {
+    //   //await fetch('https://graph.facebook.com/v2.11/100025728168189/friends?access_token=EAAG587OfErUBAEQp8GmJKVDGB26X0xvxgQboR04gtHsKc5j75V9ZCxyoyhtr3yujILGZBWhIGSZCywdRkfT7iNjFvJOHnfagH5kKjubl5m9cZB2NnLjm09jXtUWALXtcnZAXqAJaXZC3fTHFqDcKLX3z9En8OORpFVNZB41CvL0RYkCfpg6opdekgaBzoqksuOlZBwQpXrGwZAb2iDlKfCLlRsEgZCIDaWlPmr3occd7d68RetiVDlhVEt', {
+    //   //await fetch('https://graph.facebook.com/v2.12/' + profile.id + '/feed?message=Hello World!&access_token=' + token, {
+    //   //await fetch('https://graph.facebook.com/v2.11/oauth/access_token?client_id=485931318448821&client_secret=9435b271a288d4f99f5280e20f18ec1f&grant_type=client_credentials', { //Get App Token
+    //   //await fetch('https://graph.facebook.com/v2.11/485931318448821/accounts?name=Nick HO&installed=true&permissions=publish_actions,user_posts&access_token=485931318448821|9435b271a288d4f99f5280e20f18ec1f', { //Create Test User
+    //   await fetch('https://graph.facebook.com/v2.11/109653393236472/feed?link=' + image + '&message=' + message + '&access_token=EAAG587OfErUBAEQZAIsllv8ZBDZAhfrzZBfWx2J2LvGGb6usSZA8SCgMvGhFNRO3ttuyDZAnqFdkora89lZC4Rr1u5c5o33jLs9ZCoMQaH1KM6fmqhGPjwGn6QcXRHwJMZCZBI6ZBZCoRJvPtjpPbsFQZAqxWzmx7e0g07OJeOf8oFu6eeje0ht0xvU32i00YpK2U85ZBKZB5uQRdScvWJZBoWGkCV3o', { //Post dummy to wall
+    //     //await fetch('https://graph.facebook.com/v2.11/109653393236472/photos?url=' + message + '&access_token=EAAG587OfErUBAEQZAIsllv8ZBDZAhfrzZBfWx2J2LvGGb6usSZA8SCgMvGhFNRO3ttuyDZAnqFdkora89lZC4Rr1u5c5o33jLs9ZCoMQaH1KM6fmqhGPjwGn6QcXRHwJMZCZBI6ZBZCoRJvPtjpPbsFQZAqxWzmx7e0g07OJeOf8oFu6eeje0ht0xvU32i00YpK2U85ZBKZB5uQRdScvWJZBoWGkCV3o', { //Post Photo to wall
+    //     //method: 'GET',
+    //     method: 'POST',
+    //     headers: {
+    //       Accept: 'application/json',
+    //       'Content-Type': 'application/json',
+    //     },
+
+    //     // body: JSON.stringify({
+
+    //     // }),
+    //   })
+    //     .then((response) => response.json())
+    //     .then((responseJson) => {
+
+    //       //alert(JSON.stringify(responseJson))
+    //       //console.log(JSON.stringify(responseJson))
+
+    //       if (JSON.stringify(responseJson).match('id')) { // Post wall facebook successful!
+    //         if (Platform.OS === 'android') {
+    //           ToastAndroid.showWithGravity('Đăng Tin Facebook thành công!', ToastAndroid.SHORT, ToastAndroid.TOP);
+    //         }
+    //         else {
+    //           Alert.alert('Thông báo', 'Đăng Tin Facebook thành công!');
+    //         }
+    //       } else { // Error
+    //         if (Platform.OS === 'android') {
+    //           ToastAndroid.showWithGravity('Lỗi ' + JSON.stringify(responseJson.ErrorCode) + ', vui lòng liên hệ Admin trong mục Giúp Đỡ!', ToastAndroid.SHORT, ToastAndroid.TOP);
+    //         }
+    //         else {
+    //           Alert.alert('Thông báo', 'Lỗi ' + JSON.stringify(responseJson.ErrorCode) + ', vui lòng liên hệ Admin trong mục Giúp Đỡ!');
+    //         }
+    //       }
+
+    //       this.popupLoadingIndicator.dismiss()
+
+    //     }).
+    //     catch((error) => { console.log(error) });
+    // } catch (error) {
+    //   console.log(error)
+    // }
+
+    //return;
+
+
+
+
+
+
+
+
+
     try {
       const { type, token } = await Facebook.logInWithReadPermissionsAsync(
         '485931318448821', // Replace with your own app id in standalone app 485931318448821, Test AppID: 1201211719949057
-        { permissions: ['public_profile', 'email'] }
+        { permissions: ['public_profile', 'user_friends', 'email'] }//'publish_actions','manage_pages','publish_pages'
       );
 
       switch (type) {
         case 'success': {
+         
+          this.popupLoadingIndicator.show()
+
           // Get the user's name using Facebook's Graph API
           const response = await fetch(`https://graph.facebook.com/me?access_token=${token}`);
           const profile = await response.json();
+
           // Alert.alert(
           //   'Logged in!',
-          //   `Hi ${profile.name}!`,
+          //   `${JSON.stringify(profile)}!`,
           // );
 
-          Alert.alert(
-            'Logged in!',
-            `${JSON.stringify(profile)}!`,
-          );
+          //alert(token + ' ' + JSON.stringify(profile))
+
+
+          try {
+            //await fetch('https://graph.facebook.com/v2.11/100025728168189/friends?access_token=EAAG587OfErUBAEQp8GmJKVDGB26X0xvxgQboR04gtHsKc5j75V9ZCxyoyhtr3yujILGZBWhIGSZCywdRkfT7iNjFvJOHnfagH5kKjubl5m9cZB2NnLjm09jXtUWALXtcnZAXqAJaXZC3fTHFqDcKLX3z9En8OORpFVNZB41CvL0RYkCfpg6opdekgaBzoqksuOlZBwQpXrGwZAb2iDlKfCLlRsEgZCIDaWlPmr3occd7d68RetiVDlhVEt', {
+            //await fetch('https://graph.facebook.com/v2.12/' + profile.id + '/feed?message=Hello World!&access_token=' + token, {
+            //await fetch('https://graph.facebook.com/v2.11/oauth/access_token?client_id=485931318448821&client_secret=9435b271a288d4f99f5280e20f18ec1f&grant_type=client_credentials', { //Get App Token
+            //await fetch('https://graph.facebook.com/v2.11/485931318448821/accounts?name=Nick HO&installed=true&permissions=publish_actions,user_posts&access_token=485931318448821|9435b271a288d4f99f5280e20f18ec1f', { //Create Test User
+            await fetch('https://graph.facebook.com/v2.11/109653393236472/feed?link=' + image + '&message=' + message + '&access_token=EAAG587OfErUBAEQZAIsllv8ZBDZAhfrzZBfWx2J2LvGGb6usSZA8SCgMvGhFNRO3ttuyDZAnqFdkora89lZC4Rr1u5c5o33jLs9ZCoMQaH1KM6fmqhGPjwGn6QcXRHwJMZCZBI6ZBZCoRJvPtjpPbsFQZAqxWzmx7e0g07OJeOf8oFu6eeje0ht0xvU32i00YpK2U85ZBKZB5uQRdScvWJZBoWGkCV3o', { //Post dummy to wall
+              //await fetch('https://graph.facebook.com/v2.11/109653393236472/photos?url=' + message + '&access_token=EAAG587OfErUBAEQZAIsllv8ZBDZAhfrzZBfWx2J2LvGGb6usSZA8SCgMvGhFNRO3ttuyDZAnqFdkora89lZC4Rr1u5c5o33jLs9ZCoMQaH1KM6fmqhGPjwGn6QcXRHwJMZCZBI6ZBZCoRJvPtjpPbsFQZAqxWzmx7e0g07OJeOf8oFu6eeje0ht0xvU32i00YpK2U85ZBKZB5uQRdScvWJZBoWGkCV3o', { //Post Photo to wall
+              //method: 'GET',
+              method: 'POST',
+              headers: {
+                Accept: 'application/json',
+                'Content-Type': 'application/json',
+              },
+
+              // body: JSON.stringify({
+
+              // }),
+            })
+              .then((response) => response.json())
+              .then((responseJson) => {
+
+                //alert(JSON.stringify(responseJson))
+                //console.log(JSON.stringify(responseJson))
+
+                if (JSON.stringify(responseJson).match('id')) { // Post wall facebook successful!
+                  if (Platform.OS === 'android') {
+                    ToastAndroid.showWithGravity('Đăng Tin Facebook thành công!', ToastAndroid.SHORT, ToastAndroid.TOP);
+                  }
+                  else {
+                    Alert.alert('Thông báo', 'Đăng Tin Facebook thành công!');
+                  }
+                } else { // Error
+                  if (Platform.OS === 'android') {
+                    ToastAndroid.showWithGravity('Lỗi ' + JSON.stringify(responseJson.ErrorCode) + ', vui lòng liên hệ Admin trong mục Giúp Đỡ!', ToastAndroid.SHORT, ToastAndroid.TOP);
+                  }
+                  else {
+                    Alert.alert('Thông báo', 'Lỗi ' + JSON.stringify(responseJson.ErrorCode) + ', vui lòng liên hệ Admin trong mục Giúp Đỡ!');
+                  }
+                }
+
+                this.popupLoadingIndicator.dismiss()
+
+              }).
+              catch((error) => { console.log(error) });
+          } catch (error) {
+            console.log(error)
+          }
+
+
+
+
+
           break;
         }
         case 'cancel': {
           Alert.alert(
-            'Cancelled!',
-            'Login was cancelled!',
+            'Thông báo',
+            'Huỷ đăng nhập Facebook',
           );
           break;
         }
         default: {
           Alert.alert(
-            'Oops!',
-            'Login failed!',
+            'Thông báo',
+            'Đăng nhập không thành công',
           );
         }
       }
     } catch (e) {
       Alert.alert(
-        'Oops!',
-        'Login failed!',
+        'Thông báo',
+        'Đăng nhập không thành công' + JSON.stringify(e),
       );
     }
   };
@@ -1829,6 +1945,7 @@ export default class HomeScreen extends React.Component {
                 {/* <Text>{item.Images.split('|')[2]}</Text> */}
               </View>
               <View style={styles.cardBottom}>
+                {/* Room Icon Left */}
                 <View style={styles.cardBottomLeft}>
                   <Text style={styles.cardBottomIconText}>{item.Point}</Text>
 
@@ -1863,10 +1980,40 @@ export default class HomeScreen extends React.Component {
                     <Ionicons style={styles.cardBottomIcon} name='ios-chatbubbles' />
                   </TouchableOpacity>
                 </View>
+
+                {/* Room Icon Righ */}
                 <View style={styles.cardBottomRight}>
-                  {/* <TouchableOpacity >
-                    <Ionicons style={styles.cardBottomIcon} name='ios-thumbs-up' />
-                  </TouchableOpacity> */}
+
+                  {/* Like Facebook */}
+                  <TouchableOpacity
+                    style={{}}
+                    onPress={() => {
+
+                      Alert.alert(
+                        'Thông báo',
+                        'Bạn cần đăng nhập Facebook với quyền "publish_pages, manage_pages, user_posts" để Chia Sẻ Tin này trên Timeline của mình.  \nBạn muốn đăng nhập ngay?',
+                        [
+                          {
+                            text: 'Hủy', onPress: () => {
+
+                            }
+                          },
+                          {
+                            text: 'Đồng ý', onPress: () => {
+                              this._handleFacebookLogin(item.Title, item.Description
+                                + '\n\n\nCài đặt Ứng dụng Nhàbaola để biết thêm nhiều loại Bất Động Sản khác'
+                                + '\n - iOS: https://itunes.apple.com/vn/app/nhabaola/id1287451307?mt=8'
+                                + '\n - Android: ' + 'https://play.google.com/store/apps/details?id=vn.nhabaola.nhabaola')
+                            }
+                          },
+                        ]
+                      );
+                    }}
+                  >
+                    <Ionicons style={styles.cardBottomIcon} name='logo-facebook' />
+                  </TouchableOpacity>
+
+                  {/* Sharing */}
                   <TouchableOpacity
                     onPress={async () => {
 

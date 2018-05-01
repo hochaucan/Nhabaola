@@ -19,6 +19,7 @@ import {
     Keyboard,
     Animated,
     Easing,
+    ToastAndroid,
 
 } from 'react-native';
 //import { ExpoLinksView } from '@expo/samples';
@@ -945,15 +946,24 @@ export default class SearchScreen extends React.Component {
                                         text: 'Đồng ý', onPress: () => {
                                             roomBox.map((y) => {
                                                 // Notify Landlord 
-                                                notifyNBLAsync(y.Images.split('|')[0]//globalVariable.ADMIN_PUSH_TOKEN
-                                                    , { "screen": "RoomDetailScreen", "params": { "roomBoxID": y.ID } } //{ ...roombox }
-                                                    , "default"
-                                                    , this.state.profile.FullName + "-" + this.state.profile.UserName + " tìm kiếm:"
-                                                    , this.state.txtFilterResult
-                                                    + ", bán kính trong vòng " + this.state.radius + " km từ vị trí "
-                                                    + y.Address
-                                                ); //pushToken, data, sound, title, body
+                                                if (y.Images.split('|')[1] == 'true') {
+                                                    notifyNBLAsync(y.Images.split('|')[0]//globalVariable.ADMIN_PUSH_TOKEN
+                                                        , { "screen": "RoomDetailScreen", "params": { "roomBoxID": y.ID } } //{ ...roombox }
+                                                        , "default"
+                                                        , this.state.profile.FullName + "-" + this.state.profile.UserName + " tìm kiếm:"
+                                                        , this.state.txtFilterResult
+                                                        + ", bán kính trong vòng " + this.state.radius + " km từ vị trí "
+                                                        + y.Address
+                                                    ); //pushToken, data, sound, title, body
+                                                }
                                             })
+
+                                            if (Platform.OS === 'android') {
+                                                ToastAndroid.showWithGravity('Gửi thông báo thành công!', ToastAndroid.SHORT, ToastAndroid.TOP);
+                                            }
+                                            else {
+                                                Alert.alert('Thông báo', 'Gửi thông báo thành công!');
+                                            }
                                         }
                                     },
                                 ]
