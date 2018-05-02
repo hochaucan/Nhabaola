@@ -550,6 +550,71 @@ export default class RoomDetailScreen extends React.Component {
                             }} name='md-settings' />
                         </TouchableOpacity>
                     } */}
+
+
+                    {/* Notify to Landlord */}
+                    <TouchableOpacity
+                        style={{
+                            position: 'absolute',
+                            right: 15, top: 15,
+                        }}
+
+                        onPress={async () => {
+
+                            await this._getProfileFromStorageAsync();
+
+                            if (this.state.profile == null) {
+                                if (Platform.OS == 'ios') {
+                                    Alert.alert('Thông Báo', 'Bạn vui lòng đăng nhập')
+                                } else {
+                                    ToastAndroid.showWithGravity("Bạn vui lòng đăng nhập!", ToastAndroid.SHORT, ToastAndroid.TOP)
+                                }
+
+                            } else {
+                                Alert.alert(
+                                    'Thông báo',
+                                    'Bạn muốn gửi thông báo đến người Đăng Tin này?',
+                                    [
+                                        {
+                                            text: 'Hủy', onPress: () => {
+
+                                            }
+                                        },
+                                        {
+                                            text: 'Đồng ý', onPress: () => {
+                                                //  roomBox.map((y) => {
+                                                // Notify Landlord 
+                                                if (this.state.roomBox.Images.split('|')[1] == 'true') {
+                                                    notifyNBLAsync(this.state.roomBox.Images.split('|')[0]//globalVariable.ADMIN_PUSH_TOKEN
+                                                        , { "screen": "RoomDetailScreen", "params": { "roomBoxID": this.state.roomBox.ID } } //{ ...roombox }
+                                                        , "default"
+                                                        , this.state.profile.FullName + "-" + this.state.profile.UserName + " tìm kiếm:"
+                                                        , "Tin Đăng của bạn ở địa chỉ: " + this.state.roomBox.Address
+
+                                                    ); //pushToken, data, sound, title, body
+                                                }
+                                                // })
+
+                                                if (Platform.OS === 'android') {
+                                                    ToastAndroid.showWithGravity('Gửi thông báo thành công!', ToastAndroid.SHORT, ToastAndroid.TOP);
+                                                }
+                                                else {
+                                                    Alert.alert('Thông báo', 'Gửi thông báo thành công!');
+                                                }
+                                            }
+                                        },
+                                    ]
+                                );
+                            }
+
+
+                        }}
+                    >
+                        <Ionicons style={{
+                            color: '#fff', fontSize: responsiveFontSize(3.5)
+                        }} name='md-megaphone' />
+                    </TouchableOpacity>
+
                 </View>
 
                 {/* Avatar */}

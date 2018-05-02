@@ -952,7 +952,7 @@ export default class SearchScreen extends React.Component {
                                                         , "default"
                                                         , this.state.profile.FullName + "-" + this.state.profile.UserName + " tìm kiếm:"
                                                         , this.state.txtFilterResult
-                                                        + ", bán kính trong vòng " + this.state.radius + " km từ vị trí "
+                                                        + ", bán kính trong vòng " + this.state.radius + " km từ vị trí người tìm, trong đó có Tin Đăng của bạn ở địa chỉ: "
                                                         + y.Address
                                                     ); //pushToken, data, sound, title, body
                                                 }
