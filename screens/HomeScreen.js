@@ -654,7 +654,24 @@ export default class HomeScreen extends React.Component {
               ToastAndroid.showWithGravity('Tài khoản hoặc mật khẩu không đúng', ToastAndroid.SHORT, ToastAndroid.TOP);
             }
             else {
-              Alert.alert('Oops!', 'Tài khoản hoặc mật khẩu không đúng');
+              this.setState({ modalLogin: false })
+              Alert.alert('Thông báo', 'Tài khoản hoặc mật khẩu không đúng', [
+                {
+                  text: "Huỷ", onPress: () => {
+                    this.setState({
+                      loginUsername: '',
+                      loginPassword: '',
+                    })
+                  }
+                }
+                , {
+                  text: "Nhập lại", onPress: () => {
+                    this.setState({ modalLogin: true })
+                    this.refs.iosUserNameInput.focus()
+                      //Loading                  
+                      this.setState({ modalLoading: false })
+                  }
+                }]);
             }
 
             saveStorageAsync('FO_Account_Login', '')
@@ -1488,10 +1505,30 @@ export default class HomeScreen extends React.Component {
         .then((responseJson) => {
 
           // this._saveStorageAsync('FO_Category_GetAllData', JSON.stringify(responseJson.obj))
-          if (JSON.stringify(responseJson.ErrorCode) === "23") {
+          if (JSON.stringify(responseJson.ErrorCode) === "23") { // Username is not exist
 
             if (Platform.OS == 'ios') {
-              Alert.alert('Thông báo', 'Tài khoản này không tồn tại');
+              this.setState({ modalResetPassword1: false })
+              Alert.alert('Thông báo', 'Tài khoản này không tồn tại',
+                [
+                  {
+                    text: "Huỷ",
+                    onPress: () => {
+                      this.setState({ resetPasswordUsername: '' })
+                    }
+                  },
+                  {
+                    text: "Nhập lại",
+                    onPress: () => {
+                      this.setState({ modalResetPassword1: true })
+                      this.refs.iosResetUserNameInput.focus()
+                        //Loading                  
+                        this.setState({ modalLoading: false })
+                    }
+
+                  }
+
+                ]);
             } else {
               ToastAndroid.showWithGravity('Tài khoản này không tồn tại', ToastAndroid.SHORT, ToastAndroid.TOP);
             }
@@ -1610,12 +1647,36 @@ export default class HomeScreen extends React.Component {
               ToastAndroid.showWithGravity('Mã kích hoạt không đúng', ToastAndroid.SHORT, ToastAndroid.TOP);
             }
             else {
-              Alert.alert('Thông báo', 'Mã kích hoạt không đúng');
+              this.setState({ modalResetPassword2: false })
+              Alert.alert('Thông báo', 'Mã kích hoạt không đúng',
+                [
+                  {
+                    text: "Huỷ",
+                    onPress: () => {
+                      this.setState({
+                        resetPasswordNewPassword: '',
+                        resetPasswordActiveKey: ''
+                      })
+                    }
+                  },
+                  {
+                    text: "Nhập lại",
+                    onPress: () => {
+                      this.setState({ modalResetPassword2: true })
+                      this.refs.ActiveKeyInput.focus();
+
+                      //Loading                  
+                      this.setState({ modalLoading: false })
+                    }
+                  }
+                ]
+              );
             }
 
             this.refs.ActiveKeyInput.focus()
           }
 
+          //Loading
           if (Platform.OS == 'ios') {
             this.setState({ modalLoading: false })
           } else {
@@ -2555,6 +2616,8 @@ export default class HomeScreen extends React.Component {
                 this.setState({
                   modalResetPassword2: false,
                   modalLoading: false,
+                  resetPasswordNewPassword: '',
+                  resetPasswordActiveKey: ''
                 })
               }}
             />
@@ -2786,7 +2849,12 @@ export default class HomeScreen extends React.Component {
                 onPress={() => {
                   Keyboard.dismiss();
                   if (Platform.OS == 'ios') {
-                    this.setState({ modalLogin: false, modalLoading: false })
+                    this.setState({
+                      modalLogin: false,
+                      modalLoading: false,
+                      loginUsername: '',
+                      loginPassword: '',
+                    })
                   }
                   else {
                     this.popupLogin.dismiss()
