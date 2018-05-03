@@ -152,6 +152,7 @@ export default class HomeScreen extends React.Component {
       flatListIsEnd: false,
       roomByCatHeigh: new Animated.Value(40),
       highLightBackgroundOpacity: new Animated.Value(-100),
+      isInternetIssue: false,
     }
 
     // state = { selected: false };
@@ -243,6 +244,14 @@ export default class HomeScreen extends React.Component {
     // Register Push Notification
     this._notificationSubscription = this._registerForPushNotifications();
 
+    // Popup messgae if internet has problem after 15 seconds
+    setTimeout(() => {
+      if (roomBox.length == 0) {
+        this.setState({ isInternetIssue: true })
+      }
+    }, 15000)
+
+
   }
 
   // shouldComponentUpdate(nextProps, nextState) {
@@ -265,11 +274,6 @@ export default class HomeScreen extends React.Component {
   // }
 
   _registerForPushNotifications() {
-    // Send our push token over to our backend so we can receive notifications
-    // You can comment the following line out if you want to stop receiving
-    // a notification every time you open the app. Check out the source
-    // for this function in api/registerForPushNotificationsAsync.js
-
     // Watch for incoming notifications
     this._notificationSubscription = Notifications.addListener(
       this._handleNotification
@@ -1712,6 +1716,45 @@ export default class HomeScreen extends React.Component {
     return (
       // <View style={styles.container} key={this.state.refreshScreen}>
       <View style={styles.container} key={this.state.refreshScreen}>
+        {this.state.isInternetIssue &&
+          <View
+            style={{
+              position: 'absolute', height: responsiveHeight(100),
+              width: responsiveWidth(100), zIndex: 50, backgroundColor: '#fff'
+            }}
+          >
+            <TouchableOpacity
+              style={{ alignContent: 'center', alignItems: 'center' }}
+              onPress={async () => {
+                this.setState({ isInternetIssue: false })
+                this._getCategoryAsync()
+                this._getRoomBoxAsync(true)
+                this._getProfileFromStorageAsync();
+                this._getSessionKeyFromStorageAsync();
+
+                setTimeout(() => {
+                  if (roomBox.length == 0) {
+                    this.setState({ isInternetIssue: true })
+                  }
+                }, 15000)
+
+              }}
+            >
+
+              <Ionicons style={{
+                fontSize: responsiveFontSize(10),
+                paddingTop: 12, textAlign: 'center',
+                color: '#73aa2a',
+                marginTop: responsiveHeight(25)
+              }} name='md-refresh' />
+              <Text style={{
+                color: '#6c6d6d',
+                padding: 20, fontSize: responsiveFontSize(2.5)
+              }}>Bạn vui lòng kiểm tra INTERNET và tải lại trang</Text>
+            </TouchableOpacity>
+          </View>
+        }
+
         {/* Flatlist Category */}
         <Animated.View style={{
           marginRight: 10,
