@@ -2138,8 +2138,8 @@ export default class HomeScreen extends React.Component {
                             + "\nĐịa chỉ: " + item.Address + "\n\nMô tả:\n" + item.Description
                             + "\n\nCài đặt: "
                             + "\nAndroid: \nhttps://play.google.com/store/apps/details?id=vn.nhabaola.nhabaola"
-                            + "\n\niOS:",
-                          url: 'https://itunes.apple.com/vn/app/nhabaola/id1287451307?mt=8',
+                            + "\n\niOS: \nhttps://itunes.apple.com/vn/app/nhabaola/id1287451307?mt=8",
+                          //url: 'https://itunes.apple.com/vn/app/nhabaola/id1287451307?mt=8',
                           title: '*Chia Sẻ từ Ứng Dụng Nhà Bao La*'
                         }, {
                             // Android only:
