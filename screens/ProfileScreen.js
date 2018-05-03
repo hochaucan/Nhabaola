@@ -248,7 +248,7 @@ export default class ProfileScreen extends React.Component {
                 return;
             }
             if (this.state.newPassword !== this.state.confirmNewPassword) {
-                ToastAndroid.showWithGravity('Xác nhận mật khẩu không đúng', ToastAndroid.SHORT, ToastAndroid.TOP);
+                ToastAndroid.showWithGravity('Xác nhận mật khẩu mới không đúng', ToastAndroid.SHORT, ToastAndroid.TOP);
                 this.refs.popupConfirmNewPasswordInput.focus()
                 return;
             }
@@ -260,11 +260,37 @@ export default class ProfileScreen extends React.Component {
                 return;
             }
             if (this.state.newPassword === '') {
-                Alert.alert('Vu lòng nhập mật khẩu mới');
+                Alert.alert('Vui lòng nhập mật khẩu mới');
                 return;
             }
             if (this.state.newPassword !== this.state.confirmNewPassword) {
-                Alert.alert('Xác nhận mật khẩu không đúng');
+                //Alert.alert('Xác nhận mật khẩu không đúng');
+
+                this.setState({ modalChangePassword: false })
+                Alert.alert('Thông báo', 'Xác nhận mật khẩu mới không đúng',
+                    [
+                        {
+                            text: "Huỷ",
+                            onPress: () => {
+                                this.setState({
+                                    confirmNewPassword: '',
+                                    newPassword: '',
+                                    oldPassword: ''
+                                })
+                            }
+                        },
+                        {
+                            text: "Nhập lại",
+                            onPress: () => {
+                                this.setState({ modalChangePassword: true, modalLoading: false })
+                                setTimeout(() => {
+                                    this.refs.newConfirmPasswordInput.focus()
+                                }, 1000);
+
+                            }
+                        }
+                    ]);
+
                 return;
             }
         }
@@ -273,8 +299,8 @@ export default class ProfileScreen extends React.Component {
         if (Platform.OS == 'ios') {
             this.setState({ modalLoading: true })
         } else {
-            // this.popupLoadingIndicator.show()
-            this.setState({ modalLoading: true })
+            this.popupLoadingIndicator.show()
+            //this.setState({ modalLoading: true })
         }
 
 
@@ -304,7 +330,7 @@ export default class ProfileScreen extends React.Component {
                         }
                         else {
                             this.setState({ modalChangePassword: false })
-                            // Alert.alert('Thông báo', 'Đổi mật khẩu thành công!');
+                            Alert.alert('Thông báo', 'Đổi mật khẩu thành công!');
                         }
 
                         this.setState({
@@ -317,9 +343,30 @@ export default class ProfileScreen extends React.Component {
 
                         if (Platform.OS === 'android') {
                             ToastAndroid.showWithGravity('Mật khẩu cũ không đúng!', ToastAndroid.SHORT, ToastAndroid.TOP);
+                            this.refs.popupOldPasswordInput.focus()
                         }
                         else {
-                            Alert.alert('Thông báo', 'Mật khẩu cũ không đúng!');
+                            this.setState({ modalChangePassword: false })
+                            Alert.alert('Thông báo', 'Mật khẩu cũ không đúng!',
+                                [
+                                    {
+                                        text: "Huỷ",
+                                        onPress: () => {
+                                            this.setState({
+                                                confirmNewPassword: '',
+                                                newPassword: '',
+                                                oldPassword: ''
+                                            })
+                                        }
+                                    },
+                                    {
+                                        text: "Nhập lại",
+                                        onPress: () => {
+                                            this.setState({ modalChangePassword: true, modalLoading: false })
+                                            this.refs.oldPasswordInput.focus()
+                                        }
+                                    }
+                                ]);
                         }
 
 
@@ -329,7 +376,7 @@ export default class ProfileScreen extends React.Component {
                     if (Platform.OS == 'ios') {
                         this.setState({ modalLoading: false })
                     } else {
-                        this.setState({ modalLoading: false })
+                        this.popupLoadingIndicator.dismiss()
                     }
 
                 }).
@@ -839,6 +886,9 @@ export default class ProfileScreen extends React.Component {
                                 this.setState({
                                     modalChangePassword: false,
                                     modalLoading: false,
+                                    confirmNewPassword: '',
+                                    newPassword: '',
+                                    oldPassword: ''
                                 })
                             }}
                         />

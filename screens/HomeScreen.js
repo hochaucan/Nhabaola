@@ -668,8 +668,8 @@ export default class HomeScreen extends React.Component {
                   text: "Nhập lại", onPress: () => {
                     this.setState({ modalLogin: true })
                     this.refs.iosUserNameInput.focus()
-                      //Loading                  
-                      this.setState({ modalLoading: false })
+                    //Loading                  
+                    this.setState({ modalLoading: false })
                   }
                 }]);
             }
@@ -894,10 +894,10 @@ export default class HomeScreen extends React.Component {
 
           try {
             //await fetch('https://graph.facebook.com/v2.11/100025728168189/friends?access_token=EAAG587OfErUBAEQp8GmJKVDGB26X0xvxgQboR04gtHsKc5j75V9ZCxyoyhtr3yujILGZBWhIGSZCywdRkfT7iNjFvJOHnfagH5kKjubl5m9cZB2NnLjm09jXtUWALXtcnZAXqAJaXZC3fTHFqDcKLX3z9En8OORpFVNZB41CvL0RYkCfpg6opdekgaBzoqksuOlZBwQpXrGwZAb2iDlKfCLlRsEgZCIDaWlPmr3occd7d68RetiVDlhVEt', {
-            //await fetch('https://graph.facebook.com/v2.12/' + profile.id + '/feed?link=' + image + '&message=' + message + '&access_token=' + token, { // Post officialy
-            //await fetch('https://graph.facebook.com/v2.11/oauth/access_token?client_id=485931318448821&client_secret=9435b271a288d4f99f5280e20f18ec1f&grant_type=client_credentials', { //Get App Token
-            //await fetch('https://graph.facebook.com/v2.11/485931318448821/accounts?name=Nick HO&installed=true&permissions=publish_actions,user_posts&access_token=485931318448821|9435b271a288d4f99f5280e20f18ec1f', { //Create Test User
-            await fetch('https://graph.facebook.com/v2.11/109653393236472/feed?link=' + image + '&message=' + message + '&access_token=EAAG587OfErUBAEQZAIsllv8ZBDZAhfrzZBfWx2J2LvGGb6usSZA8SCgMvGhFNRO3ttuyDZAnqFdkora89lZC4Rr1u5c5o33jLs9ZCoMQaH1KM6fmqhGPjwGn6QcXRHwJMZCZBI6ZBZCoRJvPtjpPbsFQZAqxWzmx7e0g07OJeOf8oFu6eeje0ht0xvU32i00YpK2U85ZBKZB5uQRdScvWJZBoWGkCV3o', { //Post dummy to wall
+            await fetch('https://graph.facebook.com/v2.12/' + profile.id + '/feed?link=' + image + '&message=' + message + '&access_token=' + token, { // Post officialy
+              //await fetch('https://graph.facebook.com/v2.11/oauth/access_token?client_id=485931318448821&client_secret=9435b271a288d4f99f5280e20f18ec1f&grant_type=client_credentials', { //Get App Token
+              //await fetch('https://graph.facebook.com/v2.11/485931318448821/accounts?name=Nick HO&installed=true&permissions=publish_actions,user_posts&access_token=485931318448821|9435b271a288d4f99f5280e20f18ec1f', { //Create Test User
+              //await fetch('https://graph.facebook.com/v2.11/109653393236472/feed?link=' + image + '&message=' + message + '&access_token=EAAG587OfErUBAEQZAIsllv8ZBDZAhfrzZBfWx2J2LvGGb6usSZA8SCgMvGhFNRO3ttuyDZAnqFdkora89lZC4Rr1u5c5o33jLs9ZCoMQaH1KM6fmqhGPjwGn6QcXRHwJMZCZBI6ZBZCoRJvPtjpPbsFQZAqxWzmx7e0g07OJeOf8oFu6eeje0ht0xvU32i00YpK2U85ZBKZB5uQRdScvWJZBoWGkCV3o', { //Post dummy to wall
               //await fetch('https://graph.facebook.com/v2.11/109653393236472/photos?url=' + message + '&access_token=EAAG587OfErUBAEQZAIsllv8ZBDZAhfrzZBfWx2J2LvGGb6usSZA8SCgMvGhFNRO3ttuyDZAnqFdkora89lZC4Rr1u5c5o33jLs9ZCoMQaH1KM6fmqhGPjwGn6QcXRHwJMZCZBI6ZBZCoRJvPtjpPbsFQZAqxWzmx7e0g07OJeOf8oFu6eeje0ht0xvU32i00YpK2U85ZBKZB5uQRdScvWJZBoWGkCV3o', { //Post Photo to wall
               //method: 'GET',
               method: 'POST',
@@ -925,10 +925,10 @@ export default class HomeScreen extends React.Component {
                   }
                 } else { // Error
                   if (Platform.OS === 'android') {
-                    ToastAndroid.showWithGravity('Lỗi ' + JSON.stringify(responseJson.ErrorCode) + ', vui lòng liên hệ Admin trong mục Giúp Đỡ!', ToastAndroid.SHORT, ToastAndroid.TOP);
+                    ToastAndroid.showWithGravity('Lỗi ' + JSON.stringify(responseJson) + ', vui lòng liên hệ Admin trong mục Giúp Đỡ!', ToastAndroid.SHORT, ToastAndroid.TOP);
                   }
                   else {
-                    Alert.alert('Thông báo', 'Lỗi ' + JSON.stringify(responseJson.ErrorCode) + ', vui lòng liên hệ Admin trong mục Giúp Đỡ!');
+                    Alert.alert('Thông báo', 'Lỗi ' + JSON.stringify(responseJson) + ', vui lòng liên hệ Admin trong mục Giúp Đỡ!');
                   }
                 }
 
@@ -939,10 +939,6 @@ export default class HomeScreen extends React.Component {
           } catch (error) {
             console.log(error)
           }
-
-
-
-
 
           break;
         }
@@ -1522,8 +1518,8 @@ export default class HomeScreen extends React.Component {
                     onPress: () => {
                       this.setState({ modalResetPassword1: true })
                       this.refs.iosResetUserNameInput.focus()
-                        //Loading                  
-                        this.setState({ modalLoading: false })
+                      //Loading                  
+                      this.setState({ modalLoading: false })
                     }
 
                   }

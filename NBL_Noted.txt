@@ -57,10 +57,10 @@ Data: [{
 
 * POST ERROR
 if (Platform.OS === 'android') {
-              ToastAndroid.showWithGravity('Lỗi ' + JSON.stringify(responseJson.ErrorCode) + ', vui lòng liên hệ Admin trong mục Giúp Đỡ!', ToastAndroid.SHORT, ToastAndroid.TOP);
+              ToastAndroid.showWithGravity('Lỗi ' + JSON.stringify(responseJson) + ', vui lòng liên hệ Admin trong mục Giúp Đỡ!', ToastAndroid.SHORT, ToastAndroid.TOP);
             }
             else {
-              Alert.alert('Thông báo', 'Lỗi ' + JSON.stringify(responseJson.ErrorCode) + ', vui lòng liên hệ Admin trong mục Giúp Đỡ!');
+              Alert.alert('Thông báo', 'Lỗi ' + JSON.stringify(responseJson) + ', vui lòng liên hệ Admin trong mục Giúp Đỡ!');
             }
 
 * MESSAGE
