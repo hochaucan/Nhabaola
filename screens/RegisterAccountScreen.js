@@ -190,7 +190,7 @@ export default class RegisterAccountScreen extends React.Component {
                     "UserName": this.state.registerCellPhone,
                     "FullName": this.state.registerFullName,
                     "Email": this.state.registerEmail,
-                    "Sex": "",
+                    "Sex": Platform.OS == 'ios' ? '0' : '1',
                     //"YearOfBirth": "2017-10-09",
                     "Address": globalVariable.PHONE_TOKEN,
                     "ContactPhone": this.state.registerCellPhone,

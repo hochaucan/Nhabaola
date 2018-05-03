@@ -157,7 +157,7 @@ export default class UpdateAccountScreen extends React.Component {
                     "ID": this.state.profile.ID,
                     "FullName": this.state.registerFullName,
                     "Email": this.state.registerEmail,
-                    "Sex": "",
+                    "Sex": Platform.OS == 'ios' ? '0' : '1',
                     "Avarta": this.state.registerAccountImage, //uploadResult.location,
                     //"YearOfBirth": "1985-05-19",
                     "Address": globalVariable.PHONE_TOKEN,
@@ -202,7 +202,7 @@ export default class UpdateAccountScreen extends React.Component {
                             ToastAndroid.showWithGravity('Cập nhật thông tin thành công!', ToastAndroid.SHORT, ToastAndroid.TOP);
                         }
                         else {
-                            Alert.alert('Oops!', 'Cập nhật thông tin thành công!');
+                            Alert.alert('Thông báo', 'Cập nhật thông tin thành công!');
                         }
                     }
                     else { alert(responseJson.ErrorCode) }

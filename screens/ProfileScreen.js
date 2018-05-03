@@ -999,28 +999,53 @@ export default class ProfileScreen extends React.Component {
 
                         <Text style={{ fontSize: responsiveFontSize(2), color: '#73aa2a' }} >Liên hệ</Text>
                         <View style={{ marginTop: 5, flexDirection: 'row' }}>
-                            <Text style={{ flex: 1, color: '#000' }} >Hotline:</Text>
-                            <Text style={{ flex: 4, color: '#9B9D9D' }} >0973730111, 0905588639</Text>
+                            <Text style={{ fontSize: responsiveFontSize(2), flex: 2, color: '#000' }} >Hotline:</Text>
+                            <Text style={{ fontSize: responsiveFontSize(2), flex: 4, color: '#9B9D9D' }} >0973730111, 0905588639</Text>
                         </View>
                         <View style={{ marginTop: 5, flexDirection: 'row' }}>
-                            <Text style={{ flex: 1, color: '#000' }} >Email:</Text>
-                            <Text style={{ flex: 4, color: '#9B9D9D' }} >hochaucan@gmail.com</Text>
+                            <Text style={{ fontSize: responsiveFontSize(2), flex: 2, color: '#000' }} >Email:</Text>
+                            <Text style={{ fontSize: responsiveFontSize(2), flex: 4, color: '#9B9D9D' }} >hochaucan@gmail.com</Text>
                         </View>
                         <View style={{ marginTop: 5, flexDirection: 'row' }}>
-                            <Text style={{ flex: 1, color: '#000' }} >Skyle:</Text>
-                            <Text style={{ flex: 4, color: '#9B9D9D' }} >hochaucan</Text>
+                            <Text style={{ fontSize: responsiveFontSize(2), flex: 2, color: '#000' }} >Skyle:</Text>
+                            <Text style={{ fontSize: responsiveFontSize(2), flex: 4, color: '#9B9D9D' }} >hochaucan</Text>
                         </View>
                         <View style={{ marginTop: 5, flexDirection: 'row' }}>
-                            <Text style={{ flex: 1, color: '#000' }} >Facebook:</Text>
-                            <Text style={{ flex: 4, color: '#9B9D9D' }} > https://www.facebook.com/nhabaola/</Text>
+                            <Text style={{ fontSize: responsiveFontSize(2), flex: 2, color: '#000' }} >Facebook:</Text>
+                            <Text style={{ fontSize: responsiveFontSize(2), flex: 4, color: '#9B9D9D' }} > https://www.facebook.com/nhabaola/</Text>
                         </View>
                         <Text style={{ fontSize: responsiveFontSize(2), color: '#73aa2a', marginTop: 25, marginBottom: 5 }} >Giúp đỡ</Text>
-                        <Accordion
+                        <TouchableOpacity
+                            style={{ flexDirection: 'row', alignItems: 'center' }}
+                            onPress={() => {
+                                //const FANPAGE_ID = '1750146621679564'
+                                //const URL_FOR_APP = `fb://page/${FANPAGE_ID}`
+                                const URL_FOR_BROWSER = 'https://docs.google.com/document/d/1AJZpbCWJNlba-jgOmq00-iwhF0-l1Z0_XxfW9JafAqk/edit'
+                                Linking.canOpenURL(URL_FOR_BROWSER)
+                                    .then((supported) => {
+                                        if (!supported) {
+                                            Linking.openURL(URL_FOR_BROWSER)
+                                        } else {
+                                            Linking.openURL(URL_FOR_BROWSER)
+                                        }
+                                    })
+                                    .catch(err => console.error('An error occurred', err))
+                            }}
+                        >
+                            <Text style={{ alignItems: 'center', fontSize: responsiveFontSize(2) }}>Hướng dẫn sử dụng Ứng Dụng Nhàbaola</Text>
+                            <Ionicons style={{
+                                color: '#a4d227',
+                                fontSize: responsiveFontSize(2.5),
+                                marginLeft: 5,
+                            }} name='md-arrow-forward' />
+                        </TouchableOpacity>
+
+                        {/* <Accordion
                             sections={SECTIONS}
                             renderHeader={this._renderHeader}
                             renderContent={this._renderContent}
                             easing='bounce'
-                        />
+                        /> */}
 
                     </ScrollView>
                 </Modal>

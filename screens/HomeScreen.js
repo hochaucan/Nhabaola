@@ -1776,6 +1776,7 @@ export default class HomeScreen extends React.Component {
               //this._refreshRoomBox()
             }}
             horizontal={true}
+            showsHorizontalScrollIndicator={true}
             onEndReachedThreshold={0.2}
             onEndReached={() => {
               // this.setState({
