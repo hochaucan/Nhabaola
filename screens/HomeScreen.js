@@ -1934,10 +1934,20 @@ export default class HomeScreen extends React.Component {
                 <View style={styles.cardAvatarTextBox}>
                   <Text style={styles.cardAvatarName}>{item.AccountName}</Text>
                   <TouchableOpacity style={styles.cardAvatarPhoneBox}
-                    onPress={() => { Communications.phonecall(item.ContactPhone, true) }}
+                    onPress={() => {
+                      Communications.phonecall(
+                        item.ContactPhone.indexOf("|") > -1 ? item.ContactPhone.split('|')[0]
+                          : item.ContactPhone
+                        , true)
+                    }}
                   >
                     <Ionicons style={styles.cardAvatarPhoneIcon} name='logo-whatsapp' />
-                    <Text style={styles.cardAvatarPhone}>: {item.ContactPhone}</Text>
+                    <Text style={{
+                      color: '#7E7E7E',
+                      fontSize: responsiveFontSize(1.8),//13,
+                      paddingLeft: 8,
+                    }}>: {item.ContactPhone.indexOf("|") > -1 ? item.ContactPhone.split('|')[0] + '. LH: ' + item.ContactPhone.split('|')[1]
+                      : item.ContactPhone}</Text>
                   </TouchableOpacity>
                 </View>
               </View>
@@ -3513,11 +3523,11 @@ const styles = StyleSheet.create({
     color: '#7E7E7E',
     fontSize: 15,
   },
-  cardAvatarPhone: {
-    color: '#7E7E7E',
-    fontSize: 13,
-    paddingLeft: 8,
-  },
+  // cardAvatarPhone: {
+  //   color: '#7E7E7E',
+  //   fontSize: 13,
+  //   paddingLeft: 8,
+  // },
   // cardImageBox: {
   //   flex: 6,
   //   paddingLeft: 20,

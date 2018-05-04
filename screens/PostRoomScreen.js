@@ -110,6 +110,7 @@ export default class PostRoomScreen extends React.Component {
             toDateHighLight: topDate,
             isHighlight: false,
             contactPhone: '',
+            contactName: '',
         }
     }
 
@@ -406,7 +407,7 @@ export default class PostRoomScreen extends React.Component {
                     "Toilet": "",
                     "Bedroom": "",
                     "AirConditioner": "",
-                    "ContactPhone": this.state.contactPhone,
+                    "ContactPhone": this.state.contactPhone + '|' + this.state.contactName,
                     "FromDate": this.state.fromDate,
                     "ToDate": this.state.toDate,
                     "IsTop": "true",
@@ -635,8 +636,8 @@ export default class PostRoomScreen extends React.Component {
                                 ref='contactPhoneInput'
                                 returnKeyType={Platform.OS == 'ios' ? "done" : "next"}
                                 onSubmitEditing={(event) => {
-                                    //this.refs.priceInput.focus();
-                                    this.refs['priceInput'].getElement().focus();
+                                    this.refs.contactNameInput.focus();
+                                    //this.refs['contactNameInput'].getElement().focus();
                                 }}
                                 onFocus={(event) => {
                                     this._scrollToInput(event.target)
@@ -645,6 +646,7 @@ export default class PostRoomScreen extends React.Component {
                                 style={{
                                     flex: 1, padding: 5, borderColor: '#73aa2a',
                                     marginLeft: -9, marginRight: 20,
+                                    borderBottomWidth: Platform.OS == 'ios' ? 0.5 : 0,
                                     // paddingTop: Platform.OS == 'ios' ? 5 : 0,
                                 }}
                                 placeholder=''
@@ -655,6 +657,67 @@ export default class PostRoomScreen extends React.Component {
                             />
 
                             {/* <FormLabel>(mét vuông)</FormLabel> */}
+                        </View>
+                        {/* Contact Name */}
+                        <View style={{ flexDirection: 'row', }}>
+                            <FormLabel style={{}}>Người LH</FormLabel>
+
+                            <FormInput
+                                ref='contactNameInput'
+                                returnKeyType={'next'}//{Platform.OS == 'ios' ? "done" : "next"}
+                                onSubmitEditing={(event) => {
+                                    //Keyboard.dismiss();
+                                    this.refs['priceInput'].getElement().focus();
+                                }}
+                                onFocus={(event) => {
+                                    this._scrollToInput(event.target)
+                                }}
+                                containerStyle={{
+                                    borderBottomWidth: Platform.OS == 'ios' ? 0.8 : 0,
+                                    borderColor: '#73aa2a',
+                                    marginLeft: -1,
+                                    width: Platform.OS == 'ios' ? responsiveWidth(63) : responsiveWidth(69)
+                                }}
+                                inputStyle={{ color: '#000' }}
+                                placeholder='Tối đa 8 ký tự'
+                                multiline={false}
+                                maxLength={8}
+                                //numberOfLines={5}
+                                //keyboardType='default'
+                                autoCapitalize='sentences'
+                                //maxLength={300}
+                                clearButtonMode='always'
+                                underlineColorAndroid='#73aa2a'
+                                blurOnSubmit={false}
+                                value={this.state.contactName}
+                                onChangeText={(contactName) => this.setState({ contactName })}
+                            />
+
+                            {/* <TextInputMask
+                                //ref='acreage'
+                                ref='contactNameInput'
+                                returnKeyType={'next'}//{Platform.OS == 'ios' ? "done" : "next"}
+                                onSubmitEditing={(event) => {
+                                    //this.refs.priceInput.focus();
+                                    this.refs['priceInput'].getElement().focus();
+                                }}
+                                onFocus={(event) => {
+                                    this._scrollToInput(event.target)
+                                }}
+                                type={'custom'}
+                                maxLength = {8}
+                                style={{
+                                    flex: 1, padding: 5, borderColor: '#73aa2a',
+                                    marginLeft: -9, marginRight: 20, borderBottomWidth: 0.5,
+                                }}
+                                placeholder='Tối đa 8 ký tự'
+                                underlineColorAndroid='#73aa2a'
+                                blurOnSubmit={true}
+                                value={this.state.contactName}
+                                onChangeText={(contactName) => this.setState({ contactName })}
+                            /> */}
+
+
                         </View>
                         {/* Price */}
                         <View style={{ flexDirection: 'row', }}>
@@ -974,7 +1037,7 @@ export default class PostRoomScreen extends React.Component {
                             </View>
                         }
                         <KeyboardAvoidingView behavior={Platform.OS == 'ios' ? 'height' : 'padding'}
-                            style={{ marginBottom: 40 }}
+                            style={{ marginBottom: Platform.OS == 'ios' ? 140 : 30 }}
                         >
                             {/* Detail Room Information */}
                             <FormLabel style={{ marginTop: 10, }}>Chi tiết:</FormLabel>

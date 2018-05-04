@@ -133,6 +133,7 @@ export default class UpdateRoomScreen extends React.Component {
             toDateHighLight: topDate,
             isHighlight: false,
             contactPhone: '',
+            contactName: '',
             roomBox: null,
         }
     }
@@ -167,6 +168,7 @@ export default class UpdateRoomScreen extends React.Component {
             selectedCategory: this.state.roomBox.CategoryID,
             selectedAddress: this.state.roomBox.Address,
             contactPhone: this.state.roomBox.ContactPhone,
+            contactName: this.state.roomBox.ContactPhone.indexOf('|') > -1 ? this.state.roomBox.ContactPhone.split('|')[1] : '',
             // fromDate: this.state.roomBox.FromDate,
             toDate: new Date(this.state.roomBox.ToDate) < today ? topDate : this.state.roomBox.ToDate,
             isHighlight: this.state.roomBox.IsHighlight,
@@ -484,6 +486,21 @@ export default class UpdateRoomScreen extends React.Component {
         // alert(this.state.imageUrl + "   " + this.state.postRoomImage1)
         // return
 
+        // Contact Phone
+        var _contactPhone = '';
+
+        if (this.state.contactPhone.indexOf('|') > -1) {
+            if (this.state.contactName == '') {
+                _contactPhone = this.state.contactPhone.split('|')[0]
+            } else {
+                _contactPhone = this.state.contactPhone.split('|')[0] + '|' + this.state.contactName
+            }
+
+        } else {
+            _contactPhone = this.state.contactPhone + '|' + this.state.contactName;
+        }
+
+
         try {
             await fetch("http://nhabaola.vn/api/RoomBox/FO_RoomBox_Edit", {
                 method: 'POST',
@@ -506,7 +523,7 @@ export default class UpdateRoomScreen extends React.Component {
                     "Toilet": "",
                     "Bedroom": "",
                     "AirConditioner": "",
-                    "ContactPhone": this.state.contactPhone,
+                    "ContactPhone": _contactPhone,
                     "FromDate": this.state.fromDate,
                     "ToDate": this.state.toDate,
                     "IsTop": "true",
@@ -759,8 +776,8 @@ export default class UpdateRoomScreen extends React.Component {
                                 ref='contactPhoneInput'
                                 returnKeyType={Platform.OS == 'ios' ? "done" : "next"}
                                 onSubmitEditing={(event) => {
-                                    //this.refs.priceInput.focus();
-                                    this.refs['priceInput'].getElement().focus();
+                                    this.refs.contactNameInput.focus();
+                                    //this.refs['priceInput'].getElement().focus();
                                 }}
                                 onFocus={(event) => {
                                     this._scrollToInput(event.target)
@@ -769,7 +786,7 @@ export default class UpdateRoomScreen extends React.Component {
                                 style={{
                                     flex: 1, padding: 5, borderColor: '#73aa2a',
                                     marginLeft: -9, marginRight: 20,
-                                    // paddingTop: Platform.OS == 'ios' ? 5 : 0,
+                                    borderBottomWidth: Platform.OS == 'ios' ? 0.5 : 0,
                                 }}
                                 placeholder=''
                                 underlineColorAndroid='#73aa2a'
@@ -780,6 +797,44 @@ export default class UpdateRoomScreen extends React.Component {
 
                             {/* <FormLabel>(mét vuông)</FormLabel> */}
                         </View>
+
+                        {/* Contact Name */}
+                        <View style={{ flexDirection: 'row', }}>
+                            <FormLabel style={{}}>Người LH</FormLabel>
+
+                            <FormInput
+                                ref='contactNameInput'
+                                returnKeyType={'next'}//{Platform.OS == 'ios' ? "done" : "next"}
+                                onSubmitEditing={(event) => {
+                                    //Keyboard.dismiss();
+                                    this.refs['priceInput'].getElement().focus();
+                                }}
+                                onFocus={(event) => {
+                                    this._scrollToInput(event.target)
+                                }}
+                                containerStyle={{
+                                    borderBottomWidth: Platform.OS == 'ios' ? 0.8 : 0,
+                                    borderColor: '#73aa2a',
+                                    marginLeft: -1,
+                                    width: Platform.OS == 'ios' ? responsiveWidth(63) : responsiveWidth(69)
+                                }}
+                                inputStyle={{ color: '#000', paddingLeft: 5 }}
+                                placeholder='Tối đa 8 ký tự'
+                                multiline={false}
+                                maxLength={8}
+                                //numberOfLines={5}
+                                //keyboardType='default'
+                                autoCapitalize='sentences'
+                                //maxLength={300}
+                                clearButtonMode='always'
+                                underlineColorAndroid='#73aa2a'
+                                blurOnSubmit={false}
+                                value={this.state.contactName}
+                                onChangeText={(contactName) => this.setState({ contactName })}
+                            />
+
+                        </View>
+
                         {/* Price */}
                         <View style={{ flexDirection: 'row', }}>
                             <FormLabel style={{}}>Giá:</FormLabel>
@@ -1121,7 +1176,7 @@ export default class UpdateRoomScreen extends React.Component {
                         }
 
                         <KeyboardAvoidingView behavior={Platform.OS == 'ios' ? 'height' : 'padding'}
-                            style={{ marginBottom: 40 }}
+                            style={{ marginBottom: Platform.OS == 'ios' ? 140 : 30 }}
                         >
 
                             {/* Detail Room Information */}
@@ -1137,7 +1192,7 @@ export default class UpdateRoomScreen extends React.Component {
                                     this._scrollToInput(event.target)
                                 }}
                                 containerStyle={{ borderWidth: 0.5, borderColor: '#73aa2a', borderRadius: 10, }}
-                                inputStyle={{ padding: 10, height: 140, paddingRight: Platform.OS == 'ios' ? 50 : 0 }}
+                                inputStyle={{ padding: 10, height: 120, paddingRight: Platform.OS == 'ios' ? 50 : 0 }}
                                 placeholder='Vui lòng nhập thông tin chi tiết'
                                 multiline={true}
                                 autoCapitalize='sentences'
