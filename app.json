@@ -35,7 +35,11 @@
     },
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "vn.nhabaola.nhabaola"
+      "bundleIdentifier": "vn.nhabaola.nhabaola",
+      "infoPlist": {
+        "NSLocationAlwaysUsageDescription ":"Your current location will be displayed on the map and used for directions, nearby search result and estimated distance.",
+        "NSLocationWhenInUseUsageDescription": "Your current location will be displayed on the map and used for directions, nearby search result and estimated distance"
+      }
     },
     "android": {
       "package": "vn.nhabaola.nhabaola",
