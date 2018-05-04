@@ -641,10 +641,26 @@ export default class RoomDetailScreen extends React.Component {
                     <View style={styles.cardAvatarTextBox}>
                         <Text style={styles.cardAvatarName}>{this.state.roomBox.AccountName}</Text>
                         <TouchableOpacity style={styles.cardAvatarPhoneBox}
-                            onPress={() => { Communications.phonecall(this.state.roomBox.ContactPhone, true) }}
+                            onPress={() => {
+                                Communications.phonecall(
+                                    this.state.roomBox.ContactPhone.indexOf("|") > -1 ? this.state.roomBox.ContactPhone.split('|')[0]
+                                        : this.state.roomBox.ContactPhone
+                                    , true)
+                            }}
                         >
                             <Ionicons style={styles.cardAvatarPhoneIcon} name='logo-whatsapp' />
-                            <Text style={styles.cardAvatarPhone}>: {this.state.roomBox.ContactPhone}</Text>
+                            {/* <Text style={{
+                                color: '#7E7E7E',
+                                fontSize: responsiveFontSize(1.8),//13,
+                                paddingLeft: 8,
+                            }}>: {this.state.roomBox.ContactPhone}</Text> */}
+
+                            <Text style={{
+                                color: '#7E7E7E',
+                                fontSize: responsiveFontSize(1.8),//13,
+                                paddingLeft: 8,
+                            }}>: {this.state.roomBox.ContactPhone.indexOf("|") > -1 ? this.state.roomBox.ContactPhone.split('|')[0] + '. LH: ' + this.state.roomBox.ContactPhone.split('|')[1]
+                                : this.state.roomBox.ContactPhone}</Text>
                         </TouchableOpacity>
                     </View>
 
@@ -1424,11 +1440,11 @@ const styles = StyleSheet.create({
         color: '#7E7E7E',
         fontSize: 15,
     },
-    cardAvatarPhone: {
-        color: '#7E7E7E',
-        fontSize: 13,
-        paddingLeft: 8,
-    },
+    // cardAvatarPhone: {
+    //     color: '#7E7E7E',
+    //     fontSize: 13,
+    //     paddingLeft: 8,
+    // },
     // cardImageBox: {
     //     flex: 6,
     //     // paddingLeft: 20,
