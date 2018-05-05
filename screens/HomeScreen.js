@@ -2052,7 +2052,9 @@ export default class HomeScreen extends React.Component {
               <View style={styles.cardBottom}>
                 {/* Room Icon Left */}
                 <View style={styles.cardBottomLeft}>
-                  <Text style={styles.cardBottomIconText}>{item.Point}</Text>
+                  <Text style={{
+                    color: '#8B8E8E'//item.Point == 5 ? '#a4d227' : '#8B8E8E',
+                  }}>{item.Point}</Text>
 
                   {/* Rating */}
                   <TouchableOpacity
@@ -2072,7 +2074,12 @@ export default class HomeScreen extends React.Component {
                       }
                     }}
                   >
-                    <Ionicons style={styles.cardBottomIcon} name='ios-star' />
+                    <Ionicons style={{
+                      fontSize: 20,
+                      paddingRight: 25,
+                      paddingLeft: 5,
+                      color: item.Point == 5 ? '#a4d227' : '#8B8E8E',
+                    }} name='ios-star' />
                   </TouchableOpacity>
                   <Text style={styles.cardBottomIconText}></Text>
 
@@ -3198,7 +3205,7 @@ export default class HomeScreen extends React.Component {
           <StarRating
             disabled={false}
             maxStars={5}
-            starColor={'#a4d227'}
+            fullStarColor={'#a4d227'}
             rating={this.state.starCount}
             selectedStar={(rating) => {
               //this.onStarRatingPress(rating)

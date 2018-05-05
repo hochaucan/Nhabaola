@@ -909,7 +909,7 @@ export default class RoomDetailScreen extends React.Component {
                                         fontSize: 20,
                                         paddingRight: 20,
                                         paddingLeft: 5,
-                                        color: this.state.isRating ? '#a4d227' : '#8B8E8E',
+                                        color: this.state.isRating ? '#a4d227' : this.state.roomBox.Point == 5 ? '#a4d227' : '#8B8E8E',
                                     }} name='ios-star' />
                                 </TouchableOpacity>
                                 <Text style={styles.cardBottomIconText}>{this.state.comments.length}</Text>
@@ -1285,7 +1285,7 @@ export default class RoomDetailScreen extends React.Component {
                     <StarRating
                         disabled={false}
                         maxStars={5}
-                        starColor={'#a4d227'}
+                        fullStarColor={'#a4d227'}
                         rating={this.state.starCount}
                         selectedStar={(rating) => {
                             this.setState({
