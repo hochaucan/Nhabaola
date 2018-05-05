@@ -849,10 +849,15 @@ export default class RoomDetailScreen extends React.Component {
 
                                         })
 
+                                        const _contactName = this.state.roomBox.ContactPhone.indexOf('|') > -1 ? this.state.roomBox.ContactPhone.split('|')[1] : this.state.roomBox.AccountName
+                                        const _contactPhone = this.state.roomBox.ContactPhone.indexOf('|') > -1 ? this.state.roomBox.ContactPhone.split('|')[0] : this.state.roomBox.ContactPhone
+
+
                                         if (Platform.OS == 'ios') {
                                             Share.share({
                                                 message: "*Chia Sẻ từ Ứng Dụng Nhà Bao La*"
-                                                    + "\n\nLiên hệ: " + this.state.roomBox.AccountName + "\nĐiện thoại: " + this.state.roomBox.ContactPhone
+                                                    + "\n\nLiên hệ: " + _contactName
+                                                    + "\nĐiện thoại: " + _contactPhone
                                                     + "\n\nLoại bất động sản: " + loadBDS
                                                     + "\nGiá: " + this.state.roomBox.Price + " đồng"
                                                     + "\nDiện tích: " + this.state.roomBox.Acreage + " mét vuông"
@@ -874,7 +879,8 @@ export default class RoomDetailScreen extends React.Component {
                                         else { //Android
                                             Share.share({
                                                 message: "*Chia Sẻ từ Ứng Dụng Nhà Bao La*"
-                                                    + "\n\nLiên hệ: " + this.state.roomBox.AccountName + "\nĐiện thoại: " + this.state.roomBox.ContactPhone
+                                                    + "\n\nLiên hệ: " + _contactName
+                                                    + "\nĐiện thoại: " + _contactPhone
                                                     + "\n\nLoại bất động sản: " + loadBDS
                                                     + "\nGiá: " + this.state.roomBox.Price + " đồng"
                                                     + "\nDiện tích: " + this.state.roomBox.Acreage + " mét vuông"

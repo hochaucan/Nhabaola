@@ -2133,15 +2133,16 @@ export default class HomeScreen extends React.Component {
                         if (y.ID == item.CategoryID) {
                           loadBDS = y.CatName
                         }
-
-
-
                       })
+
+                      const _contactName = item.ContactPhone.indexOf('|') > -1 ? item.ContactPhone.split('|')[1] : item.AccountName
+                      const _contactPhone = item.ContactPhone.indexOf('|') > -1 ? item.ContactPhone.split('|')[0] : item.ContactPhone
 
                       if (Platform.OS == 'ios') {
                         Share.share({
                           message: "*Chia Sẻ từ Ứng Dụng Nhà Bao La*"
-                            + "\n\nLiên hệ: " + item.AccountName + "\nĐiện thoại: " + item.ContactPhone
+                            + "\n\nLiên hệ: " + _contactName
+                            + "\nĐiện thoại: " + _contactPhone
                             + "\n\nLoại bất động sản: " + loadBDS
                             + "\nGiá: " + item.Price + " đồng"
                             + "\nDiện tích: " + item.Acreage + " mét vuông"
@@ -2160,9 +2161,11 @@ export default class HomeScreen extends React.Component {
                             ]
                           })
                       } else { //Android
+
                         Share.share({
                           message: "*Chia Sẻ từ Ứng Dụng Nhà Bao La*"
-                            + "\n\nLiên hệ: " + item.AccountName + "\nĐiện thoại: " + item.ContactPhone
+                            + "\n\nLiên hệ: " + _contactName
+                            + "\nĐiện thoại: " + _contactPhone
                             + "\n\nLoại bất động sản: " + loadBDS
                             + "\nGiá: " + item.Price + " đồng"
                             + "\nDiện tích: " + item.Acreage + " mét vuông"
