@@ -19,7 +19,7 @@ import {
     ActivityIndicator,
 } from 'react-native';
 import { ExpoLinksView } from '@expo/samples';
-import { Constants } from 'expo';
+import { Constants, Facebook } from 'expo';
 import MapView from 'react-native-maps';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { Ionicons } from '@expo/vector-icons';
@@ -429,16 +429,15 @@ export default class RoomDetailScreen extends React.Component {
                 .then((response) => response.json())
                 .then((responseJson) => {
 
-                    if (JSON.stringify(responseJson.ErrorCode) === "0") { // Rating successful
+                    if (JSON.stringify(responseJson.ErrorCode) === "0") { // Report successful
                         this.popupReportNBL.dismiss();
 
                         if (Platform.OS === 'android') {
-                            ToastAndroid.showWithGravity('Cảm ơn bạn đã báo cáo chúng tôi!', ToastAndroid.SHORT, ToastAndroid.TOP);
+                            //ToastAndroid.showWithGravity('Cảm ơn bạn đã báo cáo chúng tôi!', ToastAndroid.SHORT, ToastAndroid.TOP);
                         }
                         else {
                             this.setState({ modalReport: false })
-
-                            // Alert.alert('Thông báo', 'Cảm ơn bạn đã báo cáo chúng tôi!');
+                            //Alert.alert('Thông báo', 'Cảm ơn bạn đã báo cáo chúng tôi!');
                         }
 
                         this.setState({
@@ -447,6 +446,15 @@ export default class RoomDetailScreen extends React.Component {
                             reportHouse: false,
                         })
 
+                    }
+                    else { //Post Error
+                        if (Platform.OS === 'android') {
+                            //ToastAndroid.showWithGravity('Lỗi ' + JSON.stringify(responseJson) + ', vui lòng liên hệ Admin trong mục Giúp Đỡ!', ToastAndroid.SHORT, ToastAndroid.TOP);
+                        }
+                        else {
+                            this.setState({ modalReport: false })
+                            //Alert.alert('Thông báo', 'Lỗi ' + JSON.stringify(responseJson) + ', vui lòng liên hệ Admin trong mục Giúp Đỡ!');
+                        }
                     }
 
                     if (Platform.OS == 'ios') {
@@ -489,6 +497,97 @@ export default class RoomDetailScreen extends React.Component {
         this.setState(data);
 
     }
+
+    _handleFacebookLogin = async (image, message) => {
+
+
+        try {
+            const { type, token } = await Facebook.logInWithReadPermissionsAsync(
+                '485931318448821', // Replace with your own app id in standalone app 485931318448821, Test AppID: 1201211719949057
+                { permissions: ['public_profile', 'user_friends', 'email', 'user_posts'] }//'publish_actions','manage_pages','publish_pages','user_posts'
+            );
+
+            switch (type) {
+                case 'success': {
+
+                    this.popupLoadingIndicator.show()
+
+                    // Get the user's name using Facebook's Graph API
+                    const response = await fetch(`https://graph.facebook.com/me?access_token=${token}`);
+                    const profile = await response.json();
+
+
+                    try {
+                        //await fetch('https://graph.facebook.com/v2.11/100025728168189/friends?access_token=EAAG587OfErUBAEQp8GmJKVDGB26X0xvxgQboR04gtHsKc5j75V9ZCxyoyhtr3yujILGZBWhIGSZCywdRkfT7iNjFvJOHnfagH5kKjubl5m9cZB2NnLjm09jXtUWALXtcnZAXqAJaXZC3fTHFqDcKLX3z9En8OORpFVNZB41CvL0RYkCfpg6opdekgaBzoqksuOlZBwQpXrGwZAb2iDlKfCLlRsEgZCIDaWlPmr3occd7d68RetiVDlhVEt', {
+                        await fetch('https://graph.facebook.com/v2.12/' + profile.id + '/feed?link=' + image + '&message=' + message + '&access_token=' + token, { // Post officialy
+                            //await fetch('https://graph.facebook.com/v2.11/oauth/access_token?client_id=485931318448821&client_secret=9435b271a288d4f99f5280e20f18ec1f&grant_type=client_credentials', { //Get App Token
+                            //await fetch('https://graph.facebook.com/v2.11/485931318448821/accounts?name=Nick HO&installed=true&permissions=publish_actions,user_posts&access_token=485931318448821|9435b271a288d4f99f5280e20f18ec1f', { //Create Test User
+                            //await fetch('https://graph.facebook.com/v2.11/109653393236472/feed?link=' + image + '&message=' + message + '&access_token=EAAG587OfErUBAEQZAIsllv8ZBDZAhfrzZBfWx2J2LvGGb6usSZA8SCgMvGhFNRO3ttuyDZAnqFdkora89lZC4Rr1u5c5o33jLs9ZCoMQaH1KM6fmqhGPjwGn6QcXRHwJMZCZBI6ZBZCoRJvPtjpPbsFQZAqxWzmx7e0g07OJeOf8oFu6eeje0ht0xvU32i00YpK2U85ZBKZB5uQRdScvWJZBoWGkCV3o', { //Post dummy to wall
+                            //await fetch('https://graph.facebook.com/v2.11/109653393236472/photos?url=' + message + '&access_token=EAAG587OfErUBAEQZAIsllv8ZBDZAhfrzZBfWx2J2LvGGb6usSZA8SCgMvGhFNRO3ttuyDZAnqFdkora89lZC4Rr1u5c5o33jLs9ZCoMQaH1KM6fmqhGPjwGn6QcXRHwJMZCZBI6ZBZCoRJvPtjpPbsFQZAqxWzmx7e0g07OJeOf8oFu6eeje0ht0xvU32i00YpK2U85ZBKZB5uQRdScvWJZBoWGkCV3o', { //Post Photo to wall
+                            //method: 'GET',
+                            method: 'POST',
+                            headers: {
+                                Accept: 'application/json',
+                                'Content-Type': 'application/json',
+                            },
+
+                            // body: JSON.stringify({
+
+                            // }),
+                        })
+                            .then((response) => response.json())
+                            .then((responseJson) => {
+
+                                //alert(JSON.stringify(responseJson))
+                                //console.log(JSON.stringify(responseJson))
+
+                                if (!JSON.stringify(responseJson).match('error')) { // Post wall facebook successful!
+                                    if (Platform.OS === 'android') {
+                                        ToastAndroid.showWithGravity('Đăng Tin Facebook thành công!', ToastAndroid.SHORT, ToastAndroid.TOP);
+                                    }
+                                    else {
+                                        Alert.alert('Thông báo', 'Đăng Tin Facebook thành công!');
+                                    }
+                                } else { // Error
+                                    if (Platform.OS === 'android') {
+                                        ToastAndroid.showWithGravity('Lỗi ' + JSON.stringify(responseJson) + ', vui lòng liên hệ Admin trong mục Giúp Đỡ!', ToastAndroid.SHORT, ToastAndroid.TOP);
+                                    }
+                                    else {
+                                        Alert.alert('Thông báo', 'Lỗi ' + JSON.stringify(responseJson) + ', vui lòng liên hệ Admin trong mục Giúp Đỡ!');
+                                    }
+                                }
+
+                                this.popupLoadingIndicator.dismiss()
+
+                            }).
+                            catch((error) => { console.log(error) });
+                    } catch (error) {
+                        console.log(error)
+                    }
+
+                    break;
+                }
+                case 'cancel': {
+                    Alert.alert(
+                        'Thông báo',
+                        'Huỷ đăng nhập Facebook',
+                    );
+                    break;
+                }
+                default: {
+                    Alert.alert(
+                        'Thông báo',
+                        'Đăng nhập không thành công',
+                    );
+                }
+            }
+        } catch (e) {
+            Alert.alert(
+                'Thông báo',
+                'Đăng nhập không thành công' + JSON.stringify(e),
+            );
+        }
+    };
 
     render() {
         //const { picture, name, email, phone, login, dob, location } = this.props.navigation.state.params;
@@ -833,10 +932,40 @@ export default class RoomDetailScreen extends React.Component {
                                     <Ionicons style={styles.cardBottomIcon} name='ios-chatbubbles' />
                                 </TouchableOpacity>
                             </View>
+
+                            {/* Room Icon Right */}
                             <View style={styles.cardBottomRight}>
-                                {/* <TouchableOpacity >
-                                    <Ionicons style={styles.cardBottomIcon} name='ios-thumbs-up' />
-                                </TouchableOpacity> */}
+
+                                {/* Like Facebook */}
+                                <TouchableOpacity
+                                    style={{}}
+                                    onPress={() => {
+
+                                        Alert.alert(
+                                            'Thông báo',
+                                            'Bạn cần đăng nhập Facebook với quyền "publish_pages, manage_pages, user_posts" để Chia Sẻ Tin này trên Timeline của mình.  \nBạn muốn đăng nhập ngay?',
+                                            [
+                                                {
+                                                    text: 'Hủy', onPress: () => {
+
+                                                    }
+                                                },
+                                                {
+                                                    text: 'Đồng ý', onPress: () => {
+                                                        this._handleFacebookLogin(this.state.roomBox.Title, this.state.roomBox.Description
+                                                            + '\n\n\nCài đặt Ứng dụng Nhàbaola để biết thêm nhiều loại Bất Động Sản khác'
+                                                            + '\n - iOS: https://itunes.apple.com/vn/app/nhabaola/id1287451307?mt=8'
+                                                            + '\n - Android: ' + 'https://play.google.com/store/apps/details?id=vn.nhabaola.nhabaola')
+                                                    }
+                                                },
+                                            ]
+                                        );
+                                    }}
+                                >
+                                    <Ionicons style={styles.cardBottomIcon} name='logo-facebook' />
+                                </TouchableOpacity>
+
+                                {/* Sharing */}
                                 <TouchableOpacity
                                     onPress={async () => {
                                         let loadBDS = '';
@@ -1244,13 +1373,7 @@ export default class RoomDetailScreen extends React.Component {
                                 icon={{ name: 'md-cloud-upload', type: 'ionicon' }}
                                 title='Gửi'
                                 onPress={() => {
-                                    // Notify Admin 
-                                    notifyNBLAsync('ExponentPushToken[ycjiZbIzuZuk5oS0EhzWTB]'
-                                        , { "screen": "RoomDetailScreen", "params": { "roomBoxID": this.state.roomBox.ID } } //{ ...roombox }
-                                        , "default"
-                                        , this.state.profile.FullName + " phàn nàn:"
-                                        , "Không đúng địa chỉ hoặc Không gọi được hoặc Nhà đã cho thuê"
-                                    ); //pushToken, data, sound, title, body
+
 
                                     if (this.state.reportAddress) {
                                         this._reportNBLAsync(2, this.state.roomBox.ID)
@@ -1261,6 +1384,16 @@ export default class RoomDetailScreen extends React.Component {
                                     if (this.state.reportHouse) {
                                         this._reportNBLAsync(5, this.state.roomBox.ID)
                                     }
+
+                                    ToastAndroid.showWithGravity('Cảm ơn bạn đã báo cáo chúng tôi!', ToastAndroid.SHORT, ToastAndroid.TOP);
+
+                                    // Notify Admin 
+                                    notifyNBLAsync(globalVariable.ADMIN_PUSH_TOKEN
+                                        , { "screen": "RoomDetailScreen", "params": { "roomBoxID": this.state.roomBox.ID } } //{ ...roombox }
+                                        , "default"
+                                        , this.state.profile.FullName + " phàn nàn:"
+                                        , "Không đúng địa chỉ hoặc Không gọi được hoặc Nhà đã cho thuê"
+                                    ); //pushToken, data, sound, title, body
 
                                 }}
                             />
@@ -1347,13 +1480,7 @@ export default class RoomDetailScreen extends React.Component {
                                 title='Gửi'
                                 onPress={() => {
 
-                                    // Notify Admin 
-                                    notifyNBLAsync('ExponentPushToken[ycjiZbIzuZuk5oS0EhzWTB]'
-                                        , { "screen": "RoomDetailScreen", "params": { "roomBoxID": this.state.roomBox.ID } } //{ ...roombox }
-                                        , "default"
-                                        , this.state.profile.FullName + " phàn nàn:"
-                                        , "Không đúng địa chỉ hoặc Không gọi được hoặc Nhà đã cho thuê"
-                                    ); //pushToken, data, sound, title, body
+
 
                                     if (this.state.reportAddress) {
                                         this._reportNBLAsync(2, this.state.roomBox.ID)
@@ -1364,6 +1491,16 @@ export default class RoomDetailScreen extends React.Component {
                                     if (this.state.reportHouse) {
                                         this._reportNBLAsync(5, this.state.roomBox.ID)
                                     }
+
+                                    Alert.alert('Thông báo', 'Cảm ơn bạn đã báo cáo chúng tôi!');
+
+                                    // Notify Admin 
+                                    notifyNBLAsync(globalVariable.ADMIN_PUSH_TOKEN
+                                        , { "screen": "RoomDetailScreen", "params": { "roomBoxID": this.state.roomBox.ID } } //{ ...roombox }
+                                        , "default"
+                                        , this.state.profile.FullName + " phàn nàn:"
+                                        , "Không đúng địa chỉ hoặc Không gọi được hoặc Nhà đã cho thuê"
+                                    ); //pushToken, data, sound, title, body
 
                                 }}
                             />

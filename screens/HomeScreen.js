@@ -1282,20 +1282,13 @@ export default class HomeScreen extends React.Component {
             this.popupReportNBL.dismiss();
 
             if (Platform.OS === 'android') {
-              ToastAndroid.showWithGravity('Cảm ơn bạn đã báo cáo chúng tôi!', ToastAndroid.SHORT, ToastAndroid.TOP);
+              //ToastAndroid.showWithGravity('Cảm ơn bạn đã báo cáo chúng tôi!', ToastAndroid.SHORT, ToastAndroid.TOP);
             }
             else {
               this.setState({ modalReport: false, })
               //Alert.alert('Thông báo', 'Cảm ơn bạn đã báo cáo chúng tôi!');
             }
 
-            // // Notify Admin 
-            // notifyNBLAsync('ExponentPushToken[ycjiZbIzuZuk5oS0EhzWTB]'
-            //   , { "screen": "RoomDetailScreen", "params": { "roomBoxID": _roomId} } //{ ...roombox }
-            //   , "default"
-            //   , this.state.profile.FullName + " Phàn nàn:"
-            //   , "Không đúng địa chỉ hoặc Không gọi được hoặc Nhà đã cho thuê"
-            // ); //pushToken, data, sound, title, body
 
             this.setState({
               reportAddress: false,
@@ -1306,10 +1299,11 @@ export default class HomeScreen extends React.Component {
           }
           else { //Post Error
             if (Platform.OS === 'android') {
-              ToastAndroid.showWithGravity('Lỗi ' + JSON.stringify(responseJson.ErrorCode) + ', vui lòng liên hệ Admin trong mục Giúp Đỡ!', ToastAndroid.SHORT, ToastAndroid.TOP);
+              //ToastAndroid.showWithGravity('Lỗi ' + JSON.stringify(responseJson) + ', vui lòng liên hệ Admin trong mục Giúp Đỡ!', ToastAndroid.SHORT, ToastAndroid.TOP);
             }
             else {
-              Alert.alert('Thông báo', 'Lỗi ' + JSON.stringify(responseJson.ErrorCode) + ', vui lòng liên hệ Admin trong mục Giúp Đỡ!');
+              this.setState({ modalReport: false })
+              //Alert.alert('Thông báo', 'Lỗi ' + JSON.stringify(responseJson) + ', vui lòng liên hệ Admin trong mục Giúp Đỡ!');
             }
           }
 
@@ -3070,6 +3064,8 @@ export default class HomeScreen extends React.Component {
                     this._reportNBLAsync(5, this.state.reportRoomId)
                   }
 
+                  ToastAndroid.showWithGravity('Cảm ơn bạn đã báo cáo chúng tôi!', ToastAndroid.SHORT, ToastAndroid.TOP);
+
                   // Notify Admin 
                   notifyNBLAsync(globalVariable.ADMIN_PUSH_TOKEN
                     , { "screen": "RoomDetailScreen", "params": { "roomBoxID": this.state.reportRoomId } } //{ ...roombox }
@@ -3174,6 +3170,8 @@ export default class HomeScreen extends React.Component {
                   if (this.state.reportHouse) {
                     this._reportNBLAsync(5, this.state.reportRoomId)
                   }
+
+                  Alert.alert('Thông báo', 'Cảm ơn bạn đã báo cáo chúng tôi!');
 
                   // Notify Admin 
                   notifyNBLAsync(globalVariable.ADMIN_PUSH_TOKEN
