@@ -71,6 +71,8 @@ if (Platform.OS === 'android') {
                             Alert.alert('Thông báo', 'Bình luận thành công!');
                         }
 
+* INFOPLIST IOS
+https://developer.apple.com/library/content/qa/qa1937/_index.html
 
 * EASING
 step0
