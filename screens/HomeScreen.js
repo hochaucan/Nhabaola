@@ -1193,6 +1193,70 @@ export default class HomeScreen extends React.Component {
 
   }
 
+  _postPinnedByRoom = async (isPinned, _roomId) => {
+
+    // alert(_roomId + "  " + _rate + "  " + this.state.profile.ID + "  " + this.state.sessionKey)
+
+    try {
+      await fetch("http://nhabaola.vn/api/RoomBox/FO_RoomBox_SetPinned", {
+        method: 'POST',
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          "ID": _roomId,
+          "IsPinned": isPinned,
+          "CreatedBy": this.state.profile.ID,
+          "UpdatedBy": this.state.sessionKey,
+        }),
+      })
+        .then((response) => response.json())
+        .then((responseJson) => {
+
+          if (JSON.stringify(responseJson.ErrorCode) === "0") { // Rating successful
+            this.popupRating.dismiss();
+
+            if (Platform.OS === 'android') {
+              ToastAndroid.showWithGravity('Đánh dấu thành công!', ToastAndroid.SHORT, ToastAndroid.TOP);
+            }
+            else {
+              Alert.alert('Thông báo', 'Đánh dấu thành công!');
+            }
+            // this.popupActiveNewPassword.dismiss();
+            // this.setState({ resetPasswordUsername: '' })
+            // this.setState({
+            //   loginUsername: this.state.resetPasswordUsername,
+            //   loginPassword: resetPasswordNewPassword,
+            // })
+
+            // this._loginAsync();
+          }
+          else {
+            if (Platform.OS === 'android') {
+              ToastAndroid.showWithGravity('Lỗi ' + JSON.stringify(responseJson) + ', vui lòng liên hệ Admin trong mục Giúp Đỡ!', ToastAndroid.SHORT, ToastAndroid.TOP);
+            }
+            else {
+              Alert.alert('Thông báo', 'Lỗi ' + JSON.stringify(responseJson) + ', vui lòng liên hệ Admin trong mục Giúp Đỡ!');
+            }
+          }
+
+          // this.setState({
+          //   //roomCategory: JSON.stringify(responseJson.obj)
+          //   // roomCategory: responseJson.obj.map((y) => { return y.CatName })
+          //   //roomCategory: JSON.parse(this._getCategoryAsync('roomCategory'))
+          //   roomCategory: responseJson.obj
+          // })
+
+
+        }).
+        catch((error) => { console.log(error) });
+    } catch (error) {
+      console.log(error)
+    }
+
+  }
+
   _postRatingByRoom = async (_rate, _roomId) => {
 
     // alert(_roomId + "  " + _rate + "  " + this.state.profile.ID + "  " + this.state.sessionKey)
@@ -1804,6 +1868,7 @@ export default class HomeScreen extends React.Component {
           <FlatList
             //onScroll={this._onScroll}
             // ref='homepage'
+            //extraData={this.state}
             refreshing={this.state.refreshCategory}
             keyboardShouldPersistTaps="always"
             removeClippedSubviews={true}
@@ -2091,6 +2156,28 @@ export default class HomeScreen extends React.Component {
                   >
                     <Ionicons style={styles.cardBottomIcon} name='ios-chatbubbles' />
                   </TouchableOpacity>
+
+                  {/* Pinned */}
+                  <TouchableOpacity
+                    onPress={() => {
+                      //const {colorPinned} = this.state;
+                      //  item.IsPinned = 'false'
+                      // alert(item.IsPinned)
+                      // this.setState({
+                      //   extraData: item.IsPinned == 'false' ? '#a4d227' : '#8B8E8E',
+                      // })
+
+                      this._postPinnedByRoom("true", item.ID)
+                    }}
+                  >
+                    <Ionicons style={{
+                      fontSize: 20,
+                      paddingRight: 25,
+                      paddingLeft: 5,
+                      color: '#8B8E8E',
+                    }} name='md-heart-outline' />
+                  </TouchableOpacity>
+
                 </View>
 
                 {/* Room Icon Righ */}

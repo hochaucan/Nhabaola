@@ -535,6 +535,16 @@ export default class ProfileScreen extends React.Component {
                             <Text>  Tin đã đăng</Text>
                         </Ionicons>
                     </TouchableOpacity>
+                    <TouchableOpacity style={styles.profileMenuItem}
+                        onPress={() => {
+
+                            this.props.navigation.navigate('PostedRoomHIstoryScreen', { onRefreshScreen: this._getWalletAsync });
+                        }}
+                    >
+                        <Ionicons style={styles.profileMenuItemText} name='md-heart-outline'>
+                            <Text>  Tin đánh dấu</Text>
+                        </Ionicons>
+                    </TouchableOpacity>
                     <TouchableOpacity style={styles.profileMenuItem}>
                         <Ionicons style={styles.profileMenuItemText} name='logo-usd'>
                             <Text style={{}}>  Ví tiền:  </Text>
