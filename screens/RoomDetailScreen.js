@@ -36,7 +36,6 @@ import globalVariable from '../components/Global'
 import convertAmountToWording from '../api/convertAmountToWording'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import notifyNBLAsync from '../api/notifyNBLAsync';
-import StreetView from 'react-native-streetview';
 
 var { height, width } = Dimensions.get('window');
 
@@ -1169,16 +1168,7 @@ export default class RoomDetailScreen extends React.Component {
                         >
                             <Ionicons style={{ color: '#fff', fontSize: responsiveFontSize(1.5) }} name='md-return-right' > Tìm đường</Ionicons>
                         </TouchableOpacity>
-                        <View style={styles.container}>
-                            <StreetView
-                                style={styles.streetView}
-                                allGesturesEnabled={true}
-                                coordinate={{
-                                    'latitude': -33.852,
-                                    'longitude': 151.211
-                                }}
-                            />
-                        </View>
+                    
                         <MapView
                             // provider='google'
                             style={{
