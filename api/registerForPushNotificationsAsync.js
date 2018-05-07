@@ -11,6 +11,7 @@ export default (async function registerForPushNotificationsAsync() {
 
   // Stop here if the user did not grant permissions
   if (status !== 'granted') {
+    Alert.alert("Thông báo", "Quyền được nhận Thông Báo từ Nhàbaola bị từ chối")
     return;
   }
 

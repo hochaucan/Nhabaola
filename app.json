@@ -9,7 +9,7 @@
       "ios",
       "android"
     ],
-    "version": "1.1.0",
+    "version": "1.1.2",
     "orientation": "portrait",
     "primaryColor": "#cccccc",
     "icon": "./assets/icons/app-icon.png",
@@ -37,13 +37,15 @@
       "supportsTablet": true,
       "bundleIdentifier": "vn.nhabaola.nhabaola",
       "infoPlist": {
-        "NSLocationAlwaysUsageDescription ":"Your current location will be displayed on the map and used for directions, nearby search result and estimated distance.",
-        "NSLocationWhenInUseUsageDescription": "Your current location will be displayed on the map and used for directions, nearby search result and estimated distance"
+        "NSLocationAlwaysUsageDescription ": "Your current location will be displayed on the map and used for directions, nearby search result and estimated distance.",
+        "NSLocationWhenInUseUsageDescription": "Your current location will be displayed on the map and used for directions, nearby search result and estimated distance",
+        "NSCameraUsageDescription": "This app uses the camera to take picture for posting",
+        "NSPhotoLibraryUsageDescription": "This app uses Photo Library to pick up image for posting"
       }
     },
     "android": {
       "package": "vn.nhabaola.nhabaola",
-      "versionCode": 10,
+      "versionCode": 12,
       "config": {
         "googleMaps": {
           "apiKey": "AIzaSyDjGSoHkMu6Q55FifG90l25DR8SfMo3quM"

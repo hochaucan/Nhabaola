@@ -12,7 +12,7 @@ import {
   NetInfo,
   Alert,
 } from 'react-native';
-import { AppLoading, Asset, Font } from 'expo';
+import { AppLoading, Asset, Font, Permissions } from 'expo';
 import { Ionicons } from '@expo/vector-icons';
 import RootNavigation from './navigation/RootNavigation';
 
@@ -55,9 +55,15 @@ export default class App extends React.Component {
     );
 
     this._loadAssetsAsync();
+
+
   }
 
-  componentDidMount() {
+  componentDidMount = async () => {
+
+    //await this._getPermissionLocation();
+    //await this._getPermissionCAMERA();
+    //await this._getPermissionCAMERA_ROLL();
     // Animate NBL Logo
     // Animated.timing(                  // Animate over time
     //   this.state.topLogo,            // The animated value to drive
@@ -68,6 +74,34 @@ export default class App extends React.Component {
     //   }
     // ).start();
   }
+
+
+  // _getPermissionCAMERA = async () => {
+  //   let { status } = await Permissions.askAsync(Permissions.CAMERA);
+  //   if (status !== 'granted') {
+  //     Alert.alert("Thông báo", "Quyền truy cập CAMERA bị từ chối")
+  //   }
+
+  // }
+
+  // _getPermissionCAMERA_ROLL = async () => {
+
+  //   let { status } = await Permissions.askAsync(Permissions.CAMERA_ROLL);
+  //   if (status !== 'granted') {
+  //     Alert.alert("Thông báo", "Quyền truy cập CAMERA_ROLL bị từ chối")
+
+  //   }
+  // }
+
+  // _getPermissionLocation = async () => {
+
+  //   let { status } = await Permissions.askAsync(Permissions.LOCATION);
+  //   if (status !== 'granted') {
+  //     this.setState({
+  //       errorMessage: 'Quyền truy cập Vị Trí của bạn bị từ chối',
+  //     });
+  //   }
+  // }
 
   render() {
     let { topLogo } = this.state;

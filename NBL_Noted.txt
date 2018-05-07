@@ -74,6 +74,30 @@ if (Platform.OS === 'android') {
 * INFOPLIST IOS
 https://developer.apple.com/library/content/qa/qa1937/_index.html
 
+App Store submission disclaimer
+If you need to submit you application to the AppStore, you need to add to your Info.plist all *UsageDescription keys with a string value explaining to the user how the app uses this data. Even if you don't use them.
+So before submitting your app to the App Store, make sure that in your Info.plist you have the following keys:
+
+<key>NSBluetoothPeripheralUsageDescription</key>
+<string>Some description</string>
+<key>NSCalendarsUsageDescription</key>
+<string>Some description</string>
+<key>NSCameraUsageDescription</key>
+<string>Some description</string>
+<key>NSLocationWhenInUseUsageDescription</key>
+<string>Some description</string>
+<key>NSPhotoLibraryAddUsageDescription</key>
+<string>Some description</string>
+<key>NSPhotoLibraryUsageDescription</key>
+<string>Some description</string>
+<key>NSSpeechRecognitionUsageDescription</key>
+<string>Some description</string>
+<key>NSAppleMusicUsageDescription</key>
+<string>Some description</string>
+<key>NSMotionUsageDescription</key>
+<string>Some description</string>
+
+
 * EASING
 step0
 step1

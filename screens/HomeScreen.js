@@ -23,7 +23,7 @@ import {
   Keyboard,
   Easing,
 } from 'react-native';
-import { WebBrowser, ImagePicker, Facebook, Google, Notifications } from 'expo';
+import { WebBrowser, ImagePicker, Facebook, Google, Notifications, Permissions } from 'expo';
 import { MonoText } from '../components/StyledText';
 import ActionButton from 'react-native-action-button';
 import Icon from 'react-native-vector-icons/Ionicons';
@@ -308,6 +308,8 @@ export default class HomeScreen extends React.Component {
     // Remove Push Notification
     this._notificationSubscription && this._notificationSubscription.remove();
   }
+
+
 
   _onScroll = (event) => {
 
@@ -1208,14 +1210,14 @@ export default class HomeScreen extends React.Component {
           "ID": _roomId,
           "IsPinned": isPinned,
           "CreatedBy": this.state.profile.ID,
-          "UpdatedBy": this.state.sessionKey,
+          "UpdatedBy": this.state.profile.UpdatedBy, //this.state.sessionKey,
         }),
       })
         .then((response) => response.json())
         .then((responseJson) => {
 
           if (JSON.stringify(responseJson.ErrorCode) === "0") { // Rating successful
-            this.popupRating.dismiss();
+
 
             if (Platform.OS === 'android') {
               ToastAndroid.showWithGravity('Đánh dấu thành công!', ToastAndroid.SHORT, ToastAndroid.TOP);
@@ -1240,14 +1242,6 @@ export default class HomeScreen extends React.Component {
               Alert.alert('Thông báo', 'Lỗi ' + JSON.stringify(responseJson) + ', vui lòng liên hệ Admin trong mục Giúp Đỡ!');
             }
           }
-
-          // this.setState({
-          //   //roomCategory: JSON.stringify(responseJson.obj)
-          //   // roomCategory: responseJson.obj.map((y) => { return y.CatName })
-          //   //roomCategory: JSON.parse(this._getCategoryAsync('roomCategory'))
-          //   roomCategory: responseJson.obj
-          // })
-
 
         }).
         catch((error) => { console.log(error) });
@@ -1336,7 +1330,7 @@ export default class HomeScreen extends React.Component {
           "ReportTypeID": _reportTypeId,
           "UserID": this.state.profile.ID,
           "CreatedBy": this.state.profile.ID,
-          "UpdatedBy": this.state.sessionKey,
+          "UpdatedBy": this.state.profile.UpdatedBy, //this.state.sessionKey,
         }),
       })
         .then((response) => response.json())
@@ -2160,14 +2154,18 @@ export default class HomeScreen extends React.Component {
                   {/* Pinned */}
                   <TouchableOpacity
                     onPress={() => {
-                      //const {colorPinned} = this.state;
-                      //  item.IsPinned = 'false'
-                      // alert(item.IsPinned)
-                      // this.setState({
-                      //   extraData: item.IsPinned == 'false' ? '#a4d227' : '#8B8E8E',
-                      // })
+                      if (this.state.profile === null) {
+                        if (Platform.OS == 'ios') {
+                          Alert.alert('Thông Báo', 'Bạn vui lòng đăng nhập')
+                        } else {
+                          ToastAndroid.showWithGravity("Bạn vui lòng đăng nhập!", ToastAndroid.SHORT, ToastAndroid.TOP)
+                        }
+                      } else {
 
-                      this._postPinnedByRoom("true", item.ID)
+                        this._postPinnedByRoom("true", item.ID)
+                      }
+
+
                     }}
                   >
                     <Ionicons style={{
@@ -2783,9 +2781,9 @@ export default class HomeScreen extends React.Component {
           dialogTitle={<DialogTitle title="Đăng nhập" titleStyle={{}} titleTextStyle={{ color: '#73aa2a' }} />}
           dismissOnTouchOutside={false}
           dialogStyle={{ marginBottom: 150, width: width * 0.9, }}
-        // onShown={() => {
-        //   this.refs.userNameInput.focus()
-        // }}
+          onShown={() => {
+            this.refs.userNameInput.focus()
+          }}
 
         >
           <View>
@@ -2922,9 +2920,9 @@ export default class HomeScreen extends React.Component {
           onRequestClose={() => {
             this.setState({ modalLogin: false })
           }}
-        // onShow={() => {
-        //   this.refs.iosUserNameInput.focus()
-        // }}
+          onShow={() => {
+            this.refs.iosUserNameInput.focus()
+          }}
         >
 
           <View>

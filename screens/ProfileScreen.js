@@ -538,7 +538,7 @@ export default class ProfileScreen extends React.Component {
                     <TouchableOpacity style={styles.profileMenuItem}
                         onPress={() => {
 
-                            this.props.navigation.navigate('PostedRoomHIstoryScreen', { onRefreshScreen: this._getWalletAsync });
+                            this.props.navigation.navigate('PinnedRoomScreen', { onRefreshScreen: this._getWalletAsync });
                         }}
                     >
                         <Ionicons style={styles.profileMenuItemText} name='md-heart-outline'>

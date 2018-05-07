@@ -373,39 +373,28 @@ export default class SearchScreen extends React.Component {
     getVal(val) {
         // console.warn(val);
     }
-    componentWillMount() {
+    componentWillMount = async () => {
+        await this._getPermissionLOCATION();
+        await this._getPermissionCAMERA();
+        await this._getPermissionCAMERA_ROLL();
+
         this._getLocationAsync();
-        // setTimeout(() => {
-        //     this._getLocationAsync();
-        // }, 2000);
-
         this._getCategoryFromStorageAsync();
-        // this._getProfileFromStorageAsync();
-
-        // if (Platform.OS === 'android' && !Constants.isDevice) {
-        //     this.setState({
-        //         errorMessage: 'Oops, this will not work on Sketch in an Android emulator. Try it on your device!',
-        //     });
-        // } else {
-        //     this._getLocationAsync();
-        // }
-
-        // setTimeout(() => this.setState({ hackHeight: height + 1 }), 500);
-        // setTimeout(() => this.setState({ hackHeight: height * 0.5 }), 1000);
     }
 
     componentDidMount() {
 
     }
 
+
     _getLocationAsync = async () => {
 
-        let { status } = await Permissions.askAsync(Permissions.LOCATION);
-        if (status !== 'granted') {
-            this.setState({
-                errorMessage: 'Permission to access location was denied',
-            });
-        }
+        // let { status } = await Permissions.askAsync(Permissions.LOCATION);
+        // if (status !== 'granted') {
+        //     this.setState({
+        //         errorMessage: 'Quyền truy cập Vị Trí của bạn bị từ chối',
+        //     });
+        // }
 
         let provider = await Location.getProviderStatusAsync()
         // console.log(provider.locationServicesEnabled)
@@ -448,10 +437,30 @@ export default class SearchScreen extends React.Component {
 
     };
 
-    // _getCurrentPositionAsync() {
-    //     //  this.refs.map.animateToRegion(this.region, 1000);
+    _getPermissionLOCATION = async () => {
+        let { status } = await Permissions.askAsync(Permissions.LOCATION);
+        if (status !== 'granted') {
+            Alert.alert("Thông báo", "Quyền truy cập Vị Trí của bạn bị từ chối")
+        }
 
-    // }
+    }
+
+    _getPermissionCAMERA = async () => {
+        let { status } = await Permissions.askAsync(Permissions.CAMERA);
+        if (status !== 'granted') {
+            Alert.alert("Thông báo", "Quyền truy cập CAMERA bị từ chối")
+        }
+
+    }
+
+    _getPermissionCAMERA_ROLL = async () => {
+
+        let { status } = await Permissions.askAsync(Permissions.CAMERA_ROLL);
+        if (status !== 'granted') {
+            Alert.alert("Thông báo", "Quyền truy cập CAMERA_ROLL bị từ chối")
+
+        }
+    }
 
     _dropdownFilter_onSelect(idx, value) {
         // BUG: alert in a modal will auto dismiss and causes crash after reload and touch. @sohobloo 2016-12-1

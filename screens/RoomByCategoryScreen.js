@@ -1253,6 +1253,55 @@ export default class RoomByCategoryScreen extends React.Component {
 
   }
 
+  _postPinnedByRoom = async (isPinned, _roomId) => {
+
+    // alert(_roomId + "  " + _rate + "  " + this.state.profile.ID + "  " + this.state.sessionKey)
+
+    try {
+      await fetch("http://nhabaola.vn/api/RoomBox/FO_RoomBox_SetPinned", {
+        method: 'POST',
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          "ID": _roomId,
+          "IsPinned": isPinned,
+          "CreatedBy": this.state.profile.ID,
+          "UpdatedBy": this.state.profile.UpdatedBy, //this.state.sessionKey,
+        }),
+      })
+        .then((response) => response.json())
+        .then((responseJson) => {
+
+          if (JSON.stringify(responseJson.ErrorCode) === "0") { // Rating successful
+
+
+            if (Platform.OS === 'android') {
+              ToastAndroid.showWithGravity('Đánh dấu thành công!', ToastAndroid.SHORT, ToastAndroid.TOP);
+            }
+            else {
+              Alert.alert('Thông báo', 'Đánh dấu thành công!');
+            }
+
+          }
+          else {
+            if (Platform.OS === 'android') {
+              ToastAndroid.showWithGravity('Lỗi ' + JSON.stringify(responseJson) + ', vui lòng liên hệ Admin trong mục Giúp Đỡ!', ToastAndroid.SHORT, ToastAndroid.TOP);
+            }
+            else {
+              Alert.alert('Thông báo', 'Lỗi ' + JSON.stringify(responseJson) + ', vui lòng liên hệ Admin trong mục Giúp Đỡ!');
+            }
+          }
+
+        }).
+        catch((error) => { console.log(error) });
+    } catch (error) {
+      console.log(error)
+    }
+
+  }
+
   _getWalletAsync = async () => {
     //  await this.setState({ refresh: true })  
 
@@ -1751,6 +1800,32 @@ export default class RoomByCategoryScreen extends React.Component {
                   >
                     <Ionicons style={styles.cardBottomIcon} name='ios-chatbubbles' />
                   </TouchableOpacity>
+
+                  {/* Pinned */}
+                  <TouchableOpacity
+                    onPress={() => {
+                      if (this.state.profile === null) {
+                        if (Platform.OS == 'ios') {
+                          Alert.alert('Thông Báo', 'Bạn vui lòng đăng nhập')
+                        } else {
+                          ToastAndroid.showWithGravity("Bạn vui lòng đăng nhập!", ToastAndroid.SHORT, ToastAndroid.TOP)
+                        }
+                      } else {
+
+                        this._postPinnedByRoom("true", item.ID)
+                      }
+
+
+                    }}
+                  >
+                    <Ionicons style={{
+                      fontSize: 20,
+                      paddingRight: 25,
+                      paddingLeft: 5,
+                      color: '#8B8E8E',
+                    }} name='md-heart-outline' />
+                  </TouchableOpacity>
+
                 </View>
 
                 {/* Room Icon Righ */}
