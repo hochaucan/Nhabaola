@@ -1199,6 +1199,8 @@ export default class HomeScreen extends React.Component {
 
     // alert(_roomId + "  " + _rate + "  " + this.state.profile.ID + "  " + this.state.sessionKey)
 
+    this.popupLoadingIndicator.show()
+
     try {
       await fetch("http://nhabaola.vn/api/RoomBox/FO_RoomBox_SetPinned", {
         method: 'POST',
@@ -1242,7 +1244,7 @@ export default class HomeScreen extends React.Component {
               Alert.alert('Thông báo', 'Lỗi ' + JSON.stringify(responseJson) + ', vui lòng liên hệ Admin trong mục Giúp Đỡ!');
             }
           }
-
+          this.popupLoadingIndicator.dismiss()
         }).
         catch((error) => { console.log(error) });
     } catch (error) {
@@ -1254,6 +1256,8 @@ export default class HomeScreen extends React.Component {
   _postRatingByRoom = async (_rate, _roomId) => {
 
     // alert(_roomId + "  " + _rate + "  " + this.state.profile.ID + "  " + this.state.sessionKey)
+
+    this.popupLoadingIndicator.show()
 
     try {
       await fetch("http://nhabaola.vn/api/RoomBox/FO_RoomBox_SetLike", {
@@ -1291,13 +1295,7 @@ export default class HomeScreen extends React.Component {
             // this._loginAsync();
           }
 
-          // this.setState({
-          //   //roomCategory: JSON.stringify(responseJson.obj)
-          //   // roomCategory: responseJson.obj.map((y) => { return y.CatName })
-          //   //roomCategory: JSON.parse(this._getCategoryAsync('roomCategory'))
-          //   roomCategory: responseJson.obj
-          // })
-
+          this.popupLoadingIndicator.dismiss()
 
         }).
         catch((error) => { console.log(error) });

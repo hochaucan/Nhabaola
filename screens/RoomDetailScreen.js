@@ -359,6 +359,8 @@ export default class RoomDetailScreen extends React.Component {
         // alert(_roomId + "  " + _rate + "  " + this.state.profile.ID + "  " + this.state.profile.UpdatedBy)
         // return;
 
+        this.popupLoadingIndicator.show()
+
         try {
             await fetch("http://nhabaola.vn/api/RoomBox/FO_RoomBox_SetLike", {
                 method: 'POST',
@@ -386,6 +388,8 @@ export default class RoomDetailScreen extends React.Component {
                             Alert.alert('Thông báo', 'Cảm ơn bạn đã đánh giá!');
                         }
                     }
+
+                    this.popupLoadingIndicator.dismiss()
                 }).
                 catch((error) => { console.log(error) });
         } catch (error) {
@@ -404,6 +408,7 @@ export default class RoomDetailScreen extends React.Component {
     _postPinnedByRoom = async (isPinned, _roomId) => {
 
         // alert(_roomId + "  " + _rate + "  " + this.state.profile.ID + "  " + this.state.sessionKey)
+        this.popupLoadingIndicator.show()
 
         try {
             await fetch("http://nhabaola.vn/api/RoomBox/FO_RoomBox_SetPinned", {
@@ -441,6 +446,8 @@ export default class RoomDetailScreen extends React.Component {
                             Alert.alert('Thông báo', 'Lỗi ' + JSON.stringify(responseJson) + ', vui lòng liên hệ Admin trong mục Giúp Đỡ!');
                         }
                     }
+
+                    this.popupLoadingIndicator.dismiss()
 
                 }).
                 catch((error) => { console.log(error) });
@@ -1168,7 +1175,7 @@ export default class RoomDetailScreen extends React.Component {
                         >
                             <Ionicons style={{ color: '#fff', fontSize: responsiveFontSize(1.5) }} name='md-return-right' > Tìm đường</Ionicons>
                         </TouchableOpacity>
-                    
+
                         <MapView
                             // provider='google'
                             style={{
