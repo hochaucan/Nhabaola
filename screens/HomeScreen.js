@@ -68,55 +68,6 @@ function numberWithCommas(x) {
   return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
 }
 
-
-
-function doGet(e) {
-
-  var sourceText = 'táo'
-  if (e.parameter.q) {
-    sourceText = e.parameter.q;
-  }
-
-  var sourceLang = 'auto';
-  if (e.parameter.source) {
-    sourceLang = e.parameter.source;
-  }
-
-  var targetLang = 'ja';
-  if (e.parameter.target) {
-    targetLang = e.parameter.target;
-  }
-
-  /* Option 1 */
-
-  var translatedText = LanguageApp.translate(sourceText, sourceLang, targetLang)
-
-  /* Option 2 */
-
-  var url = "https://translate.googleapis.com/translate_a/single?client=gtx&sl="
-    + sourceLang + "&tl=" + targetLang + "&dt=t&q=" + encodeURI(sourceText);
-
-  var result = JSON.parse(UrlFetchApp.fetch(url).getContentText());
-
-  translatedText = result[0][0][0];
-
-  var json = {
-    'sourceText': sourceText,
-    'translatedText': translatedText
-  };
-
-  // set JSONP callback
-  var callback = 'callback';
-  if (e.parameter.callback) {
-    callback = e.parameter.callback
-  }
-
-  // return JSONP
-  return ContentService
-    .createTextOutput(callback + '(' + JSON.stringify(json) + ')')
-    .setMimeType(ContentService.MimeType.JAVASCRIPT);
-}
-
 export default class HomeScreen extends React.Component {
   static navigationOptions = {
     tabBarLabel: 'Trang chủ',
@@ -300,6 +251,7 @@ export default class HomeScreen extends React.Component {
       }
     }, 15000)
 
+    // this._postTranslator()
 
   }
 
@@ -1200,6 +1152,44 @@ export default class HomeScreen extends React.Component {
 
   }
 
+
+
+  _postTranslator = async (textAPI, langAPI) => {
+
+    var url = "https://translate.yandex.net/api/v1.5/tr.json/translate",
+      keyAPI = "trnsl.1.1.20130922T110455Z.4a9208e68c61a760.f819c1db302ba637c2bea1befa4db9f784e9fbb8";
+
+    //document.querySelector('#translate').addEventListener('click', function () {
+    var xhr = new XMLHttpRequest(),
+      //textAPI = "I'm fine. Thanks you!",
+      //langAPI = "vi"
+      data = "key=" + keyAPI + "&text=" + textAPI + "&lang=" + langAPI;
+    xhr.open("POST", url, true);
+    xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+    xhr.send(data);
+    xhr.onreadystatechange = function () {
+      if (this.readyState == 4 && this.status == 200) {
+        var res = this.responseText;
+        // document.querySelector('#json').innerHTML = res;
+        alert(res)
+        var json = JSON.parse(res);
+        if (json.code == 200) {
+          //document.querySelector('#output').innerHTML = json.text[0];
+          alert(json.text[0])
+        }
+        else {
+          //document.querySelector('#output').innerHTML = "Error Code: " + json.code;
+          alert(json.code)
+        }
+      }
+    }
+    // }, false);
+
+  }
+
+
+
+
   _getCategoryAsync = async () => {
     try {
       await fetch("http://nhabaola.vn/api/Category/FO_Category_GetAllData", {
@@ -1969,7 +1959,7 @@ export default class HomeScreen extends React.Component {
                     borderColor: '#a4d227',
                     padding: 10,
 
-                  }}>{item.CatName} {doGet(e)}</Text>
+                  }}>{item.CatName}</Text>
                 </TouchableOpacity>
               </View>
 
@@ -2215,6 +2205,7 @@ export default class HomeScreen extends React.Component {
                   {/* Comment */}
                   <TouchableOpacity
                     onPress={() => {
+                      //this._postTranslator(item.Address,'zh')
                       this.props.navigation.navigate('RoomDetailScreen', { item, isComment: true });
                     }}
                   >

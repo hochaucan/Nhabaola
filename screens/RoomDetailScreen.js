@@ -45,6 +45,7 @@ const LONGITUDE = -122.4324;
 const LATITUDE_DELTA = 0.02;
 const LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO;
 
+
 function numberWithCommas(x) {
     return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
 }
@@ -90,6 +91,7 @@ export default class RoomDetailScreen extends React.Component {
             modalLoading: false,
             pushToken: '',
             isPushNotification: 'true',
+            //translateDescription: '',
         }
     }
 
@@ -318,6 +320,50 @@ export default class RoomDetailScreen extends React.Component {
             console.log(error)
         }
 
+
+    }
+
+    _postTranslator = async (lang, textAPI, langAPI) => {
+
+        this.popupLoadingIndicator.show();
+
+        var url = "https://translate.yandex.net/api/v1.5/tr.json/translate",
+            keyAPI = "trnsl.1.1.20130922T110455Z.4a9208e68c61a760.f819c1db302ba637c2bea1befa4db9f784e9fbb8";
+
+        //document.querySelector('#translate').addEventListener('click', function () {
+        var xhr = new XMLHttpRequest(),
+            //textAPI = "I'm fine. Thanks you!",
+            //langAPI = "vi"
+            data = "key=" + keyAPI + "&text=" + textAPI + "&lang=" + langAPI;
+        xhr.open("POST", url, true);
+        xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+        xhr.send(data);
+        xhr.onreadystatechange = function () {
+            if (this.readyState == 4 && this.status == 200) {
+                var res = this.responseText;
+                // document.querySelector('#json').innerHTML = res;
+                //alert(res)
+                var json = JSON.parse(res);
+                if (json.code == 200) {
+                    //RoomDetailScreen.popupLoadingIndicator.dismiss();
+                    Alert.alert(lang, json.text[0])
+                    //this.setState({ translateDescription: json.text[0] })
+                    //translateDescription = json.text[0]
+                }
+                else {
+                    //document.querySelector('#output').innerHTML = "Error Code: " + json.code;
+                    alert(json.code)
+                }
+            }
+        }
+        // }, false);
+
+        setTimeout(() => {
+            this.popupLoadingIndicator.dismiss();
+        }, 2500)
+
+        // this.popupLoadingIndicator.dismiss();
+        //this.setState({ translateDescription: json.text[0] })
 
     }
 
@@ -849,7 +895,7 @@ export default class RoomDetailScreen extends React.Component {
                         flexDirection: 'row',
                         marginLeft: 5,
                         marginBottom: 5,
-                        //  alignItems: 'center',
+                        alignItems: 'center',
 
                     }}
 
@@ -863,7 +909,56 @@ export default class RoomDetailScreen extends React.Component {
                             fontSize: responsiveFontSize(1.4),//13,
                             paddingLeft: 2,
                         }}>: {this.state.roomBox.UpdatedDate}</Text>
+
+
+                        {/* Language English*/}
+                        <TouchableOpacity style={{
+
+                            marginLeft: 20,
+                            marginBottom: 2,
+
+                        }}
+                            onPress={() => {
+                                this._postTranslator('English', this.state.roomBox.Description, 'en')
+                            }}
+                        >
+                            {/* <Ionicons style={{
+                           color: '#7E7E7E',
+                           fontSize: responsiveFontSize(1.8),
+                       }} name='md-time' /> */}
+                            <Text style={{
+                                color: '#73aa2a',
+                                fontSize: responsiveFontSize(1.8),//13,
+                                paddingLeft: 2,
+                                ///marginBottom: 5,
+                            }}>English</Text>
+                        </TouchableOpacity>
+
+                        {/* Language Chinese*/}
+                        <TouchableOpacity style={{
+
+                            marginLeft: 10,
+                            marginBottom: 2,
+
+                        }}
+                            onPress={() => {
+                                this._postTranslator('Chinese', this.state.roomBox.Description, 'zh')
+                            }}
+                        >
+                            {/* <Ionicons style={{
+color: '#7E7E7E',
+fontSize: responsiveFontSize(1.8),
+}} name='md-time' /> */}
+                            <Text style={{
+                                color: '#73aa2a',
+                                fontSize: responsiveFontSize(1.8),//13,
+                                paddingLeft: 2,
+
+                            }}>Chinese</Text>
+                        </TouchableOpacity>
                     </View>
+
+
 
                     <View style={{
 
