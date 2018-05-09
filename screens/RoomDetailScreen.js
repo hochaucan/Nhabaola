@@ -844,6 +844,27 @@ export default class RoomDetailScreen extends React.Component {
                     }}
                 >
 
+                    {/* Posting Date */}
+                    <View style={{
+                        flexDirection: 'row',
+                        marginLeft: 5,
+                        marginBottom: 5,
+                        //  alignItems: 'center',
+
+                    }}
+
+                    >
+                        <Ionicons style={{
+                            color: '#7E7E7E',
+                            fontSize: responsiveFontSize(1.8),
+                        }} name='md-time' />
+                        <Text style={{
+                            color: '#7E7E7E',
+                            fontSize: responsiveFontSize(1.4),//13,
+                            paddingLeft: 2,
+                        }}>: {this.state.roomBox.UpdatedDate}</Text>
+                    </View>
+
                     <View style={{
 
                         flex: 1,
@@ -888,9 +909,10 @@ export default class RoomDetailScreen extends React.Component {
                             {/* Wartermark */}
                             <Image
                                 style={{
-                                    position: 'absolute', bottom: 50, right: 15, zIndex: 10, opacity: 0.5,
+                                    position: 'absolute', top: 20, right: 15, zIndex: 10, opacity: 0.3,
                                     width: responsiveWidth(15),
-                                    height: responsiveWidth(15), borderRadius: 100,
+                                    height: responsiveWidth(15),
+                                    //borderRadius: 100,
                                 }}
                                 source={require('../images/app-icon.png')}
                             />
@@ -1024,7 +1046,7 @@ export default class RoomDetailScreen extends React.Component {
 
                                         Alert.alert(
                                             'Thông báo',
-                                            'Bạn cần đăng nhập Facebook với quyền "publish_pages, manage_pages, user_posts" để Chia Sẻ Tin này trên Timeline của mình.  \nBạn muốn đăng nhập ngay?',
+                                            'Bạn cần đăng nhập Facebook để đăng Tin này trên Timeline của bạn.  \nBạn muốn đăng nhập ngay?',
                                             [
                                                 {
                                                     text: 'Hủy', onPress: () => {

@@ -68,6 +68,55 @@ function numberWithCommas(x) {
   return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
 }
 
+
+
+function doGet(e) {
+
+  var sourceText = 'táo'
+  if (e.parameter.q) {
+    sourceText = e.parameter.q;
+  }
+
+  var sourceLang = 'auto';
+  if (e.parameter.source) {
+    sourceLang = e.parameter.source;
+  }
+
+  var targetLang = 'ja';
+  if (e.parameter.target) {
+    targetLang = e.parameter.target;
+  }
+
+  /* Option 1 */
+
+  var translatedText = LanguageApp.translate(sourceText, sourceLang, targetLang)
+
+  /* Option 2 */
+
+  var url = "https://translate.googleapis.com/translate_a/single?client=gtx&sl="
+    + sourceLang + "&tl=" + targetLang + "&dt=t&q=" + encodeURI(sourceText);
+
+  var result = JSON.parse(UrlFetchApp.fetch(url).getContentText());
+
+  translatedText = result[0][0][0];
+
+  var json = {
+    'sourceText': sourceText,
+    'translatedText': translatedText
+  };
+
+  // set JSONP callback
+  var callback = 'callback';
+  if (e.parameter.callback) {
+    callback = e.parameter.callback
+  }
+
+  // return JSONP
+  return ContentService
+    .createTextOutput(callback + '(' + JSON.stringify(json) + ')')
+    .setMimeType(ContentService.MimeType.JAVASCRIPT);
+}
+
 export default class HomeScreen extends React.Component {
   static navigationOptions = {
     tabBarLabel: 'Trang chủ',
@@ -1920,7 +1969,7 @@ export default class HomeScreen extends React.Component {
                     borderColor: '#a4d227',
                     padding: 10,
 
-                  }}>{item.CatName}</Text>
+                  }}>{item.CatName} {doGet(e)}</Text>
                 </TouchableOpacity>
               </View>
 
@@ -2000,6 +2049,7 @@ export default class HomeScreen extends React.Component {
                     }}>: {item.ContactPhone.indexOf("|") > -1 ? item.ContactPhone.split('|')[0] + '. LH: ' + item.ContactPhone.split('|')[1]
                       : item.ContactPhone}</Text>
                   </TouchableOpacity>
+
                 </View>
               </View>
 
@@ -2017,12 +2067,34 @@ export default class HomeScreen extends React.Component {
               {/* Wartermark */}
               <Image
                 style={{
-                  position: 'absolute', top: 270, right: 15, zIndex: 10, opacity: 0.5,
+                  position: 'absolute', top: 120, right: 15, zIndex: 10, opacity: 0.3,
                   width: responsiveWidth(15),
-                  height: responsiveWidth(15), borderRadius: 100,
+                  height: responsiveWidth(15),
+                  //borderRadius: 100,
                 }}
                 source={require('../images/app-icon.png')}
               />
+
+              {/* Posting Date */}
+              <View style={{
+                flexDirection: 'row',
+                marginLeft: 5,
+                marginBottom: 5,
+                //  alignItems: 'center',
+
+              }}
+
+              >
+                <Ionicons style={{
+                  color: '#7E7E7E',
+                  fontSize: responsiveFontSize(1.8),
+                }} name='md-time' />
+                <Text style={{
+                  color: '#7E7E7E',
+                  fontSize: responsiveFontSize(1.4),//13,
+                  paddingLeft: 2,
+                }}>: {item.UpdatedDate}</Text>
+              </View>
 
               <TouchableWithoutFeedback
                 style={{

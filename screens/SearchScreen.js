@@ -23,7 +23,7 @@ import {
 
 } from 'react-native';
 //import { ExpoLinksView } from '@expo/samples';
-import { Constants, Location, Permissions } from 'expo';
+import { Constants, Location, Permissions, Notifications } from 'expo';
 import { Ionicons } from '@expo/vector-icons';
 import { Button, FormLabel, FormInput, SocialIcon, Icon } from 'react-native-elements'
 import MapView from 'react-native-maps';
@@ -377,6 +377,7 @@ export default class SearchScreen extends React.Component {
         await this._getPermissionLOCATION();
         await this._getPermissionCAMERA();
         await this._getPermissionCAMERA_ROLL();
+        await this._getPermissionNOTIFICATIONS();
 
         this._getLocationAsync();
         this._getCategoryFromStorageAsync();
@@ -461,6 +462,20 @@ export default class SearchScreen extends React.Component {
 
         }
     }
+
+    _getPermissionNOTIFICATIONS = async () => {
+
+        let { status } = await Permissions.askAsync(Permissions.NOTIFICATIONS);
+
+        // Stop here if the user did not grant permissions
+        if (status !== 'granted') {
+            Alert.alert("Thông báo", "Quyền được nhận Thông Báo từ Nhàbaola bị từ chối")
+        } else {
+            globalVariable.PHONE_TOKEN = await Notifications.getExpoPushTokenAsync();
+        }
+
+    }
+
 
     _dropdownFilter_onSelect(idx, value) {
         // BUG: alert in a modal will auto dismiss and causes crash after reload and touch. @sohobloo 2016-12-1

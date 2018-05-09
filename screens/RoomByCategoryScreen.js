@@ -1672,12 +1672,34 @@ export default class RoomByCategoryScreen extends React.Component {
               {/* Wartermark */}
               <Image
                 style={{
-                  position: 'absolute', top: 270, right: 15, zIndex: 10, opacity: 0.5,
+                  position: 'absolute', top: 120, right: 15, zIndex: 10, opacity: 0.3,
                   width: responsiveWidth(15),
-                  height: responsiveWidth(15), borderRadius: 100,
+                  height: responsiveWidth(15),
+                  //borderRadius: 100,
                 }}
                 source={require('../images/app-icon.png')}
               />
+
+              {/* Posting Date */}
+              <View style={{
+                flexDirection: 'row',
+                marginLeft: 5,
+                marginBottom: 5,
+                //  alignItems: 'center',
+
+              }}
+
+              >
+                <Ionicons style={{
+                  color: '#7E7E7E',
+                  fontSize: responsiveFontSize(1.8),
+                }} name='md-time' />
+                <Text style={{
+                  color: '#7E7E7E',
+                  fontSize: responsiveFontSize(1.4),//13,
+                  paddingLeft: 2,
+                }}>: {item.UpdatedDate}</Text>
+              </View>
 
               <TouchableWithoutFeedback
                 style={{
@@ -1837,7 +1859,7 @@ export default class RoomByCategoryScreen extends React.Component {
 
                       Alert.alert(
                         'Thông báo',
-                        'Bạn cần đăng nhập Facebook với quyền "publish_pages, manage_pages, user_posts" để Chia Sẻ Tin này trên Timeline của mình.  \nBạn muốn đăng nhập ngay?',
+                        'Bạn cần đăng nhập Facebook để đăng Tin này trên Timeline của bạn.  \nBạn muốn đăng nhập ngay?',
                         [
                           {
                             text: 'Hủy', onPress: () => {
