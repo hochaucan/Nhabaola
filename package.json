@@ -31,6 +31,7 @@
     "react-native-simple-picker": "^2.0.0",
     "react-native-star-rating": "^1.0.8",
     "react-native-swiper": "^1.5.12",
+    "react-native-translate": "0.0.2",
     "react-navigation": "^1.5.9"
   },
   "devDependencies": {

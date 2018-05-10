@@ -13,7 +13,7 @@ import {
   Platform,
   TextInput,
   findNodeHandle,
-  
+
 }
   from 'react-native';
 import { Constants, Location, Permissions } from 'expo';
@@ -25,6 +25,11 @@ import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view
 // import KeyboardSpacer from 'react-native-keyboard-spacer';
 import getDirections from 'react-native-google-maps-directions'
 import SimplePicker from 'react-native-simple-picker';
+import enTranslation from '../components/en.json';
+import zhTranslation from '../components/zh.json';
+import viTranslation from '../components/vi.json';
+import { setLocalization, translate, Translate } from 'react-native-translate';
+//import { translate, Translate } from 'react-native-translate';
 
 
 
@@ -59,6 +64,8 @@ export default class Testing extends React.Component {
     } else {
       this._getLocationAsync();
     }
+
+    setLocalization(zhTranslation);
   }
 
   _getLocationAsync = async () => {
@@ -111,54 +118,8 @@ export default class Testing extends React.Component {
 
     return (
       <View style={styles.container}>
-        <Text style={styles.paragraph}>Current Option: {this.state.selectedOption}</Text>
 
-        <Text
-          style={{ color: '#006381', marginTop: 20 }}
-          onPress={() => {
-            this.refs.picker.show();
-          }}
-        >
-            Click here to select your option
-        </Text>
-
-        <Text
-          style={{ color: '#006381', marginTop: 20 }}
-          onPress={() => {
-            this.refs.picker2.show();
-          }}
-        >
-            Click here to select your option with labels
-        </Text>
-
-        <SimplePicker
-          ref={'picker'}
-          options={options}
-          onSubmit={(option) => {
-            this.setState({
-              selectedOption: option,
-            });
-          }}
-        />
-
-        <SimplePicker
-          ref={'picker2'}
-          options={options}
-          labels={labels}
-          confirmText='Đồng ý'
-          cancelText='Hủy'
-          itemStyle={{
-            fontSize: 25,
-            color: '#73aa2a',
-            textAlign: 'center',
-            fontWeight: 'bold',
-          }}
-          onSubmit={(option) => {
-            this.setState({
-              selectedOption: option,
-            });
-          }}
-        />
+        <Translate value="Sale of apartments" />
       </View>
 
     );
