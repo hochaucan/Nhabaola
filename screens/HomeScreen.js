@@ -2066,7 +2066,7 @@ export default class HomeScreen extends React.Component {
               />
 
               {/* Posting Date */}
-              <View style={{
+              {/* <View style={{
                 flexDirection: 'row',
                 marginLeft: 5,
                 marginBottom: 5,
@@ -2084,7 +2084,7 @@ export default class HomeScreen extends React.Component {
                   fontSize: responsiveFontSize(1.4),//13,
                   paddingLeft: 2,
                 }}>: {item.UpdatedDate}</Text>
-              </View>
+              </View> */}
 
               <TouchableWithoutFeedback
                 style={{
@@ -2147,7 +2147,49 @@ export default class HomeScreen extends React.Component {
               </View>
               <View style={styles.cardDesBox}>
 
+ {/* Posting Date */}
+              <View style={{
+                flexDirection: 'row',
+                //marginLeft: 5,
+                marginBottom: 10,
+                marginTop:-10,
+                
+                //  alignItems: 'center',
 
+              }}
+
+              >
+              <View
+              style={{flex:1, flexDirection:'row'}}
+              >
+                <Ionicons style={{
+                  color: '#7E7E7E',
+                  fontSize: responsiveFontSize(1.8),
+                }} name='md-time' />
+                <Text style={{
+                  color: '#7E7E7E',
+                  fontSize: responsiveFontSize(1.4),//13,
+                  paddingLeft: 2,
+                }}>: {item.UpdatedDate}</Text>
+</View>
+  <View
+              style={{flex:1,flexDirection:'row',
+              justifyContent:'flex-end',
+              }}
+              >
+                 <Ionicons style={{
+
+                  color: '#7E7E7E',
+                  fontSize: responsiveFontSize(1.8),
+                }} name='ios-pricetag-outline' />
+                <Text style={{
+                  color: '#7E7E7E',
+                  fontSize: responsiveFontSize(1.4),//13,
+                  paddingLeft: 2,
+                  marginLeft:3,
+                }}>Mã Tin: {item.ID}</Text>
+                </View>
+              </View>
 
                 <Text style={{
                   fontSize: responsiveFontSize(1.8)

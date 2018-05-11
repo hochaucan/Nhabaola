@@ -425,7 +425,7 @@ export default class PostRoomScreen extends React.Component {
 
                     //alert(responseJson.ErrorCode)
 
-                    if (JSON.stringify(responseJson.ErrorCode) === "10") {
+                    if (JSON.stringify(responseJson.ErrorCode) === "10") { // successfull
                         //this.props.navigation.state.params.onRefreshScreen({ refreshScreen: true, });
 
                         HomeScreen.refreshRoomBoxAfterPost();
@@ -438,6 +438,23 @@ export default class PostRoomScreen extends React.Component {
                         }
                         else {
                             Alert.alert('Đăng tin thành công!');
+                        }
+                    }
+                    else if (JSON.stringify(responseJson.ErrorCode) === "7"
+                        || JSON.stringify(responseJson.ErrorCode) === "8"
+                        || JSON.stringify(responseJson.ErrorCode) === "9") {
+                        if (Platform.OS === 'android') {
+                            ToastAndroid.showWithGravity('Ví tiền không đủ. Bạn vui lòng nạp tiền vào Ví Tiền Nhàbaola!', ToastAndroid.SHORT, ToastAndroid.TOP);
+                        }
+                        else {
+                            Alert.alert('Thông báo', 'Ví tiền không đủ. Bạn vui lòng nạp tiền vào Ví Tiền Nhàbaola!');
+                        }
+                    } else {
+                        if (Platform.OS === 'android') {
+                            ToastAndroid.showWithGravity('Lỗi ' + JSON.stringify(responseJson) + ', vui lòng liên hệ Admin trong mục Giúp Đỡ!', ToastAndroid.SHORT, ToastAndroid.TOP);
+                        }
+                        else {
+                            Alert.alert('Thông báo', 'Lỗi ' + JSON.stringify(responseJson) + ', vui lòng liên hệ Admin trong mục Giúp Đỡ!');
                         }
                     }
 
