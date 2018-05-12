@@ -44,6 +44,10 @@ import convertAmountToWording from '../api/convertAmountToWording'
 import registerForPushNotificationsAsync from '../api/registerForPushNotificationsAsync';
 import globalVariable from '../components/Global'
 import notifyNBLAsync from '../api/notifyNBLAsync';
+import enTranslation from '../components/en.json';
+import zhTranslation from '../components/zh.json';
+import viTranslation from '../components/vi.json';
+import { setLocalization, translate, Translate } from 'react-native-translate';
 
 const homePlace = {
   description: 'Home',
@@ -225,14 +229,16 @@ export default class HomeScreen extends React.Component {
       console.log(e);
     }
   }
-  _getStorageAsync = async (key) => {
-    try {
-      var v = await AsyncStorage.getItem(key);
-      alert(v)
-    } catch (e) {
-      console.log(e);
-    }
-  }
+  // _getStorageAsync = async (key) => {
+  //   try {
+  //     var v = await AsyncStorage.getItem(key);
+  //     //alert(v)
+  //     //await this.setState({ language: v })
+  //    // return v;
+  //   } catch (e) {
+  //     console.log(e);
+  //   }
+  // }
 
   _refreshRoomBox() {
     this._getRoomBoxAsync(true);
@@ -299,7 +305,29 @@ export default class HomeScreen extends React.Component {
     // );
   };
 
+  _getLanguageFromStorageAsync = async () => {
+    try {
+      var value = await AsyncStorage.getItem('language');
+
+      if (value !== null) {
+        if (value == 'enTranslation') {
+          setLocalization(enTranslation)
+        } else if (value == 'zhTranslation') {
+          setLocalization(zhTranslation)
+        }
+        else {
+          setLocalization(viTranslation)
+        }
+      }
+
+    } catch (e) {
+      console.log(e);
+    }
+  }
+
   componentWillMount() {
+
+    this._getLanguageFromStorageAsync();
 
     this._getCategoryAsync();
     this._getRoomBoxAsync(true);
@@ -308,6 +336,9 @@ export default class HomeScreen extends React.Component {
 
     // Remove Push Notification
     this._notificationSubscription && this._notificationSubscription.remove();
+
+
+
   }
 
 
@@ -355,7 +386,7 @@ export default class HomeScreen extends React.Component {
         {
           toValue: 40,
           // easing: Easing.linear,
-          duration: 150,
+          duration: 50,
         }
       ).start();
 
@@ -364,7 +395,7 @@ export default class HomeScreen extends React.Component {
         {
           toValue: -100,
           // easing: Easing.linear,
-          duration: 100,
+          duration: 50,
         }
       ).start();
 
@@ -376,7 +407,7 @@ export default class HomeScreen extends React.Component {
         {
           toValue: 0,
           // easing: Easing.linear,
-          duration: 100,
+          duration: 50,
         }
       ).start();
 
@@ -385,7 +416,7 @@ export default class HomeScreen extends React.Component {
         {
           toValue: 1,
           //  easing: Easing.linear,
-          duration: 100,
+          duration: 50,
         }
       ).start();
     }
@@ -547,10 +578,10 @@ export default class HomeScreen extends React.Component {
           }
           else {
             if (Platform.OS === 'android') {
-              ToastAndroid.showWithGravity('Tài khoản hoặc mật khẩu đã thay đổi', ToastAndroid.SHORT, ToastAndroid.TOP);
+              ToastAndroid.showWithGravity(translate("Account or password was changed"), ToastAndroid.SHORT, ToastAndroid.TOP);
             }
             else {
-              Alert.alert('Oops!', 'Tài khoản hoặc mật khẩu đã thay đổi');
+              Alert.alert(translate("Notice"), translate("Account or password was changed"));
             }
 
             this.setState({ profile: null, sessionKey: null })
@@ -558,12 +589,6 @@ export default class HomeScreen extends React.Component {
             saveStorageAsync('SessionKey', '')
 
           }
-
-          //this._getStorageAsync('SessionKey')
-          // var tmp = getStorageAsync('SessionKey')
-          // alert(JSON.stringify(tmp))
-
-          // this.popupLoadingIndicator.dismiss();
         }).
         catch((error) => { console.log(error) });
     } catch (error) {
@@ -582,21 +607,21 @@ export default class HomeScreen extends React.Component {
     //Form validation
     if (Platform.OS === 'android') {
       if (this.state.loginUsername === '') {
-        ToastAndroid.showWithGravity('Vui lòng nhập tài khoản', ToastAndroid.SHORT, ToastAndroid.TOP);
+        ToastAndroid.showWithGravity(translate('Please enter an account'), ToastAndroid.SHORT, ToastAndroid.TOP);
         return;
       }
       if (this.state.loginPassword === '') {
-        ToastAndroid.showWithGravity('Vui lòng nhập mật khẩu', ToastAndroid.SHORT, ToastAndroid.TOP);
+        ToastAndroid.showWithGravity(translate("Please enter a password"), ToastAndroid.SHORT, ToastAndroid.TOP);
         return;
       }
     }
     else {
       if (this.state.loginUsername === '') {
-        Alert.alert('Oops!', 'Vui lòng nhập tài khoản');
+        Alert.alert(translate("Notice"), translate("Please enter an account"));
         return;
       }
       if (this.state.loginPassword === '') {
-        Alert.alert('Oops!', 'Vui lòng nhập mật khẩu');
+        Alert.alert(translate("Notice"), translate("Please enter a password"));
         return;
       }
     }
@@ -649,22 +674,22 @@ export default class HomeScreen extends React.Component {
             this._getWalletAsync();
 
             if (Platform.OS === 'android') {
-              ToastAndroid.showWithGravity('Đăng nhập thành công!', ToastAndroid.SHORT, ToastAndroid.TOP);
+              ToastAndroid.showWithGravity(translate("Login successful"), ToastAndroid.SHORT, ToastAndroid.TOP);
             } else {
               // this.setState({ modalLogin: false })
-              Alert.alert('Thông báo', 'Đăng nhập thành công!');
+              Alert.alert(translate("Notice"), translate("Login successful"));
             }
 
           }
           else { // Login False
             if (Platform.OS === 'android') {
-              ToastAndroid.showWithGravity('Tài khoản hoặc mật khẩu không đúng', ToastAndroid.SHORT, ToastAndroid.TOP);
+              ToastAndroid.showWithGravity(translate("Incorrect username or password"), ToastAndroid.SHORT, ToastAndroid.TOP);
             }
             else {
               this.setState({ modalLogin: false })
-              Alert.alert('Thông báo', 'Tài khoản hoặc mật khẩu không đúng', [
+              Alert.alert(translate("Notice"), translate("Incorrect username or password"), [
                 {
-                  text: "Huỷ", onPress: () => {
+                  text: translate("Cancel"), onPress: () => {
                     this.setState({
                       loginUsername: '',
                       loginPassword: '',
@@ -672,7 +697,7 @@ export default class HomeScreen extends React.Component {
                   }
                 }
                 , {
-                  text: "Nhập lại", onPress: () => {
+                  text: translate("Retype"), onPress: () => {
                     this.setState({ modalLogin: true })
                     this.refs.iosUserNameInput.focus()
                     //Loading                  
@@ -739,15 +764,22 @@ export default class HomeScreen extends React.Component {
               sessionKey: responseJson.obj.UpdatedBy
             })
 
-            ToastAndroid.showWithGravity('Đăng nhập thành công!', ToastAndroid.SHORT, ToastAndroid.TOP);
+
+
+            if (Platform.OS === 'android') {
+              ToastAndroid.showWithGravity(translate("Login successful"), ToastAndroid.SHORT, ToastAndroid.TOP);
+            }
+            else {
+              Alert.alert(translate("Notice"), translate("Login successful"), );
+            }
 
           }
           else { // Login False
             if (Platform.OS === 'android') {
-              ToastAndroid.showWithGravity('Tài khoản hoặc mật khẩu không đúng', ToastAndroid.SHORT, ToastAndroid.TOP);
+              ToastAndroid.showWithGravity(translate("Incorrect username or password"), ToastAndroid.SHORT, ToastAndroid.TOP);
             }
             else {
-              Alert.alert('Oops!', 'Tài khoản hoặc mật khẩu không đúng');
+              Alert.alert(translate("Notice"), translate("Incorrect username or password"));
             }
 
             saveStorageAsync('FO_Account_Login', '')
@@ -767,7 +799,7 @@ export default class HomeScreen extends React.Component {
     await this._getWalletAsync();
     if (this.state.wallet != '0') {
       if (Platform.OS == 'ios') {
-        Alert.alert('Chúc mừng bạn! ', 'Bạn được tặng ' + numberWithCommas(this.state.wallet) + ' đồng vào Ví Tiền');
+        Alert.alert(translate("Congratulation"), translate("You get") + numberWithCommas(this.state.wallet) + translate("dong in wallet"));
       } else {
         setTimeout(() => this.popupCongraForNewAccount.show(), 500)
       }
@@ -925,17 +957,17 @@ export default class HomeScreen extends React.Component {
 
                 if (!JSON.stringify(responseJson).match('error')) { // Post wall facebook successful!
                   if (Platform.OS === 'android') {
-                    ToastAndroid.showWithGravity('Đăng Tin Facebook thành công!', ToastAndroid.SHORT, ToastAndroid.TOP);
+                    ToastAndroid.showWithGravity(translate("Post Facebook Successful"), ToastAndroid.SHORT, ToastAndroid.TOP);
                   }
                   else {
-                    Alert.alert('Thông báo', 'Đăng Tin Facebook thành công!');
+                    Alert.alert(translate("Notice"), translate("Post Facebook Successful"));
                   }
                 } else { // Error
                   if (Platform.OS === 'android') {
-                    ToastAndroid.showWithGravity('Lỗi ' + JSON.stringify(responseJson) + ', vui lòng liên hệ Admin trong mục Giúp Đỡ!', ToastAndroid.SHORT, ToastAndroid.TOP);
+                    ToastAndroid.showWithGravity(translate("Error") + JSON.stringify(responseJson) + translate("Please contact Admin in the Help menu"), ToastAndroid.SHORT, ToastAndroid.TOP);
                   }
                   else {
-                    Alert.alert('Thông báo', 'Lỗi ' + JSON.stringify(responseJson) + ', vui lòng liên hệ Admin trong mục Giúp Đỡ!');
+                    Alert.alert(translate("Notice"), translate("Error") + JSON.stringify(responseJson) + translate("Please contact Admin in the Help menu"));
                   }
                 }
 
@@ -1844,6 +1876,69 @@ export default class HomeScreen extends React.Component {
           </View>
         }
 
+        {/* Multi Language */}
+        <View
+          style={{
+            flexDirection: 'row',
+            alignContent: 'center',
+            alignItems: 'center',
+            justifyContent: 'center',
+          }}
+        >
+          <TouchableOpacity
+            style={{
+              padding: 10,
+
+            }}
+            onPress={async () => {
+              setLocalization(viTranslation);
+              await this._saveStorageAsync('language', 'viTranslation')
+              this.forceUpdate()
+            }}
+          >
+            <Text style={{
+              fontSize: responsiveFontSize(2),
+              color: '#a4d227',
+
+            }}>Tiếng Việt</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={{
+              padding: 10,
+
+            }}
+            onPress={async () => {
+              setLocalization(enTranslation);
+              await this._saveStorageAsync('language', 'enTranslation')
+              this.forceUpdate()
+            }}
+          >
+            <Text style={{
+              fontSize: responsiveFontSize(2),
+              color: '#a4d227'
+            }}>English</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={{
+              padding: 10,
+
+            }}
+
+            onPress={async () => {
+              setLocalization(zhTranslation);
+              await this._saveStorageAsync('language', 'zhTranslation')
+              this.forceUpdate()
+            }}
+          >
+            <Text style={{
+              fontSize: responsiveFontSize(2),
+              color: '#a4d227'
+            }}>中文</Text>
+          </TouchableOpacity>
+
+          {/* <Translate value="Post"/> */}
+        </View>
+
         {/* Flatlist Category */}
         <Animated.View style={{
           marginRight: 10,
@@ -1889,7 +1984,7 @@ export default class HomeScreen extends React.Component {
         <Animated.View style={{
           //flexDirection: 'row',
           height: this.state.roomByCatHeigh,
-          marginTop: 12,
+          marginTop: 8,
           marginLeft: 2,//70,
           marginBottom: 5,
           zIndex: 30,
@@ -2112,12 +2207,6 @@ export default class HomeScreen extends React.Component {
 
               </TouchableWithoutFeedback>
               <View style={{ flexDirection: 'row', paddingLeft: 20, paddingRight: 20, paddingTop: 5, paddingBottom: 5, marginTop: -50, backgroundColor: '#000', opacity: 0.6 }}>
-                {/* <TextMask
-                  style={{ flex: 1, color: '#fff', fontSize: 15 }}
-                  value={item.Price}
-                  type={'money'}
-                  options={{ suffixUnit: ' đ', precision: 0, unit: 'Giá:   ', separator: ' ' }}
-                /> */}
                 <Text
                   style={{
                     flex: 1, color: '#fff', fontWeight: '300',
@@ -2147,49 +2236,50 @@ export default class HomeScreen extends React.Component {
               </View>
               <View style={styles.cardDesBox}>
 
- {/* Posting Date */}
-              <View style={{
-                flexDirection: 'row',
-                //marginLeft: 5,
-                marginBottom: 10,
-                marginTop:-10,
-                
-                //  alignItems: 'center',
 
-              }}
+                <View style={{
+                  flexDirection: 'row',
+                  //marginLeft: 5,
+                  marginBottom: 10,
+                  marginTop: -10,
+                }}
+                >
 
-              >
-              <View
-              style={{flex:1, flexDirection:'row'}}
-              >
-                <Ionicons style={{
-                  color: '#7E7E7E',
-                  fontSize: responsiveFontSize(1.8),
-                }} name='md-time' />
-                <Text style={{
-                  color: '#7E7E7E',
-                  fontSize: responsiveFontSize(1.4),//13,
-                  paddingLeft: 2,
-                }}>: {item.UpdatedDate}</Text>
-</View>
-  <View
-              style={{flex:1,flexDirection:'row',
-              justifyContent:'flex-end',
-              }}
-              >
-                 <Ionicons style={{
+                  {/* Posting Date  */}
+                  <View
+                    style={{ flex: 1, flexDirection: 'row' }}
+                  >
+                    <Ionicons style={{
+                      color: '#7E7E7E',
+                      fontSize: responsiveFontSize(1.8),
+                    }} name='md-time' />
+                    <Text style={{
+                      color: '#7E7E7E',
+                      fontSize: responsiveFontSize(1.4),//13,
+                      paddingLeft: 2,
+                    }}>: {item.UpdatedDate}</Text>
+                  </View>
 
-                  color: '#7E7E7E',
-                  fontSize: responsiveFontSize(1.8),
-                }} name='ios-pricetag-outline' />
-                <Text style={{
-                  color: '#7E7E7E',
-                  fontSize: responsiveFontSize(1.4),//13,
-                  paddingLeft: 2,
-                  marginLeft:3,
-                }}>Mã Tin: {item.ID}</Text>
+                  {/* Room ID */}
+                  <View
+                    style={{
+                      flex: 1, flexDirection: 'row',
+                      justifyContent: 'flex-end',
+                    }}
+                  >
+                    <Ionicons style={{
+
+                      color: '#7E7E7E',
+                      fontSize: responsiveFontSize(1.8),
+                    }} name='ios-pricetag-outline' />
+                    <Text style={{
+                      color: '#7E7E7E',
+                      fontSize: responsiveFontSize(1.4),//13,
+                      paddingLeft: 2,
+                      marginLeft: 3,
+                    }}>Mã Tin: {item.ID}</Text>
+                  </View>
                 </View>
-              </View>
 
                 <Text style={{
                   fontSize: responsiveFontSize(1.8)
@@ -2431,7 +2521,7 @@ export default class HomeScreen extends React.Component {
               <ActionButton.Item buttonColor='#a4d227'
                 textContainerStyle={{ backgroundColor: '#73aa2a' }}
                 textStyle={{ color: '#fff' }}
-                title="Đăng nhập" onPress={() => {
+                title={translate('Login')} onPress={() => {
 
 
                   if (Platform.OS == 'ios') {
@@ -2468,7 +2558,7 @@ export default class HomeScreen extends React.Component {
             <ActionButton.Item buttonColor='#a4d227'
               textContainerStyle={{ backgroundColor: '#73aa2a' }}
               textStyle={{ color: '#fff' }}
-              title="Đăng tin" onPress={() => {
+              title={translate('Post')} onPress={() => {
                 this.state.profile
                   ?
                   //this.props.navigation.navigate('PostRoomScreen', { onSelect: this.onSelect })
@@ -2478,8 +2568,8 @@ export default class HomeScreen extends React.Component {
                   })
                   :
                   Platform.OS === 'android'
-                    ? ToastAndroid.showWithGravity('Vui lòng đăng nhập', ToastAndroid.SHORT, ToastAndroid.TOP)
-                    : Alert.alert("Vui lòng đăng nhập")
+                    ? ToastAndroid.showWithGravity(translate('Please login'), ToastAndroid.SHORT, ToastAndroid.TOP)
+                    : Alert.alert(translate('Please login'))
 
 
                 //this.popupLogin.show();
@@ -2501,7 +2591,7 @@ export default class HomeScreen extends React.Component {
               <ActionButton.Item buttonColor='#a4d227'
                 textContainerStyle={{ backgroundColor: '#73aa2a' }}
                 textStyle={{ color: '#fff' }}
-                title="Trang Cá Nhân" onPress={() => {
+                title={translate('Personal page')} onPress={() => {
 
                   this.props.navigation.navigate("ProfileScreen", {
                     onRefreshScreen: this.onRefreshScreen,
@@ -2536,7 +2626,7 @@ export default class HomeScreen extends React.Component {
         <PopupDialog
           ref={(popupResetPassword) => { this.popupResetPassword = popupResetPassword; }}
           dialogAnimation={new ScaleAnimation()}
-          dialogTitle={<DialogTitle title="Lấy lại mật khẩu" titleStyle={{}} titleTextStyle={{ color: '#73aa2a' }} />}
+          dialogTitle={<DialogTitle title={translate("Retrieve password")} titleStyle={{}} titleTextStyle={{ color: '#73aa2a' }} />}
           dismissOnTouchOutside={false}
           dialogStyle={{
             marginBottom: 150, width: width * 0.9,
@@ -2563,7 +2653,7 @@ export default class HomeScreen extends React.Component {
                   this._resetPasswordStep1();
                 }}
                 containerStyle={{ flex: 15 }}
-                placeholder='Số điện thoại'
+                placeholder={translate("Cellphone")}
                 autoCapitalize='sentences'
                 keyboardType='phone-pad'
                 underlineColorAndroid={'#73aa2a'}
@@ -2578,7 +2668,7 @@ export default class HomeScreen extends React.Component {
               buttonStyle={{ backgroundColor: '#9B9D9D', padding: 10, borderRadius: 5, }}
               raised={false}
               icon={{ name: 'ios-backspace', type: 'ionicon' }}
-              title='Hủy'
+              title={translate("Cancel")}
               onPress={() => {
                 Keyboard.dismiss();
                 this.popupResetPassword.dismiss()
@@ -2594,7 +2684,7 @@ export default class HomeScreen extends React.Component {
                 Keyboard.dismiss();
                 this._resetPasswordStep1();
               }}
-              title='Đồng ý' />
+              title={translate("Agree")} />
           </View>
 
         </PopupDialog>
@@ -2641,7 +2731,7 @@ export default class HomeScreen extends React.Component {
                   this._resetPasswordStep1();
                 }}
                 containerStyle={{ flex: 15 }}
-                placeholder='Số điện thoại'
+                placeholder={translate("Cellphone")}
                 autoCapitalize='sentences'
                 keyboardType='phone-pad'
                 underlineColorAndroid={'#73aa2a'}
@@ -2656,7 +2746,7 @@ export default class HomeScreen extends React.Component {
               buttonStyle={{ backgroundColor: '#9B9D9D', padding: 10, borderRadius: 5, }}
               raised={false}
               icon={{ name: 'ios-backspace', type: 'ionicon' }}
-              title='Hủy'
+              title={translate("Cancel")}
               onPress={() => {
                 Keyboard.dismiss();
                 this.setState({
@@ -2675,7 +2765,7 @@ export default class HomeScreen extends React.Component {
                 Keyboard.dismiss();
                 this._resetPasswordStep1();
               }}
-              title='Đồng ý' />
+              title={translate("Agree")} />
           </View>
         </Modal>
 
@@ -2683,7 +2773,7 @@ export default class HomeScreen extends React.Component {
         <PopupDialog
           ref={(popupActiveNewPassword) => { this.popupActiveNewPassword = popupActiveNewPassword; }}
           dialogAnimation={new ScaleAnimation()}
-          dialogTitle={<DialogTitle title="Mật khẩu mới" titleStyle={{}} titleTextStyle={{ color: '#73aa2a' }} />}
+          dialogTitle={<DialogTitle title={translate("New password")} titleStyle={{}} titleTextStyle={{ color: '#73aa2a' }} />}
           dismissOnTouchOutside={false}
           dialogStyle={{
             marginBottom: 220, width: width * 0.9,
@@ -2697,7 +2787,7 @@ export default class HomeScreen extends React.Component {
           <View style={{
             padding: 15
           }}>
-            <Text style={{ textAlign: 'center', color: '#73aa2a' }}>Bạn vui lòng kiểm tra Email để lấy Mã Kích Hoạt mật khẩu mới!</Text>
+            <Text style={{ textAlign: 'center', color: '#73aa2a' }}>{translate("Please check Email to get Activation Code for new password")}</Text>
             {/* Active Key */}
             <Animated.View style={{
               position: 'relative', left: this.state.animation.usernamePostionLeft,
@@ -2712,7 +2802,7 @@ export default class HomeScreen extends React.Component {
                   this.refs.newPasswordInput.focus();
                 }}
                 containerStyle={{ flex: 15 }}
-                placeholder='Mã kích hoạt mật khẩu mới'
+                placeholder={translate("Activation code for new password")}
                 autoCapitalize='sentences'
                 keyboardType='numeric'
                 underlineColorAndroid={'#73aa2a'}
@@ -2733,7 +2823,7 @@ export default class HomeScreen extends React.Component {
                   this._resetPasswordStep2();
                 }}
                 containerStyle={{ flex: 15 }}
-                placeholder='Mật khẩu mới'
+                placeholder={translate("New password")}
                 autoCapitalize='sentences'
                 //keyboardType='email-address'
                 secureTextEntry={true}
@@ -2752,7 +2842,7 @@ export default class HomeScreen extends React.Component {
               buttonStyle={{ backgroundColor: '#9B9D9D', padding: 10, borderRadius: 5, }}
               raised={false}
               icon={{ name: 'ios-backspace', type: 'ionicon' }}
-              title='Hủy'
+              title={translate("Cancel")}
               onPress={() => {
                 Keyboard.dismiss();
                 this.popupActiveNewPassword.dismiss()
@@ -2767,7 +2857,7 @@ export default class HomeScreen extends React.Component {
                 Keyboard.dismiss();
                 this._resetPasswordStep2();
               }}
-              title='Đồng ý' />
+              title={translate("Agree")} />
           </View>
         </PopupDialog>
 
@@ -2797,7 +2887,7 @@ export default class HomeScreen extends React.Component {
             padding: 15,
             marginTop: 60,
           }}>
-            <Text style={{ textAlign: 'center', color: '#73aa2a' }}>Bạn vui lòng kiểm tra Email để lấy Mã Kích Hoạt mật khẩu mới!</Text>
+            <Text style={{ textAlign: 'center', color: '#73aa2a' }}>{translate("Please check Email to get Activation Code for new password")}</Text>
             {/* Active Key */}
             <Animated.View style={{
               position: 'relative', left: this.state.animation.usernamePostionLeft,
@@ -2812,7 +2902,7 @@ export default class HomeScreen extends React.Component {
                   this.refs.newPasswordInput.focus();
                 }}
                 containerStyle={{ flex: 15 }}
-                placeholder='Mã kích hoạt mật khẩu mới'
+                placeholder={translate("Activation code for new password")}
                 autoCapitalize='sentences'
                 keyboardType='numeric'
                 underlineColorAndroid={'#73aa2a'}
@@ -2833,7 +2923,7 @@ export default class HomeScreen extends React.Component {
                   this._resetPasswordStep2();
                 }}
                 containerStyle={{ flex: 15 }}
-                placeholder='Mật khẩu mới'
+                placeholder={translate("New password")}
                 autoCapitalize='sentences'
                 //keyboardType='email-address'
                 secureTextEntry={true}
@@ -2852,7 +2942,7 @@ export default class HomeScreen extends React.Component {
               buttonStyle={{ backgroundColor: '#9B9D9D', padding: 10, borderRadius: 5, }}
               raised={false}
               icon={{ name: 'ios-backspace', type: 'ionicon' }}
-              title='Hủy'
+              title={translate("Cancel")}
               onPress={() => {
                 Keyboard.dismiss();
                 this.setState({
@@ -2872,7 +2962,7 @@ export default class HomeScreen extends React.Component {
                 Keyboard.dismiss();
                 this._resetPasswordStep2();
               }}
-              title='Đồng ý' />
+              title={translate("Agree")} />
           </View>
 
         </Modal>
@@ -2881,7 +2971,7 @@ export default class HomeScreen extends React.Component {
         <PopupDialog
           ref={(popupLogin) => { this.popupLogin = popupLogin; }}
           dialogAnimation={new ScaleAnimation()}
-          dialogTitle={<DialogTitle title="Đăng nhập" titleStyle={{}} titleTextStyle={{ color: '#73aa2a' }} />}
+          dialogTitle={<DialogTitle title={translate("Login")} titleStyle={{}} titleTextStyle={{ color: '#73aa2a' }} />}
           dismissOnTouchOutside={false}
           dialogStyle={{ marginBottom: 150, width: width * 0.9, }}
           onShown={() => {
@@ -2900,7 +2990,7 @@ export default class HomeScreen extends React.Component {
                   this.refs.passwordInput.focus();
                 }}
                 containerStyle={{ flex: 15 }}
-                placeholder='Số điện thoại'
+                placeholder={translate("Cellphone")}
                 autoCapitalize='sentences'
                 keyboardType='phone-pad'
                 value={this.state.loginUsername}
@@ -2918,7 +3008,7 @@ export default class HomeScreen extends React.Component {
                   this._loginAsync()
                 }}
                 containerStyle={{ flex: 15 }}
-                placeholder='Mật khẩu'
+                placeholder={translate("Password")}
                 underlineColorAndroid={'#73aa2a'}
                 secureTextEntry={true}
                 value={this.state.loginPassword}
@@ -2931,7 +3021,7 @@ export default class HomeScreen extends React.Component {
                 buttonStyle={{ backgroundColor: '#9B9D9D', padding: 10, borderRadius: 5, }}
                 raised={false}
                 icon={{ name: 'ios-backspace', type: 'ionicon' }}
-                title='Hủy'
+                title={translate("Cancel")}
                 onPress={() => {
                   Keyboard.dismiss();
                   this.popupLogin.dismiss()
@@ -2942,7 +3032,7 @@ export default class HomeScreen extends React.Component {
                 buttonStyle={{ backgroundColor: '#73aa2a', padding: 10, borderRadius: 5, }}
                 raised={false}
                 icon={{ name: 'md-checkmark', type: 'ionicon' }}
-                title='Đăng nhập'
+                title={translate("Login")}
                 onPress={() => {
                   Keyboard.dismiss();
                   this._loginAsync()
@@ -2959,7 +3049,7 @@ export default class HomeScreen extends React.Component {
                   this.popupResetPassword.show();
                 }}
               >
-                <Text style={{ padding: 15, textAlign: 'center', }}>Quên mật khẩu</Text>
+                <Text style={{ padding: 15, textAlign: 'center', }}>{translate("Forgot password")}</Text>
               </TouchableOpacity>
               <TouchableOpacity style={{ flex: 1, }}
                 onPress={() => {
@@ -2975,7 +3065,7 @@ export default class HomeScreen extends React.Component {
                   }) */}
                 }}
               >
-                <Text style={{ padding: 15, textAlign: 'center' }}>Đăng ký mới</Text>
+                <Text style={{ padding: 15, textAlign: 'center' }}>{translate("Sign up")}</Text>
               </TouchableOpacity>
             </View>
 
@@ -3055,7 +3145,7 @@ export default class HomeScreen extends React.Component {
                   this.refs.passwordInput.focus();
                 }}
                 containerStyle={{ flex: 15 }}
-                placeholder='Số điện thoại'
+                placeholder={translate("Cellphone")}
                 autoCapitalize='sentences'
                 keyboardType='phone-pad'
                 value={this.state.loginUsername}
@@ -3074,7 +3164,7 @@ export default class HomeScreen extends React.Component {
                   this._loginAsync()
                 }}
                 containerStyle={{ flex: 15 }}
-                placeholder='Mật khẩu'
+                placeholder={translate("Password")}
                 underlineColorAndroid={'#73aa2a'}
                 secureTextEntry={true}
                 value={this.state.loginPassword}
@@ -3087,7 +3177,7 @@ export default class HomeScreen extends React.Component {
                 buttonStyle={{ backgroundColor: '#9B9D9D', padding: 10, borderRadius: 5, }}
                 raised={false}
                 icon={{ name: 'ios-backspace', type: 'ionicon' }}
-                title='Hủy'
+                title={translate("Cancel")}
                 onPress={() => {
                   Keyboard.dismiss();
                   if (Platform.OS == 'ios') {
@@ -3109,7 +3199,7 @@ export default class HomeScreen extends React.Component {
                 buttonStyle={{ backgroundColor: '#73aa2a', padding: 10, borderRadius: 5, }}
                 raised={false}
                 icon={{ name: 'md-checkmark', type: 'ionicon' }}
-                title='Đăng nhập'
+                title={translate("Login")}
                 onPress={() => {
                   Keyboard.dismiss();
                   //this.setState({ modalLoading: true })
@@ -3129,7 +3219,7 @@ export default class HomeScreen extends React.Component {
                   this.setState({ modalLogin: false, modalResetPassword1: true })
                 }}
               >
-                <Text style={{ padding: 15, textAlign: 'center', }}>Quên mật khẩu</Text>
+                <Text style={{ padding: 15, textAlign: 'center', }}>{translate("Forgot password")}</Text>
               </TouchableOpacity>
 
               {/* Register new account */}
@@ -3147,7 +3237,7 @@ export default class HomeScreen extends React.Component {
                   }) */}
                 }}
               >
-                <Text style={{ padding: 15, textAlign: 'center' }}>Đăng ký mới</Text>
+                <Text style={{ padding: 15, textAlign: 'center' }}>{translate("Sign up")}</Text>
               </TouchableOpacity>
             </View>
 
@@ -3191,14 +3281,14 @@ export default class HomeScreen extends React.Component {
         <PopupDialog
           ref={(popupReportNBL) => { this.popupReportNBL = popupReportNBL; }}
           dialogAnimation={new ScaleAnimation()}
-          dialogTitle={<DialogTitle title="Báo cáo Nhà Bao La" titleStyle={{}} titleTextStyle={{ color: '#73aa2a' }} />}
+          dialogTitle={<DialogTitle title={translate("Violation report")} titleStyle={{}} titleTextStyle={{ color: '#73aa2a' }} />}
           dismissOnTouchOutside={false}
           dialogStyle={{ marginBottom: 100, width: width * 0.9 }}
 
         >
           <View>
             <CheckBox
-              title='Không đúng địa chỉ'
+              title={translate("Address is not correct")}
               checked={this.state.reportAddress}
               onPress={() => {
                 this.setState({
@@ -3207,7 +3297,7 @@ export default class HomeScreen extends React.Component {
               }}
             />
             <CheckBox
-              title='Không gọi được'
+              title={translate("Cannot contact")}
               checked={this.state.reportCall}
               onPress={() => {
                 this.setState({
@@ -3216,7 +3306,7 @@ export default class HomeScreen extends React.Component {
               }}
             />
             <CheckBox
-              title='Nhà đã cho thuê'
+              title={translate("The house has been rented")}
               checked={this.state.reportHouse}
               onPress={() => {
                 this.setState({
@@ -3241,12 +3331,12 @@ export default class HomeScreen extends React.Component {
                     reportHouse: false,
                   })
                 }}
-                title='Hủy' />
+                title={translate("Cancel")} />
 
               <Button
                 buttonStyle={{ backgroundColor: '#73aa2a', padding: 15, borderRadius: 10 }}
                 icon={{ name: 'md-cloud-upload', type: 'ionicon' }}
-                title='Gửi'
+                title={translate("Send")}
                 onPress={() => {
 
                   if (this.state.reportAddress) {
@@ -3259,14 +3349,14 @@ export default class HomeScreen extends React.Component {
                     this._reportNBLAsync(5, this.state.reportRoomId)
                   }
 
-                  ToastAndroid.showWithGravity('Cảm ơn bạn đã báo cáo chúng tôi!', ToastAndroid.SHORT, ToastAndroid.TOP);
+                  ToastAndroid.showWithGravity(translate("Thanks your for reporting to Nhabaola"), ToastAndroid.SHORT, ToastAndroid.TOP);
 
                   // Notify Admin 
                   notifyNBLAsync(globalVariable.ADMIN_PUSH_TOKEN
                     , { "screen": "RoomDetailScreen", "params": { "roomBoxID": this.state.reportRoomId } } //{ ...roombox }
                     , "default"
-                    , this.state.profile.FullName + " phàn nàn:"
-                    , "Không đúng địa chỉ hoặc Không gọi được hoặc Nhà đã cho thuê"
+                    , this.state.profile.FullName + " " + translate("Complaint") + ":"
+                    , translate("Inaccurate Address or Not Called or Leased House")
                   ); //pushToken, data, sound, title, body
 
                 }}
@@ -3302,7 +3392,7 @@ export default class HomeScreen extends React.Component {
             style={{ marginTop: 70 }}
           >
             <CheckBox
-              title='Không đúng địa chỉ'
+              title={translate("Address is not correct")}
               checked={this.state.reportAddress}
               onPress={() => {
                 this.setState({
@@ -3311,7 +3401,7 @@ export default class HomeScreen extends React.Component {
               }}
             />
             <CheckBox
-              title='Không gọi được'
+              title={translate("Cannot contact")}
               checked={this.state.reportCall}
               onPress={() => {
                 this.setState({
@@ -3320,7 +3410,7 @@ export default class HomeScreen extends React.Component {
               }}
             />
             <CheckBox
-              title='Nhà đã cho thuê'
+              title={translate("The house has been rented")}
               checked={this.state.reportHouse}
               onPress={() => {
                 this.setState({
@@ -3347,12 +3437,12 @@ export default class HomeScreen extends React.Component {
                     modalLoading: false,
                   })
                 }}
-                title='Hủy' />
+                title={translate("Cancel")} />
 
               <Button
                 buttonStyle={{ backgroundColor: '#73aa2a', padding: 15, borderRadius: 10 }}
                 icon={{ name: 'md-cloud-upload', type: 'ionicon' }}
-                title='Gửi'
+                title={translate("Send")}
                 onPress={() => {
 
 
@@ -3366,14 +3456,14 @@ export default class HomeScreen extends React.Component {
                     this._reportNBLAsync(5, this.state.reportRoomId)
                   }
 
-                  Alert.alert('Thông báo', 'Cảm ơn bạn đã báo cáo chúng tôi!');
+                  Alert.alert(translate("Notice"), translate("Thanks your for reporting to Nhabaola"));
 
                   // Notify Admin 
                   notifyNBLAsync(globalVariable.ADMIN_PUSH_TOKEN
                     , { "screen": "RoomDetailScreen", "params": { "roomBoxID": this.state.reportRoomId } } //{ ...roombox }
                     , "default"
-                    , this.state.profile.FullName + " phàn nàn:"
-                    , "Không đúng địa chỉ hoặc Không gọi được hoặc Nhà đã cho thuê"
+                    , this.state.profile.FullName + " " + translate("Complaint") + ":"
+                    , translate("Inaccurate Address or Not Called or Leased House")
                   ); //pushToken, data, sound, title, body
 
                 }}
@@ -3406,7 +3496,7 @@ export default class HomeScreen extends React.Component {
 
 
         {/* Modal Register Account */}
-        <Modal
+        {/* <Modal
           animationType={"slide"}
           transparent={false}
           visible={this.state.modalRegisterAccount}
@@ -3421,7 +3511,7 @@ export default class HomeScreen extends React.Component {
               <TouchableOpacity
                 style={{}}
                 onPress={async () => {
-                  //this._pickPostRoomImage('registerAccountImage')
+                 
                   await this.setState({ modalRegisterAccount: false })
                   this.popupSelectedImage.show()
                 }
@@ -3461,9 +3551,7 @@ export default class HomeScreen extends React.Component {
                     (Xác nhận ĐT)
                 </FormLabel>
                 </TouchableOpacity>
-                {/* <FormValidationMessage>
-                {'This field is required'}
-              </FormValidationMessage> */}
+               
               </Animated.View>
               <Animated.View style={{ position: 'relative', left: this.state.animation.passwordPositionLeft, flexDirection: 'row', padding: 10, paddingTop: 0, }}>
                 <Ionicons style={{ flex: 1, fontSize: 22, paddingTop: 12, textAlign: 'center', }} name='ios-lock' />
@@ -3478,7 +3566,7 @@ export default class HomeScreen extends React.Component {
                 />
               </Animated.View>
               <Animated.View style={{ position: 'relative', left: this.state.animation.passwordPositionLeft, flexDirection: 'row', padding: 10, paddingTop: 0, }}>
-                {/* <Ionicons style={{ flex: 1, fontSize: 22, paddingTop: 12, textAlign: 'center', }} name='ios-lock-outline' /> */}
+                
                 <FormInput
                   containerStyle={{ flex: 15, marginLeft: 36 }}
                   inputStyle={{ paddingLeft: Platform.OS === 'android' ? 4 : 0 }}
@@ -3514,8 +3602,7 @@ export default class HomeScreen extends React.Component {
                   onChangeText={(registerConfirmCellPhone) => { this.setState({ registerConfirmCellPhone }) }}
                 />
               </Animated.View>
-              {/* The view that will animate to match the keyboards height */}
-              {/* {Platform.OS === 'ios' ? <KeyboardSpacer /> : null} */}
+              
             </View>
 
             <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center', marginTop: 20, }}>
@@ -3549,7 +3636,7 @@ export default class HomeScreen extends React.Component {
               />
             </View>
           </ScrollView>
-        </Modal>
+        </Modal> */}
 
 
         {/* Popup select image library or camera */}
@@ -3570,7 +3657,7 @@ export default class HomeScreen extends React.Component {
             >
               <Ionicons style={{ fontSize: 40, borderRadius: 10, backgroundColor: '#a4d227', color: '#fff', textAlign: 'center', padding: 10 }} name='ios-folder-open' >
               </Ionicons>
-              <Text style={{ textAlign: 'center', marginTop: 5 }}>Thư viện ảnh</Text>
+              <Text style={{ textAlign: 'center', marginTop: 5 }}>{translate("Image library")}</Text>
             </TouchableOpacity>
             <TouchableOpacity
               style={{ justifyContent: 'center', alignContent: 'center', }}
@@ -3581,7 +3668,7 @@ export default class HomeScreen extends React.Component {
               }}
             >
               <Ionicons style={{ fontSize: 40, borderRadius: 10, backgroundColor: '#a4d227', color: '#fff', textAlign: 'center', padding: 10 }} name='md-camera' />
-              <Text style={{ textAlign: 'center', marginTop: 5 }}>Camera</Text>
+              <Text style={{ textAlign: 'center', marginTop: 5 }}>{translate("Camera")}</Text>
             </TouchableOpacity>
           </View>
         </PopupDialog>
@@ -3614,8 +3701,8 @@ export default class HomeScreen extends React.Component {
             {/* <Image
               style={{ position: 'absolute', width: responsiveWidth(90), height: responsiveHeight(30) }}
               source={require('../assets/images/nbl-highlight.gif')} /> */}
-            <Text style={{ fontSize: responsiveFontSize(2), color: '#73aa2a', marginBottom: 10, }}>Chúc Mừng Bạn</Text>
-            <Text>Bạn được tặng {numberWithCommas(this.state.wallet)} đồng vào Ví Tiền</Text>
+            <Text style={{ fontSize: responsiveFontSize(2), color: '#73aa2a', marginBottom: 10, }}>{translate("Congratulation")}</Text>
+            <Text>{translate("You get")} {numberWithCommas(this.state.wallet)} {translate("dong in wallet")}</Text>
           </View>
         </PopupDialog>
       </View >

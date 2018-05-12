@@ -900,7 +900,7 @@ export default class RoomDetailScreen extends React.Component {
                     }}
 
                     >
-                        <Ionicons style={{
+                        {/* <Ionicons style={{
                             color: '#7E7E7E',
                             fontSize: responsiveFontSize(1.8),
                         }} name='md-time' />
@@ -908,13 +908,13 @@ export default class RoomDetailScreen extends React.Component {
                             color: '#7E7E7E',
                             fontSize: responsiveFontSize(1.4),//13,
                             paddingLeft: 2,
-                        }}>: {this.state.roomBox.UpdatedDate}</Text>
+                        }}>: {this.state.roomBox.UpdatedDate}</Text> */}
 
 
                         {/* Language English*/}
                         <TouchableOpacity style={{
 
-                            marginLeft: 20,
+                            marginLeft: 10,
                             marginBottom: 2,
 
                         }}
@@ -1051,6 +1051,50 @@ fontSize: responsiveFontSize(1.8),
                         </View>
                         <View style={styles.cardDesBox}>
 
+                            {/* Posting Date and RoomID */}
+                            <View style={{
+                                flexDirection: 'row',
+                                //marginLeft: 5,
+                                marginBottom: 10,
+                                marginTop: -10,
+                            }}
+                            >
+
+                                {/* Posting Date  */}
+                                <View
+                                    style={{ flex: 1, flexDirection: 'row' }}
+                                >
+                                    <Ionicons style={{
+                                        color: '#7E7E7E',
+                                        fontSize: responsiveFontSize(1.8),
+                                    }} name='md-time' />
+                                    <Text style={{
+                                        color: '#7E7E7E',
+                                        fontSize: responsiveFontSize(1.4),//13,
+                                        paddingLeft: 2,
+                                    }}>: {this.state.roomBox.UpdatedDate}</Text>
+                                </View>
+
+                                {/* Room ID */}
+                                <View
+                                    style={{
+                                        flex: 1, flexDirection: 'row',
+                                        justifyContent: 'flex-end',
+                                    }}
+                                >
+                                    <Ionicons style={{
+
+                                        color: '#7E7E7E',
+                                        fontSize: responsiveFontSize(1.8),
+                                    }} name='ios-pricetag-outline' />
+                                    <Text style={{
+                                        color: '#7E7E7E',
+                                        fontSize: responsiveFontSize(1.4),//13,
+                                        paddingLeft: 2,
+                                        marginLeft: 3,
+                                    }}>Mã Tin: {this.state.roomBox.ID}</Text>
+                                </View>
+                            </View>
 
                             <Text style={styles.cardDesText}>
 

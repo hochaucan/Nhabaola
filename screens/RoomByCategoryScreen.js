@@ -1679,28 +1679,6 @@ export default class RoomByCategoryScreen extends React.Component {
                 }}
                 source={require('../images/app-icon.png')}
               />
-
-              {/* Posting Date */}
-              <View style={{
-                flexDirection: 'row',
-                marginLeft: 5,
-                marginBottom: 5,
-                //  alignItems: 'center',
-
-              }}
-
-              >
-                <Ionicons style={{
-                  color: '#7E7E7E',
-                  fontSize: responsiveFontSize(1.8),
-                }} name='md-time' />
-                <Text style={{
-                  color: '#7E7E7E',
-                  fontSize: responsiveFontSize(1.4),//13,
-                  paddingLeft: 2,
-                }}>: {item.UpdatedDate}</Text>
-              </View>
-
               <TouchableWithoutFeedback
                 style={{
                   flex: 6,
@@ -1762,6 +1740,50 @@ export default class RoomByCategoryScreen extends React.Component {
               </View>
               <View style={styles.cardDesBox}>
 
+                {/* Posting Date and RoomID */}
+                <View style={{
+                  flexDirection: 'row',
+                  //marginLeft: 5,
+                  marginBottom: 10,
+                  marginTop: -10,
+                }}
+                >
+
+                  {/* Posting Date  */}
+                  <View
+                    style={{ flex: 1, flexDirection: 'row' }}
+                  >
+                    <Ionicons style={{
+                      color: '#7E7E7E',
+                      fontSize: responsiveFontSize(1.8),
+                    }} name='md-time' />
+                    <Text style={{
+                      color: '#7E7E7E',
+                      fontSize: responsiveFontSize(1.4),//13,
+                      paddingLeft: 2,
+                    }}>: {item.UpdatedDate}</Text>
+                  </View>
+
+                  {/* Room ID */}
+                  <View
+                    style={{
+                      flex: 1, flexDirection: 'row',
+                      justifyContent: 'flex-end',
+                    }}
+                  >
+                    <Ionicons style={{
+
+                      color: '#7E7E7E',
+                      fontSize: responsiveFontSize(1.8),
+                    }} name='ios-pricetag-outline' />
+                    <Text style={{
+                      color: '#7E7E7E',
+                      fontSize: responsiveFontSize(1.4),//13,
+                      paddingLeft: 2,
+                      marginLeft: 3,
+                    }}>Mã Tin: {item.ID}</Text>
+                  </View>
+                </View>
 
 
                 <Text style={{
