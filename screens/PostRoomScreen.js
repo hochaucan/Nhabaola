@@ -277,7 +277,7 @@ export default class PostRoomScreen extends React.Component {
             }
 
             if (cellPhoneVN.test(this.state.contactPhone) === false) {
-                ToastAndroid.showWithGravity('Vui lòng nhập đúng số Điện Thoại Di Động Việt Nam', ToastAndroid.SHORT, ToastAndroid.TOP);
+                ToastAndroid.showWithGravity('Số điện thoại LH không đúng số Điện Thoại Di Động Việt Nam', ToastAndroid.SHORT, ToastAndroid.TOP);
                 this.refs['contactPhoneInput'].getElement().focus();
                 return;
             }
@@ -324,7 +324,7 @@ export default class PostRoomScreen extends React.Component {
                 return;
             }
             if (cellPhoneVN.test(this.state.contactPhone) === false) {
-                Alert.alert('Vui lòng nhập đúng số Điện Thoại Di Động Việt Nam');
+                Alert.alert('Số điện thoại LH không đúng số Điện Thoại Di Động Việt Nam');
                 //this.refs['contactPhoneInput'].getElement().focus();
                 return;
             }

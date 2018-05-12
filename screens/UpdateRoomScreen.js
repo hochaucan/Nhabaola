@@ -310,6 +310,7 @@ export default class UpdateRoomScreen extends React.Component {
         //alert(new Date(this.state.toDate) + " " + new Date(this.state.fromDate))
         // alert(this.state.toDate + " " + minDate)
         //return
+        let cellPhoneVN = /(09|01[2|6|8|9])+([0-9]{8})\b/;
 
         //Form validation
         if (Platform.OS === 'android') {
@@ -332,6 +333,13 @@ export default class UpdateRoomScreen extends React.Component {
                 this.refs['contactPhoneInput'].getElement().focus();
                 return;
             }
+
+            if (cellPhoneVN.test(this.state.contactPhone) === false) {
+                ToastAndroid.showWithGravity('Số điện thoại LH không đúng số Điện Thoại Di Động Việt Nam', ToastAndroid.SHORT, ToastAndroid.TOP);
+                this.refs['contactPhoneInput'].getElement().focus();
+                return;
+            }
+
             if (this.state.price === '') {
                 ToastAndroid.showWithGravity('Vui lòng nhập giá', ToastAndroid.SHORT, ToastAndroid.TOP);
                 this.refs['priceInput'].getElement().focus();
@@ -377,17 +385,23 @@ export default class UpdateRoomScreen extends React.Component {
             }
             if (this.state.contactPhone === '') {
                 Alert.alert('Vui lòng nhập Số điện thoại liên hệ');
-                this.refs['contactPhoneInput'].getElement().focus();
+                //this.refs['contactPhoneInput'].getElement().focus();
+                return;
+            }
+
+            if (cellPhoneVN.test(this.state.contactPhone) === false) {
+                Alert.alert('Số điện thoại LH không đúng số Điện Thoại Di Động Việt Nam');
+                //this.refs['contactPhoneInput'].getElement().focus();
                 return;
             }
             if (this.state.price === '') {
                 Alert.alert('Vui lòng nhập giá');
-                this.refs['priceInput'].getElement().focus();
+                //this.refs['priceInput'].getElement().focus();
                 return;
             }
             if (this.state.acreage === '') {
                 Alert.alert('Vui lòng nhập diện tích');
-                this.refs['acreageInput'].getElement().focus();
+                //this.refs['acreageInput'].getElement().focus();
                 return;
             }
             if (this.state.selectedCategory === '0') {
@@ -404,7 +418,7 @@ export default class UpdateRoomScreen extends React.Component {
             }
             if (this.state.detailInfo === '') {
                 Alert.alert('Vui lòng nhập thông tin chi tiết');
-                this.refs.roomInfoInput.focus();
+                //this.refs.roomInfoInput.focus();
                 return;
             }
         }
