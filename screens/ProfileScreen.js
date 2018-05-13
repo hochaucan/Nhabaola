@@ -29,38 +29,42 @@ import saveStorageAsync from '../components/saveStorageAsync';
 import HomeScreen from './HomeScreen';
 import { TextInputMask, TextMask } from 'react-native-masked-text';
 import { responsiveHeight, responsiveWidth, responsiveFontSize } from 'react-native-responsive-dimensions';
+import enTranslation from '../components/en.json';
+import zhTranslation from '../components/zh.json';
+import viTranslation from '../components/vi.json';
+import { setLocalization, translate, Translate } from 'react-native-translate';
 
 
 var { height, width } = Dimensions.get('window');
 function numberWithCommas(x) {
     return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
 }
-const SECTIONS = [
-    {
-        title: 'Đăng tin',
-        content: 'Đang cập nhật...',
-    },
-    {
-        title: 'Cập nhật tin',
-        content: 'Đang cập nhật...',
-    },
-    {
-        title: 'Nạp ví tiền',
-        content: 'Đang cập nhật...',
-    },
-    {
-        title: 'Đổi mật khẩu',
-        content: 'Đang cập nhật...',
-    },
-    {
-        title: 'Đổi thông tin cá nhân',
-        content: 'Đang cập nhật...',
-    },
-    {
-        title: 'Quên mật khẩu',
-        content: 'Đang cập nhật...',
-    },
-];
+// const SECTIONS = [
+//     {
+//         title: 'Đăng tin',
+//         content: 'Đang cập nhật...',
+//     },
+//     {
+//         title: 'Cập nhật tin',
+//         content: 'Đang cập nhật...',
+//     },
+//     {
+//         title: 'Nạp ví tiền',
+//         content: 'Đang cập nhật...',
+//     },
+//     {
+//         title: 'Đổi mật khẩu',
+//         content: 'Đang cập nhật...',
+//     },
+//     {
+//         title: 'Đổi thông tin cá nhân',
+//         content: 'Đang cập nhật...',
+//     },
+//     {
+//         title: 'Quên mật khẩu',
+//         content: 'Đang cập nhật...',
+//     },
+// ];
 
 function funcformatDateDDMMYYYY(_date) {
     var _newdate = new Date(_date);
@@ -217,13 +221,6 @@ export default class ProfileScreen extends React.Component {
                         })
                     }
 
-                    //alert(JSON.stringify(this.state.wallet[0].CurrentAmount))
-                    //this._saveStorageAsync('FO_RoomBox_GetAllData', JSON.stringify(responseJson.obj))
-                    // responseJson.obj.map((y) => { return y.CatName })
-
-
-                    //   this.setState({ refresh: false })
-
                 }).
                 catch((error) => { console.log(error) });
         } catch (error) {
@@ -238,17 +235,17 @@ export default class ProfileScreen extends React.Component {
         //Form validation
         if (Platform.OS === 'android') {
             if (this.state.oldPassword === '') {
-                ToastAndroid.showWithGravity('Vui lòng nhập mật khẩu cũ', ToastAndroid.SHORT, ToastAndroid.TOP);
+                ToastAndroid.showWithGravity(translate("Please enter old password"), ToastAndroid.SHORT, ToastAndroid.TOP);
                 this.refs.popupOldPasswordInput.focus()
                 return;
             }
             if (this.state.newPassword === '') {
-                ToastAndroid.showWithGravity('Vu lòng nhập mật khẩu mới', ToastAndroid.SHORT, ToastAndroid.TOP);
+                ToastAndroid.showWithGravity(translate("Please enter a new password"), ToastAndroid.SHORT, ToastAndroid.TOP);
                 this.refs.popupNewPasswordInput.focus()
                 return;
             }
             if (this.state.newPassword !== this.state.confirmNewPassword) {
-                ToastAndroid.showWithGravity('Xác nhận mật khẩu mới không đúng', ToastAndroid.SHORT, ToastAndroid.TOP);
+                ToastAndroid.showWithGravity(translate("Confirm new password is incorrect"), ToastAndroid.SHORT, ToastAndroid.TOP);
                 this.refs.popupConfirmNewPasswordInput.focus()
                 return;
             }
@@ -256,21 +253,21 @@ export default class ProfileScreen extends React.Component {
         }
         else { // iOS
             if (this.state.oldPassword === '') {
-                Alert.alert('Vui lòng nhập mật khẩu cũ');
+                Alert.alert(translate("Please enter a new password"));
                 return;
             }
             if (this.state.newPassword === '') {
-                Alert.alert('Vui lòng nhập mật khẩu mới');
+                Alert.alert(translate("Please enter a new password"));
                 return;
             }
             if (this.state.newPassword !== this.state.confirmNewPassword) {
                 //Alert.alert('Xác nhận mật khẩu không đúng');
 
                 this.setState({ modalChangePassword: false })
-                Alert.alert('Thông báo', 'Xác nhận mật khẩu mới không đúng',
+                Alert.alert(translate("Notice"), translate("Confirm new password is incorrect"),
                     [
                         {
-                            text: "Huỷ",
+                            text: translate("Cancel"),
                             onPress: () => {
                                 this.setState({
                                     confirmNewPassword: '',
@@ -280,7 +277,7 @@ export default class ProfileScreen extends React.Component {
                             }
                         },
                         {
-                            text: "Nhập lại",
+                            text: translate("Retype"),
                             onPress: () => {
                                 this.setState({ modalChangePassword: true, modalLoading: false })
                                 setTimeout(() => {
@@ -326,11 +323,11 @@ export default class ProfileScreen extends React.Component {
                         this.popupChangePassword.dismiss();
 
                         if (Platform.OS === 'android') {
-                            ToastAndroid.showWithGravity('Đổi mật khẩu thành công!', ToastAndroid.SHORT, ToastAndroid.TOP);
+                            ToastAndroid.showWithGravity(translate("Change password successfully"), ToastAndroid.SHORT, ToastAndroid.TOP);
                         }
                         else {
                             this.setState({ modalChangePassword: false })
-                            Alert.alert('Thông báo', 'Đổi mật khẩu thành công!');
+                            Alert.alert(translate("Notice"), translate("Change password successfully"));
                         }
 
                         this.setState({
@@ -342,15 +339,15 @@ export default class ProfileScreen extends React.Component {
                     if (JSON.stringify(responseJson.ErrorCode) === "15") { // Change Password un-successful
 
                         if (Platform.OS === 'android') {
-                            ToastAndroid.showWithGravity('Mật khẩu cũ không đúng!', ToastAndroid.SHORT, ToastAndroid.TOP);
+                            ToastAndroid.showWithGravity(translate("Old password is incorrect"), ToastAndroid.SHORT, ToastAndroid.TOP);
                             this.refs.popupOldPasswordInput.focus()
                         }
                         else {
                             this.setState({ modalChangePassword: false })
-                            Alert.alert('Thông báo', 'Mật khẩu cũ không đúng!',
+                            Alert.alert(translate("Notice"), translate("Old password is incorrect"),
                                 [
                                     {
-                                        text: "Huỷ",
+                                        text: translate("Cancel"),
                                         onPress: () => {
                                             this.setState({
                                                 confirmNewPassword: '',
@@ -360,7 +357,7 @@ export default class ProfileScreen extends React.Component {
                                         }
                                     },
                                     {
-                                        text: "Nhập lại",
+                                        text: translate("Retype"),
                                         onPress: () => {
                                             this.setState({ modalChangePassword: true, modalLoading: false })
                                             this.refs.oldPasswordInput.focus()
@@ -393,9 +390,9 @@ export default class ProfileScreen extends React.Component {
         this.setState({ mapRegion });
     };
 
-    _updateAccount = () => {
+    // _updateAccount = () => {
 
-    }
+    // }
 
     _moveToRoomDetail = (user) => {
         this.props.navigation.navigate('RoomDetailScreen', { ...user });
@@ -455,7 +452,10 @@ export default class ProfileScreen extends React.Component {
                         }}>
                         <Ionicons style={{ fontSize: 28, color: '#fff', }} name='md-arrow-back'></Ionicons>
                     </TouchableOpacity>
-                    <Text style={{ marginLeft: 20, color: '#fff', fontSize: responsiveFontSize(2.2), justifyContent: 'center' }}>Cá nhân</Text>
+                    <Text style={{
+                        marginLeft: 20, color: '#fff',
+                        fontSize: responsiveFontSize(2.2), justifyContent: 'center'
+                    }}>{translate("Personal page")}</Text>
                 </View>
                 <View style={{
                     //height: 80,
@@ -486,7 +486,7 @@ export default class ProfileScreen extends React.Component {
                             ?
                             <View style={{ flex: 4, paddingLeft: 20, marginTop: 10 }}>
                                 <Text style={styles.cardAvatarName}>{this.state.profile.FullName}</Text>
-                                <Text style={styles.cardAvatarAddress}>Ngày đăng ký: {funcformatDateDDMMYYYY(this.state.profile.RegistryDate)}</Text>
+                                <Text style={styles.cardAvatarAddress}>{translate("Registered Date")}: {funcformatDateDDMMYYYY(this.state.profile.RegistryDate)}</Text>
                                 <TouchableOpacity style={styles.cardAvatarPhoneBox}>
                                     <Ionicons style={styles.cardAvatarPhoneIcon} name='logo-whatsapp' />
                                     <Text style={styles.cardAvatarPhone}>: {this.state.profile.ContactPhone}</Text>
@@ -501,7 +501,7 @@ export default class ProfileScreen extends React.Component {
 
                                     }}
                                 >
-                                    <Text style={styles.cardAvatarName}>Đăng nhập</Text>
+                                    <Text style={styles.cardAvatarName}>{translate("Login")}</Text>
                                 </TouchableOpacity>
                             </View>
                         }
@@ -522,7 +522,7 @@ export default class ProfileScreen extends React.Component {
                         }}
                     >
                         <Ionicons style={styles.profileMenuItemText} name='md-cloud-upload'>
-                            <Text>  Đăng tin</Text>
+                            <Text>  {translate("Post")}</Text>
                         </Ionicons>
                     </TouchableOpacity>
                     <TouchableOpacity style={styles.profileMenuItem}
@@ -532,7 +532,7 @@ export default class ProfileScreen extends React.Component {
                         }}
                     >
                         <Ionicons style={styles.profileMenuItemText} name='md-folder'>
-                            <Text>  Tin đã đăng</Text>
+                            <Text>  {translate("Posted history")}</Text>
                         </Ionicons>
                     </TouchableOpacity>
                     <TouchableOpacity style={styles.profileMenuItem}
@@ -542,12 +542,12 @@ export default class ProfileScreen extends React.Component {
                         }}
                     >
                         <Ionicons style={styles.profileMenuItemText} name='md-heart-outline'>
-                            <Text>  Tin đánh dấu</Text>
+                            <Text>  {translate("Pinned")}</Text>
                         </Ionicons>
                     </TouchableOpacity>
                     <TouchableOpacity style={styles.profileMenuItem}>
                         <Ionicons style={styles.profileMenuItemText} name='logo-usd'>
-                            <Text style={{}}>  Ví tiền:  </Text>
+                            <Text style={{}}>  {translate("Wallet")}:  </Text>
                             <Text style={{ color: '#73aa2a' }}>{numberWithCommas(this.state.wallet)} đ</Text>
                         </Ionicons>
                     </TouchableOpacity>
@@ -591,7 +591,7 @@ export default class ProfileScreen extends React.Component {
                         }}
                     >
                         <Ionicons style={styles.profileMenuItemText} name='md-information-circle'>
-                            <Text>  Thông tin cá nhân</Text>
+                            <Text>  {translate("Personal information")}</Text>
                         </Ionicons>
                     </TouchableOpacity>
                     <TouchableOpacity style={styles.profileMenuItem}
@@ -626,14 +626,14 @@ export default class ProfileScreen extends React.Component {
                         }}
                     >
                         <Ionicons style={styles.profileMenuItemText} name='md-lock'>
-                            <Text>  Đổi mật khẩu</Text>
+                            <Text>  {translate("Change password")}</Text>
                         </Ionicons>
                     </TouchableOpacity>
                     <TouchableOpacity style={styles.profileMenuItem}
                         onPress={() => { this.setState({ modalHelp: true }) }}
                     >
                         <Ionicons style={styles.profileMenuItemText} name='md-help'>
-                            <Text>  Liên hệ và Giúp đỡ</Text>
+                            <Text>  {translate("Contact help")}</Text>
                         </Ionicons>
                     </TouchableOpacity>
 
@@ -641,16 +641,16 @@ export default class ProfileScreen extends React.Component {
                         <TouchableOpacity style={styles.profileMenuItem}
                             onPress={() => {
                                 Alert.alert(
-                                    'Thông báo',
-                                    'Bạn chắc chắn Đăng xuất?',
+                                    translate("Notice"),
+                                    translate("Are you sure to logout"),
                                     [
                                         {
-                                            text: 'Hủy', onPress: () => {
+                                            text: translate("Cancel"), onPress: () => {
 
                                             }
                                         },
                                         {
-                                            text: 'Đồng ý', onPress: () => {
+                                            text: translate("Agree"), onPress: () => {
                                                 //BackHandler.exitApp()
                                                 saveStorageAsync('FO_Account_Login', '')
                                                 saveStorageAsync('SessionKey', '')
@@ -678,7 +678,7 @@ export default class ProfileScreen extends React.Component {
                             }}
                         >
                             <Ionicons style={styles.profileMenuItemText} name='md-exit'>
-                                <Text>  Đăng xuất</Text>
+                                <Text>  {translate("Sign out")}</Text>
                             </Ionicons>
                         </TouchableOpacity>
                         : null}
@@ -705,7 +705,7 @@ export default class ProfileScreen extends React.Component {
                 <PopupDialog
                     ref={(popupChangePassword) => { this.popupChangePassword = popupChangePassword; }}
                     dialogAnimation={new ScaleAnimation()}
-                    dialogTitle={<DialogTitle title="Đổi mật khẩu" titleStyle={{}} titleTextStyle={{ color: '#73aa2a' }} />}
+                    dialogTitle={<DialogTitle title={translate("Change password")} titleStyle={{}} titleTextStyle={{ color: '#73aa2a' }} />}
                     dismissOnTouchOutside={false}
                     dialogStyle={{ marginBottom: 150, width: width * 0.9, height: height * 0.5, }}
                     onShown={() => {
@@ -733,7 +733,7 @@ export default class ProfileScreen extends React.Component {
                                     this.refs.popupNewPasswordInput.focus();
                                 }}
                                 containerStyle={{ flex: 15, }}
-                                placeholder='Mật khẩu củ'
+                                placeholder={translate("Old password")}
                                 // autoCapitalize='sentences'
                                 secureTextEntry={true}
                                 //keyboardType='phone-pad'
@@ -753,7 +753,7 @@ export default class ProfileScreen extends React.Component {
                                     this.refs.popupConfirmNewPasswordInput.focus();
                                 }}
                                 containerStyle={{ flex: 15 }}
-                                placeholder='Mật khẩu mới'
+                                placeholder={translate("New password")}
                                 secureTextEntry={true}
                                 underlineColorAndroid={'#73aa2a'}
                                 onChangeText={(newPassword) => this.setState({ newPassword })}
@@ -770,7 +770,7 @@ export default class ProfileScreen extends React.Component {
                                     this._changePassword();
                                 }}
                                 containerStyle={{ flex: 15 }}
-                                placeholder='Xác nhận mật khẩu mới'
+                                placeholder={translate("Confirm new password")}
                                 secureTextEntry={true}
                                 underlineColorAndroid={'#73aa2a'}
                                 onChangeText={(confirmNewPassword) => this.setState({ confirmNewPassword })}
@@ -786,7 +786,7 @@ export default class ProfileScreen extends React.Component {
                             buttonStyle={{ backgroundColor: '#9B9D9D', padding: 10, borderRadius: 5, }}
                             raised={false}
                             icon={{ name: 'ios-backspace', type: 'ionicon' }}
-                            title='Hủy'
+                            title={translate("Cancel")}
                             onPress={() => {
                                 Keyboard.dismiss()
                                 this.popupChangePassword.dismiss()
@@ -798,7 +798,7 @@ export default class ProfileScreen extends React.Component {
                             buttonStyle={{ backgroundColor: '#73aa2a', padding: 10, borderRadius: 5, }}
                             raised={false}
                             icon={{ name: 'md-checkmark', type: 'ionicon' }}
-                            title='Đồng ý'
+                            title={translate("Agree")}
                             onPress={() => {
                                 Keyboard.dismiss();
                                 this._changePassword();
@@ -839,7 +839,7 @@ export default class ProfileScreen extends React.Component {
                                     this.refs.newPasswordInput.focus()
                                 }}
                                 containerStyle={{ flex: 15, }}
-                                placeholder='Mật khẩu củ'
+                                placeholder={translate("Old password")}
                                 // autoCapitalize='sentences'
                                 secureTextEntry={true}
                                 //keyboardType='phone-pad'
@@ -859,7 +859,7 @@ export default class ProfileScreen extends React.Component {
                                     this.refs.newConfirmPasswordInput.focus()
                                 }}
                                 containerStyle={{ flex: 15 }}
-                                placeholder='Mật khẩu mới'
+                                placeholder={translate("New password")}
                                 secureTextEntry={true}
                                 underlineColorAndroid={'#73aa2a'}
                                 onChangeText={(newPassword) => this.setState({ newPassword })}
@@ -875,7 +875,7 @@ export default class ProfileScreen extends React.Component {
                                     this._changePassword();
                                 }}
                                 containerStyle={{ flex: 15 }}
-                                placeholder='Xác nhận mật khẩu mới'
+                                placeholder={translate("Confirm new password")}
                                 secureTextEntry={true}
                                 underlineColorAndroid={'#73aa2a'}
                                 onChangeText={(confirmNewPassword) => this.setState({ confirmNewPassword })}
@@ -891,7 +891,7 @@ export default class ProfileScreen extends React.Component {
                             buttonStyle={{ backgroundColor: '#9B9D9D', padding: 10, borderRadius: 5, }}
                             raised={false}
                             icon={{ name: 'ios-backspace', type: 'ionicon' }}
-                            title='Hủy'
+                            title={translate("Cancel")}
                             onPress={() => {
                                 this.setState({
                                     modalChangePassword: false,
@@ -907,7 +907,7 @@ export default class ProfileScreen extends React.Component {
                             buttonStyle={{ backgroundColor: '#73aa2a', padding: 10, borderRadius: 5, }}
                             raised={false}
                             icon={{ name: 'md-checkmark', type: 'ionicon' }}
-                            title='Đồng ý'
+                            title={translate("Agree")}
                             onPress={() => {
                                 Keyboard.dismiss();
                                 this._changePassword();
@@ -918,11 +918,13 @@ export default class ProfileScreen extends React.Component {
                 </Modal>
 
                 {/* Modal Update Account*/}
-                <Modal
+                {/* <Modal
                     animationType={"slide"}
                     transparent={false}
                     visible={this.state.modalUpdateAccount}
-                    onRequestClose={() => { alert("Modal has been closed.") }}
+                    onRequestClose={() => {
+                        this.setState({ modalUpdateAccount: false })
+                    }}
                 >
                     <ScrollView>
                         <View style={{ flexDirection: 'row', padding: 20, marginTop: 20, justifyContent: 'center', alignItems: 'center' }}>
@@ -931,8 +933,11 @@ export default class ProfileScreen extends React.Component {
                                 onPress={() => this._pickPostRoomImage('updateAccountImage')}
                             >
                                 <Ionicons style={{ opacity: 0.7, fontSize: 100, color: '#73aa2a', flex: 1, textAlign: 'center', }} name='ios-contact' />
-                                {this.state.updateAccountImage && <Image source={{ uri: this.state.updateAccountImage }} style={{ width: 80, height: 80, borderRadius: 100, marginTop: -90, marginLeft: 17, marginBottom: 10, }} />}
-                                <Text style={{}}>Đổi hình đại diện</Text>
+                                {this.state.updateAccountImage && <Image source={{ uri: this.state.updateAccountImage }} style={{
+                                    width: 80, height: 80,
+                                    borderRadius: 100, marginTop: -90, marginLeft: 17, marginBottom: 10,
+                                }} />}
+                                <Text style={{}}>{translate("Change avatar")}</Text>
                             </TouchableOpacity>
 
                         </View>
@@ -948,7 +953,7 @@ export default class ProfileScreen extends React.Component {
                                     containerStyle={{ flex: 15, paddingLeft: 5, }}
                                     placeholder='Họ và Tên'
                                     autoCapitalize='sentences'
-                                    /* keyboardType='phone-pad' */
+                                   
                                     underlineColorAndroid={'#fff'}
                                     onChangeText={(text) => this.setState({ text })}
                                     value={this.state.text}
@@ -960,7 +965,7 @@ export default class ProfileScreen extends React.Component {
                                 <FormInput
                                     containerStyle={{ flex: 15, paddingLeft: 5, }}
                                     placeholder='Email'
-                                    /* keyboardType='email-address' */
+                                 
                                     underlineColorAndroid={'#fff'}
                                 />
                             </View>
@@ -986,7 +991,7 @@ export default class ProfileScreen extends React.Component {
                             />
                         </View>
                     </ScrollView>
-                </Modal>
+                </Modal> */}
 
                 {/* Modal Help*/}
                 <Modal
@@ -1003,28 +1008,61 @@ export default class ProfileScreen extends React.Component {
                             onPress={() => this.setState({ modalHelp: false })}>
                             <Ionicons style={{ fontSize: 28, color: '#a4d227', }} name='md-arrow-back'></Ionicons>
                         </TouchableOpacity>
-                        <Text style={{ marginLeft: 20, color: '#73aa2a', fontSize: responsiveFontSize(2.2), justifyContent: 'center' }}>Liên hệ và Giúp đỡ</Text>
+                        <Text style={{
+                            marginLeft: 20, color: '#73aa2a',
+                            fontSize: responsiveFontSize(2.2), justifyContent: 'center'
+                        }}>{translate("Contact help")}</Text>
                     </View>
                     <ScrollView style={{ flex: 1, padding: 20, }}>
 
-                        <Text style={{ fontSize: responsiveFontSize(2), color: '#73aa2a' }} >Liên hệ</Text>
+                        <Text style={{
+                            fontSize: responsiveFontSize(2),
+                            color: '#73aa2a'
+                        }} >{translate("Contact")}</Text>
                         <View style={{ marginTop: 5, flexDirection: 'row' }}>
-                            <Text style={{ fontSize: responsiveFontSize(2), flex: 2, color: '#000' }} >Hotline:</Text>
-                            <Text style={{ fontSize: responsiveFontSize(2), flex: 4, color: '#9B9D9D' }} >0973730111, 0905588639</Text>
+                            <Text style={{
+                                fontSize: responsiveFontSize(2),
+                                flex: 2, color: '#000'
+                            }} >{translate("Hotline")}:</Text>
+                            <Text style={{
+                                fontSize: responsiveFontSize(2),
+                                flex: 4, color: '#9B9D9D'
+                            }} >0973730111, 0905588639</Text>
                         </View>
                         <View style={{ marginTop: 5, flexDirection: 'row' }}>
-                            <Text style={{ fontSize: responsiveFontSize(2), flex: 2, color: '#000' }} >Email:</Text>
-                            <Text style={{ fontSize: responsiveFontSize(2), flex: 4, color: '#9B9D9D' }} >hochaucan@gmail.com</Text>
+                            <Text style={{
+                                fontSize: responsiveFontSize(2),
+                                flex: 2, color: '#000'
+                            }} >Email:</Text>
+                            <Text style={{
+                                fontSize: responsiveFontSize(2),
+                                flex: 4, color: '#9B9D9D'
+                            }} >hochaucan@gmail.com</Text>
                         </View>
                         <View style={{ marginTop: 5, flexDirection: 'row' }}>
-                            <Text style={{ fontSize: responsiveFontSize(2), flex: 2, color: '#000' }} >Skyle:</Text>
-                            <Text style={{ fontSize: responsiveFontSize(2), flex: 4, color: '#9B9D9D' }} >hochaucan</Text>
+                            <Text style={{
+                                fontSize: responsiveFontSize(2),
+                                flex: 2, color: '#000'
+                            }} >Skyle:</Text>
+                            <Text style={{
+                                fontSize: responsiveFontSize(2),
+                                flex: 4, color: '#9B9D9D'
+                            }} >hochaucan</Text>
                         </View>
                         <View style={{ marginTop: 5, flexDirection: 'row' }}>
-                            <Text style={{ fontSize: responsiveFontSize(2), flex: 2, color: '#000' }} >Facebook:</Text>
-                            <Text style={{ fontSize: responsiveFontSize(2), flex: 4, color: '#9B9D9D' }} > https://www.facebook.com/nhabaola/</Text>
+                            <Text style={{
+                                fontSize: responsiveFontSize(2), flex: 2,
+                                color: '#000'
+                            }} >Facebook:</Text>
+                            <Text style={{
+                                fontSize: responsiveFontSize(2), flex: 4,
+                                color: '#9B9D9D'
+                            }} > https://www.facebook.com/nhabaola/</Text>
                         </View>
-                        <Text style={{ fontSize: responsiveFontSize(2), color: '#73aa2a', marginTop: 25, marginBottom: 5 }} >Giúp đỡ</Text>
+                        <Text style={{
+                            fontSize: responsiveFontSize(2), color: '#73aa2a',
+                            marginTop: 25, marginBottom: 5
+                        }} >{translate("User manual")}</Text>
                         <TouchableOpacity
                             style={{ flexDirection: 'row', alignItems: 'center' }}
                             onPress={() => {
@@ -1042,7 +1080,7 @@ export default class ProfileScreen extends React.Component {
                                     .catch(err => console.error('An error occurred', err))
                             }}
                         >
-                            <Text style={{ alignItems: 'center', fontSize: responsiveFontSize(2) }}>Hướng dẫn sử dụng Ứng Dụng Nhàbaola</Text>
+                            <Text style={{ alignItems: 'center', fontSize: responsiveFontSize(2) }}>https://docs.google.com/document/d/1AJZpbCWJNlba-jgOmq00-iwhF0-l1Z0_XxfW9JafAqk</Text>
                             <Ionicons style={{
                                 color: '#a4d227',
                                 fontSize: responsiveFontSize(2.5),
@@ -1061,7 +1099,7 @@ export default class ProfileScreen extends React.Component {
                 </Modal>
 
                 {/* Modal Posted Room History*/}
-                <Modal
+                {/* <Modal
                     animationType={"slide"}
                     transparent={false}
                     visible={this.state.modalPostedRoomHistory}
@@ -1078,7 +1116,7 @@ export default class ProfileScreen extends React.Component {
                     <ScrollView>
                         <View style={styles.searchRoolResultBox}>
                             <FlatList
-                                //onScroll={this._onScroll}
+                                
                                 ref='refPostedRoomHistory'
                                 data={this.state.postedRoomHistoryData}
                                 renderItem={({ item }) =>
@@ -1097,7 +1135,7 @@ export default class ProfileScreen extends React.Component {
                                                 <View style={styles.searchCardPriceBox}>
                                                     <Text style={styles.searchCardPrice}>Giá: 2.000.000 đ</Text>
                                                     <Ionicons style={styles.searCardDistanceIcon} name='md-pin' >  3 km</Ionicons>
-                                                    {/* <Text>3 km</Text> */}
+                                                   
                                                 </View>
                                             </View>
                                         </View>
@@ -1106,27 +1144,9 @@ export default class ProfileScreen extends React.Component {
                                 keyExtractor={item => item.email}
                             />
                         </View>
-                        {/* <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center', marginTop: 20, }}>
-                            <Button
-                                buttonStyle={{ backgroundColor: '#9B9D9D', padding: 10, borderRadius: 5, }}
-                                raised={false}
-                                icon={{ name: 'ios-backspace', type: 'ionicon' }}
-                                title='Hủy'
-                                onPress={() => { this.setState({ modalPostedRoomHistory: false }) }}
-                            />
-
-                            <Button
-                                buttonStyle={{ backgroundColor: '#73aa2a', padding: 10, borderRadius: 5, }}
-                                raised={false}
-                                icon={{ name: 'md-checkmark', type: 'ionicon' }}
-                                title='Đồng ý'
-                                onPress={() => {
-                                    this._updateAccount();
-                                }}
-                            />
-                        </View> */}
+                      
                     </ScrollView>
-                </Modal>
+                </Modal> */}
             </View>
         );
     }

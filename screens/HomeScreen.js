@@ -318,6 +318,8 @@ export default class HomeScreen extends React.Component {
         else {
           setLocalization(viTranslation)
         }
+      } else {
+        setLocalization(viTranslation)
       }
 
     } catch (e) {
@@ -983,177 +985,157 @@ export default class HomeScreen extends React.Component {
         }
         case 'cancel': {
           Alert.alert(
-            'Thông báo',
-            'Huỷ đăng nhập Facebook',
+            translate("Notice"),
+            translate("Cancel Facebook login"),
           );
           break;
         }
         default: {
           Alert.alert(
-            'Thông báo',
-            'Đăng nhập không thành công',
+            translate("Notice"),
+            translate("Login unsuccessful"),
           );
         }
       }
     } catch (e) {
       Alert.alert(
-        'Thông báo',
-        'Đăng nhập không thành công' + JSON.stringify(e),
+        translate("Notice"),
+        translate("Login unsuccessful") + JSON.stringify(e),
       );
     }
   };
 
-  _registerAccountAsync = async () => {
+  // _registerAccountAsync = async () => {
 
-    //Form validation
-    if (Platform.OS === 'android') {
-      if (this.state.registerCellPhone === null) {
-        ToastAndroid.showWithGravity('Vui lòng nhập Số Điện Thoại', ToastAndroid.SHORT, ToastAndroid.TOP);
-        return;
-      }
-      if (this.state.registerPassword === null) {
-        ToastAndroid.showWithGravity('Vui lòng nhập mật khẩu', ToastAndroid.SHORT, ToastAndroid.TOP);
-        return;
-      }
-      if (this.state.registerPassword != this.state.registerConfirmPassword) {
-        ToastAndroid.showWithGravity('Xác nhận mật khẩu không khớp với mật khẩu', ToastAndroid.SHORT, ToastAndroid.TOP);
-        return;
-      }
-      if (this.state.registerFullName === null) {
-        ToastAndroid.showWithGravity('Vui lòng nhập Họ Tên', ToastAndroid.SHORT, ToastAndroid.TOP);
-        return;
-      }
-      if (this.state.registerConfirmCellPhone === null) {
-        ToastAndroid.showWithGravity('Vui lòng nhập mã xác nhận Số Điện Thoại', ToastAndroid.SHORT, ToastAndroid.TOP);
-        return;
-      }
-    }
-    else {
-      if (this.state.registerCellPhone === null) {
-        Alert.alert('Oops!', 'Vui lòng nhập Số Điện Thoại');
-        return;
-      }
-      if (this.state.registerPassword === null) {
-        Alert.alert('Oops!', 'Vui lòng nhập mật khẩu');
-        return;
-      }
-      if (this.state.registerPassword != this.state.registerConfirmPassword) {
-        Alert.alert('Oops!', 'Xác nhận mật khẩu không khớp với mật khẩu');
-        return;
-      }
-      if (this.state.registerFullName === null) {
-        Alert.alert('Oops!', 'Vui lòng nhập Họ Tên');
-        return;
-      }
-      if (this.state.registerConfirmCellPhone === null) {
-        Alert.alert('Oops!', 'Vui lòng nhập mã xác nhận Số Điện Thoại');
-        return;
-      }
-    }
+  //   //Form validation
+  //   if (Platform.OS === 'android') {
+  //     if (this.state.registerCellPhone === null) {
+  //       ToastAndroid.showWithGravity(translate("Please enter the cellphone"), ToastAndroid.SHORT, ToastAndroid.TOP);
+  //       return;
+  //     }
+  //     if (this.state.registerPassword === null) {
+  //       ToastAndroid.showWithGravity(translate("Please enter a password"), ToastAndroid.SHORT, ToastAndroid.TOP);
+  //       return;
+  //     }
+  //     if (this.state.registerPassword != this.state.registerConfirmPassword) {
+  //       ToastAndroid.showWithGravity(translate("Confirm password is incorrect"), ToastAndroid.SHORT, ToastAndroid.TOP);
+  //       return;
+  //     }
+  //     if (this.state.registerFullName === null) {
+  //       ToastAndroid.showWithGravity(translate("Please enter fullname"), ToastAndroid.SHORT, ToastAndroid.TOP);
+  //       return;
+  //     }
+  //     // if (this.state.registerConfirmCellPhone === null) {
+  //     //   ToastAndroid.showWithGravity('Vui lòng nhập mã xác nhận Số Điện Thoại', ToastAndroid.SHORT, ToastAndroid.TOP);
+  //     //   return;
+  //     // }
+  //   }
+  //   else {
+  //     if (this.state.registerCellPhone === null) {
+  //       Alert.alert('Oops!', 'Vui lòng nhập Số Điện Thoại');
+  //       return;
+  //     }
+  //     if (this.state.registerPassword === null) {
+  //       Alert.alert('Oops!', 'Vui lòng nhập mật khẩu');
+  //       return;
+  //     }
+  //     if (this.state.registerPassword != this.state.registerConfirmPassword) {
+  //       Alert.alert('Oops!', 'Xác nhận mật khẩu không khớp với mật khẩu');
+  //       return;
+  //     }
+  //     if (this.state.registerFullName === null) {
+  //       Alert.alert('Oops!', 'Vui lòng nhập Họ Tên');
+  //       return;
+  //     }
+  //     // if (this.state.registerConfirmCellPhone === null) {
+  //     //   Alert.alert('Oops!', 'Vui lòng nhập mã xác nhận Số Điện Thoại');
+  //     //   return;
+  //     // }
+  //   }
 
-    await this.setState({ modalRegisterAccount: false, })
-    this.popupLoadingIndicator.show();
-
-
-
-    let uploadResponse = await uploadImageAsync(this.state.registerAccountImage);
-    let uploadResult = await uploadResponse.json();
-
-    //Set account object
-    await this.setState({
-
-      objectRegisterAccount: {
-        Avarta: uploadResult.location,
-        UserName: this.state.registerCellPhone,
-        FullName: this.state.registerFullName,
-        Email: "",
-        Sex: "",
-        YearOfBirth: "2017-10-09",
-        Address: "5 Hello 10 Hi 15 Hehe",
-        ContactPhone: this.state.registerCellPhone,
-        Password: this.state.registerPassword,
-        RegistryDate: "2017-10-09",
-        IsActive: "true",
-        CreatedDate: "2017-10-09",
-        CreatedBy: "10",
-        UpdatedBy: "Olala_SessionKey",
-        UpdatedDate: "2017-10-09"
-      },
-
-    })
-    // console.log(JSON.stringify(this.state.objectRegisterAccount))
-    //Post to register account
-    try {
-      await fetch("http://nhabaola.vn/api/Account/FO_Account_Add", {
-        method: 'POST',
-        headers: {
-          Accept: 'application/json',
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(this.state.objectRegisterAccount)
+  //   await this.setState({ modalRegisterAccount: false, })
+  //   this.popupLoadingIndicator.show();
 
 
-        // body: JSON.stringify({
-        //   "UserName": "UserName",
-        //   "FullName": "Nguyen Van A",
-        //   "Email": "Email@gmail.com",
-        //   "Sex": "Nam",
-        //   "YearOfBirth": "2017-10-09",
-        //   "Address": "5 Hello 10 Hi 15 Hehe",
-        //   "ContactPhone": "0919999888",
-        //   "Password": "Passwordvinaphuc",
-        //   "RegistryDate": "2017-10-09",
-        //   "IsActive": "true",
-        //   "CreatedDate": "2017-10-09",
-        //   "CreatedBy": "10",
-        //   "UpdatedBy": "Olala_SessionKey",
-        //   "UpdatedDate": "2017-10-09"
-        // }),
-      })
-        .then((response) => response.json())
-        .then((responseJson) => {
 
-          this.setState({
-            modalRegisterAccount: false, //Close register account modal
-            modalRegisterAccount: false,
-            registerCellPhone: null,
-            registerPassword: null,
-            registerConfirmPassword: null,
-            registerAccountImage: null,
-            registerFullName: null,
-            registerConfirmCellPhone: null,
-          })
+  //   let uploadResponse = await uploadImageAsync(this.state.registerAccountImage);
+  //   let uploadResult = await uploadResponse.json();
 
-          this.popupLoadingIndicator.dismiss();
-        }).
-        catch((error) => { console.log(error) });
-    } catch (error) {
-      console.log(error)
-    }
+  //   //Set account object
+  //   await this.setState({
 
+  //     objectRegisterAccount: {
+  //       Avarta: uploadResult.location,
+  //       UserName: this.state.registerCellPhone,
+  //       FullName: this.state.registerFullName,
+  //       Email: "",
+  //       Sex: "",
+  //       YearOfBirth: "2017-10-09",
+  //       Address: "5 Hello 10 Hi 15 Hehe",
+  //       ContactPhone: this.state.registerCellPhone,
+  //       Password: this.state.registerPassword,
+  //       RegistryDate: "2017-10-09",
+  //       IsActive: "true",
+  //       CreatedDate: "2017-10-09",
+  //       CreatedBy: "10",
+  //       UpdatedBy: "Olala_SessionKey",
+  //       UpdatedDate: "2017-10-09"
+  //     },
 
-  }
-
-  // _postImage = async () => {
-  //   var can = 'http://uploads.im/api?upload=http://www.google.com/images/srpr/nav_logo66.png'
+  //   })
   //   // console.log(JSON.stringify(this.state.objectRegisterAccount))
   //   //Post to register account
   //   try {
-  //     await fetch(can)
+  //     await fetch("http://nhabaola.vn/api/Account/FO_Account_Add", {
+  //       method: 'POST',
+  //       headers: {
+  //         Accept: 'application/json',
+  //         'Content-Type': 'application/json',
+  //       },
+  //       body: JSON.stringify(this.state.objectRegisterAccount)
+
+
+  //       // body: JSON.stringify({
+  //       //   "UserName": "UserName",
+  //       //   "FullName": "Nguyen Van A",
+  //       //   "Email": "Email@gmail.com",
+  //       //   "Sex": "Nam",
+  //       //   "YearOfBirth": "2017-10-09",
+  //       //   "Address": "5 Hello 10 Hi 15 Hehe",
+  //       //   "ContactPhone": "0919999888",
+  //       //   "Password": "Passwordvinaphuc",
+  //       //   "RegistryDate": "2017-10-09",
+  //       //   "IsActive": "true",
+  //       //   "CreatedDate": "2017-10-09",
+  //       //   "CreatedBy": "10",
+  //       //   "UpdatedBy": "Olala_SessionKey",
+  //       //   "UpdatedDate": "2017-10-09"
+  //       // }),
+  //     })
   //       .then((response) => response.json())
   //       .then((responseJson) => {
 
-  //         //alert(JSON.stringify(responseJson))
-  //         console.log(responseJson)
+  //         this.setState({
+  //           modalRegisterAccount: false, //Close register account modal
+  //           modalRegisterAccount: false,
+  //           registerCellPhone: null,
+  //           registerPassword: null,
+  //           registerConfirmPassword: null,
+  //           registerAccountImage: null,
+  //           registerFullName: null,
+  //           registerConfirmCellPhone: null,
+  //         })
 
-  //       })
-  //       .catch((e) => { console.log(e) });
+  //         this.popupLoadingIndicator.dismiss();
+  //       }).
+  //       catch((error) => { console.log(error) });
   //   } catch (error) {
   //     console.log(error)
   //   }
 
 
   // }
+
 
   _getRoomByIDAsync = async (roomID) => {
     try {
@@ -1244,20 +1226,8 @@ export default class HomeScreen extends React.Component {
 
 
           this.setState({
-            //roomCategory: JSON.stringify(responseJson.obj)
-            // roomCategory: responseJson.obj.map((y) => { return y.CatName })
-            //roomCategory: JSON.parse(this._getCategoryAsync('roomCategory'))
             roomCategory: responseJson.obj
           })
-
-          //this._getStorageAsync('roomCategory')
-          // this._getStorageAsync('roomCategory')
-
-          // {
-          //   this.state.response.map((y) => {
-          //     return (<Text>{y.prnt_usernamez}</Text>);
-          //   })
-          // }
         }).
         catch((error) => { console.log(error) });
     } catch (error) {
@@ -1293,26 +1263,18 @@ export default class HomeScreen extends React.Component {
 
 
             if (Platform.OS === 'android') {
-              ToastAndroid.showWithGravity('Đánh dấu thành công!', ToastAndroid.SHORT, ToastAndroid.TOP);
+              ToastAndroid.showWithGravity(translate("Mark successful"), ToastAndroid.SHORT, ToastAndroid.TOP);
             }
             else {
-              Alert.alert('Thông báo', 'Đánh dấu thành công!');
+              Alert.alert(translate("Notice"), translate("Mark successful"));
             }
-            // this.popupActiveNewPassword.dismiss();
-            // this.setState({ resetPasswordUsername: '' })
-            // this.setState({
-            //   loginUsername: this.state.resetPasswordUsername,
-            //   loginPassword: resetPasswordNewPassword,
-            // })
-
-            // this._loginAsync();
           }
           else {
             if (Platform.OS === 'android') {
-              ToastAndroid.showWithGravity('Lỗi ' + JSON.stringify(responseJson) + ', vui lòng liên hệ Admin trong mục Giúp Đỡ!', ToastAndroid.SHORT, ToastAndroid.TOP);
+              ToastAndroid.showWithGravity(translate("Error") + JSON.stringify(responseJson) + translate("Please contact Admin in the Help menu"), ToastAndroid.SHORT, ToastAndroid.TOP);
             }
             else {
-              Alert.alert('Thông báo', 'Lỗi ' + JSON.stringify(responseJson) + ', vui lòng liên hệ Admin trong mục Giúp Đỡ!');
+              Alert.alert(translate("Notice"), translate("Error") + JSON.stringify(responseJson) + translate("Please contact Admin in the Help menu"));
             }
           }
           this.popupLoadingIndicator.dismiss()
@@ -1351,19 +1313,11 @@ export default class HomeScreen extends React.Component {
             this.popupRating.dismiss();
 
             if (Platform.OS === 'android') {
-              ToastAndroid.showWithGravity('Cảm ơn bạn đã đánh giá!', ToastAndroid.SHORT, ToastAndroid.TOP);
+              ToastAndroid.showWithGravity(translate("Thank you for rating"), ToastAndroid.SHORT, ToastAndroid.TOP);
             }
             else {
-              Alert.alert('Thông báo', 'Cảm ơn bạn đã đánh giá!');
+              Alert.alert(translate("Notice"), translate("Thank you for rating"));
             }
-            // this.popupActiveNewPassword.dismiss();
-            // this.setState({ resetPasswordUsername: '' })
-            // this.setState({
-            //   loginUsername: this.state.resetPasswordUsername,
-            //   loginPassword: resetPasswordNewPassword,
-            // })
-
-            // this._loginAsync();
           }
 
           this.popupLoadingIndicator.dismiss()
@@ -1466,8 +1420,6 @@ export default class HomeScreen extends React.Component {
       roomPageIndex: (this.state.page - 1) * this.state.roomPageCount
     })
 
-    //alert(this.state.roomPageIndex)
-
     try {
       await fetch("http://nhabaola.vn/api/RoomBox/FO_RoomBox_GetAllData", {
         method: 'POST',
@@ -1484,33 +1436,10 @@ export default class HomeScreen extends React.Component {
         .then((response) => response.json())
         .then((responseJson) => {
 
-
-
-          //this._saveStorageAsync('FO_RoomBox_GetAllData', JSON.stringify(responseJson.obj))
-          // responseJson.obj.map((y) => { return y.CatName })
-
-
           responseJson.obj.map((y) => {
             roomBox.push(y);
           })
-          // if (isNew) {
-          //   responseJson.obj.map((y) => {
-          //     roomBox.unshift(y);
-          //   })
-          // } else {
-          //   responseJson.obj.map((y) => {
-          //     roomBox.push(y);
-          //   })
-          // }
 
-          //roomBox.push(responseJson.obj);
-
-          // this.setState({
-          //   roomBox: responseJson.obj,
-          //   refresh: false,
-          // })
-
-          // this.setState({ refresh: false })
 
           setTimeout(
             () => {
@@ -1523,7 +1452,6 @@ export default class HomeScreen extends React.Component {
           // End Flatlist
           if (JSON.stringify(responseJson.obj.length) == '0') {
             this.setState({ flatListIsEnd: true, })
-            // alert(JSON.stringify(responseJson.obj.length))
           }
 
         }).
@@ -1535,9 +1463,7 @@ export default class HomeScreen extends React.Component {
   }
 
   _getWalletAsync = async () => {
-    //  await this.setState({ refresh: true })  
 
-    // alert(this.state.wallet)
 
     try {
       await fetch("http://nhabaola.vn/api/Wallet/FO_Wallet_GetDataByUserID", {
@@ -1554,7 +1480,6 @@ export default class HomeScreen extends React.Component {
       })
         .then((response) => response.json())
         .then((responseJson) => {
-          // alert(JSON.stringify(responseJson.obj))
 
           if (responseJson.obj !== null) {
             saveStorageAsync('FO_Wallet_GetDataByUserID', JSON.stringify(responseJson.obj[0].CurrentAmount))
@@ -1562,13 +1487,6 @@ export default class HomeScreen extends React.Component {
               wallet: responseJson.obj[0].CurrentAmount,
             })
           }
-
-          //alert(JSON.stringify(this.state.wallet[0].CurrentAmount))
-          //this._saveStorageAsync('FO_RoomBox_GetAllData', JSON.stringify(responseJson.obj))
-          // responseJson.obj.map((y) => { return y.CatName })
-
-
-          //   this.setState({ refresh: false })
 
         }).
         catch((error) => { console.log(error) });
@@ -1580,27 +1498,21 @@ export default class HomeScreen extends React.Component {
 
 
   _resetPasswordStep1 = async () => {
-    //alert(this.state.resetPasswordUsername)
+
     //Form validation
     if (Platform.OS === 'android') {
       if (this.state.resetPasswordUsername === '') {
-        ToastAndroid.showWithGravity('Vui lòng nhập số điện thoại', ToastAndroid.SHORT, ToastAndroid.TOP);
+        ToastAndroid.showWithGravity(translate("Please enter the cellphone"), ToastAndroid.SHORT, ToastAndroid.TOP);
         return;
       }
-      // if (this.state.resetPasswordEmail === null) {
-      //   ToastAndroid.showWithGravity('Vui lòng nhập email đã đăng ký', ToastAndroid.SHORT, ToastAndroid.TOP);
-      //   return;
-      // }
+
     }
     else {
       if (this.state.resetPasswordUsername === '') {
-        Alert.alert('Oops!', 'Vui lòng nhập số điện thoại');
+        Alert.alert(translate("Notice"), translate("Please enter the cellphone"));
         return;
       }
-      // if (this.state.resetPasswordEmail === null) {
-      //   Alert.alert('Oops!', 'Vui lòng nhập email đã đăng ký');
-      //   return;
-      // }
+
     }
 
     if (Platform.OS == 'ios') {
@@ -1619,27 +1531,25 @@ export default class HomeScreen extends React.Component {
         },
         body: JSON.stringify({
           "UserName": this.state.resetPasswordUsername,
-          //  "Email": this.resetPasswordEmail,
         }),
       })
         .then((response) => response.json())
         .then((responseJson) => {
 
-          // this._saveStorageAsync('FO_Category_GetAllData', JSON.stringify(responseJson.obj))
           if (JSON.stringify(responseJson.ErrorCode) === "23") { // Username is not exist
 
             if (Platform.OS == 'ios') {
               this.setState({ modalResetPassword1: false })
-              Alert.alert('Thông báo', 'Tài khoản này không tồn tại',
+              Alert.alert(translate("Notice"), translate("This account does not exist"),
                 [
                   {
-                    text: "Huỷ",
+                    text: translate("Cancel"),
                     onPress: () => {
                       this.setState({ resetPasswordUsername: '' })
                     }
                   },
                   {
-                    text: "Nhập lại",
+                    text: translate("Retype"),
                     onPress: () => {
                       this.setState({ modalResetPassword1: true })
                       this.refs.iosResetUserNameInput.focus()
@@ -1651,7 +1561,7 @@ export default class HomeScreen extends React.Component {
 
                 ]);
             } else {
-              ToastAndroid.showWithGravity('Tài khoản này không tồn tại', ToastAndroid.SHORT, ToastAndroid.TOP);
+              ToastAndroid.showWithGravity(translate("This account does not exist"), ToastAndroid.SHORT, ToastAndroid.TOP);
             }
 
             //Loading
@@ -1697,21 +1607,21 @@ export default class HomeScreen extends React.Component {
     //Form validation
     if (Platform.OS === 'android') {
       if (this.state.resetPasswordActiveKey === '') {
-        ToastAndroid.showWithGravity('Vui lòng nhập Mã Kích Hoạt', ToastAndroid.SHORT, ToastAndroid.TOP);
+        ToastAndroid.showWithGravity(translate("Please enter the Activation Code"), ToastAndroid.SHORT, ToastAndroid.TOP);
         return;
       }
       if (this.state.resetPasswordNewPassword === '') {
-        ToastAndroid.showWithGravity('Vui lòng nhập mật khẩu mới', ToastAndroid.SHORT, ToastAndroid.TOP);
+        ToastAndroid.showWithGravity(translate("Please enter a new password"), ToastAndroid.SHORT, ToastAndroid.TOP);
         return;
       }
     }
     else {
       if (this.state.resetPasswordActiveKey === '') {
-        Alert.alert('Oops!', 'Vui lòng nhập Mã Kích Hoạt');
+        Alert.alert(translate("Notice"), translate("Please enter the Activation Code"));
         return;
       }
       if (this.state.resetPasswordNewPassword === '') {
-        Alert.alert('Oops!', 'Vui lòng nhập mật khẩu mới');
+        Alert.alert(translate("Notice"), translate("Please enter a new password"));
         return;
       }
     }
@@ -1748,14 +1658,12 @@ export default class HomeScreen extends React.Component {
         .then((response) => response.json())
         .then((responseJson) => {
 
-          // this._saveStorageAsync('FO_Category_GetAllData', JSON.stringify(responseJson.obj))
-
           if (JSON.stringify(responseJson.ErrorCode) === "0") { // Reset password successful
             if (Platform.OS === 'android') {
-              ToastAndroid.showWithGravity('Lấy lại mật khẩu thành công!', ToastAndroid.SHORT, ToastAndroid.TOP);
+              ToastAndroid.showWithGravity(translate("Reset password successful"), ToastAndroid.SHORT, ToastAndroid.TOP);
             }
             else {
-              Alert.alert('Thông báo', 'Lấy lại mật khẩu thành công!');
+              Alert.alert(translate("Notice"), translate("Reset password successful"));
             }
             this.popupActiveNewPassword.dismiss();
             this.setState({ resetPasswordUsername: '' })
@@ -1765,14 +1673,14 @@ export default class HomeScreen extends React.Component {
           }
           else {
             if (Platform.OS === 'android') { // Active Code not correct
-              ToastAndroid.showWithGravity('Mã kích hoạt không đúng', ToastAndroid.SHORT, ToastAndroid.TOP);
+              ToastAndroid.showWithGravity(translate("Incorrect activation code"), ToastAndroid.SHORT, ToastAndroid.TOP);
             }
             else {
               this.setState({ modalResetPassword2: false })
-              Alert.alert('Thông báo', 'Mã kích hoạt không đúng',
+              Alert.alert(translate("Notice"), translate("Incorrect activation code"),
                 [
                   {
-                    text: "Huỷ",
+                    text: translate("Cancel"),
                     onPress: () => {
                       this.setState({
                         resetPasswordNewPassword: '',
@@ -1781,7 +1689,7 @@ export default class HomeScreen extends React.Component {
                     }
                   },
                   {
-                    text: "Nhập lại",
+                    text: translate("Retype"),
                     onPress: () => {
                       this.setState({ modalResetPassword2: true })
                       this.refs.ActiveKeyInput.focus();
@@ -1871,7 +1779,7 @@ export default class HomeScreen extends React.Component {
               <Text style={{
                 color: '#6c6d6d',
                 padding: 20, fontSize: responsiveFontSize(2.5)
-              }}>Bạn vui lòng kiểm tra INTERNET và tải lại trang</Text>
+              }}>{translate("Please check the INTERNET and reload the page")}</Text>
             </TouchableOpacity>
           </View>
         }
@@ -1885,6 +1793,7 @@ export default class HomeScreen extends React.Component {
             justifyContent: 'center',
           }}
         >
+          {/* Vietnamese */}
           <TouchableOpacity
             style={{
               padding: 10,
@@ -1892,6 +1801,13 @@ export default class HomeScreen extends React.Component {
             }}
             onPress={async () => {
               setLocalization(viTranslation);
+
+              if (Platform.OS === 'android') {
+                ToastAndroid.showWithGravity(translate("You have switched languages to Vietnamease"), ToastAndroid.SHORT, ToastAndroid.TOP);
+              }
+              else {
+                Alert.alert(translate("Notice"), translate("You have switched languages to Vietnamease"))
+              }
               await this._saveStorageAsync('language', 'viTranslation')
               this.forceUpdate()
             }}
@@ -1902,6 +1818,8 @@ export default class HomeScreen extends React.Component {
 
             }}>Tiếng Việt</Text>
           </TouchableOpacity>
+
+          {/* English */}
           <TouchableOpacity
             style={{
               padding: 10,
@@ -1909,6 +1827,13 @@ export default class HomeScreen extends React.Component {
             }}
             onPress={async () => {
               setLocalization(enTranslation);
+
+              if (Platform.OS === 'android') {
+                ToastAndroid.showWithGravity(translate("You have switched languages to English"), ToastAndroid.SHORT, ToastAndroid.TOP);
+              }
+              else {
+                Alert.alert(translate("Notice"), translate("You have switched languages to English"))
+              }
               await this._saveStorageAsync('language', 'enTranslation')
               this.forceUpdate()
             }}
@@ -1918,6 +1843,8 @@ export default class HomeScreen extends React.Component {
               color: '#a4d227'
             }}>English</Text>
           </TouchableOpacity>
+
+          {/* Chinease */}
           <TouchableOpacity
             style={{
               padding: 10,
@@ -1926,6 +1853,13 @@ export default class HomeScreen extends React.Component {
 
             onPress={async () => {
               setLocalization(zhTranslation);
+
+              if (Platform.OS === 'android') {
+                ToastAndroid.showWithGravity(translate("You have switched languages to Chinease"), ToastAndroid.SHORT, ToastAndroid.TOP);
+              }
+              else {
+                Alert.alert(translate("Notice"), translate("You have switched languages to Chinease"))
+              }
               await this._saveStorageAsync('language', 'zhTranslation')
               this.forceUpdate()
             }}
@@ -2312,9 +2246,9 @@ export default class HomeScreen extends React.Component {
                     onPress={async () => {
                       if (this.state.profile === null) {
                         if (Platform.OS == 'ios') {
-                          Alert.alert('Thông Báo', 'Bạn vui lòng đăng nhập')
+                          Alert.alert(translate("Notice"), translate("Please login"))
                         } else {
-                          ToastAndroid.showWithGravity("Bạn vui lòng đăng nhập!", ToastAndroid.SHORT, ToastAndroid.TOP)
+                          ToastAndroid.showWithGravity(translate("Please login"), ToastAndroid.SHORT, ToastAndroid.TOP)
                         }
                       } else {
                         await this.setState({
@@ -2349,9 +2283,9 @@ export default class HomeScreen extends React.Component {
                     onPress={() => {
                       if (this.state.profile === null) {
                         if (Platform.OS == 'ios') {
-                          Alert.alert('Thông Báo', 'Bạn vui lòng đăng nhập')
+                          Alert.alert(translate("Notice"), translate("Please login"))
                         } else {
-                          ToastAndroid.showWithGravity("Bạn vui lòng đăng nhập!", ToastAndroid.SHORT, ToastAndroid.TOP)
+                          ToastAndroid.showWithGravity(translate("Please login"), ToastAndroid.SHORT, ToastAndroid.TOP)
                         }
                       } else {
 
@@ -2380,18 +2314,18 @@ export default class HomeScreen extends React.Component {
                     onPress={() => {
 
                       Alert.alert(
-                        'Thông báo',
-                        'Bạn cần đăng nhập Facebook để đăng Tin này trên Timeline của bạn.  \nBạn muốn đăng nhập ngay?',
+                        translate("Notice"),
+                        translate("You need to login to Facebook to post this on your Timeline") + '.  \n' + translate("Do you want to login now"),
                         [
                           {
-                            text: 'Hủy', onPress: () => {
+                            text: translate("Cancel"), onPress: () => {
 
                             }
                           },
                           {
-                            text: 'Đồng ý', onPress: () => {
+                            text: translate("Agree"), onPress: () => {
                               this._handleFacebookLogin(item.Title, item.Description
-                                + '\n\n\nCài đặt Ứng dụng Nhàbaola để biết thêm nhiều loại Bất Động Sản khác'
+                                + '\n\n\n' + translate("Install the Nhabaola Application for more Real Estate")
                                 + '\n - iOS: https://itunes.apple.com/vn/app/nhabaola/id1287451307?mt=8'
                                 + '\n - Android: ' + 'https://play.google.com/store/apps/details?id=vn.nhabaola.nhabaola')
                             }
@@ -2419,21 +2353,21 @@ export default class HomeScreen extends React.Component {
 
                       if (Platform.OS == 'ios') {
                         Share.share({
-                          message: "*Chia Sẻ từ Ứng Dụng Nhà Bao La*"
-                            + "\n\nLiên hệ: " + _contactName
-                            + "\nĐiện thoại: " + _contactPhone
-                            + "\n\nLoại bất động sản: " + loadBDS
-                            + "\nGiá: " + item.Price + " đồng"
-                            + "\nDiện tích: " + item.Acreage + " mét vuông"
-                            + "\nĐịa chỉ: " + item.Address + "\n\nMô tả:\n" + item.Description
-                            + "\n\nCài đặt: "
+                          message: translate("Share from Nhabaola application")
+                            + "\n\n" + translate("Contact") + ": " + _contactName
+                            + "\n" + translate("Cellphone") + ": " + _contactPhone
+                            + "\n\n" + translate("Type of real estate") + ": " + loadBDS
+                            + "\n" + translate("Price") + ": " + item.Price + " đồng"
+                            + "\n" + translate("Area") + ": " + item.Acreage + " " + translate("Square meters")
+                            + "\n" + translate("Address") + ": " + item.Address + "\n\n" + translate("Description") + ":\n" + item.Description
+                            + "\n\n" + translate("Installation") + ": "
                             + "\nAndroid: \nhttps://play.google.com/store/apps/details?id=vn.nhabaola.nhabaola"
                             + "\n\niOS: \nhttps://itunes.apple.com/vn/app/nhabaola/id1287451307?mt=8",
                           //url: 'https://itunes.apple.com/vn/app/nhabaola/id1287451307?mt=8',
-                          title: '*Chia Sẻ từ Ứng Dụng Nhà Bao La*'
+                          title: translate("Share from Nhabaola application")
                         }, {
                             // Android only:
-                            dialogTitle: '*Chia Sẻ từ Ứng Dụng Nhà Bao La*',
+                            dialogTitle: translate("Share from Nhabaola application"),
                             // iOS only:
                             excludedActivityTypes: [
                               'http://nhabaola.vn'
@@ -2442,21 +2376,21 @@ export default class HomeScreen extends React.Component {
                       } else { //Android
 
                         Share.share({
-                          message: "*Chia Sẻ từ Ứng Dụng Nhà Bao La*"
-                            + "\n\nLiên hệ: " + _contactName
-                            + "\nĐiện thoại: " + _contactPhone
-                            + "\n\nLoại bất động sản: " + loadBDS
-                            + "\nGiá: " + item.Price + " đồng"
-                            + "\nDiện tích: " + item.Acreage + " mét vuông"
-                            + "\nĐịa chỉ: " + item.Address + "\n\nMô tả:\n" + item.Description
-                            + "\n\nCài đặt: "
+                          message: translate("Share from Nhabaola application")
+                            + "\n\n" + translate("Contact") + ": " + _contactName
+                            + "\n" + translate("Cellphone") + ": " + _contactPhone
+                            + "\n\n" + translate("Type of real estate") + ": " + loadBDS
+                            + "\n" + translate("Price") + ": " + item.Price + " đồng"
+                            + "\n" + translate("Area") + ": " + item.Acreage + " " + translate("Square meters")
+                            + "\n" + translate("Address") + ": " + item.Address + "\n\n" + translate("Description") + ":\n" + item.Description
+                            + "\n\n" + translate("Installation") + ": "
                             + "\niOS: \nhttps://itunes.apple.com/vn/app/nhabaola/id1287451307?mt=8"
                             + "\n\nAndroid: \nhttps://play.google.com/store/apps/details?id=vn.nhabaola.nhabaola",
                           url: 'https://play.google.com/store/apps/details?id=vn.nhabaola.nhabaola',
-                          title: '*Chia Sẻ từ Ứng Dụng Nhà Bao La*'
+                          title: translate("Share from Nhabaola application")
                         }, {
                             // Android only:
-                            dialogTitle: '*Chia Sẻ từ Ứng Dụng Nhà Bao La*',
+                            dialogTitle: translate("Share from Nhabaola application"),
                             // iOS only:
                             excludedActivityTypes: [
                               'http://nhabaola.vn'
@@ -2472,9 +2406,9 @@ export default class HomeScreen extends React.Component {
                     onPress={async () => {
                       if (this.state.profile === null) {
                         if (Platform.OS == 'ios') {
-                          Alert.alert('Thông Báo', 'Bạn vui lòng đăng nhập')
+                          Alert.alert(translate("Notice"), translate("Please login"))
                         } else {
-                          ToastAndroid.showWithGravity("Bạn vui lòng đăng nhập!", ToastAndroid.SHORT, ToastAndroid.TOP)
+                          ToastAndroid.showWithGravity(translate("Please login"), ToastAndroid.SHORT, ToastAndroid.TOP)
                         }
                       } else {
                         await this.setState({

@@ -35,6 +35,10 @@ import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view
 import SimplePicker from 'react-native-simple-picker';
 import { responsiveHeight, responsiveWidth, responsiveFontSize } from 'react-native-responsive-dimensions';
 import globalVariable from '../components/Global'
+import enTranslation from '../components/en.json';
+import zhTranslation from '../components/zh.json';
+import viTranslation from '../components/vi.json';
+import { setLocalization, translate, Translate } from 'react-native-translate';
 
 var { height, width } = Dimensions.get('window');
 
@@ -44,28 +48,6 @@ const LONGITUDE = -122.4324;
 const LATITUDE_DELTA = 0.02;
 const LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO;
 
-// var today = new Date();
-// var dd = today.getDate();
-// var mm = today.getMonth() + 1;
-// var yyyy = today.getFullYear();
-// var minDate = dd + '/' + mm + '/' + yyyy //yyyy + '-' + mm + '-' + dd
-
-// var newdate = new Date(today);
-// newdate.setDate(newdate.getDate() + 1);
-// var dd2 = newdate.getDate();
-// var mm2 = newdate.getMonth() + 1;
-// var yyyy2 = newdate.getFullYear();
-// var topDate = dd2 + '/' + mm2 + '/' + yyyy2// yyyy2 + '-' + mm2 + '-' + dd2
-
-// function funcAdd1Day(_date) {
-//     var _newdate = new Date(_date);
-//     _newdate.setDate(_newdate.getDate() + 1);
-//     var _dd = _newdate.getDate();
-//     var _mm = _newdate.getMonth() + 1;
-//     var _yyyy = _newdate.getFullYear();
-//     var _topDate = _dd + '/' + _mm + '/' + _yyyy//_yyyy2 + '-' + _mm2 + '-' + _dd2
-//     return _topDate;
-// }
 
 var today = new Date();
 var dd = today.getDate() == 1 ? '01' : today.getDate();
@@ -80,15 +62,6 @@ var mm2 = newdate.getMonth() + 1;
 var yyyy2 = newdate.getFullYear();
 var topDate = yyyy2 + '-' + mm2 + '-' + dd2
 
-// function funcAdd1Day(_date) {
-//     var _newdate = new Date(_date);
-//     _newdate.setDate(_newdate.getDate() + 1);
-//     var _dd2 = _newdate.getDate();
-//     var _mm2 = _newdate.getMonth() + 1;
-//     var _yyyy2 = _newdate.getFullYear();
-//     var _topDate = _yyyy2 + '-' + _mm2 + '-' + _dd2
-//     return _topDate;
-// }
 
 export default class UpdateRoomScreen extends React.Component {
     static navigationOptions = {
@@ -109,13 +82,13 @@ export default class UpdateRoomScreen extends React.Component {
             postRoomImage5: null,
             postRoomImage6: null,
             imageUrl: '',
-            iosSelectedCategory: '-- Chọn loại BĐS --',
+            iosSelectedCategory: '-- ' + translate("Select the type of real estate") + ' --',
             postRoomAddressMaker: {
                 latitude: null,
                 longitude: null,
             },
             selectedImages: '0',
-            selectedAddress: 'Vui lòng nhập địa chỉ',
+            selectedAddress: translate("Please input address"),
             searchingMaker: {
                 latitude: null,
                 longitude: null,
@@ -155,12 +128,10 @@ export default class UpdateRoomScreen extends React.Component {
             roomBox: this.props.navigation.state.params.item
         })
 
-        //alert(JSON.stringify(this.state.roomBox))
-        // var images = this.state.roomBox.Images.replace('|', '').split('|');
         var images = this.state.roomBox.Images.split('|').splice(2);
         var _latitude = parseFloat(this.state.roomBox.Latitude)
         var _longitude = parseFloat(this.state.roomBox.Longitude)
-        //  alert(images[3] == null ? images[3] : "khac")
+
         await this.setState({
             detailInfo: this.state.roomBox.Description,
             price: this.state.roomBox.Price,
@@ -169,7 +140,7 @@ export default class UpdateRoomScreen extends React.Component {
             selectedAddress: this.state.roomBox.Address,
             contactPhone: this.state.roomBox.ContactPhone,
             contactName: this.state.roomBox.ContactPhone.indexOf('|') > -1 ? this.state.roomBox.ContactPhone.split('|')[1] : '',
-            // fromDate: this.state.roomBox.FromDate,
+
             toDate: new Date(this.state.roomBox.ToDate) < today ? topDate : this.state.roomBox.ToDate,
             isHighlight: this.state.roomBox.IsHighlight,
             toDateHighLight: new Date(this.state.roomBox.HighlightToDate) < today ? topDate : this.state.roomBox.HighlightToDate,
@@ -187,8 +158,6 @@ export default class UpdateRoomScreen extends React.Component {
                 latitude: _latitude, longitude: _longitude, latitudeDelta: LATITUDE_DELTA, longitudeDelta: LONGITUDE_DELTA
             },
         })
-
-        // alert(this.state.selectedCategory)
 
     }
 
@@ -321,49 +290,49 @@ export default class UpdateRoomScreen extends React.Component {
                 // && this.state.postRoomImage5 === null
                 // && this.state.postRoomImage6 === null
             ) {
-                ToastAndroid.showWithGravity('Vui lòng chọn hình đại diện', ToastAndroid.SHORT, ToastAndroid.TOP);
+                ToastAndroid.showWithGravity(translate("Please select a avatar"), ToastAndroid.SHORT, ToastAndroid.TOP);
                 return;
             }
             if (this.state.searchingMaker.latitude === null) {
-                ToastAndroid.showWithGravity('Vui lòng nhập địa chỉ', ToastAndroid.SHORT, ToastAndroid.TOP);
+                ToastAndroid.showWithGravity(translate("Please input address"), ToastAndroid.SHORT, ToastAndroid.TOP);
                 return;
             }
             if (this.state.contactPhone === '') {
-                ToastAndroid.showWithGravity('Vui lòng nhập Số điện thoại liên hệ', ToastAndroid.SHORT, ToastAndroid.TOP);
+                ToastAndroid.showWithGravity(translate("Please enter contact cellphone"), ToastAndroid.SHORT, ToastAndroid.TOP);
                 this.refs['contactPhoneInput'].getElement().focus();
                 return;
             }
 
             if (cellPhoneVN.test(this.state.contactPhone) === false) {
-                ToastAndroid.showWithGravity('Số điện thoại LH không đúng số Điện Thoại Di Động Việt Nam', ToastAndroid.SHORT, ToastAndroid.TOP);
+                ToastAndroid.showWithGravity(translate("Invalid cellphone number of Vietnam Mobile Phone"), ToastAndroid.SHORT, ToastAndroid.TOP);
                 this.refs['contactPhoneInput'].getElement().focus();
                 return;
             }
 
             if (this.state.price === '') {
-                ToastAndroid.showWithGravity('Vui lòng nhập giá', ToastAndroid.SHORT, ToastAndroid.TOP);
+                ToastAndroid.showWithGravity(translate("Please enter a price"), ToastAndroid.SHORT, ToastAndroid.TOP);
                 this.refs['priceInput'].getElement().focus();
                 return;
             }
             if (this.state.acreage === '') {
-                ToastAndroid.showWithGravity('Vui lòng nhập diện tích', ToastAndroid.SHORT, ToastAndroid.TOP);
+                ToastAndroid.showWithGravity(translate("Please enter an area"), ToastAndroid.SHORT, ToastAndroid.TOP);
                 this.refs['acreageInput'].getElement().focus();
                 return;
             }
             if (this.state.selectedCategory === '0') {
-                ToastAndroid.showWithGravity('Vui lòng chọn loại BĐS', ToastAndroid.SHORT, ToastAndroid.TOP);
+                ToastAndroid.showWithGravity(translate("Please select real estate"), ToastAndroid.SHORT, ToastAndroid.TOP);
                 return;
             }
             if (new Date(this.state.toDate) < new Date(this.state.fromDate)) {
-                ToastAndroid.showWithGravity('Ngày kết thúc hiệu lực không được nhỏ hơn ngày bắt đầu', ToastAndroid.SHORT, ToastAndroid.TOP);
+                ToastAndroid.showWithGravity(translate("The effective end date is not less than the start date"), ToastAndroid.SHORT, ToastAndroid.TOP);
                 return;
             }
             if (this.state.isHighlight && new Date(this.state.toDateHighLight) < new Date(this.state.fromDateHighLight)) {
-                ToastAndroid.showWithGravity('Ngày kết thúc nổi bật không được nhỏ hơn ngày bắt đầu', ToastAndroid.SHORT, ToastAndroid.TOP);
+                ToastAndroid.showWithGravity(translate("The highlight end date is not less than the start date"), ToastAndroid.SHORT, ToastAndroid.TOP);
                 return;
             }
             if (this.state.detailInfo === '') {
-                ToastAndroid.showWithGravity('Vui lòng nhập thông tin chi tiết', ToastAndroid.SHORT, ToastAndroid.TOP);
+                ToastAndroid.showWithGravity(translate("Please enter detailed information"), ToastAndroid.SHORT, ToastAndroid.TOP);
                 this.refs.roomInfoInput.focus();
                 return;
             }
@@ -376,48 +345,48 @@ export default class UpdateRoomScreen extends React.Component {
                 // && this.state.postRoomImage5 === null
                 // && this.state.postRoomImage6 === null
             ) {
-                Alert.alert('Vui lòng chọn hình đại diện');
+                Alert.alert(translate("Please select a avatar"), ToastAndroid.SHORT, ToastAndroid.CENTER);
                 return;
             }
             if (this.state.searchingMaker.latitude === null) {
-                Alert.alert('Vui lòng nhập địa chỉ');
+                Alert.alert(translate("Please input address"));
                 return;
             }
             if (this.state.contactPhone === '') {
-                Alert.alert('Vui lòng nhập Số điện thoại liên hệ');
+                Alert.alert(translate("Please enter contact cellphone"));
                 //this.refs['contactPhoneInput'].getElement().focus();
                 return;
             }
 
             if (cellPhoneVN.test(this.state.contactPhone) === false) {
-                Alert.alert('Số điện thoại LH không đúng số Điện Thoại Di Động Việt Nam');
+                Alert.alert(translate("Invalid cellphone number of Vietnam Mobile Phone"));
                 //this.refs['contactPhoneInput'].getElement().focus();
                 return;
             }
             if (this.state.price === '') {
-                Alert.alert('Vui lòng nhập giá');
+                Alert.alert(translate("Please enter a price"));
                 //this.refs['priceInput'].getElement().focus();
                 return;
             }
             if (this.state.acreage === '') {
-                Alert.alert('Vui lòng nhập diện tích');
+                Alert.alert(translate("Please enter an area"));
                 //this.refs['acreageInput'].getElement().focus();
                 return;
             }
             if (this.state.selectedCategory === '0') {
-                Alert.alert('Vui lòng chọn loại BĐS');
+                Alert.alert(translate("Please select real estate"));
                 return;
             }
             if (new Date(this.state.toDate) < new Date(this.state.fromDate)) {
-                Alert.alert('Ngày kết thúc hiệu lực không được nhỏ hơn ngày bắt đầu');
+                Alert.alert(translate("The effective end date is not less than the start date"));
                 return;
             }
             if (this.state.isHighlight && new Date(this.state.toDateHighLight) < new Date(this.state.fromDateHighLight)) {
-                Alert.alert('Ngày kết thúc nổi bật không được nhỏ hơn ngày bắt đầu');
+                Alert.alert(translate("The highlight end date is not less than the start date"));
                 return;
             }
             if (this.state.detailInfo === '') {
-                Alert.alert('Vui lòng nhập thông tin chi tiết');
+                Alert.alert(translate("Please enter detailed information"));
                 //this.refs.roomInfoInput.focus();
                 return;
             }
@@ -433,13 +402,6 @@ export default class UpdateRoomScreen extends React.Component {
                 this.setState({ imageUrl: this.state.imageUrl + uploadResult.ImagePath })
             } else { //Existing image
                 await this.setState({ imageUrl: this.state.imageUrl + '|' + this.state.postRoomImage1 })
-
-                // this.setState((prevState) => {
-                //     return { imageUrl: prevState.imageUrl + '|' + this.state.postRoomImage1 };
-                // })
-
-                // alert(this.state.imageUrl)
-                // return
             }
 
         }
@@ -489,16 +451,6 @@ export default class UpdateRoomScreen extends React.Component {
                 this.setState({ imageUrl: this.state.imageUrl + '|' + this.state.postRoomImage6 })
             }
         }
-
-        // if (!this.state.isHighlight) {
-        //     this.setState({
-        //         fromDateHighLight: minDate,
-        //         toDateHighLight: funcAdd1Day(minDate)
-        //     })
-        // }
-
-        // alert(this.state.imageUrl + "   " + this.state.postRoomImage1)
-        // return
 
         // Contact Phone
         var _contactPhone = '';
@@ -555,41 +507,26 @@ export default class UpdateRoomScreen extends React.Component {
 
 
 
-                    if (JSON.stringify(responseJson.ErrorCode) === "11") {
+                    if (JSON.stringify(responseJson.ErrorCode) === "11") { // Update successful
                         this.props.navigation.state.params.onRefreshScreen({ refreshScreen: true, });
                         this.props.navigation.goBack();
 
                         if (Platform.OS === 'android') {
-                            ToastAndroid.showWithGravity('Cập nhật tin thành công!', ToastAndroid.SHORT, ToastAndroid.TOP);
+                            ToastAndroid.showWithGravity(translate("Update successful"), ToastAndroid.SHORT, ToastAndroid.TOP);
                         }
                         else {
-                            Alert.alert('Cập nhật tin thành công!');
+                            Alert.alert(translate("Update successful"));
                         }
-                        //this._getRoomBoxByUserAsync(true);
-                    } else {
 
-                        alert(responseJson.ErrorCode)
+                    } else {// Error
+
+                        if (Platform.OS === 'android') {
+                            ToastAndroid.showWithGravity(translate("Error") + JSON.stringify(responseJson) + translate("Please contact Admin in the Help menu"), ToastAndroid.SHORT, ToastAndroid.TOP);
+                        }
+                        else {
+                            Alert.alert(translate("Notice"), translate("Error") + JSON.stringify(responseJson) + translate("Please contact Admin in the Help menu"));
+                        }
                     }
-                    // if (JSON.stringify(responseJson.ErrorCode) === "3") {
-
-                    //     if (Platform.OS === 'android') {
-                    //         ToastAndroid.showWithGravity('Ngày bắt đầu hiệu lực phải lớn hơn ngày hiện tại', ToastAndroid.SHORT, ToastAndroid.CENTER);
-                    //     }
-                    //     else {
-                    //         Alert.alert('Ngày bắt đầu hiệu lực phải lớn hơn ngày hiện tại');
-                    //     }
-                    //     //this._getRoomBoxByUserAsync(true);
-                    // }
-
-
-                    //alert(JSON.stringify(responseJson))
-
-                    //this.props.navigation.navigate('Home');
-                    // HomeScreen.refreshRoomBoxAfterPost();
-                    //this.props.navigation.state.params.onSelect({ selected: true });
-                    //this.props.navigation.goBack();
-                    //  this.props.navigation.state.params._getWalletAsync();
-                    // this.props.navigation.state.params.onRefreshScreen({ refreshScreen: true });
 
 
                     this.popupLoadingIndicator.dismiss();
@@ -644,7 +581,7 @@ export default class UpdateRoomScreen extends React.Component {
                     innerRef={ref => { this.scroll = ref }}
                     style={{ paddingTop: 10, marginTop: 20, }}
                 >
-                    <FormLabel>Hình ảnh</FormLabel>
+                    <FormLabel>{translate("Picture")}</FormLabel>
                     <View style={{
                         height: 120, paddingRight: 20,
                         paddingLeft: 20, flexDirection: 'row', justifyContent: 'space-between',
@@ -660,7 +597,7 @@ export default class UpdateRoomScreen extends React.Component {
                         >
                             <Ionicons style={{ opacity: 0.7, fontSize: 120, color: '#73aa2a', flex: 1, textAlign: 'center', }} name='ios-image-outline' />
                             {this.state.postRoomImage1 && <Image source={{ uri: this.state.postRoomImage1 }} style={{ width: 90, height: 90 }} />}
-                            <Text style={{ color: '#73aa2a', fontSize: 12, textAlign: 'center', paddingTop: 5, }}>Hình đại diện</Text>
+                            <Text style={{ color: '#73aa2a', fontSize: 12, textAlign: 'center', paddingTop: 5, }}>{translate("Avatar")}</Text>
                         </TouchableOpacity>
 
                         <TouchableOpacity
@@ -724,14 +661,9 @@ export default class UpdateRoomScreen extends React.Component {
                         </TouchableOpacity>
 
                     </View>
-                    {/* <FormLabel style={{ borderBottomWidth: 0.7, borderColor: '#a4d227', marginTop: 15, }}>Địa chỉ</FormLabel> */}
+
                     <View style={{ height: 270, padding: 20, }}>
-                        {/* <FormInput
-                containerStyle={{ marginLeft: 0, marginRight: 0, }}
-                placeholder='Vui lòng nhập địa chỉ'
-                autoCapitalize='sentences'
-                maxLength={300}
-              /> */}
+
                         <TouchableOpacity
                             style={{
                                 marginBottom: 10,
@@ -784,7 +716,7 @@ export default class UpdateRoomScreen extends React.Component {
                     <View style={{ paddingBottom: 20 }}>
                         {/* Contact Phone */}
                         <View style={{ flexDirection: 'row', }}>
-                            <FormLabel style={{}}>Đ.Thoại LH</FormLabel>
+                            <FormLabel style={{}}>{translate("Contact cellphone")}</FormLabel>
                             <TextInputMask
                                 //ref='acreage'
                                 ref='contactPhoneInput'
@@ -809,12 +741,12 @@ export default class UpdateRoomScreen extends React.Component {
                                 onChangeText={(contactPhone) => this.setState({ contactPhone })}
                             />
 
-                            {/* <FormLabel>(mét vuông)</FormLabel> */}
+
                         </View>
 
                         {/* Contact Name */}
                         <View style={{ flexDirection: 'row', }}>
-                            <FormLabel style={{}}>Người LH</FormLabel>
+                            <FormLabel style={{}}>{translate("Contact Person")}</FormLabel>
 
                             <FormInput
                                 ref='contactNameInput'
@@ -833,7 +765,7 @@ export default class UpdateRoomScreen extends React.Component {
                                     width: Platform.OS == 'ios' ? responsiveWidth(63) : responsiveWidth(69)
                                 }}
                                 inputStyle={{ color: '#000', paddingLeft: 5 }}
-                                placeholder='Tối đa 8 ký tự'
+                                placeholder={translate("Maximum of 8 characters")}
                                 multiline={false}
                                 maxLength={8}
                                 //numberOfLines={5}
@@ -851,7 +783,7 @@ export default class UpdateRoomScreen extends React.Component {
 
                         {/* Price */}
                         <View style={{ flexDirection: 'row', }}>
-                            <FormLabel style={{}}>Giá:</FormLabel>
+                            <FormLabel style={{}}>{translate("Price")}:</FormLabel>
                             <TextInputMask
                                 ref='priceInput'
                                 returnKeyType={Platform.OS == 'ios' ? "done" : "next"}
@@ -863,7 +795,7 @@ export default class UpdateRoomScreen extends React.Component {
                                 }}
                                 type={'money'}
                                 options={{ suffixUnit: '', precision: 0, unit: '', separator: ' ' }}
-                                style={{ flex: 1, padding: 5, marginLeft: 30, borderBottomWidth: Platform.OS === 'ios' ? 0.5 : 0, borderColor: '#73aa2a' }}
+                                style={{ flex: 1, padding: 5, marginLeft: Platform.OS == 'ios' ? 0 : 30, borderBottomWidth: Platform.OS === 'ios' ? 0.5 : 0, borderColor: '#73aa2a' }}
                                 placeholder=''
                                 underlineColorAndroid='#73aa2a'
                                 value={this.state.price}
@@ -874,7 +806,7 @@ export default class UpdateRoomScreen extends React.Component {
                         </View>
                         {/* Acreage */}
                         <View style={{ flexDirection: 'row', }}>
-                            <FormLabel style={{}}>Diện tích:</FormLabel>
+                            <FormLabel style={{}}>{translate("Area")}:</FormLabel>
                             <TextInputMask
                                 ref='acreageInput'
                                 returnKeyType={Platform.OS == 'ios' ? "done" : "next"}
@@ -898,34 +830,30 @@ export default class UpdateRoomScreen extends React.Component {
                                 onChangeText={(acreage) => this.setState({ acreage })}
                             />
 
-                            <FormLabel>(mét vuông)</FormLabel>
+                            <FormLabel>({translate("Square meters")})</FormLabel>
                         </View>
                         {/* Room Type */}
                         <View style={{ flexDirection: 'row', }}>
-                            <FormLabel style={{}}>Loại BĐS:</FormLabel>
+                            <FormLabel style={{}}>{translate("Type of real estate")}:</FormLabel>
                             {Platform.OS === 'ios' ?
                                 <TouchableOpacity
                                     style={{ marginTop: 12 }}
                                     onPress={() => {
                                         this.refs.pickerCategory.show();
-                                        // this.setState({
-                                        //     modalBDS: true
-                                        // })
+
                                     }}
                                 >
-
-                                    {/* <Text style={{ marginLeft: 5, }}>{this.state.iosSelectedCategory}  <Ionicons style={{ fontSize: responsiveFontSize(2.5) }} name='ios-arrow-dropdown-outline' /> </Text> */}
 
                                     {
                                         this.state.roomCategory.map((y, i) => {
                                             return (
-                                                // <Text key={i}> {y.ID} {this.state.selectedCategory} </Text>
+
                                                 y.ID == this.state.selectedCategory ?
-                                                    // <Text key={i}> {y.CatName}</Text>
+
                                                     <Text key={i} style={{ marginLeft: 5, }}>{y.CatName}  <Ionicons style={{ fontSize: responsiveFontSize(2.5) }} name='ios-arrow-dropdown-outline' /> </Text>
                                                     : null
 
-                                                //<Picker.Item key={i} label={y.CatName} value={y.ID} />
+
                                             )
                                         })
                                     }
@@ -952,7 +880,7 @@ export default class UpdateRoomScreen extends React.Component {
                                     mode='dropdown'
                                     selectedValue={parseInt(this.state.selectedCategory)}
                                     onValueChange={(itemValue, itemIndex) => this.setState({ selectedCategory: itemValue })}>
-                                    <Picker.Item label='-- Chọn loại BĐS --' value='0' />
+                                    <Picker.Item label={translate("Select the type of real estate")} value='0' />
 
 
 
@@ -969,8 +897,8 @@ export default class UpdateRoomScreen extends React.Component {
                                 ref={'pickerCategory'}
                                 options={this.state.roomCategory.map((y, i) => y.ID)}
                                 labels={this.state.roomCategory.map((y, i) => y.CatName)}
-                                confirmText='Đồng ý'
-                                cancelText='Hủy'
+                                confirmText={translate("Agree")}
+                                cancelText={translate("Cancel")}
                                 itemStyle={{
                                     fontSize: 25,
                                     color: '#73aa2a',
@@ -991,10 +919,10 @@ export default class UpdateRoomScreen extends React.Component {
                         </View>
 
                         {/* From Effected Date */}
-                        <FormLabel labelStyle={{}}>Hiệu lực:</FormLabel>
+                        <FormLabel labelStyle={{}}>{translate("Effect")}:</FormLabel>
                         <View style={{ flexDirection: 'row', marginTop: 8 }}>
-                            <FormLabel labelStyle={{ color: '#fff' }}>Hiệu lực:</FormLabel>
-                            <Text style={{ paddingTop: 10 }}>Từ</Text>
+                            <FormLabel labelStyle={{ color: '#fff' }}>{translate("Effect")}:</FormLabel>
+                            <Text style={{ paddingTop: 10 }}>{translate("From")}</Text>
                             <DatePicker
                                 style={{ marginLeft: 8 }}
                                 date={this.state.fromDate}
@@ -1003,8 +931,8 @@ export default class UpdateRoomScreen extends React.Component {
                                 format="YYYY-MM-DD"
                                 minDate={minDate}
                                 //maxDate="2016-06-01"
-                                confirmBtnText="Chọn"
-                                cancelBtnText="Hủy"
+                                confirmBtnText={translate("Select")}
+                                cancelBtnText={translate("Cancel")}
                                 showIcon={true}
                                 customStyles={{
                                     dateIcon: {
@@ -1041,9 +969,9 @@ export default class UpdateRoomScreen extends React.Component {
 
                         {/* To Effected Date */}
                         <View style={{ flexDirection: 'row', marginTop: 10 }}>
-                            <FormLabel labelStyle={{ color: '#fff' }}>Hiệu lực:</FormLabel>
+                            <FormLabel labelStyle={{ color: '#fff' }}>{translate("Effect")}:</FormLabel>
 
-                            <Text style={{ paddingTop: 10 }}>Đến</Text>
+                            <Text style={{ paddingTop: 10 }}>{translate("To")}</Text>
                             <DatePicker
                                 style={{}}
                                 date={this.state.toDate}
@@ -1052,8 +980,8 @@ export default class UpdateRoomScreen extends React.Component {
                                 format="YYYY-MM-DD"
                                 minDate={this.state.fromDate}
                                 //maxDate="2016-06-01"
-                                confirmBtnText="Chọn"
-                                cancelBtnText="Hủy"
+                                confirmBtnText={translate("Select")}
+                                cancelBtnText={translate("Cancel")}
                                 showIcon={true}
                                 customStyles={{
                                     dateIcon: {
@@ -1077,20 +1005,16 @@ export default class UpdateRoomScreen extends React.Component {
                                     this.setState({ toDate })
                                     this.refs.roomInfoInput.focus();
 
-                                    //let _toDate = new Date(this.state.toDate);
-                                    // alert(_toDate > today)
                                 }}
                             />
-                            {/* {new Date(this.state.toDate) < today &&
-                                <Text style={{ marginLeft: 10, marginTop: 12, color: 'red' }}>*</Text>
-                            } */}
+
                         </View>
 
                         {/* Highlight Date */}
                         <View
                             style={{ flexDirection: 'row', marginTop: 10, alignItems: 'center' }}
                         >
-                            <FormLabel style={{}}>Làm nổi bật:</FormLabel>
+                            <FormLabel style={{}}>{translate("Highlight")}:</FormLabel>
                             <Switch
                                 style={{ marginTop: 12 }}
                                 onValueChange={() => {
@@ -1104,8 +1028,8 @@ export default class UpdateRoomScreen extends React.Component {
                         {this.state.isHighlight &&
                             <View>
                                 <View style={{ flexDirection: 'row', marginTop: 8 }}>
-                                    <FormLabel labelStyle={{ color: '#fff' }}>Hiệu lực:</FormLabel>
-                                    <Text style={{ paddingTop: 10 }}>Từ</Text>
+                                    <FormLabel labelStyle={{ color: '#fff' }}>{translate("Effect")}:</FormLabel>
+                                    <Text style={{ paddingTop: 10 }}>{translate("From")}</Text>
                                     <DatePicker
                                         style={{ marginLeft: 8 }}
                                         date={this.state.fromDateHighLight}
@@ -1114,8 +1038,8 @@ export default class UpdateRoomScreen extends React.Component {
                                         format="YYYY-MM-DD"
                                         minDate={this.state.fromDate}
                                         maxDate={this.state.toDate}
-                                        confirmBtnText="Chọn"
-                                        cancelBtnText="Hủy"
+                                        confirmBtnText={translate("Select")}
+                                        cancelBtnText={translate("Cancel")}
                                         showIcon={true}
                                         customStyles={{
                                             dateIcon: {
@@ -1145,9 +1069,9 @@ export default class UpdateRoomScreen extends React.Component {
 
                                 {/* toDateHighLight */}
                                 <View style={{ flexDirection: 'row', marginTop: 10 }}>
-                                    <FormLabel labelStyle={{ color: '#fff' }}>Hiệu lực:</FormLabel>
+                                    <FormLabel labelStyle={{ color: '#fff' }}>{translate("Effect")}:</FormLabel>
 
-                                    <Text style={{ paddingTop: 10 }}>Đến</Text>
+                                    <Text style={{ paddingTop: 10 }}>{translate("To")}</Text>
                                     <DatePicker
                                         style={{}}
                                         date={this.state.toDateHighLight}
@@ -1156,8 +1080,8 @@ export default class UpdateRoomScreen extends React.Component {
                                         format="YYYY-MM-DD"
                                         minDate={this.state.fromDate}
                                         maxDate={this.state.toDate}
-                                        confirmBtnText="Chọn"
-                                        cancelBtnText="Hủy"
+                                        confirmBtnText={translate("Select")}
+                                        cancelBtnText={translate("Cancel")}
                                         showIcon={true}
                                         customStyles={{
                                             dateIcon: {
@@ -1194,7 +1118,7 @@ export default class UpdateRoomScreen extends React.Component {
                         >
 
                             {/* Detail Room Information */}
-                            <FormLabel style={{ marginTop: 10, }}>Chi tiết:</FormLabel>
+                            <FormLabel style={{ marginTop: 10, }}>{translate("Details")}:</FormLabel>
                             <FormInput
                                 ref='roomInfoInput'
                                 returnKeyType={"done"}
@@ -1207,7 +1131,7 @@ export default class UpdateRoomScreen extends React.Component {
                                 }}
                                 containerStyle={{ borderWidth: 0.5, borderColor: '#73aa2a', borderRadius: 10, }}
                                 inputStyle={{ padding: 10, height: 120, paddingRight: Platform.OS == 'ios' ? 50 : 0 }}
-                                placeholder='Vui lòng nhập thông tin chi tiết'
+                                placeholder={translate("Please enter detailed information")}
                                 multiline={true}
                                 autoCapitalize='sentences'
                                 //maxLength={300}
@@ -1228,19 +1152,15 @@ export default class UpdateRoomScreen extends React.Component {
                             buttonStyle={{ backgroundColor: '#9B9D9D', padding: 15, borderRadius: 10 }}
                             icon={{ name: 'ios-backspace', type: 'ionicon' }}
                             onPress={() => {
-                                //HomeScreen.refreshRoomBoxAfterPost();
 
                                 this.props.navigation.goBack();
-                                // this.props.navigation.state.params.onRefreshScreen({ refreshScreen: true, profile: null });
-                                //this.props.navigation.state.params.onSelect({ selected: true });
 
-                                //this.props.navigation.state.params.onSelect({ _refreshRoomBox });
                             }}
-                            title='Hủy' />
+                            title={translate("Cancel")} />
                         <Button
                             buttonStyle={{ backgroundColor: '#73aa2a', padding: 15, borderRadius: 10 }}
                             icon={{ name: 'md-cloud-upload', type: 'ionicon' }}
-                            title='Cập nhật'
+                            title={translate("Updates")}
                             onPress={() => {
                                 Keyboard.dismiss();
                                 this._updateRoomAsync();
@@ -1279,7 +1199,7 @@ export default class UpdateRoomScreen extends React.Component {
                     }}
                 >
                     <GooglePlacesAutocomplete
-                        placeholder="Tìm kiếm địa chỉ"
+                        placeholder={translate("Please input address")}
                         minLength={1} // minimum length of text to search
                         autoFocus={false}
                         returnKeyType={'search'} // Can be left out for default return key https://facebook.github.io/react-native/docs/textinput.html#returnkeytype
@@ -1396,7 +1316,7 @@ export default class UpdateRoomScreen extends React.Component {
                         >
                             <Ionicons style={{ fontSize: 40, borderRadius: 10, backgroundColor: '#a4d227', color: '#fff', textAlign: 'center', padding: 10 }} name='ios-folder-open' >
                             </Ionicons>
-                            <Text style={{ textAlign: 'center', marginTop: 5 }}>Thư viện ảnh</Text>
+                            <Text style={{ textAlign: 'center', marginTop: 5 }}>{translate("Image library")}</Text>
                         </TouchableOpacity>
                         <View style={{ flex: 1 }}></View>
                         <TouchableOpacity
@@ -1407,7 +1327,7 @@ export default class UpdateRoomScreen extends React.Component {
                             }}
                         >
                             <Ionicons style={{ fontSize: 40, borderRadius: 10, backgroundColor: '#a4d227', color: '#fff', textAlign: 'center', padding: 10 }} name='md-camera' />
-                            <Text style={{ textAlign: 'center', marginTop: 5 }}>Camera</Text>
+                            <Text style={{ textAlign: 'center', marginTop: 5 }}>{translate("Camera")}</Text>
                         </TouchableOpacity>
                     </View>
                 </PopupDialog>

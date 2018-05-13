@@ -35,6 +35,10 @@ import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view
 import { responsiveHeight, responsiveWidth, responsiveFontSize } from 'react-native-responsive-dimensions';
 import SimplePicker from 'react-native-simple-picker';
 import globalVariable from '../components/Global'
+import enTranslation from '../components/en.json';
+import zhTranslation from '../components/zh.json';
+import viTranslation from '../components/vi.json';
+import { setLocalization, translate, Translate } from 'react-native-translate';
 
 var { height, width } = Dimensions.get('window');
 
@@ -85,14 +89,14 @@ export default class PostRoomScreen extends React.Component {
             postRoomImage4: null,
             postRoomImage5: null,
             postRoomImage6: null,
-            iosSelectedCategory: '-- Chọn loại BĐS --',
+            iosSelectedCategory: '-- ' + translate("Select the type of real estate") + ' --',
             imageUrl: '',
             postRoomAddressMaker: {
                 latitude: null,
                 longitude: null,
             },
             selectedImages: '0',
-            selectedAddress: 'Vui lòng nhập địa chỉ',
+            selectedAddress: translate("Please input address"),
             searchingMaker: {
                 latitude: null,
                 longitude: null,
@@ -263,42 +267,42 @@ export default class PostRoomScreen extends React.Component {
                 // && this.state.postRoomImage5 === null
                 // && this.state.postRoomImage6 === null
             ) {
-                ToastAndroid.showWithGravity('Vui lòng chọn hình đại diện', ToastAndroid.SHORT, ToastAndroid.TOP);
+                ToastAndroid.showWithGravity(translate("Please select a avatar"), ToastAndroid.SHORT, ToastAndroid.TOP);
                 return;
             }
             if (this.state.searchingMaker.latitude === null) {
-                ToastAndroid.showWithGravity('Vui lòng nhập địa chỉ', ToastAndroid.SHORT, ToastAndroid.TOP);
+                ToastAndroid.showWithGravity(translate("Please input address"), ToastAndroid.SHORT, ToastAndroid.TOP);
                 return;
             }
             if (this.state.contactPhone === '') {
-                ToastAndroid.showWithGravity('Vui lòng nhập Số điện thoại liên hệ', ToastAndroid.SHORT, ToastAndroid.TOP);
+                ToastAndroid.showWithGravity(translate("Please enter contact cellphone"), ToastAndroid.SHORT, ToastAndroid.TOP);
                 this.refs['contactPhoneInput'].getElement().focus();
                 return;
             }
 
             if (cellPhoneVN.test(this.state.contactPhone) === false) {
-                ToastAndroid.showWithGravity('Số điện thoại LH không đúng số Điện Thoại Di Động Việt Nam', ToastAndroid.SHORT, ToastAndroid.TOP);
+                ToastAndroid.showWithGravity(translate("Invalid cellphone number of Vietnam Mobile Phone"), ToastAndroid.SHORT, ToastAndroid.TOP);
                 this.refs['contactPhoneInput'].getElement().focus();
                 return;
             }
 
             if (this.state.price === '') {
-                ToastAndroid.showWithGravity('Vui lòng nhập giá', ToastAndroid.SHORT, ToastAndroid.TOP);
+                ToastAndroid.showWithGravity(translate("Please enter a price"), ToastAndroid.SHORT, ToastAndroid.TOP);
                 this.refs['priceInput'].getElement().focus();
                 return;
             }
             if (this.state.acreage === '') {
-                ToastAndroid.showWithGravity('Vui lòng nhập diện tích', ToastAndroid.SHORT, ToastAndroid.TOP);
+                ToastAndroid.showWithGravity(translate("Please enter an area"), ToastAndroid.SHORT, ToastAndroid.TOP);
                 this.refs['acreageInput'].getElement().focus();
                 return;
             }
             if (this.state.selectedCategory === '0') {
-                ToastAndroid.showWithGravity('Vui lòng chọn loại BĐS', ToastAndroid.SHORT, ToastAndroid.TOP);
+                ToastAndroid.showWithGravity(translate("Please select real estate"), ToastAndroid.SHORT, ToastAndroid.TOP);
                 return;
             }
 
             if (this.state.detailInfo === '') {
-                ToastAndroid.showWithGravity('Vui lòng nhập thông tin chi tiết', ToastAndroid.SHORT, ToastAndroid.TOP);
+                ToastAndroid.showWithGravity(translate("Please enter detailed information"), ToastAndroid.SHORT, ToastAndroid.TOP);
                 this.refs.roomInfoInput.focus();
                 return;
             }
@@ -311,39 +315,39 @@ export default class PostRoomScreen extends React.Component {
                 // && this.state.postRoomImage5 === null
                 // && this.state.postRoomImage6 === null
             ) {
-                Alert.alert('Vui lòng chọn hình đại diện', ToastAndroid.SHORT, ToastAndroid.CENTER);
+                Alert.alert(translate("Please select a avatar"), ToastAndroid.SHORT, ToastAndroid.CENTER);
                 return;
             }
             if (this.state.searchingMaker.latitude === null) {
-                Alert.alert('Vui lòng nhập địa chỉ');
+                Alert.alert(translate("Please input address"));
                 return;
             }
             if (this.state.contactPhone === '') {
-                Alert.alert('Vui lòng nhập Số điện thoại liên hệ');
-                this.refs['contactPhoneInput'].getElement().focus();
+                Alert.alert(translate("Please enter contact cellphone"));
+                //this.refs['contactPhoneInput'].getElement().focus();
                 return;
             }
             if (cellPhoneVN.test(this.state.contactPhone) === false) {
-                Alert.alert('Số điện thoại LH không đúng số Điện Thoại Di Động Việt Nam');
+                Alert.alert(translate("Invalid cellphone number of Vietnam Mobile Phone"));
                 //this.refs['contactPhoneInput'].getElement().focus();
                 return;
             }
             if (this.state.price === '') {
-                Alert.alert('Vui lòng nhập giá');
-                this.refs['priceInput'].getElement().focus();
+                Alert.alert(translate("Please enter a price"));
+                //this.refs['priceInput'].getElement().focus();
                 return;
             }
             if (this.state.acreage === '') {
-                Alert.alert('Vui lòng nhập diện tích');
-                this.refs['acreageInput'].getElement().focus();
+                Alert.alert(translate("Please enter an area"));
+                //this.refs['acreageInput'].getElement().focus();
                 return;
             }
             if (this.state.selectedCategory === '0') {
-                Alert.alert('Vui lòng chọn loại BĐS');
+                Alert.alert(translate("Please select real estate"));
                 return;
             }
             if (this.state.detailInfo === '') {
-                Alert.alert('Vui lòng nhập thông tin chi tiết');
+                Alert.alert(translate("Please enter detailed information"));
                 //this.refs.roomInfoInput.focus();
                 return;
             }
@@ -434,27 +438,27 @@ export default class PostRoomScreen extends React.Component {
                         this.props.navigation.state.params.onRefreshScreen({ refreshScreen: true });
 
                         if (Platform.OS === 'android') {
-                            ToastAndroid.showWithGravity('Đăng tin thành công!', ToastAndroid.SHORT, ToastAndroid.TOP);
+                            ToastAndroid.showWithGravity(translate("Post successfully"), ToastAndroid.SHORT, ToastAndroid.TOP);
                         }
                         else {
-                            Alert.alert('Đăng tin thành công!');
+                            Alert.alert(translate("Post successfully"));
                         }
                     }
                     else if (JSON.stringify(responseJson.ErrorCode) === "7"
                         || JSON.stringify(responseJson.ErrorCode) === "8"
                         || JSON.stringify(responseJson.ErrorCode) === "9") {
                         if (Platform.OS === 'android') {
-                            ToastAndroid.showWithGravity('Ví tiền không đủ. Bạn vui lòng nạp tiền vào Ví Tiền Nhàbaola!', ToastAndroid.SHORT, ToastAndroid.TOP);
+                            ToastAndroid.showWithGravity(translate("Wallets are not enough. Please top up money to your wallet"), ToastAndroid.SHORT, ToastAndroid.TOP);
                         }
                         else {
-                            Alert.alert('Thông báo', 'Ví tiền không đủ. Bạn vui lòng nạp tiền vào Ví Tiền Nhàbaola!');
+                            Alert.alert(translate("Notice"), translate("Wallets are not enough. Please top up money to your wallet"));
                         }
                     } else {
                         if (Platform.OS === 'android') {
-                            ToastAndroid.showWithGravity('Lỗi ' + JSON.stringify(responseJson) + ', vui lòng liên hệ Admin trong mục Giúp Đỡ!', ToastAndroid.SHORT, ToastAndroid.TOP);
+                            ToastAndroid.showWithGravity(translate("Error") + JSON.stringify(responseJson) + translate("Please contact Admin in the Help menu"), ToastAndroid.SHORT, ToastAndroid.TOP);
                         }
                         else {
-                            Alert.alert('Thông báo', 'Lỗi ' + JSON.stringify(responseJson) + ', vui lòng liên hệ Admin trong mục Giúp Đỡ!');
+                            Alert.alert(translate("Notice"), translate("Error") + JSON.stringify(responseJson) + translate("Please contact Admin in the Help menu"));
                         }
                     }
 
@@ -512,7 +516,7 @@ export default class PostRoomScreen extends React.Component {
                 >
 
                     {/* <ScrollView style={{ paddingTop: 10, marginTop: 20, }}> */}
-                    <FormLabel>Hình ảnh</FormLabel>
+                    <FormLabel>{translate("Picture")}</FormLabel>
                     <View style={{
                         height: 120, paddingRight: 20,
                         paddingLeft: 20, flexDirection: 'row', justifyContent: 'space-between',
@@ -528,7 +532,7 @@ export default class PostRoomScreen extends React.Component {
                         >
                             <Ionicons style={{ opacity: 0.7, fontSize: 120, color: '#73aa2a', flex: 1, textAlign: 'center', }} name='ios-image-outline' />
                             {this.state.postRoomImage1 && <Image source={{ uri: this.state.postRoomImage1 }} style={{ width: 90, height: 90 }} />}
-                            <Text style={{ color: '#73aa2a', fontSize: 12, textAlign: 'center', paddingTop: 5, }}>Hình đại diện</Text>
+                            <Text style={{ color: '#73aa2a', fontSize: 12, textAlign: 'center', paddingTop: 5, }}>{translate("Avatar")}</Text>
                         </TouchableOpacity>
 
                         <TouchableOpacity
@@ -592,7 +596,7 @@ export default class PostRoomScreen extends React.Component {
                         </TouchableOpacity>
 
                     </View>
-                    {/* <FormLabel style={{ borderBottomWidth: 0.7, borderColor: '#a4d227', marginTop: 15, }}>Địa chỉ</FormLabel> */}
+
                     <View style={{ height: 270, padding: 20, }}>
 
                         {/* Address */}
@@ -647,7 +651,7 @@ export default class PostRoomScreen extends React.Component {
                     <View style={{ paddingBottom: 20 }}>
                         {/* Contact Phone */}
                         <View style={{ flexDirection: 'row', }}>
-                            <FormLabel style={{}}>Đ.Thoại LH</FormLabel>
+                            <FormLabel style={{}}>{translate("Contact cellphone")}</FormLabel>
                             <TextInputMask
                                 //ref='acreage'
                                 ref='contactPhoneInput'
@@ -664,7 +668,6 @@ export default class PostRoomScreen extends React.Component {
                                     flex: 1, padding: 5, borderColor: '#73aa2a',
                                     marginLeft: -9, marginRight: 20,
                                     borderBottomWidth: Platform.OS == 'ios' ? 0.5 : 0,
-                                    // paddingTop: Platform.OS == 'ios' ? 5 : 0,
                                 }}
                                 placeholder=''
                                 underlineColorAndroid='#73aa2a'
@@ -673,11 +676,11 @@ export default class PostRoomScreen extends React.Component {
                                 onChangeText={(contactPhone) => this.setState({ contactPhone })}
                             />
 
-                            {/* <FormLabel>(mét vuông)</FormLabel> */}
+
                         </View>
                         {/* Contact Name */}
                         <View style={{ flexDirection: 'row', }}>
-                            <FormLabel style={{}}>Người LH</FormLabel>
+                            <FormLabel style={{}}>{translate("Contact Person")}</FormLabel>
 
                             <FormInput
                                 ref='contactNameInput'
@@ -696,7 +699,7 @@ export default class PostRoomScreen extends React.Component {
                                     width: Platform.OS == 'ios' ? responsiveWidth(63) : responsiveWidth(69)
                                 }}
                                 inputStyle={{ color: '#000' }}
-                                placeholder='Tối đa 8 ký tự'
+                                placeholder={translate("Maximum of 8 characters")}
                                 multiline={false}
                                 maxLength={8}
                                 //numberOfLines={5}
@@ -738,7 +741,7 @@ export default class PostRoomScreen extends React.Component {
                         </View>
                         {/* Price */}
                         <View style={{ flexDirection: 'row', }}>
-                            <FormLabel style={{}}>Giá:</FormLabel>
+                            <FormLabel style={{}}>{translate("Price")}:</FormLabel>
                             <TextInputMask
                                 ref='priceInput'
                                 returnKeyType={Platform.OS == 'ios' ? "done" : "next"}
@@ -750,7 +753,7 @@ export default class PostRoomScreen extends React.Component {
                                 }}
                                 type={'money'}
                                 options={{ suffixUnit: '', precision: 0, unit: '', separator: ' ' }}
-                                style={{ flex: 1, padding: 5, marginLeft: 30, borderBottomWidth: Platform.OS === 'ios' ? 0.5 : 0, borderColor: '#73aa2a' }}
+                                style={{ flex: 1, padding: 5, marginLeft: Platform.OS == 'ios' ? 0 : 30, borderBottomWidth: Platform.OS === 'ios' ? 0.5 : 0, borderColor: '#73aa2a' }}
                                 placeholder=''
                                 underlineColorAndroid='#73aa2a'
                                 value={this.state.price}
@@ -761,7 +764,7 @@ export default class PostRoomScreen extends React.Component {
                         </View>
                         {/* Acreage */}
                         <View style={{ flexDirection: 'row', }}>
-                            <FormLabel style={{}}>Diện tích:</FormLabel>
+                            <FormLabel style={{}}>{translate("Area")}:</FormLabel>
                             <TextInputMask
                                 //ref='acreage'
                                 ref='acreageInput'
@@ -786,11 +789,11 @@ export default class PostRoomScreen extends React.Component {
                                 onChangeText={(acreage) => this.setState({ acreage })}
                             />
 
-                            <FormLabel>(mét vuông)</FormLabel>
+                            <FormLabel>({translate("Square meters")})</FormLabel>
                         </View>
                         {/* Room Type */}
                         <View style={{ flexDirection: 'row', }}>
-                            <FormLabel style={{}}>Loại BĐS:</FormLabel>
+                            <FormLabel style={{}}>{translate("Type of real estate")}:</FormLabel>
                             {Platform.OS === 'ios' ?
                                 <TouchableOpacity
                                     style={{ marginTop: 12 }}
@@ -828,7 +831,7 @@ export default class PostRoomScreen extends React.Component {
                                     mode='dropdown'
                                     selectedValue={this.state.selectedCategory}
                                     onValueChange={(itemValue, itemIndex) => this.setState({ selectedCategory: itemValue })}>
-                                    <Picker.Item label='-- Chọn loại BĐS --' value='0' />
+                                    <Picker.Item label={translate("Select the type of real estate")} value='0' />
 
 
 
@@ -845,8 +848,8 @@ export default class PostRoomScreen extends React.Component {
                                 ref={'pickerCategory'}
                                 options={this.state.roomCategory.map((y, i) => y.ID)}
                                 labels={this.state.roomCategory.map((y, i) => y.CatName)}
-                                confirmText='Đồng ý'
-                                cancelText='Hủy'
+                                confirmText={translate("Agree")}
+                                cancelText={translate("Cancel")}
                                 itemStyle={{
                                     fontSize: 25,
                                     color: '#73aa2a',
@@ -867,10 +870,10 @@ export default class PostRoomScreen extends React.Component {
                         </View>
 
                         {/* From Effected Date */}
-                        <FormLabel labelStyle={{}}>Hiệu lực:</FormLabel>
+                        <FormLabel labelStyle={{}}>{translate("Effect")}:</FormLabel>
                         <View style={{ flexDirection: 'row', marginTop: 8 }}>
-                            <FormLabel labelStyle={{ color: '#fff' }}>Hiệu lực:</FormLabel>
-                            <Text style={{ paddingTop: 10 }}>Từ</Text>
+                            <FormLabel labelStyle={{ color: '#fff' }}>{translate("Effect")}:</FormLabel>
+                            <Text style={{ paddingTop: 10 }}>{translate("From")}</Text>
                             <DatePicker
                                 style={{ marginLeft: 8 }}
                                 date={this.state.fromDate}
@@ -879,8 +882,8 @@ export default class PostRoomScreen extends React.Component {
                                 format="YYYY-MM-DD"
                                 minDate={minDate}
                                 //maxDate="2016-06-01"
-                                confirmBtnText="Chọn"
-                                cancelBtnText="Hủy"
+                                confirmBtnText={translate("Select")}
+                                cancelBtnText={translate("Cancel")}
                                 showIcon={true}
                                 customStyles={{
                                     dateIcon: {
@@ -916,9 +919,9 @@ export default class PostRoomScreen extends React.Component {
                         </View>
                         {/* To Effected Date */}
                         <View style={{ flexDirection: 'row', marginTop: 10 }}>
-                            <FormLabel labelStyle={{ color: '#fff' }}>Hiệu lực:</FormLabel>
+                            <FormLabel labelStyle={{ color: '#fff' }}>{translate("Effect")}:</FormLabel>
 
-                            <Text style={{ paddingTop: 10 }}>Đến</Text>
+                            <Text style={{ paddingTop: 10 }}>{translate("To")}</Text>
                             <DatePicker
                                 style={{}}
                                 date={this.state.toDate}
@@ -927,8 +930,8 @@ export default class PostRoomScreen extends React.Component {
                                 format="YYYY-MM-DD"
                                 minDate={this.state.fromDate}
                                 //maxDate="2016-06-01"
-                                confirmBtnText="Chọn"
-                                cancelBtnText="Hủy"
+                                confirmBtnText={translate("Select")}
+                                cancelBtnText={translate("Cancel")}
                                 showIcon={true}
                                 customStyles={{
                                     dateIcon: {
@@ -959,7 +962,7 @@ export default class PostRoomScreen extends React.Component {
                         <View
                             style={{ flexDirection: 'row', marginTop: 10, alignItems: 'center' }}
                         >
-                            <FormLabel style={{}}>Làm nổi bật:</FormLabel>
+                            <FormLabel style={{}}>{translate("Highlight")}:</FormLabel>
                             <Switch
                                 style={{ marginTop: 12 }}
                                 onValueChange={() => {
@@ -973,8 +976,8 @@ export default class PostRoomScreen extends React.Component {
                         {this.state.isHighlight &&
                             <View>
                                 <View style={{ flexDirection: 'row', marginTop: 8 }}>
-                                    <FormLabel labelStyle={{ color: '#fff' }}>Hiệu lực:</FormLabel>
-                                    <Text style={{ paddingTop: 10 }}>Từ</Text>
+                                    <FormLabel labelStyle={{ color: '#fff' }}>{translate("Effect")}:</FormLabel>
+                                    <Text style={{ paddingTop: 10 }}>{translate("From")}</Text>
                                     <DatePicker
                                         style={{ marginLeft: 8 }}
                                         date={this.state.fromDateHighLight}
@@ -983,8 +986,8 @@ export default class PostRoomScreen extends React.Component {
                                         format="YYYY-MM-DD"
                                         minDate={this.state.fromDate}
                                         maxDate={this.state.toDate}
-                                        confirmBtnText="Chọn"
-                                        cancelBtnText="Hủy"
+                                        confirmBtnText={translate("Select")}
+                                        cancelBtnText={translate("Cancel")}
                                         showIcon={true}
                                         customStyles={{
                                             dateIcon: {
@@ -1013,9 +1016,9 @@ export default class PostRoomScreen extends React.Component {
                                 </View>
                                 {/* To Highlight Date */}
                                 <View style={{ flexDirection: 'row', marginTop: 10 }}>
-                                    <FormLabel labelStyle={{ color: '#fff' }}>Hiệu lực:</FormLabel>
+                                    <FormLabel labelStyle={{ color: '#fff' }}>{translate("Effect")}:</FormLabel>
 
-                                    <Text style={{ paddingTop: 10 }}>Đến</Text>
+                                    <Text style={{ paddingTop: 10 }}>{translate("To")}</Text>
                                     <DatePicker
                                         style={{}}
                                         date={this.state.toDateHighLight}
@@ -1024,8 +1027,8 @@ export default class PostRoomScreen extends React.Component {
                                         format="YYYY-MM-DD"
                                         minDate={this.state.fromDate}
                                         maxDate={this.state.toDate}
-                                        confirmBtnText="Chọn"
-                                        cancelBtnText="Hủy"
+                                        confirmBtnText={translate("Select")}
+                                        cancelBtnText={translate("Cancel")}
                                         showIcon={true}
                                         customStyles={{
                                             dateIcon: {
@@ -1057,7 +1060,7 @@ export default class PostRoomScreen extends React.Component {
                             style={{ marginBottom: Platform.OS == 'ios' ? 140 : 30 }}
                         >
                             {/* Detail Room Information */}
-                            <FormLabel style={{ marginTop: 10, }}>Chi tiết:</FormLabel>
+                            <FormLabel style={{ marginTop: 10, }}>{translate("Details")}:</FormLabel>
                             <FormInput
                                 ref='roomInfoInput'
                                 returnKeyType={"done"}
@@ -1070,7 +1073,7 @@ export default class PostRoomScreen extends React.Component {
                                 }}
                                 containerStyle={{ borderWidth: 0.5, borderColor: '#73aa2a', borderRadius: 10, }}
                                 inputStyle={{ padding: 10, height: 120, paddingRight: Platform.OS == 'ios' ? 50 : 0 }}
-                                placeholder='Vui lòng nhập thông tin chi tiết'
+                                placeholder={translate("Please enter detailed information")}
                                 multiline={true}
                                 //numberOfLines={5}
                                 //keyboardType='default'
@@ -1094,19 +1097,15 @@ export default class PostRoomScreen extends React.Component {
                             buttonStyle={{ backgroundColor: '#9B9D9D', padding: 15, borderRadius: 10 }}
                             icon={{ name: 'ios-backspace', type: 'ionicon' }}
                             onPress={() => {
-                                //HomeScreen.refreshRoomBoxAfterPost();
 
                                 this.props.navigation.goBack();
-                                // this.props.navigation.state.params.onRefreshScreen({ refreshScreen: true, profile: null });
-                                //this.props.navigation.state.params.onSelect({ selected: true });
 
-                                //this.props.navigation.state.params.onSelect({ _refreshRoomBox });
                             }}
-                            title='Hủy' />
+                            title={translate("Cancel")} />
                         <Button
                             buttonStyle={{ backgroundColor: '#73aa2a', padding: 15, borderRadius: 10 }}
                             icon={{ name: 'md-cloud-upload', type: 'ionicon' }}
-                            title='Đăng tin'
+                            title={translate("Post")}
                             onPress={() => {
 
                                 this._postRoomAsync();
@@ -1152,7 +1151,7 @@ export default class PostRoomScreen extends React.Component {
                     }}
                 >
                     <GooglePlacesAutocomplete
-                        placeholder="Vui lòng nhập địa chỉ"
+                        placeholder={translate("Please input address")}
                         minLength={1} // minimum length of text to search
                         autoFocus={true}
                         returnKeyType={'search'} // Can be left out for default return key https://facebook.github.io/react-native/docs/textinput.html#returnkeytype
@@ -1275,7 +1274,7 @@ export default class PostRoomScreen extends React.Component {
                         >
                             <Ionicons style={{ fontSize: 40, borderRadius: 10, backgroundColor: '#a4d227', color: '#fff', textAlign: 'center', padding: 10 }} name='ios-folder-open' >
                             </Ionicons>
-                            <Text style={{ textAlign: 'center', marginTop: 5 }}>Thư viện ảnh</Text>
+                            <Text style={{ textAlign: 'center', marginTop: 5 }}>{translate("Image library")}</Text>
                         </TouchableOpacity>
                         <View style={{ flex: 1 }}></View>
                         <TouchableOpacity
@@ -1286,7 +1285,7 @@ export default class PostRoomScreen extends React.Component {
                             }}
                         >
                             <Ionicons style={{ fontSize: 40, borderRadius: 10, backgroundColor: '#a4d227', color: '#fff', textAlign: 'center', padding: 10 }} name='md-camera' />
-                            <Text style={{ textAlign: 'center', marginTop: 5 }}>Camera</Text>
+                            <Text style={{ textAlign: 'center', marginTop: 5 }}>{translate("Camera")}</Text>
                         </TouchableOpacity>
                     </View>
                 </PopupDialog>

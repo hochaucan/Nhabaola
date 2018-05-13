@@ -62,10 +62,10 @@ Data: [{
 
 * POST ERROR
 if (Platform.OS === 'android') {
-              ToastAndroid.showWithGravity('Lỗi ' + JSON.stringify(responseJson) + ', vui lòng liên hệ Admin trong mục Giúp Đỡ!', ToastAndroid.SHORT, ToastAndroid.TOP);
+              ToastAndroid.showWithGravity(translate("Error") + JSON.stringify(responseJson) + translate("Please contact Admin in the Help menu"), ToastAndroid.SHORT, ToastAndroid.TOP);
             }
             else {
-              Alert.alert('Thông báo', 'Lỗi ' + JSON.stringify(responseJson) + ', vui lòng liên hệ Admin trong mục Giúp Đỡ!');
+              Alert.alert(translate("Notice"), translate("Error") + JSON.stringify(responseJson) + translate("Please contact Admin in the Help menu"));
             }
 
 * MESSAGE
@@ -459,6 +459,98 @@ function DocTienBangChu(SoTien) {
     ]
   }
 }
+
+
+translate("Notice")
+translate("Cancel")
+translate("Agree")
+translate("Retype")
+translate("Delete")
+ translate("Error")
+  translate("Contact")
+  {translate("Expired")
+ translate("Cellphone")
+  translate("Price")
+  translate("Area")
+  translate("Address")
+  translate("Description")
+  translate("Installation")
+  translate("Login")
+  translate("Post")
+  translate("Pinned")
+  translate("Wallet")
+  translate("Sign out")
+  translate("Hotline")
+  translate("Picture")
+  translate("Avatar")
+  translate("Effect")
+  translate("From")
+  translate("To")
+  translate("Select")
+  translate("Highlight")
+  translate("Details")
+  translate("Updates")
+  translate("Change avatar")
+  translate("Set top")
+  translate("Delete successfully")
+translate("Cancel Facebook login")
+ translate("Login unsuccessful")
+ translate("Please enter the cellphone")
+ translate("Please enter a password")
+ translate("Please enter fullname")
+ translate("Please login")
+ translate("Please contact Admin in the Help menu")
+ translate("Please input address")
+ translate("Thank you for rating")
+ translate("Please enter the Activation Code")
+ translate("Please enter a new password")
+ translate("Reset password successful")
+ translate("Incorrect activation code")
+ translate("Confirm password is incorrect")
+ translate("Mark successful")
+ translate("Please check the INTERNET and reload the page")
+ translate("You need to login to Facebook to post this on your Timeline")
+ translate("Do you want to login now")
+ translate("Install the Nhabaola Application for more Real Estate"
+ translate("Share from Nhabaola application")
+ translate("Type of real estate")
+ translate("Square meters")
+ translate("Do you want to change language")
+ translate("You have switched languages to Vietnamease")
+ translate("Confirm new password is incorrect")
+ translate("Old password is incorrect")
+ translate("Personal page")
+ translate("Registered Date")
+ translate("Posted history")
+ translate("Personal information")
+ translate("Change password")
+ translate("Contact help")
+ translate("Are you sure to logout")
+ translate("Old password")
+ translate("New password")
+ translate("Confirm new password")
+ translate("User manual")
+ translate("Select the type of real estate") 
+ translate("Please select a avatar")
+ translate("Please enter contact cellphone")
+ translate("Please enter a price")
+ translate("Please enter an area")
+ translate("Please select real estate")
+ translate("Please enter detailed information")
+ translate("Post successfully")
+ translate("Wallets are not enough. Please top up money to your wallet")
+ translate("Contact cellphone")
+ translate("Contact Person")
+ translate("Maximum of 8 characters")
+ translate("Image library")
+ translate("The effective end date is not less than the start date")
+ translate("The highlight end date is not less than the start date")
+ translate("Update successful")
+ translate("Set top successful")
+ translate("Receive notifications from customers")
+translate("Effective date")
+translate("Do you want to set top")
+translate("Are you sure to delete")
 
 
 

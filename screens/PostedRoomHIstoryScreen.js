@@ -29,6 +29,10 @@ import { responsiveHeight, responsiveWidth, responsiveFontSize } from 'react-nat
 import deleteImageAsync from '../api/deleteImageAsync'
 import convertAmountToWording from '../api/convertAmountToWording'
 import globalVariable from '../components/Global'
+import enTranslation from '../components/en.json';
+import zhTranslation from '../components/zh.json';
+import viTranslation from '../components/vi.json';
+import { setLocalization, translate, Translate } from 'react-native-translate';
 
 var { height, width } = Dimensions.get('window');
 
@@ -48,7 +52,7 @@ var minDate = yyyy + '-' + mm + '-' + dd //== '1' ? '01' : dd
 const roomBox = [];
 export default class PostedRoomHIstoryScreen extends React.Component {
     static navigationOptions = {
-        title: 'Tin Đã Đăng',
+        title: translate("Posted history"),
         header: null,
     };
 
@@ -117,8 +121,7 @@ export default class PostedRoomHIstoryScreen extends React.Component {
             console.log(e);
         }
 
-        //alert(JSON.stringify(profile))
-        //alert(profile)
+
     }
 
     _getCategoryFromStorageAsync = async () => {
@@ -135,12 +138,12 @@ export default class PostedRoomHIstoryScreen extends React.Component {
             console.log(e);
         }
 
-        // alert(JSON.stringify(this.state.roomCategory))
+
     }
 
     _getRoomBoxByUserAsync = async (isNew) => {
         await this.setState({ refresh: true })
-        //alert(JSON.stringify(this.state.profile))
+
 
         if (!isNew) { // Loading more page 
             this.setState((prevState, props) => ({
@@ -192,16 +195,7 @@ export default class PostedRoomHIstoryScreen extends React.Component {
     }
 
     _deleteRoomBoxAsync = async (item) => {
-        //await this.setState({ refresh: true })
-        //alert(this.state.profile)
-        // alert(JSON.stringify(item.Images))
 
-        //let deleteResult = deleteResponse.json();
-
-
-        //alert( JSON.stringify(deleteResponse))
-
-        //return;
 
         try {
             await fetch("http://nhabaola.vn/api/RoomBox/FO_RoomBox_Del", {
@@ -219,20 +213,25 @@ export default class PostedRoomHIstoryScreen extends React.Component {
                 .then((response) => response.json())
                 .then((responseJson) => {
 
-                    if (JSON.stringify(responseJson.ErrorCode) === "12") {
+                    if (JSON.stringify(responseJson.ErrorCode) === "12") { // Delete successful
                         if (Platform.OS === 'android') {
-                            ToastAndroid.showWithGravity('Xóa thành công!', ToastAndroid.SHORT, ToastAndroid.TOP);
+                            ToastAndroid.showWithGravity(translate("Delete successfully"), ToastAndroid.SHORT, ToastAndroid.TOP);
                         }
                         else {
-                            Alert.alert('Xóa thành công!');
+                            Alert.alert(translate("Delete successfully"));
                         }
 
                         this._getRoomBoxByUserAsync(true);
                         let deleteResponse = deleteImageAsync(item.Images);
 
+                    } else {
+                        if (Platform.OS === 'android') {
+                            ToastAndroid.showWithGravity(translate("Error") + JSON.stringify(responseJson) + translate("Please contact Admin in the Help menu"), ToastAndroid.SHORT, ToastAndroid.TOP);
+                        }
+                        else {
+                            Alert.alert(translate("Notice"), translate("Error") + JSON.stringify(responseJson) + translate("Please contact Admin in the Help menu"));
+                        }
                     }
-                    //this.setState({ refresh: false })
-                    //alert(JSON.stringify(responseJson))
 
                 }).
                 catch((error) => { console.log(error) });
@@ -243,8 +242,7 @@ export default class PostedRoomHIstoryScreen extends React.Component {
     }
 
     _setTopAsync = async (id) => {
-        //await this.setState({ refresh: true })
-        //alert(this.state.profile)
+
         this.popupLoadingIndicator.show();
 
         try {
@@ -264,15 +262,22 @@ export default class PostedRoomHIstoryScreen extends React.Component {
                 .then((response) => response.json())
                 .then((responseJson) => {
 
-                    if (JSON.stringify(responseJson.ErrorCode) === "0") {
+                    if (JSON.stringify(responseJson.ErrorCode) === "0") { // Topup successful
                         if (Platform.OS === 'android') {
-                            ToastAndroid.showWithGravity('Đưa tin lên đầu thành công!', ToastAndroid.SHORT, ToastAndroid.TOP);
+                            ToastAndroid.showWithGravity(translate("Set top successful"), ToastAndroid.SHORT, ToastAndroid.TOP);
                         }
                         else {
-                            Alert.alert('Đưa tin lên đầu thành công!');
+                            Alert.alert(translate("Set top successful"));
                         }
 
                         this.popupLoadingIndicator.dismiss();
+                    } else {
+                        if (Platform.OS === 'android') {
+                            ToastAndroid.showWithGravity(translate("Error") + JSON.stringify(responseJson) + translate("Please contact Admin in the Help menu"), ToastAndroid.SHORT, ToastAndroid.TOP);
+                        }
+                        else {
+                            Alert.alert(translate("Notice"), translate("Error") + JSON.stringify(responseJson) + translate("Please contact Admin in the Help menu"));
+                        }
                     }
 
                 }).
@@ -288,13 +293,7 @@ export default class PostedRoomHIstoryScreen extends React.Component {
     }
 
     _updateRoomAsync = async (room) => {
-        // // Calculate Images fields
-        // var isNotify = !room.Images.split('|')[1]
-        // var images = globalVariable.PHONE_TOKEN + '|' + isNotify + room.Images.substring(room.Images.indexOf("http") - 1)
 
-        //this._getRoomBoxByUserAsync(true)
-        //alert(images)
-        // return;
 
         //Loading
         // this.popupLoadingIndicator.show();
@@ -356,12 +355,11 @@ export default class PostedRoomHIstoryScreen extends React.Component {
                         // }
 
                     } else { // Lỗi
-
                         if (Platform.OS === 'android') {
-                            ToastAndroid.showWithGravity('Lỗi, vui lòng liên hệ Admin trong mục Giúp Đỡ!', ToastAndroid.SHORT, ToastAndroid.TOP);
+                            ToastAndroid.showWithGravity(translate("Error") + JSON.stringify(responseJson) + translate("Please contact Admin in the Help menu"), ToastAndroid.SHORT, ToastAndroid.TOP);
                         }
                         else {
-                            Alert.alert('Thông báo', 'Lỗi, vui lòng liên hệ Admin trong mục Giúp Đỡ!');
+                            Alert.alert(translate("Notice"), translate("Error") + JSON.stringify(responseJson) + translate("Please contact Admin in the Help menu"));
                         }
                     }
                     // if (JSON.stringify(responseJson.ErrorCode) === "3") {
@@ -376,14 +374,6 @@ export default class PostedRoomHIstoryScreen extends React.Component {
                     // }
 
 
-                    //alert(JSON.stringify(responseJson))
-
-                    //this.props.navigation.navigate('Home');
-                    // HomeScreen.refreshRoomBoxAfterPost();
-                    //this.props.navigation.state.params.onSelect({ selected: true });
-                    //this.props.navigation.goBack();
-                    //  this.props.navigation.state.params._getWalletAsync();
-                    // this.props.navigation.state.params.onRefreshScreen({ refreshScreen: true });
 
 
                     this.popupLoadingIndicator.dismiss();
@@ -415,24 +405,11 @@ export default class PostedRoomHIstoryScreen extends React.Component {
                         }}>
                         <Ionicons style={{ fontSize: 28, color: '#fff', }} name='md-arrow-back'></Ionicons>
                     </TouchableOpacity>
-                    <Text style={{ marginLeft: 20, color: '#fff', fontSize: responsiveFontSize(2.2), justifyContent: 'center' }}>Tin đã đăng</Text>
+                    <Text style={{
+                        marginLeft: 20, color: '#fff',
+                        fontSize: responsiveFontSize(2.2), justifyContent: 'center'
+                    }}>{translate("Posted history")}</Text>
                 </View>
-
-
-
-                {/* <View style={{ flexDirection: 'row', padding: 20, }}>
-                    <TouchableOpacity
-                        style={{}}
-                        onPress={() => {
-
-                            this.props.navigation.goBack()
-                            this.props.navigation.state.params.onRefreshScreen();
-                            //this.props.navigation.state.params.onRefreshScreen({ refreshScreen: true });
-                        }}>
-                        <Ionicons style={{ fontSize: 28, color: '#a4d227', }} name='md-arrow-back'></Ionicons>
-                    </TouchableOpacity>
-                    <Text style={{ marginLeft: 20, color: '#73aa2a', fontSize: 20, justifyContent: 'center' }}>Tin Bạn Đã Đăng</Text>
-                </View> */}
 
                 <View style={styles.searchRoolResultBox}>
 
@@ -465,9 +442,9 @@ export default class PostedRoomHIstoryScreen extends React.Component {
                                 paddingTop: Platform.OS == 'ios' ? 5 : 0,
                                 paddingBottom: Platform.OS == 'ios' ? 5 : 10,
                                 height: 30,
-                                // paddingRight: Platform.OS == 'ios' ? 50 : 0
+
                             }}
-                            placeholder='Tìm kiếm...'
+                            placeholder={translate("Searching")}
                             //multiline={false}
                             //numberOfLines={5}
                             //keyboardType='default'
@@ -509,11 +486,10 @@ export default class PostedRoomHIstoryScreen extends React.Component {
                                         flex: 1,
                                         flexDirection: 'row',
                                         height: 100,
-                                        // borderWidth: 1,
+
                                         paddingTop: 10,
                                         paddingBottom: 10,
-                                        // borderBottomWidth: 0.3,
-                                        //borderColor: '#9B9D9D',
+
                                     }}>
                                         <Image
                                             style={{ flex: 3, borderRadius: 5 }}
@@ -551,7 +527,7 @@ export default class PostedRoomHIstoryScreen extends React.Component {
 
                                                     this.state.roomCategory.map((y, i) => {
                                                         return (
-                                                            // <Text>{y.ID} {item.CategoryID}</Text>
+
                                                             y.ID == item.CategoryID &&
                                                             <Text
                                                                 style={{ flex: 1, fontSize: responsiveFontSize(1.8), textAlign: 'center', color: '#73aa2a' }}
@@ -561,7 +537,7 @@ export default class PostedRoomHIstoryScreen extends React.Component {
                                                 }
 
                                                 {!item.IsActive &&
-                                                    <Text style={{ flex: 1, fontSize: responsiveFontSize(1.8), color: 'red', textAlign: 'center' }}>Hết hạn</Text>
+                                                    <Text style={{ flex: 1, fontSize: responsiveFontSize(1.8), color: 'red', textAlign: 'center' }}>{translate("Expired")}</Text>
                                                 }
 
                                             </View>
@@ -577,16 +553,16 @@ export default class PostedRoomHIstoryScreen extends React.Component {
                                             if (item.Images.split('|')[1] == 'true') {
 
                                                 Alert.alert(
-                                                    'Thông báo',
-                                                    'Bạn muốn TẮT thông báo Bình Luận cho Tin này?',
+                                                    translate("Notice"),
+                                                    translate("Would you like to turn off notification"),
                                                     [
                                                         {
-                                                            text: 'Hủy', onPress: () => {
+                                                            text: translate("Cancel"), onPress: () => {
                                                                 // this._deleteRoomBoxAsync(item);
                                                             }
                                                         },
                                                         {
-                                                            text: 'Đồng ý', onPress: () => {
+                                                            text: translate("Agree"), onPress: () => {
                                                                 this._updateRoomAsync(item)
                                                             }
                                                         },
@@ -596,16 +572,16 @@ export default class PostedRoomHIstoryScreen extends React.Component {
 
                                             } else {
                                                 Alert.alert(
-                                                    'Thông báo',
-                                                    'Bạn muốn NHẬN thông báo Bình Luận cho Tin này?',
+                                                    translate("Notice"),
+                                                    translate("Would you like to turn on notification"),
                                                     [
                                                         {
-                                                            text: 'Hủy', onPress: () => {
+                                                            text: translate("Cancel"), onPress: () => {
                                                                 // this._deleteRoomBoxAsync(item);
                                                             }
                                                         },
                                                         {
-                                                            text: 'Đồng ý', onPress: () => {
+                                                            text: translate("Agree"), onPress: () => {
                                                                 this._updateRoomAsync(item)
                                                             }
                                                         },
@@ -616,7 +592,7 @@ export default class PostedRoomHIstoryScreen extends React.Component {
 
                                         }}
                                     >
-                                        <Text style={{ textAlign: "right", fontSize: responsiveFontSize(1.8), color: '#9B9D9D' }}>  Nhận thông báo từ khách hàng</Text>
+                                        <Text style={{ textAlign: "right", fontSize: responsiveFontSize(1.8), color: '#9B9D9D' }}>  {translate("Receive notifications from customers")}</Text>
                                         {item.Images.split('|')[1] == 'true' ?
                                             <Ionicons style={{ fontSize: responsiveFontSize(4), textAlign: "right", color: "#a4d227" }} name="ios-notifications" />
                                             :
@@ -632,7 +608,7 @@ export default class PostedRoomHIstoryScreen extends React.Component {
                                         style={{ flex: 1, flexDirection: 'row', alignItems: 'center' }}
                                     >
                                         <Ionicons style={{ fontSize: 12, marginRight: 5 }} name="md-timer" />
-                                        <Text style={{ fontSize: responsiveFontSize(1.8), }}>Ngày hiệu lực</Text>
+                                        <Text style={{ fontSize: responsiveFontSize(1.8), }}>{translate("Effective date")}</Text>
                                     </View>
                                     <Text style={{ flex: 1, fontSize: responsiveFontSize(1.8), textAlign: 'center', color: '#9B9D9D' }}>{item.FromDate}</Text>
                                     <Text style={{ color: '#9B9D9D' }}> - </Text>
@@ -646,7 +622,7 @@ export default class PostedRoomHIstoryScreen extends React.Component {
                                             style={{ flex: 1, flexDirection: 'row', alignItems: 'center' }}
                                         >
                                             <Ionicons style={{ fontSize: 12, marginRight: 5 }} name="md-sunny" />
-                                            <Text style={{ fontSize: responsiveFontSize(1.8), }}>Ngày nổi bật</Text>
+                                            <Text style={{ fontSize: responsiveFontSize(1.8), }}>{translate("Highlight date")}</Text>
                                         </View>
                                         <Text style={{ flex: 1, fontSize: responsiveFontSize(1.8), textAlign: 'center', color: '#9B9D9D' }}>{item.HighlightFromDate}</Text>
                                         <Text style={{ color: '#9B9D9D' }}> - </Text>
@@ -666,16 +642,16 @@ export default class PostedRoomHIstoryScreen extends React.Component {
                                             }}
                                             onPress={() => {
                                                 Alert.alert(
-                                                    'Thông báo',
-                                                    'Bạn muốn đưa Tin lên đầu trang?',
+                                                    translate("Notice"),
+                                                    translate("Do you want to set top"),
                                                     [
                                                         {
-                                                            text: 'Hủy', onPress: () => {
+                                                            text: translate("Cancel"), onPress: () => {
                                                                 // this._deleteRoomBoxAsync(item);
                                                             }
                                                         },
                                                         {
-                                                            text: 'Đồng ý', onPress: () => {
+                                                            text: translate("Agree"), onPress: () => {
                                                                 this._setTopAsync(item.ID)
                                                             }
                                                         },
@@ -688,7 +664,7 @@ export default class PostedRoomHIstoryScreen extends React.Component {
                                             }}
                                         >
                                             <Ionicons style={{ fontSize: 12, marginRight: 5 }} name="md-arrow-round-up" />
-                                            <Text>Lên đầu</Text>
+                                            <Text>{translate("Set top")}</Text>
                                         </TouchableOpacity>
                                     }
                                     {/* Update Room */}
@@ -706,7 +682,7 @@ export default class PostedRoomHIstoryScreen extends React.Component {
                                         }}
                                     >
                                         <Ionicons style={{ fontSize: 12, marginRight: 5 }} name="md-build" />
-                                        <Text>Cập nhật</Text>
+                                        <Text>{translate("Updates")}</Text>
                                     </TouchableOpacity>
 
                                     {/* Delete Room */}
@@ -720,16 +696,16 @@ export default class PostedRoomHIstoryScreen extends React.Component {
 
 
                                             Alert.alert(
-                                                'Thông báo',
-                                                'Bạn chắc chắn xóa BĐS này?',
+                                                translate("Notice"),
+                                                translate("Are you sure to delete"),
                                                 [
                                                     {
-                                                        text: 'Hủy', onPress: () => {
+                                                        text: translate("Cancel"), onPress: () => {
                                                             // this._deleteRoomBoxAsync(item);
                                                         }
                                                     },
                                                     {
-                                                        text: 'Đồng ý', onPress: () => {
+                                                        text: translate("Agree"), onPress: () => {
                                                             this._deleteRoomBoxAsync(item);
                                                         }
                                                     },
@@ -741,7 +717,7 @@ export default class PostedRoomHIstoryScreen extends React.Component {
                                         }}
                                     >
                                         <Ionicons style={{ fontSize: 12, marginRight: 5 }} name="md-trash" />
-                                        <Text>Xóa</Text>
+                                        <Text>{translate("Delete")}</Text>
                                     </TouchableOpacity>
                                 </View>
                             </View>
