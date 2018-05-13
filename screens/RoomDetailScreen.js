@@ -36,6 +36,10 @@ import globalVariable from '../components/Global'
 import convertAmountToWording from '../api/convertAmountToWording'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import notifyNBLAsync from '../api/notifyNBLAsync';
+import enTranslation from '../components/en.json';
+import zhTranslation from '../components/zh.json';
+import viTranslation from '../components/vi.json';
+import { setLocalization, translate, Translate } from 'react-native-translate';
 
 var { height, width } = Dimensions.get('window');
 
@@ -126,8 +130,6 @@ export default class RoomDetailScreen extends React.Component {
         await this._getProfileFromStorageAsync();
 
         this._getCommentsAsync();
-
-        // alert(JSON.stringify(this.state.roomBox))
     }
 
 
@@ -150,8 +152,6 @@ export default class RoomDetailScreen extends React.Component {
             console.log(e);
         }
 
-        // alert(JSON.stringify(this.state.profile))
-        //alert(profile)
     }
 
     _getRoomCategoryFromStorageAsync = async () => {
@@ -173,8 +173,6 @@ export default class RoomDetailScreen extends React.Component {
             console.log(e);
         }
 
-        //alert(JSON.stringify(this.state.roomCategory))
-        //alert(profile)
     }
 
 
@@ -189,7 +187,6 @@ export default class RoomDetailScreen extends React.Component {
             starCount: rating
         });
 
-        // console.log(rating);
     }
 
 
@@ -240,14 +237,14 @@ export default class RoomDetailScreen extends React.Component {
         if (Platform.OS === 'android') {
 
             if (this.state.commentContent == '') {
-                ToastAndroid.showWithGravity('Vui lòng nhập nội dung Bình Luận', ToastAndroid.SHORT, ToastAndroid.TOP);
+                ToastAndroid.showWithGravity(translate("Please enter a comment"), ToastAndroid.SHORT, ToastAndroid.TOP);
                 return;
             }
         }
         else { // iOS
 
             if (this.state.commentContent == '') {
-                Alert.alert('Vui lòng nhập nội dung Bình Luận');
+                Alert.alert(translate("Please enter a comment"));
                 return;
             }
         }
@@ -281,10 +278,10 @@ export default class RoomDetailScreen extends React.Component {
 
                         this._getCommentsAsync();
                         if (Platform.OS === 'android') {
-                            ToastAndroid.showWithGravity('Bình luận thành công!', ToastAndroid.SHORT, ToastAndroid.TOP);
+                            ToastAndroid.showWithGravity(translate("Comment successfully"), ToastAndroid.SHORT, ToastAndroid.TOP);
                         }
                         else {
-                            Alert.alert('Thông báo', 'Bình luận thành công!');
+                            Alert.alert(translate("Notice"), translate("Comment successfully"));
                         }
 
                         if (this.state.isPushNotification == 'true') {
@@ -292,7 +289,7 @@ export default class RoomDetailScreen extends React.Component {
                             notifyNBLAsync(this.state.pushToken
                                 , { "screen": "RoomDetailScreen", "params": { "roomBoxID": this.state.roomBox.ID } } //{ ...roombox }
                                 , "default"
-                                , this.state.profile.FullName + " Bình Luận:"
+                                , this.state.profile.FullName + " " + translate("Comment") + ":"
                                 , this.state.commentContent
                             ); //pushToken, data, sound, title, body
                         }
@@ -304,10 +301,10 @@ export default class RoomDetailScreen extends React.Component {
                     }
                     else { //Post Error
                         if (Platform.OS === 'android') {
-                            ToastAndroid.showWithGravity('Lỗi ' + JSON.stringify(responseJson.ErrorCode) + ', vui lòng liên hệ Admin trong mục Giúp Đỡ!', ToastAndroid.SHORT, ToastAndroid.TOP);
+                            ToastAndroid.showWithGravity(translate("Error") + JSON.stringify(responseJson) + translate("Please contact Admin in the Help menu"), ToastAndroid.SHORT, ToastAndroid.TOP);
                         }
                         else {
-                            Alert.alert('Thông báo', 'Lỗi ' + JSON.stringify(responseJson.ErrorCode) + ', vui lòng liên hệ Admin trong mục Giúp Đỡ!');
+                            Alert.alert(translate("Notice"), translate("Error") + JSON.stringify(responseJson) + translate("Please contact Admin in the Help menu"));
                         }
                     }
 
@@ -386,11 +383,11 @@ export default class RoomDetailScreen extends React.Component {
                 .then((response) => response.json())
                 .then((responseJson) => {
 
-                    //this._saveStorageAsync('FO_Category_GetAllData', JSON.stringify(responseJson.obj))
+
                     this.setState({
                         comments: responseJson.obj
                     })
-                    //alert(JSON.stringify(responseJson.obj))
+
 
                 }).
                 catch((error) => { console.log(error) });
@@ -428,10 +425,17 @@ export default class RoomDetailScreen extends React.Component {
                         this.popupRating.dismiss();
 
                         if (Platform.OS === 'android') {
-                            ToastAndroid.showWithGravity('Cảm ơn bạn đã đánh giá!', ToastAndroid.SHORT, ToastAndroid.TOP);
+                            ToastAndroid.showWithGravity(translate("Thank you for rating"), ToastAndroid.SHORT, ToastAndroid.TOP);
                         }
                         else {
-                            Alert.alert('Thông báo', 'Cảm ơn bạn đã đánh giá!');
+                            Alert.alert(translate("Notice"), translate("Thank you for rating"));
+                        }
+                    } else {
+                        if (Platform.OS === 'android') {
+                            //ToastAndroid.showWithGravity(translate("Error") + JSON.stringify(responseJson) + translate("Please contact Admin in the Help menu"), ToastAndroid.SHORT, ToastAndroid.TOP);
+                        }
+                        else {
+                            //Alert.alert(translate("Notice"), translate("Error") + JSON.stringify(responseJson) + translate("Please contact Admin in the Help menu"));
                         }
                     }
 
@@ -473,23 +477,23 @@ export default class RoomDetailScreen extends React.Component {
                 .then((response) => response.json())
                 .then((responseJson) => {
 
-                    if (JSON.stringify(responseJson.ErrorCode) === "0") { // Rating successful
+                    if (JSON.stringify(responseJson.ErrorCode) === "0") { // Pinned successful
 
 
                         if (Platform.OS === 'android') {
-                            ToastAndroid.showWithGravity('Đánh dấu thành công!', ToastAndroid.SHORT, ToastAndroid.TOP);
+                            ToastAndroid.showWithGravity(translate("Mark successful"), ToastAndroid.SHORT, ToastAndroid.TOP);
                         }
                         else {
-                            Alert.alert('Thông báo', 'Đánh dấu thành công!');
+                            Alert.alert(translate("Notice"), translate("Mark successful"));
                         }
 
                     }
-                    else {
+                    else {// Error
                         if (Platform.OS === 'android') {
-                            ToastAndroid.showWithGravity('Lỗi ' + JSON.stringify(responseJson) + ', vui lòng liên hệ Admin trong mục Giúp Đỡ!', ToastAndroid.SHORT, ToastAndroid.TOP);
+                            ToastAndroid.showWithGravity(translate("Error") + JSON.stringify(responseJson) + translate("Please contact Admin in the Help menu"), ToastAndroid.SHORT, ToastAndroid.TOP);
                         }
                         else {
-                            Alert.alert('Thông báo', 'Lỗi ' + JSON.stringify(responseJson) + ', vui lòng liên hệ Admin trong mục Giúp Đỡ!');
+                            Alert.alert(translate("Notice"), translate("Error") + JSON.stringify(responseJson) + translate("Please contact Admin in the Help menu"));
                         }
                     }
 
@@ -551,11 +555,10 @@ export default class RoomDetailScreen extends React.Component {
                     }
                     else { //Post Error
                         if (Platform.OS === 'android') {
-                            //ToastAndroid.showWithGravity('Lỗi ' + JSON.stringify(responseJson) + ', vui lòng liên hệ Admin trong mục Giúp Đỡ!', ToastAndroid.SHORT, ToastAndroid.TOP);
+                            //ToastAndroid.showWithGravity(translate("Error") + JSON.stringify(responseJson) + translate("Please contact Admin in the Help menu"), ToastAndroid.SHORT, ToastAndroid.TOP);
                         }
                         else {
-                            this.setState({ modalReport: false })
-                            //Alert.alert('Thông báo', 'Lỗi ' + JSON.stringify(responseJson) + ', vui lòng liên hệ Admin trong mục Giúp Đỡ!');
+                            //Alert.alert(translate("Notice"), translate("Error") + JSON.stringify(responseJson) + translate("Please contact Admin in the Help menu"));
                         }
                     }
 
@@ -645,17 +648,17 @@ export default class RoomDetailScreen extends React.Component {
 
                                 if (!JSON.stringify(responseJson).match('error')) { // Post wall facebook successful!
                                     if (Platform.OS === 'android') {
-                                        ToastAndroid.showWithGravity('Đăng Tin Facebook thành công!', ToastAndroid.SHORT, ToastAndroid.TOP);
+                                        ToastAndroid.showWithGravity(translate("Post Facebook Successful"), ToastAndroid.SHORT, ToastAndroid.TOP);
                                     }
                                     else {
-                                        Alert.alert('Thông báo', 'Đăng Tin Facebook thành công!');
+                                        Alert.alert(translate("Notice"), translate("Post Facebook Successful"));
                                     }
                                 } else { // Error
                                     if (Platform.OS === 'android') {
-                                        ToastAndroid.showWithGravity('Lỗi ' + JSON.stringify(responseJson) + ', vui lòng liên hệ Admin trong mục Giúp Đỡ!', ToastAndroid.SHORT, ToastAndroid.TOP);
+                                        ToastAndroid.showWithGravity(translate("Error") + JSON.stringify(responseJson) + translate("Please contact Admin in the Help menu"), ToastAndroid.SHORT, ToastAndroid.TOP);
                                     }
                                     else {
-                                        Alert.alert('Thông báo', 'Lỗi ' + JSON.stringify(responseJson) + ', vui lòng liên hệ Admin trong mục Giúp Đỡ!');
+                                        Alert.alert(translate("Notice"), translate("Error") + JSON.stringify(responseJson) + translate("Please contact Admin in the Help menu"));
                                     }
                                 }
 
@@ -671,22 +674,22 @@ export default class RoomDetailScreen extends React.Component {
                 }
                 case 'cancel': {
                     Alert.alert(
-                        'Thông báo',
-                        'Huỷ đăng nhập Facebook',
+                        translate("Notice"),
+                        translate("Cancel Facebook login"),
                     );
                     break;
                 }
                 default: {
                     Alert.alert(
-                        'Thông báo',
-                        'Đăng nhập không thành công',
+                        translate("Notice"),
+                        translate("Login unsuccessful"),
                     );
                 }
             }
         } catch (e) {
             Alert.alert(
-                'Thông báo',
-                'Đăng nhập không thành công' + JSON.stringify(e),
+                translate("Notice"),
+                translate("Login unsuccessful") + JSON.stringify(e),
             );
         }
     };
@@ -729,7 +732,10 @@ export default class RoomDetailScreen extends React.Component {
                         }}>
                         <Ionicons style={{ fontSize: 28, color: '#fff', }} name='md-arrow-back'></Ionicons>
                     </TouchableOpacity>
-                    <Text style={{ marginLeft: 20, color: '#fff', fontSize: responsiveFontSize(2.2), justifyContent: 'center' }}>Chi tiết</Text>
+                    <Text style={{
+                        marginLeft: 20, color: '#fff',
+                        fontSize: responsiveFontSize(2.2), justifyContent: 'center'
+                    }}>{translate("Details")}</Text>
 
                     {/* Update in Room Detail */}
                     {/* {this.state.roomBox.CreatedBy == this.state.profile.ID &&
@@ -766,41 +772,41 @@ export default class RoomDetailScreen extends React.Component {
 
                             if (this.state.profile == null) {
                                 if (Platform.OS == 'ios') {
-                                    Alert.alert('Thông Báo', 'Bạn vui lòng đăng nhập')
+                                    Alert.alert(translate("Notice"), translate("Please login"))
                                 } else {
-                                    ToastAndroid.showWithGravity("Bạn vui lòng đăng nhập!", ToastAndroid.SHORT, ToastAndroid.TOP)
+                                    ToastAndroid.showWithGravity(translate("Please login"), ToastAndroid.SHORT, ToastAndroid.TOP)
                                 }
 
                             } else {
                                 Alert.alert(
-                                    'Thông báo',
-                                    'Bạn muốn gửi thông báo đến người Đăng Tin này?',
+                                    translate("Notice"),
+                                    translate("Do you want to send a message to this poster"),
                                     [
                                         {
-                                            text: 'Hủy', onPress: () => {
+                                            text: translate("Cancel"), onPress: () => {
 
                                             }
                                         },
                                         {
-                                            text: 'Đồng ý', onPress: () => {
+                                            text: translate("Agree"), onPress: () => {
                                                 //  roomBox.map((y) => {
                                                 // Notify Landlord 
                                                 if (this.state.roomBox.Images.split('|')[1] == 'true') {
                                                     notifyNBLAsync(this.state.roomBox.Images.split('|')[0]//globalVariable.ADMIN_PUSH_TOKEN
                                                         , { "screen": "RoomDetailScreen", "params": { "roomBoxID": this.state.roomBox.ID } } //{ ...roombox }
                                                         , "default"
-                                                        , this.state.profile.FullName + "-" + this.state.profile.UserName + " tìm kiếm:"
-                                                        , "Tin Đăng của bạn ở địa chỉ: " + this.state.roomBox.Address
+                                                        , this.state.profile.FullName + "-" + this.state.profile.UserName + " " + translate("Search") + ":"
+                                                        , translate("Your post at the address") + ": " + this.state.roomBox.Address
 
                                                     ); //pushToken, data, sound, title, body
                                                 }
                                                 // })
 
                                                 if (Platform.OS === 'android') {
-                                                    ToastAndroid.showWithGravity('Gửi thông báo thành công!', ToastAndroid.SHORT, ToastAndroid.TOP);
+                                                    ToastAndroid.showWithGravity(translate("Send message successfully"), ToastAndroid.SHORT, ToastAndroid.TOP);
                                                 }
                                                 else {
-                                                    Alert.alert('Thông báo', 'Gửi thông báo thành công!');
+                                                    Alert.alert(translate("Notice"), translate("Send message successfully"));
                                                 }
                                             }
                                         },
@@ -830,8 +836,7 @@ export default class RoomDetailScreen extends React.Component {
                     <View style={styles.cardAvatarBox}>
                         <TouchableOpacity
                             onPress={() => {
-                                //alert("item.title")
-                                {/* this.props.navigation.navigate('ProfileScreen'); */ }
+
                             }}
                         >
                             <Image
@@ -850,11 +855,7 @@ export default class RoomDetailScreen extends React.Component {
                             }}
                         >
                             <Ionicons style={styles.cardAvatarPhoneIcon} name='logo-whatsapp' />
-                            {/* <Text style={{
-                                color: '#7E7E7E',
-                                fontSize: responsiveFontSize(1.8),//13,
-                                paddingLeft: 8,
-                            }}>: {this.state.roomBox.ContactPhone}</Text> */}
+
 
                             <Text style={{
                                 color: '#7E7E7E',
@@ -1013,19 +1014,17 @@ fontSize: responsiveFontSize(1.8),
                             />
 
 
-                            <View style={{ flexDirection: 'row', paddingLeft: 20, paddingRight: 20, paddingTop: 5, paddingBottom: 5, marginTop: -50, backgroundColor: '#000', opacity: 0.6 }}>
-                                {/* <TextMask
-                                    style={{ flex: 1, color: '#fff', fontSize: 15 }}
-                                    value={this.state.roomBox.Price}
-                                    type={'money'}
-                                    options={{ suffixUnit: ' đ', precision: 0, unit: 'Giá:   ', separator: ' ' }}
-                                /> */}
+                            <View style={{
+                                flexDirection: 'row', paddingLeft: 20, paddingRight: 20,
+                                paddingTop: 5, paddingBottom: 5, marginTop: -50, backgroundColor: '#000', opacity: 0.6
+                            }}>
+
                                 <Text
                                     style={{
                                         flex: 1, color: '#fff', fontWeight: '300',
                                         fontSize: responsiveFontSize(1.7)
                                     }}>
-                                    Giá: {convertAmountToWording(numberWithCommas(this.state.roomBox.Price))}
+                                    {translate("Price")}: {convertAmountToWording(numberWithCommas(this.state.roomBox.Price))}
                                 </Text>
 
                                 {
@@ -1092,7 +1091,7 @@ fontSize: responsiveFontSize(1.8),
                                         fontSize: responsiveFontSize(1.4),//13,
                                         paddingLeft: 2,
                                         marginLeft: 3,
-                                    }}>Mã Tin: {this.state.roomBox.ID}</Text>
+                                    }}>{translate("RoomId")}: {this.state.roomBox.ID}</Text>
                                 </View>
                             </View>
 
@@ -1109,9 +1108,9 @@ fontSize: responsiveFontSize(1.8),
                                     onPress={async () => {
                                         if (this.state.profile === null) {
                                             if (Platform.OS == 'ios') {
-                                                Alert.alert('Thông Báo', 'Bạn vui lòng đăng nhập')
+                                                Alert.alert(translate("Notice"), translate("Please login"))
                                             } else {
-                                                ToastAndroid.showWithGravity("Bạn vui lòng đăng nhập!", ToastAndroid.SHORT, ToastAndroid.TOP)
+                                                ToastAndroid.showWithGravity(translate("Please login"), ToastAndroid.SHORT, ToastAndroid.TOP)
                                             }
                                         } else {
                                             await this.setState({
@@ -1154,9 +1153,9 @@ fontSize: responsiveFontSize(1.8),
                                     onPress={() => {
                                         if (this.state.profile === null) {
                                             if (Platform.OS == 'ios') {
-                                                Alert.alert('Thông Báo', 'Bạn vui lòng đăng nhập')
+                                                Alert.alert(translate("Notice"), translate("Please login"))
                                             } else {
-                                                ToastAndroid.showWithGravity("Bạn vui lòng đăng nhập!", ToastAndroid.SHORT, ToastAndroid.TOP)
+                                                ToastAndroid.showWithGravity(translate("Please login"), ToastAndroid.SHORT, ToastAndroid.TOP)
                                             }
                                         } else {
 
@@ -1184,18 +1183,18 @@ fontSize: responsiveFontSize(1.8),
                                     onPress={() => {
 
                                         Alert.alert(
-                                            'Thông báo',
-                                            'Bạn cần đăng nhập Facebook để đăng Tin này trên Timeline của bạn.  \nBạn muốn đăng nhập ngay?',
+                                            translate("Notice"),
+                                            translate("You need to login to Facebook to post this on your Timeline") + '.  \n' + translate("Do you want to login now"),
                                             [
                                                 {
-                                                    text: 'Hủy', onPress: () => {
+                                                    text: translate("Cancel"), onPress: () => {
 
                                                     }
                                                 },
                                                 {
-                                                    text: 'Đồng ý', onPress: () => {
+                                                    text: translate("Agree"), onPress: () => {
                                                         this._handleFacebookLogin(this.state.roomBox.Title, this.state.roomBox.Description
-                                                            + '\n\n\nCài đặt Ứng dụng Nhàbaola để biết thêm nhiều loại Bất Động Sản khác'
+                                                            + '\n\n\n' + translate("Install the Nhabaola Application for more Real Estate")
                                                             + '\n - iOS: https://itunes.apple.com/vn/app/nhabaola/id1287451307?mt=8'
                                                             + '\n - Android: ' + 'https://play.google.com/store/apps/details?id=vn.nhabaola.nhabaola')
                                                     }
@@ -1226,44 +1225,44 @@ fontSize: responsiveFontSize(1.8),
 
                                         if (Platform.OS == 'ios') {
                                             Share.share({
-                                                message: "*Chia Sẻ từ Ứng Dụng Nhà Bao La*"
-                                                    + "\n\nLiên hệ: " + _contactName
-                                                    + "\nĐiện thoại: " + _contactPhone
-                                                    + "\n\nLoại bất động sản: " + loadBDS
-                                                    + "\nGiá: " + this.state.roomBox.Price + " đồng"
-                                                    + "\nDiện tích: " + this.state.roomBox.Acreage + " mét vuông"
-                                                    + "\nĐịa chỉ: " + this.state.roomBox.Address + "\n\nMô tả:\n" + this.state.roomBox.Description
-                                                    + "\n\nCài đặt: "
+                                                message: translate("Share from Nhabaola application")
+                                                    + "\n\n" + translate("Contact") + ": " + _contactName
+                                                    + "\n" + translate("Cellphone") + ": " + _contactPhone
+                                                    + "\n\n" + translate("Type of real estate") + ": " + loadBDS
+                                                    + "\n" + translate("Price") + ": " + this.state.roomBox.Price + " đồng"
+                                                    + "\n" + translate("Area") + ": " + this.state.roomBox.Acreage + " " + translate("Square meters")
+                                                    + "\n" + translate("Address") + ": " + this.state.roomBox.Address + "\n\n" + translate("Description") + ":\n" + this.state.roomBox.Description
+                                                    + "\n\n" + translate("Installation") + ": "
                                                     + "\nAndroid: \nhttps://play.google.com/store/apps/details?id=vn.nhabaola.nhabaola"
                                                     + "\n\niOS: \nhttps://itunes.apple.com/vn/app/nhabaola/id1287451307?mt=8",
                                                 //url: 'https://itunes.apple.com/vn/app/nhabaola/id1287451307?mt=8',
-                                                title: '*Chia Sẻ từ Ứng Dụng Nhà Bao La*'
+                                                title: translate("Share from Nhabaola application")
                                             }, {
                                                     // Android only:
-                                                    dialogTitle: '*Chia Sẻ từ Ứng Dụng Nhà Bao La*',
+                                                    dialogTitle: translate("Share from Nhabaola application"),
                                                     // iOS only:
                                                     excludedActivityTypes: [
                                                         'http://nhabaola.vn'
                                                     ]
                                                 })
-                                        }
-                                        else { //Android
+                                        } else { //Android
+
                                             Share.share({
-                                                message: "*Chia Sẻ từ Ứng Dụng Nhà Bao La*"
-                                                    + "\n\nLiên hệ: " + _contactName
-                                                    + "\nĐiện thoại: " + _contactPhone
-                                                    + "\n\nLoại bất động sản: " + loadBDS
-                                                    + "\nGiá: " + this.state.roomBox.Price + " đồng"
-                                                    + "\nDiện tích: " + this.state.roomBox.Acreage + " mét vuông"
-                                                    + "\nĐịa chỉ: " + this.state.roomBox.Address + "\n\nMô tả:\n" + this.state.roomBox.Description
-                                                    + "\n\nCài đặt: "
+                                                message: translate("Share from Nhabaola application")
+                                                    + "\n\n" + translate("Contact") + ": " + _contactName
+                                                    + "\n" + translate("Cellphone") + ": " + _contactPhone
+                                                    + "\n\n" + translate("Type of real estate") + ": " + loadBDS
+                                                    + "\n" + translate("Price") + ": " + this.state.roomBox.Price + " đồng"
+                                                    + "\n" + translate("Area") + ": " + this.state.roomBox.Acreage + " " + translate("Square meters")
+                                                    + "\n" + translate("Address") + ": " + this.state.roomBox.Address + "\n\n" + translate("Description") + ":\n" + this.state.roomBox.Description
+                                                    + "\n\n" + translate("Installation") + ": "
                                                     + "\niOS: \nhttps://itunes.apple.com/vn/app/nhabaola/id1287451307?mt=8"
                                                     + "\n\nAndroid: \nhttps://play.google.com/store/apps/details?id=vn.nhabaola.nhabaola",
                                                 url: 'https://play.google.com/store/apps/details?id=vn.nhabaola.nhabaola',
-                                                title: '*Chia Sẻ từ Ứng Dụng Nhà Bao La*'
+                                                title: translate("Share from Nhabaola application")
                                             }, {
                                                     // Android only:
-                                                    dialogTitle: '*Chia Sẻ từ Ứng Dụng Nhà Bao La*',
+                                                    dialogTitle: translate("Share from Nhabaola application"),
                                                     // iOS only:
                                                     excludedActivityTypes: [
                                                         'http://nhabaola.vn'
@@ -1278,14 +1277,12 @@ fontSize: responsiveFontSize(1.8),
                                     onPress={async () => {
                                         if (this.state.profile === null) {
                                             if (Platform.OS == 'ios') {
-                                                Alert.alert('Thông Báo', 'Bạn vui lòng đăng nhập')
+                                                Alert.alert(translate("Notice"), translate("Please login"))
                                             } else {
-                                                ToastAndroid.showWithGravity("Bạn vui lòng đăng nhập!", ToastAndroid.SHORT, ToastAndroid.TOP)
+                                                ToastAndroid.showWithGravity(translate("Please login"), ToastAndroid.SHORT, ToastAndroid.TOP)
                                             }
                                         } else {
-                                            {/* await this.setState({
-                                                reportRoomId: item.ID,
-                                            }) */}
+
 
                                             if (Platform.OS == 'ios') {
                                                 this.setState({ modalReport: true })
@@ -1306,7 +1303,7 @@ fontSize: responsiveFontSize(1.8),
 
 
                     <View style={styles.cardMapViewBox}>
-                        <Text style={{ marginBottom: 5 }}>Địa chỉ:  {this.state.roomBox.Address}</Text>
+                        <Text style={{ marginBottom: 5 }}>{translate("Address")}:  {this.state.roomBox.Address}</Text>
                         <TouchableOpacity
                             style={{
                                 position: 'absolute', bottom: 25, left: 25, zIndex: 10,
@@ -1334,7 +1331,10 @@ fontSize: responsiveFontSize(1.8),
                                 getDirections(data)
                             }}
                         >
-                            <Ionicons style={{ color: '#fff', fontSize: responsiveFontSize(1.5) }} name='md-return-right' > Tìm đường</Ionicons>
+                            <Ionicons style={{
+                                color: '#fff',
+                                fontSize: responsiveFontSize(1.5)
+                            }} name='md-return-right' > {translate("Find the way")}</Ionicons>
                         </TouchableOpacity>
 
                         <MapView
@@ -1357,9 +1357,7 @@ fontSize: responsiveFontSize(1.8),
                         </MapView>
                     </View>
 
-                    {/* <View style={styles.cardCommentBar}>
-                    <Text style={styles.cardCommentBarText}>Bình luận</Text>
-                </View> */}
+
 
                     {/* COMMENTS */}
                     <KeyboardAvoidingView behavior={Platform.OS == 'ios' ? 'height' : 'padding'} >
@@ -1399,7 +1397,7 @@ fontSize: responsiveFontSize(1.8),
                                     this._postCommentsAsync();
                                 }}
 
-                                placeholder='Bình luận'
+                                placeholder={translate("Comment")}
                                 underlineColorAndroid='transparent'
                                 value={this.state.commentContent}
                                 onChangeText={(commentContent) => this.setState({ commentContent })}
@@ -1409,60 +1407,10 @@ fontSize: responsiveFontSize(1.8),
                                     this._postCommentsAsync();
                                 }}
                             >
-                                <Text style={styles.cardCommentSubmitText}>Gửi</Text>
+                                <Text style={styles.cardCommentSubmitText}>{translate("Send")}</Text>
                             </TouchableOpacity>
                         </View>
-                        {/* {Platform.OS == 'android' &&
-                            <View style={{
-                                flex: 1,
-                                flexDirection: 'row',
-                                height: 0,
-                                paddingTop: 20, paddingRight: 20, paddingLeft: 20,
-                                marginTop: 50,
-                            }}>
-                                <TextInput
-                                    style={{
-                                        flex: 3,
-                                        borderWidth: 0.8,
-                                        borderColor: '#a4d227',
-                                        height: 40,
-                                        padding: 5,
-                                        borderRadius: 5,
-                                    }}
-                                    ref='commentInput2'
-                                    returnKeyType={"done"}
-                                    onFocus={(event) => {
-                                        this._scrollToInput(event.target)
 
-                                        // if (Platform.OS == 'ios') {
-                                        //     this._scrollToInput(event.target)
-                                        // }
-                                        // else {
-                                        //     this.scroll.props.scrollToEnd()
-                                        // }
-
-                                        //this.scroll.props.scrollToPosition(20, 20)
-                                        // this._scrollToInput(event.target)
-
-                                    }}
-                                    onSubmitEditing={(event) => {
-                                        this._postCommentsAsync();
-                                    }}
-
-                                    placeholder='Bình luận'
-                                    underlineColorAndroid='transparent'
-                                    value={this.state.commentContent}
-                                    onChangeText={(commentContent) => this.setState({ commentContent })}
-                                ></TextInput>
-                                <TouchableOpacity style={styles.cardCommentSubmit}
-                                    onPress={async () => {
-                                        this._postCommentsAsync();
-                                    }}
-                                >
-                                    <Text style={styles.cardCommentSubmitText}>Gửi</Text>
-                                </TouchableOpacity>
-                            </View>
-                        } */}
                     </KeyboardAvoidingView>
 
 
@@ -1558,14 +1506,14 @@ fontSize: responsiveFontSize(1.8),
                 <PopupDialog
                     ref={(popupReportNBL) => { this.popupReportNBL = popupReportNBL; }}
                     dialogAnimation={new ScaleAnimation()}
-                    dialogTitle={<DialogTitle title="Báo cáo Nhà Bao La" titleStyle={{}} titleTextStyle={{ color: '#73aa2a' }} />}
+                    dialogTitle={<DialogTitle title={translate("Violation report")} titleStyle={{}} titleTextStyle={{ color: '#73aa2a' }} />}
                     dismissOnTouchOutside={false}
                     dialogStyle={{ marginBottom: 100, width: width * 0.9 }}
 
                 >
                     <View>
                         <CheckBox
-                            title='Không đúng địa chỉ'
+                            title={translate("Address is not correct")}
                             checked={this.state.reportAddress}
                             onPress={() => {
                                 this.setState({
@@ -1574,7 +1522,7 @@ fontSize: responsiveFontSize(1.8),
                             }}
                         />
                         <CheckBox
-                            title='Không gọi được'
+                            title={translate("Cannot contact")}
                             checked={this.state.reportCall}
                             onPress={() => {
                                 this.setState({
@@ -1583,7 +1531,7 @@ fontSize: responsiveFontSize(1.8),
                             }}
                         />
                         <CheckBox
-                            title='Nhà đã cho thuê'
+                            title={translate("The house has been rented")}
                             checked={this.state.reportHouse}
                             onPress={() => {
                                 this.setState({
@@ -1594,8 +1542,6 @@ fontSize: responsiveFontSize(1.8),
 
                         {/* Button */}
                         <View style={{ height: 80, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', paddingBottom: 20, }}>
-                            {/* <View style={{ height: 80, flexDirection: 'row', marginBottom: 15, }}> */}
-
 
                             <Button
                                 buttonStyle={{ backgroundColor: '#9B9D9D', padding: 15, borderRadius: 10 }}
@@ -1608,12 +1554,12 @@ fontSize: responsiveFontSize(1.8),
                                         reportHouse: false,
                                     })
                                 }}
-                                title='Hủy' />
+                                title={translate("Notice")} />
 
                             <Button
                                 buttonStyle={{ backgroundColor: '#73aa2a', padding: 15, borderRadius: 10 }}
                                 icon={{ name: 'md-cloud-upload', type: 'ionicon' }}
-                                title='Gửi'
+                                title={translate("Send")}
                                 onPress={() => {
 
 
@@ -1627,14 +1573,14 @@ fontSize: responsiveFontSize(1.8),
                                         this._reportNBLAsync(5, this.state.roomBox.ID)
                                     }
 
-                                    ToastAndroid.showWithGravity('Cảm ơn bạn đã báo cáo chúng tôi!', ToastAndroid.SHORT, ToastAndroid.TOP);
+                                    ToastAndroid.showWithGravity(translate("Thanks your for reporting to Nhabaola"), ToastAndroid.SHORT, ToastAndroid.TOP);
 
                                     // Notify Admin 
                                     notifyNBLAsync(globalVariable.ADMIN_PUSH_TOKEN
                                         , { "screen": "RoomDetailScreen", "params": { "roomBoxID": this.state.roomBox.ID } } //{ ...roombox }
                                         , "default"
-                                        , this.state.profile.FullName + " phàn nàn:"
-                                        , "Không đúng địa chỉ hoặc Không gọi được hoặc Nhà đã cho thuê"
+                                        , this.state.profile.FullName + " " + translate("Complaint") + ":"
+                                        , translate("Inaccurate Address or Not Called or Leased House")
                                     ); //pushToken, data, sound, title, body
 
                                 }}
@@ -1669,7 +1615,7 @@ fontSize: responsiveFontSize(1.8),
                         style={{ marginTop: 70 }}
                     >
                         <CheckBox
-                            title='Không đúng địa chỉ'
+                            title={translate("Address is not correct")}
                             checked={this.state.reportAddress}
                             onPress={() => {
                                 this.setState({
@@ -1678,7 +1624,7 @@ fontSize: responsiveFontSize(1.8),
                             }}
                         />
                         <CheckBox
-                            title='Không gọi được'
+                            title={translate("Cannot contact")}
                             checked={this.state.reportCall}
                             onPress={() => {
                                 this.setState({
@@ -1687,7 +1633,7 @@ fontSize: responsiveFontSize(1.8),
                             }}
                         />
                         <CheckBox
-                            title='Nhà đã cho thuê'
+                            title={translate("The house has been rented")}
                             checked={this.state.reportHouse}
                             onPress={() => {
                                 this.setState({
@@ -1698,8 +1644,6 @@ fontSize: responsiveFontSize(1.8),
 
                         {/* Button */}
                         <View style={{ height: 80, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', paddingBottom: 20, }}>
-                            {/* <View style={{ height: 80, flexDirection: 'row', marginBottom: 15, }}> */}
-
 
                             <Button
                                 buttonStyle={{ backgroundColor: '#9B9D9D', padding: 15, borderRadius: 10 }}
@@ -1714,12 +1658,12 @@ fontSize: responsiveFontSize(1.8),
                                         modalLoading: false,
                                     })
                                 }}
-                                title='Hủy' />
+                                title={translate("Cancel")} />
 
                             <Button
                                 buttonStyle={{ backgroundColor: '#73aa2a', padding: 15, borderRadius: 10 }}
                                 icon={{ name: 'md-cloud-upload', type: 'ionicon' }}
-                                title='Gửi'
+                                title={translate("Send")}
                                 onPress={() => {
 
 
@@ -1734,14 +1678,14 @@ fontSize: responsiveFontSize(1.8),
                                         this._reportNBLAsync(5, this.state.roomBox.ID)
                                     }
 
-                                    Alert.alert('Thông báo', 'Cảm ơn bạn đã báo cáo chúng tôi!');
+                                    Alert.alert(translate("Notice"), translate("Thanks your for reporting to Nhabaola"));
 
                                     // Notify Admin 
                                     notifyNBLAsync(globalVariable.ADMIN_PUSH_TOKEN
                                         , { "screen": "RoomDetailScreen", "params": { "roomBoxID": this.state.roomBox.ID } } //{ ...roombox }
                                         , "default"
-                                        , this.state.profile.FullName + " phàn nàn:"
-                                        , "Không đúng địa chỉ hoặc Không gọi được hoặc Nhà đã cho thuê"
+                                        , this.state.profile.FullName + " " + translate("Complaint") + ":"
+                                        , translate("Inaccurate Address or Not Called or Leased House")
                                     ); //pushToken, data, sound, title, body
 
                                 }}

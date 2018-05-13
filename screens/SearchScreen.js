@@ -38,6 +38,10 @@ import globalVariable from '../components/Global'
 import SimplePicker from 'react-native-simple-picker';
 import notifyNBLAsync from '../api/notifyNBLAsync';
 import saveStorageAsync from '../components/saveStorageAsync';
+import enTranslation from '../components/en.json';
+import zhTranslation from '../components/zh.json';
+import viTranslation from '../components/vi.json';
+import { setLocalization, translate, Translate } from 'react-native-translate';
 
 var { height, width } = Dimensions.get('window');
 
@@ -248,7 +252,7 @@ export default class SearchScreen extends React.Component {
         super(props);
         this.state = {
             mapRegion: null,//{ latitude: LATITUDE, longitude: LONGITUDE, latitudeDelta: LATITUDE_DELTA, longitudeDelta: LONGITUDE_DELTA },
-            //searchResultData: users,
+
             modalSearchFilterVisible: false,
             age: 18,
             hackHeight: height,
@@ -267,17 +271,17 @@ export default class SearchScreen extends React.Component {
             maxPrice: '999999999999',
             unitPrice: '000000',
             unitPriceLable: '',
-            unitPriceSuffixLable: 'triệu',
+            unitPriceSuffixLable: translate("million"),
             minAcreage: '0',
             maxAcreage: '500000',
             unitAcreage: '0',
             unitAcreageLable: '',
-            unitAcreageSuffixLable: 'chục mét vuông',
+            unitAcreageSuffixLable: translate("Tens of square meters"),
             multiSliderPriceValue: [0, 10],
             multiSliderAreaValue: [0, 10],
             txtFilterResult: null,
-            selectedBDS: 'Tất cả BĐS',
-            iosSelectedCategory: 'Tất cả BĐS',
+            selectedBDS: translate("All real estate"),
+            iosSelectedCategory: translate("All real estate"),
 
             // Searhing address
             searchingMaker: null,
@@ -357,10 +361,6 @@ export default class SearchScreen extends React.Component {
         this.setState({ mapRegion });
     };
 
-    // _moveToRoomDetail = (user) => {
-    //     this.props.navigation.navigate('RoomDetailScreen', { ...user });
-    // };
-
 
     _dropdown_onSelect(idx, value) {
         // BUG: alert in a modal will auto dismiss and causes crash after reload and touch. @sohobloo 2016-12-1
@@ -402,8 +402,8 @@ export default class SearchScreen extends React.Component {
 
         if (provider.locationServicesEnabled === false) {
             Alert.alert(
-                'Thông báo',
-                'Bạn vui lòng kích hoạt Location Service',
+                translate("Notice"),
+                translate("Please enable Location Service"),
             );
 
             return;
@@ -441,7 +441,7 @@ export default class SearchScreen extends React.Component {
     _getPermissionLOCATION = async () => {
         let { status } = await Permissions.askAsync(Permissions.LOCATION);
         if (status !== 'granted') {
-            Alert.alert("Thông báo", "Quyền truy cập Vị Trí của bạn bị từ chối")
+            Alert.alert(translate("Notice"), translate("Access to your Location is denied"))
         }
 
     }
@@ -449,7 +449,7 @@ export default class SearchScreen extends React.Component {
     _getPermissionCAMERA = async () => {
         let { status } = await Permissions.askAsync(Permissions.CAMERA);
         if (status !== 'granted') {
-            Alert.alert("Thông báo", "Quyền truy cập CAMERA bị từ chối")
+            Alert.alert(translate("Notice"), translate("CAMERA access is denied"))
         }
 
     }
@@ -458,7 +458,7 @@ export default class SearchScreen extends React.Component {
 
         let { status } = await Permissions.askAsync(Permissions.CAMERA_ROLL);
         if (status !== 'granted') {
-            Alert.alert("Thông báo", "Quyền truy cập CAMERA_ROLL bị từ chối")
+            Alert.alert(translate("Notice"), translate("CAMERA_ROLL access is denied"))
 
         }
     }
@@ -469,7 +469,7 @@ export default class SearchScreen extends React.Component {
 
         // Stop here if the user did not grant permissions
         if (status !== 'granted') {
-            Alert.alert("Thông báo", "Quyền được nhận Thông Báo từ Nhàbaola bị từ chối")
+            Alert.alert(translate("Notice"), translate("The right to receive notice from Nhabaola is denied"))
         } else {
             globalVariable.PHONE_TOKEN = await Notifications.getExpoPushTokenAsync();
         }
@@ -478,9 +478,7 @@ export default class SearchScreen extends React.Component {
 
 
     _dropdownFilter_onSelect(idx, value) {
-        // BUG: alert in a modal will auto dismiss and causes crash after reload and touch. @sohobloo 2016-12-1
-        //alert(`idx=${idx}, value='${value}'`);
-        //console.debug(`idx=${idx}, value='${value}'`);
+
         this.setState({
             selectedBDS: value,
         })
@@ -498,14 +496,14 @@ export default class SearchScreen extends React.Component {
             this.setState({
                 minPrice: this.state.multiSliderPriceValue[0] + this.state.unitPrice,
                 maxPrice: '999999999999',
-                unitPriceLable: ', Lớn hơn ' + this.state.multiSliderPriceValue[0] + ' ' + this.state.unitPriceSuffixLable,
+                unitPriceLable: ', ' + translate("Greater than") + ' ' + this.state.multiSliderPriceValue[0] + ' ' + this.state.unitPriceSuffixLable,
             })
         }
         else if (this.state.multiSliderPriceValue[0] == 0 && this.state.multiSliderPriceValue[1] < 10) {
             this.setState({
                 minPrice: '0',
                 maxPrice: this.state.multiSliderPriceValue[1] + this.state.unitPrice,
-                unitPriceLable: ', Nhỏ hơn ' + this.state.multiSliderPriceValue[1] + ' ' + this.state.unitPriceSuffixLable,
+                unitPriceLable: ', ' + translate("Less than") + ' ' + this.state.multiSliderPriceValue[1] + ' ' + this.state.unitPriceSuffixLable,
             })
         }
         else {
@@ -529,14 +527,14 @@ export default class SearchScreen extends React.Component {
             this.setState({
                 minAcreage: this.state.multiSliderAreaValue[0] + this.state.unitAcreage,
                 maxAcreage: '500000',
-                unitAcreageLable: ', Lớn hơn ' + this.state.multiSliderAreaValue[0] + ' ' + this.state.unitAcreageSuffixLable,
+                unitAcreageLable: ', ' + translate("Greater than") + ' ' + this.state.multiSliderAreaValue[0] + ' ' + this.state.unitAcreageSuffixLable,
             })
         }
         else if (this.state.multiSliderAreaValue[0] == 0 && this.state.multiSliderAreaValue[1] < 10) {
             this.setState({
                 minAcreage: '0',
                 maxAcreage: this.state.multiSliderAreaValue[1] + this.state.unitAcreage,
-                unitAcreageLable: ', Nhỏ hơn ' + this.state.multiSliderAreaValue[1] + ' ' + this.state.unitAcreageSuffixLable,
+                unitAcreageLable: ', ' + translate("Less than") + ' ' + this.state.multiSliderAreaValue[1] + ' ' + this.state.unitAcreageSuffixLable,
             })
         }
         else {
@@ -638,11 +636,6 @@ export default class SearchScreen extends React.Component {
 
                         MARKERS.push(this.state.houseCoords)
                     })
-
-                    //alert(JSON.stringify(roomBox))
-
-                    // this.popupLoadingIndicator.dismiss();
-                    // this.setState({ refresh: false })
                     this.setState({ searchLoading: false })
                 }).
                 catch((error) => { console.log(error) });
@@ -691,18 +684,6 @@ export default class SearchScreen extends React.Component {
         return prev.item !== next.item;
     }
 
-    // _renderPriceFilter = async () => {
-    //     let result = '';
-
-    //     this.state.multiSliderPriceValue[0] == 0 && this.state.multiSliderPriceValue[1] == 10
-    //     ?
-    //     <Text style={{ flex: 2, marginBottom: 15, marginTop: 20, marginLeft: 20 }}>Tất cả </Text>
-    //     : this.state.multiSliderPriceValue[0] > 0 && this.state.multiSliderPriceValue[1] == 10
-    //         ? <Text style={{ flex: 2, marginBottom: 15, marginTop: 20, marginLeft: 20 }}>Lớn hơn  {this.state.multiSliderPriceValue[0]}</Text>
-    //         : this.state.multiSliderPriceValue[0] == 0 && this.state.multiSliderPriceValue[1] < 10
-    //             ? <Text style={{ flex: 2, marginBottom: 15, marginTop: 20, marginLeft: 20 }}>Nhỏ hơn  {this.state.multiSliderPriceValue[1]}</Text>
-    //             : <Text style={{ flex: 2, marginBottom: 15, marginTop: 20, marginLeft: 20 }}>{this.state.multiSliderPriceValue[0]} đến {this.state.multiSliderPriceValue[1]}</Text>
-    // }
 
     _getProfileFromStorageAsync = async () => {
         try {
@@ -730,9 +711,9 @@ export default class SearchScreen extends React.Component {
 
         let currentMaker = null;
         if (this.state.errorMessage) {
-            //text = this.state.errorMessage;
+
         } else if (this.state.location) {
-            // text = JSON.stringify(this.state.location.coords);
+
             currentMaker = {
                 latitude: this.state.location.coords.latitude,
                 longitude: this.state.location.coords.longitude
@@ -803,15 +784,13 @@ export default class SearchScreen extends React.Component {
                     shadowRadius: 2,
 
                 }}>
-                    <Text style={{ width: 30, paddingLeft: Platform.OS == 'ios' ? 0 : 5 }}>BK: </Text>
+                    <Text style={{ width: 30, paddingLeft: Platform.OS == 'ios' ? 0 : 5 }}>{translate("Radius")}: </Text>
                     {Platform.OS === 'ios' ?
 
                         <TouchableOpacity
                             style={{ padding: 5 }}
                             onPress={() => {
-                                // this.setState({
-                                //     modalRadius: true
-                                // })
+
 
                                 this.refs.pickerRadius.show();
                             }}
@@ -822,7 +801,7 @@ export default class SearchScreen extends React.Component {
                         :
                         <Picker // Android
                             style={{
-                                //flex: 2,
+
                                 width: 110,
                             }}
                             mode='dropdown'
@@ -854,8 +833,8 @@ export default class SearchScreen extends React.Component {
                     ref={'pickerRadius'}
                     options={['2', '4', '6', '8', '10', '12', '14', '16', '18', '20', '30', '40', '50']}
                     labels={['2 km', '4 km', '6 km', '8 km', '10 km', '12 km', '14 km', '16 km', '18 km', '20 km', '30 km', '40 km', '50 km']}
-                    confirmText='Đồng ý'
-                    cancelText='Hủy'
+                    confirmText={translate("Agree")}
+                    cancelText={translate("Cancel")}
                     itemStyle={{
                         fontSize: 25,
                         color: '#73aa2a',
@@ -867,46 +846,6 @@ export default class SearchScreen extends React.Component {
                         this._getRoomByFilter();
                     }}
                 />
-
-                {/* Filter */}
-                {/* <View style={{
-                    flexDirection: 'row',
-                    position: 'absolute',
-                    top: 70,
-                    zIndex: 10,
-                    backgroundColor: '#fff',
-                    borderRadius: 10,
-                    padding: 10,
-                    width: this.state.txtFilterResult !== null ? width * 0.8 : width * 0.3,
-                }}>
-                    <Text >Bộ lọc: </Text>
-                    <TouchableOpacity
-                        style={{}}
-                        onPress={() => this.setState({ modalSearchFilterVisible: true })}
-                    >
-                        {this.state.txtFilterResult
-                            ? <Text style={{ color: '#73aa2a', width: width * 0.8 }}>{this.state.txtFilterResult}</Text>
-                            : <Ionicons style={styles.searchFilterIcon} name='ios-funnel'></Ionicons>
-                        }
-
-                    </TouchableOpacity>
-
-                </View> */}
-
-
-                {/* Search location  */}
-
-
-                {/* 
-                <SocialIcon
-                    style={{
-                       position: 'absolute', top: 100, zIndex: 10, right: 15,
-                    }}
-                    button
-                    light
-                    type='instagram'
-                /> */}
-
 
 
                 {/* Filter */}
@@ -951,42 +890,42 @@ export default class SearchScreen extends React.Component {
 
                         if (this.state.profile == null) {
                             if (Platform.OS == 'ios') {
-                                Alert.alert('Thông Báo', 'Bạn vui lòng đăng nhập')
+                                Alert.alert(translate("Notice"), translate("Please login"))
                             } else {
-                                ToastAndroid.showWithGravity("Bạn vui lòng đăng nhập!", ToastAndroid.SHORT, ToastAndroid.TOP)
+                                ToastAndroid.showWithGravity(translate("Please login"), ToastAndroid.SHORT, ToastAndroid.TOP)
                             }
 
                         } else {
                             Alert.alert(
-                                'Thông báo',
-                                'Bạn muốn gửi thông báo đến tất cả người Đăng Tin tìm kiếm được trên Bản Đồ?',
+                                translate("Notice"),
+                                translate("Do you want to send a message to all Search Posters on the Map"),
                                 [
                                     {
-                                        text: 'Hủy', onPress: () => {
+                                        text: translate("Cancel"), onPress: () => {
 
                                         }
                                     },
                                     {
-                                        text: 'Đồng ý', onPress: () => {
+                                        text: translate("Agree"), onPress: () => {
                                             roomBox.map((y) => {
                                                 // Notify Landlord 
                                                 if (y.Images.split('|')[1] == 'true') {
                                                     notifyNBLAsync(y.Images.split('|')[0]//globalVariable.ADMIN_PUSH_TOKEN
                                                         , { "screen": "RoomDetailScreen", "params": { "roomBoxID": y.ID } } //{ ...roombox }
                                                         , "default"
-                                                        , this.state.profile.FullName + "-" + this.state.profile.UserName + " tìm kiếm:"
+                                                        , this.state.profile.FullName + "-" + this.state.profile.UserName + " " + translate("Search") + ":"
                                                         , this.state.txtFilterResult
-                                                        + ", bán kính trong vòng " + this.state.radius + " km từ vị trí người tìm, trong đó có Tin Đăng của bạn ở địa chỉ: "
+                                                        + ", " + translate("Radius within") + " " + this.state.radius + " " + translate("km from the searcher's location, including your post at the address") + ": "
                                                         + y.Address
                                                     ); //pushToken, data, sound, title, body
                                                 }
                                             })
 
                                             if (Platform.OS === 'android') {
-                                                ToastAndroid.showWithGravity('Gửi thông báo thành công!', ToastAndroid.SHORT, ToastAndroid.TOP);
+                                                ToastAndroid.showWithGravity(translate("Send message successfully"), ToastAndroid.SHORT, ToastAndroid.TOP);
                                             }
                                             else {
-                                                Alert.alert('Thông báo', 'Gửi thông báo thành công!');
+                                                Alert.alert(translate("Notice"), translate("Send message successfully"));
                                             }
                                         }
                                     },
@@ -1099,7 +1038,7 @@ export default class SearchScreen extends React.Component {
 
                             <MapView.Marker
                                 coordinate={currentMaker}
-                                title='Vị trí của tôi'
+                                title={translate("My location")}
                             //description='Home'
                             /* image={require('../images/nbl-here-icon.png')} */
 
@@ -1126,7 +1065,7 @@ export default class SearchScreen extends React.Component {
                             ?
                             <MapView.Marker
                                 coordinate={this.state.searchingMaker}
-                                title='Vị trí tìm kiếm'
+                                title={translate("Search location")}
                             //description='Home'
                             >
 
@@ -1397,7 +1336,7 @@ export default class SearchScreen extends React.Component {
                         <Text style={{
                             color: '#73aa2a', paddingBottom: 4,
                             fontSize: responsiveFontSize(2)
-                        }}>Tìm được {roomBox.length} Nhà</Text>
+                        }}>{translate("Finding")} {roomBox.length}</Text>
                         <FlatList
                             //onScroll={this._onScroll}
                             // ref='searchresult'
@@ -1502,20 +1441,15 @@ export default class SearchScreen extends React.Component {
                                                         padding: 4, borderRadius: 5, backgroundColor: '#73aa2a',
                                                         marginTop: 3, marginBottom: 2, elevation: 2,
 
-                                                    }} name='md-return-right' >  Đi</Ionicons>
-                                                    {/* <Text style={{ color: '#fff', fontSize: responsiveFontSize(1.5) }}>Tìm đường</Text> */}
+                                                    }} name='md-return-right' >  {translate("Go")}</Ionicons>
+
                                                 </TouchableOpacity>
 
 
                                             </View>
 
                                             <View style={styles.searchCardPriceBox}>
-                                                {/* <TextMask
-                                                        style={{ flex: 2, }}
-                                                        value={item.Price}
-                                                        type={'money'}
-                                                        options={{ suffixUnit: ' đ', precision: 0, unit: ' ', separator: ' ' }}
-                                                    /> */}
+
 
                                                 <Text style={{ flex: 1, fontSize: responsiveFontSize(1.8) }}>{convertAmountToWording(item.Price)}</Text>
                                                 <View style={{ flex: 1, flexDirection: 'row', }}>
@@ -1564,16 +1498,14 @@ export default class SearchScreen extends React.Component {
                         <View style={{ flex: 1, marginTop: 30, padding: 10, }}>
                             <View style={{ flex: 1, }}>
 
-                                <FormLabel>Loại bất động sản:</FormLabel>
+                                <FormLabel>{translate("Type of real estate")}:</FormLabel>
                                 <View style={{ flexDirection: 'row', marginBottom: 30, }}>
 
                                     {Platform.OS == 'ios' ?
 
                                         <TouchableOpacity
                                             onPress={() => {
-                                                // this.setState({
-                                                //     modalRadius: true
-                                                // })
+
 
                                                 this.refs.pickerCategory.show();
                                             }}
@@ -1591,7 +1523,7 @@ export default class SearchScreen extends React.Component {
                                             onValueChange={(itemValue, itemIndex) => {
                                                 this.setState({ selectedCategory: itemValue })
                                             }}>
-                                            <Picker.Item label='-- Tất cả --' value='' />
+                                            <Picker.Item label={translate("All real estate")} value='' />
 
 
                                             {this.state.roomCategory.map((y, i) => {
@@ -1607,8 +1539,8 @@ export default class SearchScreen extends React.Component {
                                         ref={'pickerCategory'}
                                         options={this.state.roomCategory.map((y, i) => y.ID)}
                                         labels={this.state.roomCategory.map((y, i) => y.CatName)}
-                                        confirmText='Đồng ý'
-                                        cancelText='Hủy'
+                                        confirmText={translate("Agree")}
+                                        cancelText={translate("Cancel")}
                                         itemStyle={{
                                             fontSize: 25,
                                             color: '#73aa2a',
@@ -1631,7 +1563,7 @@ export default class SearchScreen extends React.Component {
                                 </View>
 
                                 {/* Price */}
-                                <FormLabel style={{}}>Giá: </FormLabel>
+                                <FormLabel style={{}}>{translate("Price")}: </FormLabel>
                                 <View style={{ justifyContent: 'center', alignItems: 'center', }}>
                                     <View
                                         style={{
@@ -1644,12 +1576,12 @@ export default class SearchScreen extends React.Component {
                                         {
                                             this.state.multiSliderPriceValue[0] == 0 && this.state.multiSliderPriceValue[1] == 10
                                                 ?
-                                                <Text style={{ flex: 2, marginBottom: 15, marginTop: 20, marginLeft: 20 }}>Tất cả </Text>
+                                                <Text style={{ flex: 2, marginBottom: 15, marginTop: 20, marginLeft: 20 }}>{translate("All")} </Text>
                                                 : this.state.multiSliderPriceValue[0] > 0 && this.state.multiSliderPriceValue[1] == 10
-                                                    ? <Text style={{ flex: 2, marginBottom: 15, marginTop: 20, marginLeft: 20 }}>Lớn hơn  {this.state.multiSliderPriceValue[0]}</Text>
+                                                    ? <Text style={{ flex: 2, marginBottom: 15, marginTop: 20, marginLeft: 20 }}>{translate("Greater than")} {this.state.multiSliderPriceValue[0]}</Text>
                                                     : this.state.multiSliderPriceValue[0] == 0 && this.state.multiSliderPriceValue[1] < 10
-                                                        ? <Text style={{ flex: 2, marginBottom: 15, marginTop: 20, marginLeft: 20 }}>Nhỏ hơn  {this.state.multiSliderPriceValue[1]}</Text>
-                                                        : <Text style={{ flex: 2, marginBottom: 15, marginTop: 20, marginLeft: 20 }}>{this.state.multiSliderPriceValue[0]} đến {this.state.multiSliderPriceValue[1]}</Text>
+                                                        ? <Text style={{ flex: 2, marginBottom: 15, marginTop: 20, marginLeft: 20 }}>{translate("Less than")}  {this.state.multiSliderPriceValue[1]}</Text>
+                                                        : <Text style={{ flex: 2, marginBottom: 15, marginTop: 20, marginLeft: 20 }}>{this.state.multiSliderPriceValue[0]} {translate("To")} {this.state.multiSliderPriceValue[1]}</Text>
                                         }
 
                                         {!(this.state.multiSliderPriceValue[0] == 0 && this.state.multiSliderPriceValue[1] == 10) && Platform.OS == 'android' &&
@@ -1666,34 +1598,34 @@ export default class SearchScreen extends React.Component {
 
                                                     // // Unit Price
                                                     if (itemValue == 'ptr') {
-                                                        this.setState({ unitPrice: '000000', unitPriceSuffixLable: 'triệu' })
+                                                        this.setState({ unitPrice: '000000', unitPriceSuffixLable: translate("million") })
                                                     }
                                                     else if (itemValue == 'pctr') {
-                                                        this.setState({ unitPrice: '0000000', unitPriceSuffixLable: 'chục triệu' })
+                                                        this.setState({ unitPrice: '0000000', unitPriceSuffixLable: translate("tens of millions") })
                                                     }
                                                     else if (itemValue == 'pttr') {
-                                                        this.setState({ unitPrice: '00000000', unitPriceSuffixLable: 'trăm triệu' })
+                                                        this.setState({ unitPrice: '00000000', unitPriceSuffixLable: translate("one hundred million") })
                                                     }
                                                     else if (itemValue == 'pt') {
-                                                        this.setState({ unitPrice: '000000000', unitPriceSuffixLable: 'tỷ' })
+                                                        this.setState({ unitPrice: '000000000', unitPriceSuffixLable: translate("billion") })
                                                     }
                                                     else if (itemValue == 'pct') {
-                                                        this.setState({ unitPrice: '0000000000', unitPriceSuffixLable: 'chục tỷ' })
+                                                        this.setState({ unitPrice: '0000000000', unitPriceSuffixLable: translate("tens of billion") })
                                                     }
                                                     else if (itemValue == 'ptt') {
-                                                        this.setState({ unitPrice: '00000000000', unitPriceSuffixLable: 'trăm tỷ' })
+                                                        this.setState({ unitPrice: '00000000000', unitPriceSuffixLable: translate("hundred billion") })
                                                     }
                                                     else {
                                                         this.setState({ unitPrice: '000000' })
                                                     }
 
                                                 }}>
-                                                <Picker.Item label='triệu' value='ptr' />
-                                                <Picker.Item label='chục triệu' value='pctr' />
-                                                <Picker.Item label='trăm triệu' value='pttr' />
-                                                <Picker.Item label='tỷ' value='pt' />
-                                                <Picker.Item label='chục tỷ' value='pct' />
-                                                <Picker.Item label='trăm tỷ' value='ptt' />
+                                                <Picker.Item label={translate("million")} value='ptr' />
+                                                <Picker.Item label={translate("tens of millions")} value='pctr' />
+                                                <Picker.Item label={translate("one hundred million")} value='pttr' />
+                                                <Picker.Item label={translate("billion")} value='pt' />
+                                                <Picker.Item label={translate("tens of billion")} value='pct' />
+                                                <Picker.Item label={translate("hundred billion")} value='ptt' />
                                             </Picker>
                                         }
 
@@ -1713,9 +1645,9 @@ export default class SearchScreen extends React.Component {
                                                 <SimplePicker
                                                     ref={'pickerPriceUnitLable'}
                                                     options={['ptr', 'pctr', 'pttr', 'pt', 'pct', 'ptt']}
-                                                    labels={['triệu', 'chục triệu', 'trăm triệu', 'tỷ', 'chục tỷ', 'trăm tỷ']}
-                                                    confirmText='Đồng ý'
-                                                    cancelText='Hủy'
+                                                    labels={[translate("million"), translate("tens of millions"), translate("one hundred million"), translate("billion"), translate("tens of billion"), translate("hundred billion")]}
+                                                    confirmText={translate("Agree")}
+                                                    cancelText={translate("Cancel")}
                                                     itemStyle={{
                                                         fontSize: 25,
                                                         color: '#73aa2a',
@@ -1728,22 +1660,22 @@ export default class SearchScreen extends React.Component {
 
                                                         // // Unit Price
                                                         if (option == 'ptr') {
-                                                            this.setState({ unitPrice: '000000', unitPriceSuffixLable: 'triệu' })
+                                                            this.setState({ unitPrice: '000000', unitPriceSuffixLable: translate("million") })
                                                         }
                                                         else if (option == 'pctr') {
-                                                            this.setState({ unitPrice: '0000000', unitPriceSuffixLable: 'chục triệu' })
+                                                            this.setState({ unitPrice: '0000000', unitPriceSuffixLable: translate("tens of millions") })
                                                         }
                                                         else if (option == 'pttr') {
-                                                            this.setState({ unitPrice: '00000000', unitPriceSuffixLable: 'trăm triệu' })
+                                                            this.setState({ unitPrice: '00000000', unitPriceSuffixLable: translate("one hundred million") })
                                                         }
                                                         else if (option == 'pt') {
-                                                            this.setState({ unitPrice: '000000000', unitPriceSuffixLable: 'tỷ' })
+                                                            this.setState({ unitPrice: '000000000', unitPriceSuffixLable: translate("billion") })
                                                         }
                                                         else if (option == 'pct') {
-                                                            this.setState({ unitPrice: '0000000000', unitPriceSuffixLable: 'chục tỷ' })
+                                                            this.setState({ unitPrice: '0000000000', unitPriceSuffixLable: translate("tens of billion") })
                                                         }
                                                         else if (option == 'ptt') {
-                                                            this.setState({ unitPrice: '00000000000', unitPriceSuffixLable: 'trăm tỷ' })
+                                                            this.setState({ unitPrice: '00000000000', unitPriceSuffixLable: translate("hundred billion") })
                                                         }
                                                         else {
                                                             this.setState({ unitPrice: '000000' })
@@ -1772,7 +1704,7 @@ export default class SearchScreen extends React.Component {
                                     />
                                 </View>
                                 {/* Acreage */}
-                                <FormLabel style={{}}>Diện tích: </FormLabel>
+                                <FormLabel style={{}}>{translate("Area")}: </FormLabel>
                                 <View style={{ justifyContent: 'center', alignItems: 'center', }}>
                                     <View
                                         style={{
@@ -1785,12 +1717,12 @@ export default class SearchScreen extends React.Component {
                                         {
                                             this.state.multiSliderAreaValue[0] == 0 && this.state.multiSliderAreaValue[1] == 10
                                                 ?
-                                                <Text style={{ flex: 2, marginBottom: 15, marginTop: 20, marginLeft: 20 }}>Tất cả </Text>
+                                                <Text style={{ flex: 2, marginBottom: 15, marginTop: 20, marginLeft: 20 }}>{translate("All")} </Text>
                                                 : this.state.multiSliderAreaValue[0] > 0 && this.state.multiSliderAreaValue[1] == 10
-                                                    ? <Text style={{ flex: 2, marginBottom: 15, marginTop: 20, marginLeft: 20 }}>Lớn hơn  {this.state.multiSliderAreaValue[0]}</Text>
+                                                    ? <Text style={{ flex: 2, marginBottom: 15, marginTop: 20, marginLeft: 20 }}>{translate("Greater than")}  {this.state.multiSliderAreaValue[0]}</Text>
                                                     : this.state.multiSliderAreaValue[0] == 0 && this.state.multiSliderAreaValue[1] < 10
-                                                        ? <Text style={{ flex: 2, marginBottom: 15, marginTop: 20, marginLeft: 20 }}>Nhỏ hơn  {this.state.multiSliderAreaValue[1]}</Text>
-                                                        : <Text style={{ flex: 2, marginBottom: 15, marginTop: 20, marginLeft: 20 }}>{this.state.multiSliderAreaValue[0]} đến {this.state.multiSliderAreaValue[1]}</Text>
+                                                        ? <Text style={{ flex: 2, marginBottom: 15, marginTop: 20, marginLeft: 20 }}>{translate("Less than")}  {this.state.multiSliderAreaValue[1]}</Text>
+                                                        : <Text style={{ flex: 2, marginBottom: 15, marginTop: 20, marginLeft: 20 }}>{this.state.multiSliderAreaValue[0]} {translate("To")} {this.state.multiSliderAreaValue[1]}</Text>
                                         }
                                         {!(this.state.multiSliderAreaValue[0] == 0 && this.state.multiSliderAreaValue[1] == 10) && Platform.OS == 'android' &&
                                             <Picker // Android
@@ -1802,21 +1734,21 @@ export default class SearchScreen extends React.Component {
 
                                                     // // Unit Acreage
                                                     if (itemValue == 'acmv') {
-                                                        this.setState({ unitAcreage: '0', unitAcreageSuffixLable: 'chục mét vuông' })
+                                                        this.setState({ unitAcreage: '0', unitAcreageSuffixLable: translate("Tens of square meters") })
                                                     }
                                                     else if (itemValue == 'atmv') {
-                                                        this.setState({ unitAcreage: '00', unitAcreageSuffixLable: 'trăm mét vuông' })
+                                                        this.setState({ unitAcreage: '00', unitAcreageSuffixLable: translate("hundred square meters") })
                                                     }
                                                     else if (itemValue == 'anmv') {
-                                                        this.setState({ unitAcreage: '000', unitAcreageSuffixLable: 'nghìn mét vuông' })
+                                                        this.setState({ unitAcreage: '000', unitAcreageSuffixLable: translate("thousand square meters") })
                                                     } else {
-                                                        this.setState({ unitAcreage: '0000', unitAcreageSuffixLable: 'chục nghìn mét vuông' })
+                                                        this.setState({ unitAcreage: '0000', unitAcreageSuffixLable: translate("tens of thousands of square meters") })
                                                     }
 
                                                 }}>
-                                                <Picker.Item label='chục mét vuông' value='acmv' />
-                                                <Picker.Item label='trăm mét vuông' value='atmv' />
-                                                <Picker.Item label='nghìn mét vuông' value='anmv' />
+                                                <Picker.Item label={translate("Tens of square meters")} value='acmv' />
+                                                <Picker.Item label={translate("hundred square meters")} value='atmv' />
+                                                <Picker.Item label={translate("thousand square meters")} value='anmv' />
                                             </Picker>
                                         }
 
@@ -1836,9 +1768,9 @@ export default class SearchScreen extends React.Component {
                                                 <SimplePicker
                                                     ref={'pickerAcreageUnitLable'}
                                                     options={['acmv', 'atmv', 'anmv']}
-                                                    labels={['chục mét vuông', 'trăm mét vuông', 'nghìn mét vuông']}
-                                                    confirmText='Đồng ý'
-                                                    cancelText='Hủy'
+                                                    labels={[translate("Tens of square meters"), translate("hundred square meters"), translate("thousand square meters")]}
+                                                    confirmText={translate("Agree")}
+                                                    cancelText={translate("Cancel")}
                                                     itemStyle={{
                                                         fontSize: 25,
                                                         color: '#73aa2a',
@@ -1851,15 +1783,15 @@ export default class SearchScreen extends React.Component {
 
                                                         // // Unit Acreage
                                                         if (option == 'acmv') {
-                                                            this.setState({ unitAcreage: '0', unitAcreageSuffixLable: 'chục mét vuông' })
+                                                            this.setState({ unitAcreage: '0', unitAcreageSuffixLable: translate("Tens of square meters") })
                                                         }
                                                         else if (option == 'atmv') {
-                                                            this.setState({ unitAcreage: '00', unitAcreageSuffixLable: 'trăm mét vuông' })
+                                                            this.setState({ unitAcreage: '00', unitAcreageSuffixLable: translate("hundred square meters") })
                                                         }
                                                         else if (option == 'anmv') {
-                                                            this.setState({ unitAcreage: '000', unitAcreageSuffixLable: 'nghìn mét vuông' })
+                                                            this.setState({ unitAcreage: '000', unitAcreageSuffixLable: translate("thousand square meters") })
                                                         } else {
-                                                            this.setState({ unitAcreage: '0000', unitAcreageSuffixLable: 'chục nghìn mét vuông' })
+                                                            this.setState({ unitAcreage: '0000', unitAcreageSuffixLable: translate("tens of thousands of square meters") })
                                                         }
                                                     }}
                                                 />
@@ -1896,17 +1828,17 @@ export default class SearchScreen extends React.Component {
                                         <Button
                                             buttonStyle={{ backgroundColor: '#9B9D9D', padding: 15, borderRadius: 10 }}
                                             icon={{ name: 'ios-backspace', type: 'ionicon' }}
-                                            title='Xóa lọc'
+                                            title={translate("Clear filter")}
                                             onPress={async () => {
                                                 this.setState({
                                                     txtFilterResult: null,
                                                     multiSliderPriceValue: [0, 10],
                                                     multiSliderAreaValue: [0, 10],
                                                     selectedCategory: '',
-                                                    selectedBDS: 'Tất cả BĐS',
+                                                    selectedBDS: translate("All real estate"),
                                                     selectedUnitAcreage: 'acmv',
                                                     selectedUnitPrice: 'ptr',
-                                                    iosSelectedCategory: 'Tất cả BĐS',
+                                                    iosSelectedCategory: translate("All real estate"),
                                                 })
                                                 this.setState({ modalSearchFilterVisible: false });
                                                 this._getRoomByFilter();
@@ -1923,7 +1855,7 @@ export default class SearchScreen extends React.Component {
 
                                                 })
                                             }}
-                                            title='Hủy' />
+                                            title={translate("Cancel")} />
                                     }
                                     <Button
                                         buttonStyle={{ backgroundColor: '#73aa2a', padding: 15, borderRadius: 10 }}
@@ -1936,7 +1868,7 @@ export default class SearchScreen extends React.Component {
                                                 && this.state.multiSliderAreaValue[1] == 10)
                                                 ? true : false
                                         }
-                                        title='Lọc'
+                                        title={translate("Filter")}
                                         onPress={async () => {
                                             this.setState({ modalSearchFilterVisible: false })
                                             await this.state.roomCategory.map((y, i) => {
@@ -1987,7 +1919,7 @@ export default class SearchScreen extends React.Component {
                     }}
                 >
                     <GooglePlacesAutocomplete
-                        placeholder="Vui lòng nhập địa chỉ"
+                        placeholder={translate("Please input address")}
                         minLength={1} // minimum length of text to search
                         autoFocus={false}
                         returnKeyType={'search'} // Can be left out for default return key https://facebook.github.io/react-native/docs/textinput.html#returnkeytype

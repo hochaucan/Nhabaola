@@ -34,6 +34,10 @@ import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view
 import saveStorageAsync from '../components/saveStorageAsync';
 import { TextInputMask, TextMask } from 'react-native-masked-text';
 import { responsiveHeight, responsiveWidth, responsiveFontSize } from 'react-native-responsive-dimensions';
+import enTranslation from '../components/en.json';
+import zhTranslation from '../components/zh.json';
+import viTranslation from '../components/vi.json';
+import { setLocalization, translate, Translate } from 'react-native-translate';
 
 var { height, width } = Dimensions.get('window');
 
@@ -71,7 +75,7 @@ export default class UpdateAccountScreen extends React.Component {
             profile: this.props.navigation.state.params.item
         })
 
-        //alert(JSON.stringify(this.state.profile))
+
         this.setState({
             registerFullName: this.state.profile.FullName,
             registerAccountImage: this.state.profile.Avarta,
@@ -87,43 +91,43 @@ export default class UpdateAccountScreen extends React.Component {
         //Form validation
         if (Platform.OS === 'android') {
             if (this.state.registerAccountImage === null) {
-                ToastAndroid.showWithGravity('Vui lòng chọn hình đại diện', ToastAndroid.SHORT, ToastAndroid.TOP);
+                ToastAndroid.showWithGravity(translate("Please select a avatar"), ToastAndroid.SHORT, ToastAndroid.TOP);
                 return;
             }
 
             if (this.state.registerFullName === '') {
-                ToastAndroid.showWithGravity('Vui lòng nhập Họ Tên', ToastAndroid.SHORT, ToastAndroid.TOP);
+                ToastAndroid.showWithGravity(translate("Please enter fullname"), ToastAndroid.SHORT, ToastAndroid.TOP);
                 this.refs.fullNameInput.focus();
                 return;
             }
 
             if (this.state.registerEmail === '') {
-                ToastAndroid.showWithGravity('Vui lòng nhập Email', ToastAndroid.SHORT, ToastAndroid.TOP);
+                ToastAndroid.showWithGravity(translate("Please enter Email"), ToastAndroid.SHORT, ToastAndroid.TOP);
                 this.refs.emailInput.focus();
                 return;
             }
             if (emailReg.test(this.state.registerEmail) === false) {
-                ToastAndroid.showWithGravity('Email không đúng', ToastAndroid.SHORT, ToastAndroid.TOP);
+                ToastAndroid.showWithGravity(translate("The email is incorrect"), ToastAndroid.SHORT, ToastAndroid.TOP);
                 this.refs.emailInput.focus();
                 return;
             }
         }
         else {
             if (this.state.registerAccountImage === null) {
-                Alert.alert('Vui lòng chọn hình đại diện');
+                Alert.alert(translate("Notice"), translate("Please select a avatar"));
                 return;
             }
 
             if (this.state.registerFullName === '') {
-                Alert.alert('Thông báo', 'Vui lòng nhập Họ Tên');
+                Alert.alert(translate("Notice"), translate("Please enter fullname"));
                 return;
             }
             if (this.state.registerEmail === '') {
-                Alert.alert('Thông báo', 'Vui lòng nhập Email');
+                Alert.alert(translate("Notice"), translate("Please enter Email"));
                 return;
             }
             if (emailReg.test(this.state.registerEmail) === false) {
-                Alert.alert('Thông báo', 'Email không đúng');
+                Alert.alert(translate("Notice"), translate("The email is incorrect"));
                 return;
             }
         }
@@ -194,21 +198,18 @@ export default class UpdateAccountScreen extends React.Component {
                                 UpdatedDate: this.state.profile.UpdatedDate,
                             }
                         });
-                        //saveStorageAsync('FO_Account_Login', JSON.stringify(this.state.profile))
+
 
                         this.props.navigation.goBack();
 
                         if (Platform.OS === 'android') {
-                            ToastAndroid.showWithGravity('Cập nhật thông tin thành công!', ToastAndroid.SHORT, ToastAndroid.TOP);
+                            ToastAndroid.showWithGravity(translate("Your information is updated successfully"), ToastAndroid.SHORT, ToastAndroid.TOP);
                         }
                         else {
-                            Alert.alert('Thông báo', 'Cập nhật thông tin thành công!');
+                            Alert.alert(translate("Notice"), translate("Your information is updated successfully"));
                         }
                     }
                     else { alert(responseJson.ErrorCode) }
-
-                    // this.props.navigation.state.params.onRefreshScreen({ loginUsername: registerCellPhone, loginPassword: registerPassword });
-                    //this.props.navigation.state.params.login();
 
                 }).
                 catch((error) => { console.log(error) });
@@ -258,14 +259,14 @@ export default class UpdateAccountScreen extends React.Component {
                         style={{}}
                         onPress={() => {
                             this.props.navigation.goBack()
-                            // this.props.navigation.state.params.onRefreshScreen();
-                            // this.props.navigation.state.params.onRefreshScreen({ refreshScreen: true });
-                            //this.props.navigation.state.params._getWalletAsync();
 
                         }}>
                         <Ionicons style={{ fontSize: 28, color: '#fff', }} name='md-arrow-back'></Ionicons>
                     </TouchableOpacity>
-                    <Text style={{ marginLeft: 20, color: '#fff', fontSize: responsiveFontSize(2), justifyContent: 'center' }}>Cập nhật</Text>
+                    <Text style={{
+                        marginLeft: 20, color: '#fff',
+                        fontSize: responsiveFontSize(2), justifyContent: 'center'
+                    }}>{translate("Updates")}</Text>
                 </View>
                 <KeyboardAwareScrollView
                     innerRef={ref => { this.scroll = ref }}
@@ -284,7 +285,7 @@ export default class UpdateAccountScreen extends React.Component {
                                     style={{ width: 80, height: 80, borderRadius: Platform.OS === 'ios' ? 40 : 100, marginTop: Platform.OS === 'ios' ? -99 : -90, marginLeft: Platform.OS === 'ios' ? 7 : 1, marginBottom: 10, }}
                                 />
                             }
-                            <Text style={{}}>Hình đại diện</Text>
+                            <Text style={{}}>{translate("Avatar")}</Text>
                         </TouchableOpacity>
 
                     </View>
@@ -330,7 +331,7 @@ export default class UpdateAccountScreen extends React.Component {
                                 }}
                                 containerStyle={{ flex: 15, marginLeft: Platform.OS === 'ios' ? 22 : 18 }}
                                 inputStyle={{ paddingLeft: Platform.OS === 'android' ? 4 : 0 }}
-                                placeholder='Họ và tên'
+                                placeholder={translate("Name")}
                                 underlineColorAndroid={'#73aa2a'}
                                 value={this.state.registerFullName}
                                 onChangeText={(registerFullName) => { this.setState({ registerFullName }) }}
@@ -352,7 +353,7 @@ export default class UpdateAccountScreen extends React.Component {
                                 }}
                                 containerStyle={{ flex: 15, marginLeft: Platform.OS === 'ios' ? 22 : 18 }}
                                 inputStyle={{ paddingLeft: Platform.OS === 'android' ? 4 : 0 }}
-                                placeholder='Email'
+                                placeholder={translate("Email (to retrieve password)")}
                                 keyboardType='email-address'
                                 underlineColorAndroid={'#73aa2a'}
                                 value={this.state.registerEmail}
@@ -370,7 +371,7 @@ export default class UpdateAccountScreen extends React.Component {
                             buttonStyle={{ backgroundColor: '#9B9D9D', padding: 10, borderRadius: 5, }}
                             raised={false}
                             icon={{ name: 'ios-backspace', type: 'ionicon' }}
-                            title='Hủy'
+                            title={translate("Cancel")}
                             onPress={() => {
                                 this.setState({
                                     registerCellPhone: '',
@@ -390,7 +391,7 @@ export default class UpdateAccountScreen extends React.Component {
                             buttonStyle={{ backgroundColor: '#73aa2a', padding: 10, borderRadius: 5, }}
                             raised={false}
                             icon={{ name: 'md-checkmark', type: 'ionicon' }}
-                            title='Cập nhật'
+                            title={translate("Updates")}
                             onPress={() => {
                                 this._updateAccountAsync();
                             }}
@@ -419,7 +420,7 @@ export default class UpdateAccountScreen extends React.Component {
                         >
                             <Ionicons style={{ fontSize: 40, borderRadius: 10, backgroundColor: '#a4d227', color: '#fff', textAlign: 'center', padding: 10 }} name='ios-folder-open' >
                             </Ionicons>
-                            <Text style={{ textAlign: 'center', marginTop: 5 }}>Thư viện ảnh</Text>
+                            <Text style={{ textAlign: 'center', marginTop: 5 }}>{translate("Image library")}</Text>
                         </TouchableOpacity>
                         <View style={{ flex: 1 }}></View>
                         <TouchableOpacity
@@ -430,7 +431,7 @@ export default class UpdateAccountScreen extends React.Component {
                             }}
                         >
                             <Ionicons style={{ fontSize: 40, borderRadius: 10, backgroundColor: '#a4d227', color: '#fff', textAlign: 'center', padding: 10 }} name='md-camera' />
-                            <Text style={{ textAlign: 'center', marginTop: 5 }}>Camera</Text>
+                            <Text style={{ textAlign: 'center', marginTop: 5 }}>{translate("Camera")}</Text>
                         </TouchableOpacity>
                     </View>
                 </PopupDialog>
