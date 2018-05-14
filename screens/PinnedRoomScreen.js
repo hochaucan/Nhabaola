@@ -67,7 +67,7 @@ export default class PinnedRoomScreen extends React.Component {
             // fromDate: minDate,
             // toDate: topDate,
             searchFlatlistKey: '',
-
+            flatListIsEnd: false,
         }
     }
 
@@ -149,7 +149,7 @@ export default class PinnedRoomScreen extends React.Component {
         }
         else { // Refresh page
             roomBox = [];
-            this.setState({ page: 1 })
+            this.setState({ page: 1, flatListIsEnd: false })
         }
 
         this.setState({ // Calculate page index
@@ -179,6 +179,10 @@ export default class PinnedRoomScreen extends React.Component {
                     })
                     this.setState({ refresh: false })
 
+                    // End Flatlist
+                    if (JSON.stringify(responseJson.obj.length) == '0') {
+                        this.setState({ flatListIsEnd: true, })
+                    }
                 }).
                 catch((error) => { console.log(error) });
         } catch (error) {
@@ -491,7 +495,9 @@ export default class PinnedRoomScreen extends React.Component {
                         shouldItemUpdate={this._shouldItemUpdate}
                         onEndReachedThreshold={0.2}
                         onEndReached={() => {
-                            this._getRoomBoxByUserAsync(false);
+                            if (this.state.flatListIsEnd == false) {
+                                this._getRoomBoxByUserAsync(false);
+                            }
                         }}
                         data={roomBox.filter(item => item.Address.includes(this.state.searchFlatlistKey))}
                         renderItem={({ item }) =>

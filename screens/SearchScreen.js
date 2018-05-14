@@ -248,8 +248,14 @@ export default class SearchScreen extends React.Component {
         // title: 'Links',
         header: null,
     };
+
+    // static navigationOptions= () => ({
+    //     tabBarOnPress: alert("can")
+    // })
+
     constructor(props) {
         super(props);
+
         this.state = {
             mapRegion: null,//{ latitude: LATITUDE, longitude: LONGITUDE, latitudeDelta: LATITUDE_DELTA, longitudeDelta: LONGITUDE_DELTA },
 
@@ -303,8 +309,17 @@ export default class SearchScreen extends React.Component {
             isHouseList: false,
             searchLoading: false,
             profile: null,
+            isVietnamease: false,
+            isEnglish: false,
+            isChinease: false,
         }
     }
+
+    static setLanguage = () => {
+
+
+    }
+
 
     _multiSliderPriceValuesChange = async (values) => {
         await this.setState({
@@ -379,6 +394,7 @@ export default class SearchScreen extends React.Component {
         await this._getPermissionCAMERA_ROLL();
         await this._getPermissionNOTIFICATIONS();
 
+        this._getLanguageFromStorageAsync();
         this._getLocationAsync();
         this._getCategoryFromStorageAsync();
     }
@@ -386,6 +402,40 @@ export default class SearchScreen extends React.Component {
     componentDidMount() {
 
     }
+
+    _getLanguageFromStorageAsync = async () => {
+        try {
+            var value = await AsyncStorage.getItem('language');
+
+            if (value !== null) {
+                if (value == 'enTranslation') {
+                    setLocalization(enTranslation)
+                    this.setState({ isEnglish: true, isVietnamease: false, isChinease: false })
+                } else if (value == 'zhTranslation') {
+                    setLocalization(zhTranslation)
+                    this.setState({ isEnglish: false, isVietnamease: false, isChinease: true })
+                }
+                else {
+                    setLocalization(viTranslation)
+                    this.setState({ isEnglish: false, isVietnamease: true, isChinease: false })
+                }
+            } else {
+                setLocalization(viTranslation)
+                this.setState({ isEnglish: false, isVietnamease: true, isChinease: false })
+            }
+
+            this.setState({
+                unitPriceSuffixLable: translate("million"),
+                unitAcreageSuffixLable: translate("Tens of square meters"),
+                selectedBDS: translate("All real estate"),
+                iosSelectedCategory: translate("All real estate"),
+            })
+
+        } catch (e) {
+            console.log(e);
+        }
+    }
+
 
 
     _getLocationAsync = async () => {
@@ -1494,6 +1544,14 @@ export default class SearchScreen extends React.Component {
                         onRequestClose={() => {
                             this.setState({ modalSearchFilterVisible: false })
                         }}
+                        onShow={() => {
+                            this.setState({
+                                unitPriceSuffixLable: translate("million"),
+                                unitAcreageSuffixLable: translate("Tens of square meters"),
+                                selectedBDS: translate("All real estate"),
+                                iosSelectedCategory: translate("All real estate"),
+                            })
+                        }}
                     >
                         <View style={{ flex: 1, marginTop: 30, padding: 10, }}>
                             <View style={{ flex: 1, }}>
@@ -1588,7 +1646,7 @@ export default class SearchScreen extends React.Component {
                                             <Picker
                                                 style={{
                                                     flex: 5,
-                                                    marginBottom: -2
+                                                    marginBottom: -2,
                                                 }}
                                                 mode='dropdown'
                                                 selectedValue={this.state.selectedUnitPrice}
@@ -1969,7 +2027,7 @@ export default class SearchScreen extends React.Component {
                         }}
                         query={{
                             // available options: https://developers.google.com/places/web-service/autocomplete
-                            key: 'AIzaSyC2QhtACfVZ2cr9HVvxQuzxd3HT36NNK3Q',
+                            key: 'AIzaSyBIhOGDA4Cvocj02AYdnxYK5oGeg6VwetM',//'AIzaSyC2QhtACfVZ2cr9HVvxQuzxd3HT36NNK3Q',
                             language: 'vi', // language of the results
                             //types: '(cities)', // default: 'geocode'
                         }}

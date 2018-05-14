@@ -48,6 +48,7 @@ import enTranslation from '../components/en.json';
 import zhTranslation from '../components/zh.json';
 import viTranslation from '../components/vi.json';
 import { setLocalization, translate, Translate } from 'react-native-translate';
+import SearchScreen from './SearchScreen';
 
 const homePlace = {
   description: 'Home',
@@ -156,7 +157,11 @@ export default class HomeScreen extends React.Component {
       flatListIsEnd: false,
       roomByCatHeigh: new Animated.Value(40),
       highLightBackgroundOpacity: new Animated.Value(-100),
+      languageOpacity: new Animated.Value(0),
       isInternetIssue: false,
+      isVietnamease: false,
+      isEnglish: false,
+      isChinease: false,
     }
 
     // state = { selected: false };
@@ -250,6 +255,17 @@ export default class HomeScreen extends React.Component {
     // Register Push Notification
     this._notificationSubscription = this._registerForPushNotifications();
 
+    // setTimeout(() => {
+    //   Animated.timing( // Language opacity
+    //     this.state.languageOpacity,
+    //     {
+    //       toValue: 1,
+    //       easing: Easing.bounce,
+    //       duration: 100,
+    //     }
+    //   ).start();
+    // }, 2000)
+
     // Popup messgae if internet has problem after 15 seconds
     setTimeout(() => {
       if (roomBox.length == 0) {
@@ -312,14 +328,18 @@ export default class HomeScreen extends React.Component {
       if (value !== null) {
         if (value == 'enTranslation') {
           setLocalization(enTranslation)
+          this.setState({ isEnglish: true, isVietnamease: false, isChinease: false })
         } else if (value == 'zhTranslation') {
           setLocalization(zhTranslation)
+          this.setState({ isEnglish: false, isVietnamease: false, isChinease: true })
         }
         else {
           setLocalization(viTranslation)
+          this.setState({ isEnglish: false, isVietnamease: true, isChinease: false })
         }
       } else {
         setLocalization(viTranslation)
+        this.setState({ isEnglish: false, isVietnamease: true, isChinease: false })
       }
 
     } catch (e) {
@@ -392,14 +412,14 @@ export default class HomeScreen extends React.Component {
         }
       ).start();
 
-      Animated.timing( // Hide Highlight Room Button
-        this.state.highLightBackgroundOpacity,
-        {
-          toValue: -100,
-          // easing: Easing.linear,
-          duration: 50,
-        }
-      ).start();
+      // Animated.timing( // Hide Highlight Room Button
+      //   this.state.highLightBackgroundOpacity,
+      //   {
+      //     toValue: -100,
+      //     // easing: Easing.linear,
+      //     duration: 50,
+      //   }
+      // ).start();
 
     } else {
       //this.setState({ roomByCatHeigh: 0 })
@@ -413,15 +433,18 @@ export default class HomeScreen extends React.Component {
         }
       ).start();
 
-      Animated.timing( // Show Highlight Room Button
-        this.state.highLightBackgroundOpacity,
-        {
-          toValue: 1,
-          //  easing: Easing.linear,
-          duration: 50,
-        }
-      ).start();
+      // Animated.timing( // Show Highlight Room Button
+      //   this.state.highLightBackgroundOpacity,
+      //   {
+      //     toValue: 1,
+      //     //  easing: Easing.linear,
+      //     duration: 50,
+      //   }
+      // ).start();
     }
+    // Update your scroll position
+    this._listViewOffset = currentOffset
+
 
     //   Animated.timing(
     //     this.state.roomByCatHeigh,
@@ -1726,12 +1749,13 @@ export default class HomeScreen extends React.Component {
         }
 
         {/* Multi Language */}
-        <View
+        <Animated.View
           style={{
             flexDirection: 'row',
             alignContent: 'center',
             alignItems: 'center',
             justifyContent: 'center',
+            //opacity: this.state.languageOpacity,//0.2,
           }}
         >
           {/* Vietnamese */}
@@ -1742,7 +1766,8 @@ export default class HomeScreen extends React.Component {
             }}
             onPress={async () => {
               setLocalization(viTranslation);
-
+              this.setState({ isVietnamease: true, isEnglish: false, isChinease: false })
+              this._getRoomBoxAsync(true)
               if (Platform.OS === 'android') {
                 ToastAndroid.showWithGravity(translate("You have switched languages to Vietnamease"), ToastAndroid.SHORT, ToastAndroid.TOP);
               }
@@ -1751,11 +1776,12 @@ export default class HomeScreen extends React.Component {
               }
               await this._saveStorageAsync('language', 'viTranslation')
               this.forceUpdate()
+
             }}
           >
             <Text style={{
               fontSize: responsiveFontSize(2),
-              color: '#a4d227',
+              color: this.state.isVietnamease ? '#73aa2a' : '#a4d227',
 
             }}>Tiếng Việt</Text>
           </TouchableOpacity>
@@ -1768,7 +1794,8 @@ export default class HomeScreen extends React.Component {
             }}
             onPress={async () => {
               setLocalization(enTranslation);
-
+              this.setState({ isVietnamease: false, isEnglish: true, isChinease: false })
+              this._getRoomBoxAsync(true)
               if (Platform.OS === 'android') {
                 ToastAndroid.showWithGravity(translate("You have switched languages to English"), ToastAndroid.SHORT, ToastAndroid.TOP);
               }
@@ -1777,11 +1804,12 @@ export default class HomeScreen extends React.Component {
               }
               await this._saveStorageAsync('language', 'enTranslation')
               this.forceUpdate()
+
             }}
           >
             <Text style={{
               fontSize: responsiveFontSize(2),
-              color: '#a4d227'
+              color: this.state.isEnglish ? '#73aa2a' : '#a4d227',
             }}>English</Text>
           </TouchableOpacity>
 
@@ -1794,7 +1822,8 @@ export default class HomeScreen extends React.Component {
 
             onPress={async () => {
               setLocalization(zhTranslation);
-
+              this.setState({ isVietnamease: false, isEnglish: false, isChinease: true })
+              this._getRoomBoxAsync(true)
               if (Platform.OS === 'android') {
                 ToastAndroid.showWithGravity(translate("You have switched languages to Chinease"), ToastAndroid.SHORT, ToastAndroid.TOP);
               }
@@ -1803,23 +1832,24 @@ export default class HomeScreen extends React.Component {
               }
               await this._saveStorageAsync('language', 'zhTranslation')
               this.forceUpdate()
+
             }}
           >
             <Text style={{
               fontSize: responsiveFontSize(2),
-              color: '#a4d227'
+              color: this.state.isChinease ? '#73aa2a' : '#a4d227',
             }}>中文</Text>
           </TouchableOpacity>
 
           {/* <Translate value="Post"/> */}
-        </View>
+        </Animated.View>
 
         {/* Flatlist Category */}
-        <Animated.View style={{
+        {/* <Animated.View style={{
           marginRight: 10,
-          position: 'absolute',
-          left: this.state.highLightBackgroundOpacity,//2,
-          top: 12,
+          // position: 'absolute',
+          left: 2,//this.state.highLightBackgroundOpacity,//2,
+          //top: Platform.OS == 'ios' ? 42.5 : 44,//12,
           zIndex: 20,
           backgroundColor: '#fff',
           opacity: 0.85,//this.state.highLightBackgroundOpacity,
@@ -1828,10 +1858,10 @@ export default class HomeScreen extends React.Component {
           borderColor: '#9B9D9D',
 
           // elevation: 10,
-          shadowColor: '#000',
-          shadowOffset: { width: 0, height: 2 },
-          shadowOpacity: 0.2,
-          shadowRadius: 2,
+          // shadowColor: '#000',
+          // shadowOffset: { width: 0, height: 2 },
+          // shadowOpacity: 0.2,
+          // shadowRadius: 2,
         }}>
 
           <TouchableOpacity
@@ -1840,7 +1870,7 @@ export default class HomeScreen extends React.Component {
             }}
             onPress={() => {
 
-              this.props.navigation.navigate('RoomByCategoryScreen', { CategoryID: 0, CategoryName: "Nổi Bật" })
+              this.props.navigation.navigate('RoomByCategoryScreen', { CategoryID: 0, CategoryName: translate("Highlight") })
 
             }}
           >
@@ -1852,19 +1882,60 @@ export default class HomeScreen extends React.Component {
 
               padding: 10,
 
-            }}>Nổi Bật</Text>
+            }}>{translate("Highlight")}</Text>
           </TouchableOpacity>
-        </Animated.View>
+        </Animated.View> */}
 
         <Animated.View style={{
-          //flexDirection: 'row',
-          height: this.state.roomByCatHeigh,
-          marginTop: 8,
-          marginLeft: 2,//70,
+          flexDirection: 'row',
+          height: this.state.roomByCatHeigh, //40
+          marginTop: 4,
+          marginLeft: 2,//2,//70,
           marginBottom: 5,
           zIndex: 30,
         }}
         >
+
+
+          <TouchableOpacity
+            style={{
+              marginRight: 10,
+              height: 50,
+              // // position: 'absolute',
+              // //left: 2,//this.state.highLightBackgroundOpacity,//2,
+              // //top: Platform.OS == 'ios' ? 42.5 : 44,//12,
+              zIndex: 30,
+              // backgroundColor: '#fff',
+              // //opacity: 0.85,//this.state.highLightBackgroundOpacity,
+              // borderRadius: Platform.OS == 'ios' ? 10 : 50,
+              // borderWidth: 0.5,
+              // borderColor: '#9B9D9D',
+
+              // elevation: 10,
+              // shadowColor: '#000',
+              // shadowOffset: { width: 0, height: 2 },
+              // shadowOpacity: 0.2,
+              // shadowRadius: 2,
+            }}
+            onPress={() => {
+
+              this.props.navigation.navigate('RoomByCategoryScreen', { CategoryID: 0, CategoryName: translate("Highlight") })
+
+            }}
+          >
+            <Text style={{
+              // marginTop: 5,
+              fontSize: responsiveFontSize(1.5),
+              color: '#73aa2a',//'#9B9D9D',
+              // backgroundColor: '#a4d227',
+              borderRadius: Platform.OS == 'ios' ? 10 : 50,
+              borderWidth: 1,
+              borderColor: '#a4d227',
+              padding: 10,
+
+
+            }}>{translate("Highlight")}</Text>
+          </TouchableOpacity>
 
           <FlatList
             //onScroll={this._onScroll}
@@ -1915,7 +1986,10 @@ export default class HomeScreen extends React.Component {
                 <TouchableOpacity
                   onPress={() => {
                     //alert("can")
-                    this.props.navigation.navigate('RoomByCategoryScreen', { CategoryID: item.ID, CategoryName: item.CatName })
+                    this.props.navigation.navigate('RoomByCategoryScreen', {
+                      CategoryID: item.ID,
+                      CategoryName: this.state.isVietnamease ? item.CatName : this.state.isEnglish ? item.CatImg.split('|')[0] : item.CatImg.split('|')[1]
+                    })
                     //this.props.navigation.navigate('ProfileScreen', { key: 'CanHo' });
                   }}
                 >
@@ -1929,7 +2003,7 @@ export default class HomeScreen extends React.Component {
                     borderColor: '#a4d227',
                     padding: 10,
 
-                  }}>{item.CatName}</Text>
+                  }}>{this.state.isVietnamease ? item.CatName : this.state.isEnglish ? item.CatImg.split('|')[0] : item.CatImg.split('|')[1]}</Text>
                 </TouchableOpacity>
               </View>
 
@@ -2087,7 +2161,7 @@ export default class HomeScreen extends React.Component {
                     flex: 1, color: '#fff', fontWeight: '300',
                     fontSize: responsiveFontSize(1.7)
                   }}>
-                  Giá: {convertAmountToWording(item.Price)}
+                  {translate("Price")}: {convertAmountToWording(item.Price)}
                 </Text>
 
                 {
@@ -2100,7 +2174,7 @@ export default class HomeScreen extends React.Component {
                           flex: 2, color: '#fff', fontWeight: '300',
                           fontSize: responsiveFontSize(1.7), textAlign: 'right'
                         }}
-                        key={i}>{y.CatName}:  {item.Acreage} m</Text>
+                        key={i}>{this.state.isVietnamease ? y.CatName : this.state.isEnglish ? y.CatImg.split('|')[0] : y.CatImg.split('|')[1]}:  {item.Acreage} m</Text>
                       // : null
                     )
                   })
@@ -2285,7 +2359,7 @@ export default class HomeScreen extends React.Component {
                       let loadBDS = '';
                       await this.state.roomCategory.map((y, i) => {
                         if (y.ID == item.CategoryID) {
-                          loadBDS = y.CatName
+                          loadBDS = this.state.isVietnamease ? y.CatName : this.state.isEnglish ? y.CatImg.split('|')[0] : y.CatImg.split('|')[1]
                         }
                       })
 
@@ -2376,7 +2450,8 @@ export default class HomeScreen extends React.Component {
         /* horizontal={false}
         numColumns={3} */
         />
-        {this.state.refresh && Platform.OS == 'ios' &&
+        {
+          this.state.refresh && Platform.OS == 'ios' &&
           <View style={{ height: 40, justifyContent: 'center', alignItems: 'center' }}>
             <ActivityIndicator
               style={{}}
@@ -2387,73 +2462,74 @@ export default class HomeScreen extends React.Component {
           </View>
         }
         {/* Action Button */}
-        {this.state.isActionButtonVisible ?
-          <ActionButton buttonColor="#73aa2a" shadowStyle={{ elevation: 2 }}
-          //bgColor={"red"}
-          >
+        {
+          this.state.isActionButtonVisible ?
+            <ActionButton buttonColor="#73aa2a" shadowStyle={{ elevation: 2 }}
+            //bgColor={"red"}
+            >
 
-            {this.state.profile === null &&
+              {this.state.profile === null &&
+                <ActionButton.Item buttonColor='#a4d227'
+                  textContainerStyle={{ backgroundColor: '#73aa2a' }}
+                  textStyle={{ color: '#fff' }}
+                  title={translate('Login')} onPress={() => {
+
+
+                    if (Platform.OS == 'ios') {
+                      this.setState({ modalLogin: true })
+                    } else {
+                      this.popupLogin.show()
+                    }
+
+
+                    const timing = Animated.timing;
+                    Animated.parallel([
+                      timing(this.state.animation.usernamePostionLeft, {
+                        toValue: 0,
+                        duration: 900
+                      }),
+                      timing(this.state.animation.passwordPositionLeft, {
+                        toValue: 0,
+                        duration: 1100
+                      }),
+                      timing(this.state.animation.loginPositionTop, {
+                        toValue: 0,
+                        duration: 700
+                      }),
+                      timing(this.state.animation.statusPositionTop, {
+                        toValue: 0,
+                        duration: 700
+                      })
+
+                    ]).start()
+                  }}>
+                  <Icon name="ios-contact" style={styles.actionButtonIcon} />
+                </ActionButton.Item>
+              }
               <ActionButton.Item buttonColor='#a4d227'
                 textContainerStyle={{ backgroundColor: '#73aa2a' }}
                 textStyle={{ color: '#fff' }}
-                title={translate('Login')} onPress={() => {
-
-
-                  if (Platform.OS == 'ios') {
-                    this.setState({ modalLogin: true })
-                  } else {
-                    this.popupLogin.show()
-                  }
-
-
-                  const timing = Animated.timing;
-                  Animated.parallel([
-                    timing(this.state.animation.usernamePostionLeft, {
-                      toValue: 0,
-                      duration: 900
-                    }),
-                    timing(this.state.animation.passwordPositionLeft, {
-                      toValue: 0,
-                      duration: 1100
-                    }),
-                    timing(this.state.animation.loginPositionTop, {
-                      toValue: 0,
-                      duration: 700
-                    }),
-                    timing(this.state.animation.statusPositionTop, {
-                      toValue: 0,
-                      duration: 700
+                title={translate('Post')} onPress={() => {
+                  this.state.profile
+                    ?
+                    //this.props.navigation.navigate('PostRoomScreen', { onSelect: this.onSelect })
+                    this.props.navigation.navigate('PostRoomScreen', {
+                      onRefreshScreen: this.onRefreshScreen,
+                      _getWalletAsync: this._getWalletAsync,
                     })
+                    :
+                    Platform.OS === 'android'
+                      ? ToastAndroid.showWithGravity(translate('Please login'), ToastAndroid.SHORT, ToastAndroid.TOP)
+                      : Alert.alert(translate('Please login'))
 
-                  ]).start()
+
+                  //this.popupLogin.show();
                 }}>
-                <Icon name="ios-contact" style={styles.actionButtonIcon} />
+                <Icon name="md-cloud-upload" style={styles.actionButtonIcon} />
               </ActionButton.Item>
-            }
-            <ActionButton.Item buttonColor='#a4d227'
-              textContainerStyle={{ backgroundColor: '#73aa2a' }}
-              textStyle={{ color: '#fff' }}
-              title={translate('Post')} onPress={() => {
-                this.state.profile
-                  ?
-                  //this.props.navigation.navigate('PostRoomScreen', { onSelect: this.onSelect })
-                  this.props.navigation.navigate('PostRoomScreen', {
-                    onRefreshScreen: this.onRefreshScreen,
-                    _getWalletAsync: this._getWalletAsync,
-                  })
-                  :
-                  Platform.OS === 'android'
-                    ? ToastAndroid.showWithGravity(translate('Please login'), ToastAndroid.SHORT, ToastAndroid.TOP)
-                    : Alert.alert(translate('Please login'))
 
 
-                //this.popupLogin.show();
-              }}>
-              <Icon name="md-cloud-upload" style={styles.actionButtonIcon} />
-            </ActionButton.Item>
-
-
-            {/* {this.state.refreshScreen &&
+              {/* {this.state.refreshScreen &&
 
               <ActionButton.Item buttonColor='#a4d227' title="Testing" onPress={() => {
                 // alert(this.state.selected)
@@ -2462,37 +2538,38 @@ export default class HomeScreen extends React.Component {
               </ActionButton.Item>
             } */}
 
-            {this.state.profile !== null &&
-              <ActionButton.Item buttonColor='#a4d227'
-                textContainerStyle={{ backgroundColor: '#73aa2a' }}
-                textStyle={{ color: '#fff' }}
-                title={translate('Personal page')} onPress={() => {
+              {this.state.profile !== null &&
+                <ActionButton.Item buttonColor='#a4d227'
+                  textContainerStyle={{ backgroundColor: '#73aa2a' }}
+                  textStyle={{ color: '#fff' }}
+                  title={translate('Personal page')} onPress={() => {
 
-                  this.props.navigation.navigate("ProfileScreen", {
-                    onRefreshScreen: this.onRefreshScreen,
-                    _getWalletAsync: this._getWalletAsync
-                  });
+                    this.props.navigation.navigate("ProfileScreen", {
+                      onRefreshScreen: this.onRefreshScreen,
+                      _getWalletAsync: this._getWalletAsync
+                    });
 
-                }}>
-                <Icon name="md-person" style={styles.actionButtonIcon} />
-              </ActionButton.Item>
-            }
+                  }}>
+                  <Icon name="md-person" style={styles.actionButtonIcon} />
+                </ActionButton.Item>
+              }
 
-            {this.state.profile !== null &&
-              <ActionButton.Item buttonColor='#a4d227'
-                textContainerStyle={{ backgroundColor: '#73aa2a' }}
-                textStyle={{ color: '#fff' }}
-                title={numberWithCommas(this.state.wallet) + " đ"} onPress={() => {
-                  //alert(this.state.selected)
-                }}>
-                <Icon name="logo-usd" style={styles.actionButtonIcon} />
-              </ActionButton.Item>
-            }
-            {/* <ActionButton.Item buttonColor='#1abc9c' title="All Tasks" onPress={() => { }}>
+              {this.state.profile !== null &&
+                <ActionButton.Item buttonColor='#a4d227'
+                  textContainerStyle={{ backgroundColor: '#73aa2a' }}
+                  textStyle={{ color: '#fff' }}
+                  title={numberWithCommas(this.state.wallet) + " đ"} onPress={() => {
+                    //alert(this.state.selected)
+                  }}>
+                  <Icon name="logo-usd" style={styles.actionButtonIcon} />
+                </ActionButton.Item>
+              }
+              {/* <ActionButton.Item buttonColor='#1abc9c' title="All Tasks" onPress={() => { }}>
               <Icon name="md-done-all" style={styles.actionButtonIcon} />
             </ActionButton.Item> */}
-          </ActionButton>
-          : null}
+            </ActionButton>
+            : null
+        }
 
 
 

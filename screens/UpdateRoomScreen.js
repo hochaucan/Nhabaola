@@ -108,10 +108,14 @@ export default class UpdateRoomScreen extends React.Component {
             contactPhone: '',
             contactName: '',
             roomBox: null,
+            isVietnamease: false,
+            isEnglish: false,
+            isChinease: false,
         }
     }
 
     componentWillMount() {
+        this._getLanguageFromStorageAsync();
         this._getRoomBoxDetailAsync();
         this._getSessionKeyFromStorageAsync();
         this._getProfileFromStorageAsync();
@@ -120,6 +124,32 @@ export default class UpdateRoomScreen extends React.Component {
 
     componentDidMount() {
         //alert(topDate)
+    }
+
+    _getLanguageFromStorageAsync = async () => {
+        try {
+            var value = await AsyncStorage.getItem('language');
+
+            if (value !== null) {
+                if (value == 'enTranslation') {
+                    setLocalization(enTranslation)
+                    this.setState({ isEnglish: true, isVietnamease: false, isChinease: false })
+                } else if (value == 'zhTranslation') {
+                    setLocalization(zhTranslation)
+                    this.setState({ isEnglish: false, isVietnamease: false, isChinease: true })
+                }
+                else {
+                    setLocalization(viTranslation)
+                    this.setState({ isEnglish: false, isVietnamease: true, isChinease: false })
+                }
+            } else {
+                setLocalization(viTranslation)
+                this.setState({ isEnglish: false, isVietnamease: true, isChinease: false })
+            }
+
+        } catch (e) {
+            console.log(e);
+        }
     }
 
     _getRoomBoxDetailAsync = async () => {
@@ -850,7 +880,7 @@ export default class UpdateRoomScreen extends React.Component {
 
                                                 y.ID == this.state.selectedCategory ?
 
-                                                    <Text key={i} style={{ marginLeft: 5, }}>{y.CatName}  <Ionicons style={{ fontSize: responsiveFontSize(2.5) }} name='ios-arrow-dropdown-outline' /> </Text>
+                                                    <Text key={i} style={{ marginLeft: 5, }}>{this.state.isVietnamease ? y.CatName : this.state.isEnglish ? y.CatImg.split('|')[0] : y.CatImg.split('|')[1]}  <Ionicons style={{ fontSize: responsiveFontSize(2.5) }} name='ios-arrow-dropdown-outline' /> </Text>
                                                     : null
 
 
@@ -896,7 +926,7 @@ export default class UpdateRoomScreen extends React.Component {
                             <SimplePicker
                                 ref={'pickerCategory'}
                                 options={this.state.roomCategory.map((y, i) => y.ID)}
-                                labels={this.state.roomCategory.map((y, i) => y.CatName)}
+                                labels={this.state.roomCategory.map((y, i) => this.state.isVietnamease ? y.CatName : this.state.isEnglish ? y.CatImg.split('|')[0] : y.CatImg.split('|')[1])}
                                 confirmText={translate("Agree")}
                                 cancelText={translate("Cancel")}
                                 itemStyle={{
@@ -909,7 +939,7 @@ export default class UpdateRoomScreen extends React.Component {
                                     await this.setState({ selectedCategory: option });
                                     this.state.roomCategory.map((y, i) => {
                                         if (y.ID === option) {
-                                            this.setState({ iosSelectedCategory: y.CatName })
+                                            this.setState({ iosSelectedCategory: this.state.isVietnamease ? y.CatName : this.state.isEnglish ? y.CatImg.split('|')[0] : y.CatImg.split('|')[1] })
                                         }
                                     })
 
@@ -1255,7 +1285,7 @@ export default class UpdateRoomScreen extends React.Component {
                         }}
                         query={{
                             // available options: https://developers.google.com/places/web-service/autocomplete
-                            key: 'AIzaSyC2QhtACfVZ2cr9HVvxQuzxd3HT36NNK3Q',
+                            key: 'AIzaSyD2xgF9lI4KYzz0NnXKtoB-kMX5x_aehw0',//'AIzaSyC2QhtACfVZ2cr9HVvxQuzxd3HT36NNK3Q',
                             language: 'vi', // language of the results
                             //types: '(cities)', // default: 'geocode'
                         }}

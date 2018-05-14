@@ -115,10 +115,14 @@ export default class PostRoomScreen extends React.Component {
             isHighlight: false,
             contactPhone: '',
             contactName: '',
+            isVietnamease: false,
+            isEnglish: false,
+            isChinease: false,
         }
     }
 
     componentWillMount() {
+        this._getLanguageFromStorageAsync();
         this._getSessionKeyFromStorageAsync();
         this._getProfileFromStorageAsync();
         this._getCategoryFromStorageAsync();
@@ -132,6 +136,32 @@ export default class PostRoomScreen extends React.Component {
                 this.popupSearching.show()
             },
             1200);
+    }
+
+    _getLanguageFromStorageAsync = async () => {
+        try {
+            var value = await AsyncStorage.getItem('language');
+
+            if (value !== null) {
+                if (value == 'enTranslation') {
+                    setLocalization(enTranslation)
+                    this.setState({ isEnglish: true, isVietnamease: false, isChinease: false })
+                } else if (value == 'zhTranslation') {
+                    setLocalization(zhTranslation)
+                    this.setState({ isEnglish: false, isVietnamease: false, isChinease: true })
+                }
+                else {
+                    setLocalization(viTranslation)
+                    this.setState({ isEnglish: false, isVietnamease: true, isChinease: false })
+                }
+            } else {
+                setLocalization(viTranslation)
+                this.setState({ isEnglish: false, isVietnamease: true, isChinease: false })
+            }
+
+        } catch (e) {
+            console.log(e);
+        }
     }
 
     _getSessionKeyFromStorageAsync = async () => {
@@ -837,7 +867,7 @@ export default class PostRoomScreen extends React.Component {
 
                                     {this.state.roomCategory.map((y, i) => {
                                         return (
-                                            <Picker.Item key={i} label={y.CatName} value={y.ID} />
+                                            <Picker.Item key={i} label={this.state.isVietnamease ? y.CatName : this.state.isEnglish ? y.CatImg.split('|')[0] : y.CatImg.split('|')[1]} value={y.ID} />
                                         )
                                     })}
 
@@ -847,7 +877,7 @@ export default class PostRoomScreen extends React.Component {
                             <SimplePicker
                                 ref={'pickerCategory'}
                                 options={this.state.roomCategory.map((y, i) => y.ID)}
-                                labels={this.state.roomCategory.map((y, i) => y.CatName)}
+                                labels={this.state.roomCategory.map((y, i) => this.state.isVietnamease ? y.CatName : this.state.isEnglish ? y.CatImg.split('|')[0] : y.CatImg.split('|')[1])}
                                 confirmText={translate("Agree")}
                                 cancelText={translate("Cancel")}
                                 itemStyle={{
@@ -860,7 +890,7 @@ export default class PostRoomScreen extends React.Component {
                                     await this.setState({ selectedCategory: option });
                                     this.state.roomCategory.map((y, i) => {
                                         if (y.ID === option) {
-                                            this.setState({ iosSelectedCategory: y.CatName })
+                                            this.setState({ iosSelectedCategory: this.state.isVietnamease ? y.CatName : this.state.isEnglish ? y.CatImg.split('|')[0] : y.CatImg.split('|')[1] })
                                         }
                                     })
 
@@ -1213,7 +1243,7 @@ export default class PostRoomScreen extends React.Component {
                         }}
                         query={{
                             // available options: https://developers.google.com/places/web-service/autocomplete
-                            key: 'AIzaSyC2QhtACfVZ2cr9HVvxQuzxd3HT36NNK3Q',
+                            key: 'AIzaSyDjGSoHkMu6Q55FifG90l25DR8SfMo3quM',//'AIzaSyC2QhtACfVZ2cr9HVvxQuzxd3HT36NNK3Q',
                             language: 'vi', // language of the results
                             //types: '(cities)', // default: 'geocode'
                         }}

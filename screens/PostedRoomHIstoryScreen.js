@@ -71,6 +71,10 @@ export default class PostedRoomHIstoryScreen extends React.Component {
             // fromDate: minDate,
             // toDate: topDate,
             searchFlatlistKey: '',
+            isVietnamease: false,
+            isEnglish: false,
+            isChinease: false,
+            flatListIsEnd: false,
 
         }
     }
@@ -85,7 +89,7 @@ export default class PostedRoomHIstoryScreen extends React.Component {
 
 
     componentWillUnmount() {
-
+        this._getLanguageFromStorageAsync();
     }
 
     componentDidMount() {
@@ -95,6 +99,32 @@ export default class PostedRoomHIstoryScreen extends React.Component {
     // _moveToRoomDetail = (user) => {
     //     this.props.navigation.navigate('RoomDetailScreen', { ...user });
     // };
+
+    _getLanguageFromStorageAsync = async () => {
+        try {
+            var value = await AsyncStorage.getItem('language');
+
+            if (value !== null) {
+                if (value == 'enTranslation') {
+                    setLocalization(enTranslation)
+                    this.setState({ isEnglish: true, isVietnamease: false, isChinease: false })
+                } else if (value == 'zhTranslation') {
+                    setLocalization(zhTranslation)
+                    this.setState({ isEnglish: false, isVietnamease: false, isChinease: true })
+                }
+                else {
+                    setLocalization(viTranslation)
+                    this.setState({ isEnglish: false, isVietnamease: true, isChinease: false })
+                }
+            } else {
+                setLocalization(viTranslation)
+                this.setState({ isEnglish: false, isVietnamease: true, isChinease: false })
+            }
+
+        } catch (e) {
+            console.log(e);
+        }
+    }
 
     onRefreshScreen = data => {
         this.setState(data);
@@ -152,7 +182,7 @@ export default class PostedRoomHIstoryScreen extends React.Component {
         }
         else { // Refresh page
             roomBox = [];
-            this.setState({ page: 1 })
+            this.setState({ page: 1, flatListIsEnd: false })
         }
 
         this.setState({ // Calculate page index
@@ -181,7 +211,10 @@ export default class PostedRoomHIstoryScreen extends React.Component {
 
                     })
                     this.setState({ refresh: false })
-
+                    // End Flatlist
+                    if (JSON.stringify(responseJson.obj.length) == '0') {
+                        this.setState({ flatListIsEnd: true, })
+                    }
                 }).
                 catch((error) => { console.log(error) });
         } catch (error) {
@@ -468,7 +501,9 @@ export default class PostedRoomHIstoryScreen extends React.Component {
                         shouldItemUpdate={this._shouldItemUpdate}
                         onEndReachedThreshold={0.2}
                         onEndReached={() => {
-                            this._getRoomBoxByUserAsync(false);
+                            if (this.state.flatListIsEnd == false) {
+                                this._getRoomBoxByUserAsync(false);
+                            }
                         }}
                         data={roomBox.filter(item => item.Address.includes(this.state.searchFlatlistKey))}
                         renderItem={({ item }) =>
@@ -511,7 +546,7 @@ export default class PostedRoomHIstoryScreen extends React.Component {
                                                     )
                                                 })
                                             } */}
-                                            <Text style={styles.searchCardPostDate}>Ngày đăng: {item.UpdatedDate}</Text>
+                                            <Text style={styles.searchCardPostDate}>{translate("Registered Date")}: {item.UpdatedDate}</Text>
                                             <View style={styles.searchCardPriceBox}>
                                                 {/* <TextMask
                                                     style={{ flex: 1, }}
@@ -531,7 +566,7 @@ export default class PostedRoomHIstoryScreen extends React.Component {
                                                             y.ID == item.CategoryID &&
                                                             <Text
                                                                 style={{ flex: 1, fontSize: responsiveFontSize(1.8), textAlign: 'center', color: '#73aa2a' }}
-                                                                key={i}>{y.CatName}</Text>
+                                                                key={i}>{this.state.isVietnamease ? y.CatName : this.state.isEnglish ? y.CatImg.split('|')[0] : y.CatImg.split('|')[1]}</Text>
                                                         )
                                                     })
                                                 }

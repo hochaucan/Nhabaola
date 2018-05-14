@@ -152,6 +152,9 @@ export default class RoomByCategoryScreen extends React.Component {
       ratingRoomId: 0,
       reportRoomId: 0,
       flatListIsEnd: false,
+      isVietnamease: false,
+      isEnglish: false,
+      isChinease: false,
     }
 
   }
@@ -278,7 +281,7 @@ export default class RoomByCategoryScreen extends React.Component {
   // };
 
   componentWillMount() {
-
+    this._getLanguageFromStorageAsync();
     this._getCategoryAsync();
 
 
@@ -294,6 +297,32 @@ export default class RoomByCategoryScreen extends React.Component {
     // Remove Push Notification
     //this._notificationSubscription && this._notificationSubscription.remove();
   }
+
+  _getLanguageFromStorageAsync = async () => {
+    try {
+        var value = await AsyncStorage.getItem('language');
+
+        if (value !== null) {
+            if (value == 'enTranslation') {
+                setLocalization(enTranslation)
+                this.setState({ isEnglish: true, isVietnamease: false, isChinease: false })
+            } else if (value == 'zhTranslation') {
+                setLocalization(zhTranslation)
+                this.setState({ isEnglish: false, isVietnamease: false, isChinease: true })
+            }
+            else {
+                setLocalization(viTranslation)
+                this.setState({ isEnglish: false, isVietnamease: true, isChinease: false })
+            }
+        } else {
+            setLocalization(viTranslation)
+            this.setState({ isEnglish: false, isVietnamease: true, isChinease: false })
+        }
+
+    } catch (e) {
+        console.log(e);
+    }
+}
 
   // _onScroll = (event) => {
   //   // Simple fade-in / fade-out animation
@@ -1718,7 +1747,7 @@ export default class RoomByCategoryScreen extends React.Component {
                           flex: 2, color: '#fff', fontWeight: '300',
                           fontSize: responsiveFontSize(1.7), textAlign: 'right'
                         }}
-                        key={i}>{y.CatName}:  {item.Acreage} m</Text>
+                        key={i}>{this.state.isVietnamease ? y.CatName : this.state.isEnglish ? y.CatImg.split('|')[0] : y.CatImg.split('|')[1]}:  {item.Acreage} m</Text>
                       // : null
                     )
                   })
@@ -1895,7 +1924,7 @@ export default class RoomByCategoryScreen extends React.Component {
                       let loadBDS = '';
                       await this.state.roomCategory.map((y, i) => {
                         if (y.ID == item.CategoryID) {
-                          loadBDS = y.CatName
+                          loadBDS = this.state.isVietnamease ? y.CatName : this.state.isEnglish ? y.CatImg.split('|')[0] : y.CatImg.split('|')[1]
                         }
                       })
 
