@@ -1232,7 +1232,7 @@ export default class SearchScreen extends React.Component {
                                                                 y.ID == item.CategoryID &&
                                                                 <Text
                                                                     style={{ flex: 2, fontSize: 10, color: '#73aa2a', }}
-                                                                    key={i}>{y.CatName}</Text>
+                                                                    key={i}>{this.state.isVietnamease ? y.CatName : this.state.isEnglish ? y.CatImg.split('|')[0] : y.CatImg.split('|')[1]}</Text>
                                                             )
                                                         })
                                                     }
@@ -1451,7 +1451,7 @@ export default class SearchScreen extends React.Component {
                                                             y.ID == item.CategoryID &&
                                                             <Text
                                                                 style={{ flex: 3, color: '#73aa2a', fontSize: responsiveFontSize(1.5) }}
-                                                                key={i}>{y.CatName}</Text>
+                                                                key={i}>{this.state.isVietnamease ? y.CatName : this.state.isEnglish ? y.CatImg.split('|')[0] : y.CatImg.split('|')[1]}</Text>
                                                         )
                                                     })
                                                 }
@@ -1551,6 +1551,7 @@ export default class SearchScreen extends React.Component {
                                 selectedBDS: translate("All real estate"),
                                 iosSelectedCategory: translate("All real estate"),
                             })
+                            this._getLanguageFromStorageAsync()
                         }}
                     >
                         <View style={{ flex: 1, marginTop: 30, padding: 10, }}>
@@ -1586,7 +1587,7 @@ export default class SearchScreen extends React.Component {
 
                                             {this.state.roomCategory.map((y, i) => {
                                                 return (
-                                                    <Picker.Item key={i} label={y.CatName} value={y.ID} />
+                                                    <Picker.Item key={i} label={this.state.isVietnamease ? y.CatName : this.state.isEnglish ? y.CatImg.split('|')[0] : y.CatImg.split('|')[1]} value={y.ID} />
                                                 )
                                             })}
 
@@ -1596,7 +1597,7 @@ export default class SearchScreen extends React.Component {
                                     <SimplePicker
                                         ref={'pickerCategory'}
                                         options={this.state.roomCategory.map((y, i) => y.ID)}
-                                        labels={this.state.roomCategory.map((y, i) => y.CatName)}
+                                        labels={this.state.roomCategory.map((y, i) => this.state.isVietnamease ? y.CatName : this.state.isEnglish ? y.CatImg.split('|')[0] : y.CatImg.split('|')[1])}
                                         confirmText={translate("Agree")}
                                         cancelText={translate("Cancel")}
                                         itemStyle={{
@@ -1609,7 +1610,7 @@ export default class SearchScreen extends React.Component {
                                             await this.setState({ selectedCategory: option });
                                             this.state.roomCategory.map((y, i) => {
                                                 if (y.ID === option) {
-                                                    this.setState({ iosSelectedCategory: y.CatName })
+                                                    this.setState({ iosSelectedCategory: this.state.isVietnamease ? y.CatName : this.state.isEnglish ? y.CatImg.split('|')[0] : y.CatImg.split('|')[1] })
                                                 }
                                             })
 
@@ -1933,7 +1934,7 @@ export default class SearchScreen extends React.Component {
 
                                                 if (y.ID == this.state.selectedCategory) {
                                                     this.setState({
-                                                        selectedBDS: y.CatName
+                                                        selectedBDS: this.state.isVietnamease ? y.CatName : this.state.isEnglish ? y.CatImg.split('|')[0] : y.CatImg.split('|')[1]
                                                     })
                                                 }
 
