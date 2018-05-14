@@ -266,7 +266,7 @@ export default class UpdateAccountScreen extends React.Component {
                     <Text style={{
                         marginLeft: 20, color: '#fff',
                         fontSize: responsiveFontSize(2), justifyContent: 'center'
-                    }}>{translate("Updates")}</Text>
+                    }}>{translate("Personal information")}</Text>
                 </View>
                 <KeyboardAwareScrollView
                     innerRef={ref => { this.scroll = ref }}

@@ -29,6 +29,7 @@ import { responsiveHeight, responsiveWidth, responsiveFontSize } from 'react-nat
 import deleteImageAsync from '../api/deleteImageAsync'
 import convertAmountToWording from '../api/convertAmountToWording'
 import globalVariable from '../components/Global'
+import { translate } from 'react-native-translate/dist';
 
 var { height, width } = Dimensions.get('window');
 
@@ -419,7 +420,7 @@ export default class PinnedRoomScreen extends React.Component {
                         }}>
                         <Ionicons style={{ fontSize: 28, color: '#fff', }} name='md-arrow-back'></Ionicons>
                     </TouchableOpacity>
-                    <Text style={{ marginLeft: 20, color: '#fff', fontSize: responsiveFontSize(2.2), justifyContent: 'center' }}>Tin đánh dấu</Text>
+                    <Text style={{ marginLeft: 20, color: '#fff', fontSize: responsiveFontSize(2.2), justifyContent: 'center' }}>{translate("Pinned")}</Text>
                 </View>
 
 
