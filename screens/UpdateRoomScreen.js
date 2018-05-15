@@ -1183,7 +1183,7 @@ export default class UpdateRoomScreen extends React.Component {
                         }
 
                         <KeyboardAvoidingView behavior={Platform.OS == 'ios' ? 'height' : 'padding'}
-                            style={{ marginBottom: Platform.OS == 'ios' ? 140 : 30 }}
+                            style={{ marginBottom: Platform.OS == 'ios' ? 430 : 90 }}
                         >
 
                             {/* Detail Room Information */}

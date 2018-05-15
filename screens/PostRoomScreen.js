@@ -1166,7 +1166,7 @@ export default class PostRoomScreen extends React.Component {
                             </View>
                         }
                         <KeyboardAvoidingView behavior={Platform.OS == 'ios' ? 'height' : 'padding'}
-                            style={{ marginBottom: Platform.OS == 'ios' ? 420 : 90 }}
+                            style={{ marginBottom: Platform.OS == 'ios' ? 430 : 90 }}
                         >
 
 
