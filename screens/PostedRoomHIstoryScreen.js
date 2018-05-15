@@ -80,6 +80,7 @@ export default class PostedRoomHIstoryScreen extends React.Component {
     }
 
     componentWillMount() {
+        this._getLanguageFromStorageAsync();
         roomBox = [];
         this._getProfileFromStorageAsync();
         this._getCategoryFromStorageAsync();
@@ -89,7 +90,7 @@ export default class PostedRoomHIstoryScreen extends React.Component {
 
 
     componentWillUnmount() {
-        this._getLanguageFromStorageAsync();
+        
     }
 
     componentDidMount() {

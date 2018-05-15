@@ -350,6 +350,7 @@ export default class RoomDetailScreen extends React.Component {
 
     }
 
+
     _postTranslator = async (lang, textAPI, langAPI) => {
 
         this.popupLoadingIndicator.show();
@@ -943,7 +944,7 @@ export default class RoomDetailScreen extends React.Component {
 
 
                         {/* Language English*/}
-                        <TouchableOpacity style={{
+                        {/* <TouchableOpacity style={{
 
                             marginLeft: 10,
                             marginBottom: 2,
@@ -953,20 +954,17 @@ export default class RoomDetailScreen extends React.Component {
                                 this._postTranslator('English', this.state.roomBox.Description, 'en')
                             }}
                         >
-                            {/* <Ionicons style={{
-                           color: '#7E7E7E',
-                           fontSize: responsiveFontSize(1.8),
-                       }} name='md-time' /> */}
+                        
                             <Text style={{
                                 color: '#73aa2a',
                                 fontSize: responsiveFontSize(1.8),//13,
                                 paddingLeft: 2,
                                 ///marginBottom: 5,
                             }}>English</Text>
-                        </TouchableOpacity>
+                        </TouchableOpacity> */}
 
                         {/* Language Chinese*/}
-                        <TouchableOpacity style={{
+                        {/* <TouchableOpacity style={{
 
                             marginLeft: 10,
                             marginBottom: 2,
@@ -976,17 +974,14 @@ export default class RoomDetailScreen extends React.Component {
                                 this._postTranslator('Chinese', this.state.roomBox.Description, 'zh')
                             }}
                         >
-                            {/* <Ionicons style={{
-color: '#7E7E7E',
-fontSize: responsiveFontSize(1.8),
-}} name='md-time' /> */}
+
                             <Text style={{
                                 color: '#73aa2a',
                                 fontSize: responsiveFontSize(1.8),//13,
                                 paddingLeft: 2,
 
                             }}>Chinese</Text>
-                        </TouchableOpacity>
+                        </TouchableOpacity> */}
                     </View>
 
 
@@ -1126,8 +1121,7 @@ fontSize: responsiveFontSize(1.8),
                             </View>
 
                             <Text style={styles.cardDesText}>
-
-                                {this.state.roomBox.Description}
+                                {this.state.roomBox.Description.indexOf("###") > -1 ? (this.state.isVietnamease ? this.state.roomBox.Description.split('###')[0] : this.state.isEnglish ? this.state.roomBox.Description.split('###')[1] : this.state.roomBox.Description.split('###')[2]) : this.state.roomBox.Description}
                             </Text>
                         </View>
                         <View style={styles.cardBottom}>
@@ -1223,7 +1217,7 @@ fontSize: responsiveFontSize(1.8),
                                                 },
                                                 {
                                                     text: translate("Agree"), onPress: () => {
-                                                        this._handleFacebookLogin(this.state.roomBox.Title, this.state.roomBox.Description
+                                                        this._handleFacebookLogin(this.state.roomBox.Title, this.state.roomBox.Description.indexOf("###") > -1 ? (this.state.isVietnamease ? this.state.roomBox.Description.split('###')[0] : this.state.isEnglish ? this.state.roomBox.Description.split('###')[1] : this.state.roomBox.Description.split('###')[2]) : this.state.roomBox.Description
                                                             + '\n\n\n' + translate("Install the Nhabaola Application for more Real Estate")
                                                             + '\n - iOS: https://itunes.apple.com/vn/app/nhabaola/id1287451307?mt=8'
                                                             + '\n - Android: ' + 'https://play.google.com/store/apps/details?id=vn.nhabaola.nhabaola')
@@ -1251,7 +1245,7 @@ fontSize: responsiveFontSize(1.8),
 
                                         const _contactName = this.state.roomBox.ContactPhone.indexOf('|') > -1 ? this.state.roomBox.ContactPhone.split('|')[1] : this.state.roomBox.AccountName
                                         const _contactPhone = this.state.roomBox.ContactPhone.indexOf('|') > -1 ? this.state.roomBox.ContactPhone.split('|')[0] : this.state.roomBox.ContactPhone
-
+                                        const _description = this.state.roomBox.Description.indexOf("###") > -1 ? (this.state.isVietnamease ? this.state.roomBox.Description.split('###')[0] : this.state.isEnglish ? this.state.roomBox.Description.split('###')[1] : this.state.roomBox.Description.split('###')[2]) : this.state.roomBox.Description
 
                                         if (Platform.OS == 'ios') {
                                             Share.share({
@@ -1261,7 +1255,7 @@ fontSize: responsiveFontSize(1.8),
                                                     + "\n\n" + translate("Type of real estate") + ": " + loadBDS
                                                     + "\n" + translate("Price") + ": " + this.state.roomBox.Price + " đồng"
                                                     + "\n" + translate("Area") + ": " + this.state.roomBox.Acreage + " " + translate("Square meters")
-                                                    + "\n" + translate("Address") + ": " + this.state.roomBox.Address + "\n\n" + translate("Description") + ":\n" + this.state.roomBox.Description
+                                                    + "\n" + translate("Address") + ": " + this.state.roomBox.Address + "\n\n" + translate("Description") + ":\n" + _description
                                                     + "\n\n" + translate("Installation") + ": "
                                                     + "\nAndroid: \nhttps://play.google.com/store/apps/details?id=vn.nhabaola.nhabaola"
                                                     + "\n\niOS: \nhttps://itunes.apple.com/vn/app/nhabaola/id1287451307?mt=8",
@@ -1284,7 +1278,7 @@ fontSize: responsiveFontSize(1.8),
                                                     + "\n\n" + translate("Type of real estate") + ": " + loadBDS
                                                     + "\n" + translate("Price") + ": " + this.state.roomBox.Price + " đồng"
                                                     + "\n" + translate("Area") + ": " + this.state.roomBox.Acreage + " " + translate("Square meters")
-                                                    + "\n" + translate("Address") + ": " + this.state.roomBox.Address + "\n\n" + translate("Description") + ":\n" + this.state.roomBox.Description
+                                                    + "\n" + translate("Address") + ": " + this.state.roomBox.Address + "\n\n" + translate("Description") + ":\n" + _description
                                                     + "\n\n" + translate("Installation") + ": "
                                                     + "\niOS: \nhttps://itunes.apple.com/vn/app/nhabaola/id1287451307?mt=8"
                                                     + "\n\nAndroid: \nhttps://play.google.com/store/apps/details?id=vn.nhabaola.nhabaola",

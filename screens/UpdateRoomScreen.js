@@ -111,6 +111,8 @@ export default class UpdateRoomScreen extends React.Component {
             isVietnamease: false,
             isEnglish: false,
             isChinease: false,
+            detailInfoEnglish: '',
+            detailInfoChinease: '',
         }
     }
 
@@ -163,7 +165,7 @@ export default class UpdateRoomScreen extends React.Component {
         var _longitude = parseFloat(this.state.roomBox.Longitude)
 
         await this.setState({
-            detailInfo: this.state.roomBox.Description,
+            detailInfo: this.state.roomBox.Description.indexOf("###") > -1 ? this.state.roomBox.Description.split('###')[0] : this.state.roomBox.Description,
             price: this.state.roomBox.Price,
             acreage: this.state.roomBox.Acreage,
             selectedCategory: this.state.roomBox.CategoryID,
@@ -187,6 +189,8 @@ export default class UpdateRoomScreen extends React.Component {
             mapRegion: {
                 latitude: _latitude, longitude: _longitude, latitudeDelta: LATITUDE_DELTA, longitudeDelta: LONGITUDE_DELTA
             },
+            detailInfoEnglish: this.state.roomBox.Description.indexOf("###") > -1 ? this.state.roomBox.Description.split('###')[1] : '',
+            detailInfoChinease: this.state.roomBox.Description.indexOf("###") > -1 ? this.state.roomBox.Description.split('###')[2] : '',
         })
 
     }
@@ -304,6 +308,40 @@ export default class UpdateRoomScreen extends React.Component {
         }
 
     };
+
+    _postTranslator = async (lang, textAPI, langAPI) => {
+        this.popupLoadingIndicator.show()
+
+        var keyAPI = "trnsl.1.1.20130922T110455Z.4a9208e68c61a760.f819c1db302ba637c2bea1befa4db9f784e9fbb8";
+
+        try {
+            await fetch('https://translate.yandex.net/api/v1.5/tr.json/translate?key='
+                + keyAPI
+                + '&lang='
+                + langAPI//encodeURIComponent(langAPI)
+                + '&text='
+                + textAPI, {//encodeURIComponent(textAPI), {
+                })
+                .then((response) => response.json())
+                .then((responseJson) => {
+
+                    if (JSON.stringify(responseJson.code) == '200') {
+                        //alert(JSON.stringify(responseJson))
+
+                        if (langAPI == 'en') {
+                            this.setState({ detailInfoEnglish: JSON.stringify(responseJson.text).replace('["', '').replace('"]', '') })
+                        } else {// zh
+                            this.setState({ detailInfoChinease: JSON.stringify(responseJson.text).replace('["', '').replace('"]', '') })
+                        }
+                    }
+                    this.popupLoadingIndicator.dismiss()
+                }).
+                catch((error) => { console.log(error) });
+        } catch (error) {
+            console.log(error)
+        }
+
+    }
 
     _updateRoomAsync = async () => {
         //alert(new Date(this.state.toDate) + " " + new Date(this.state.fromDate))
@@ -496,6 +534,7 @@ export default class UpdateRoomScreen extends React.Component {
             _contactPhone = this.state.contactPhone + '|' + this.state.contactName;
         }
 
+        let _des = this.state.detailInfo + (this.state.detailInfoEnglish != '' ? '\n\n###\n' + this.state.detailInfoEnglish : '') + (this.state.detailInfoChinease != '' ? '\n\n###\n' + this.state.detailInfoChinease : '')
 
         try {
             await fetch("http://nhabaola.vn/api/RoomBox/FO_RoomBox_Edit", {
@@ -513,7 +552,7 @@ export default class UpdateRoomScreen extends React.Component {
                     "Address": this.state.selectedAddress,
                     "Longitude": this.state.searchingMaker.longitude,
                     "Latitude": this.state.searchingMaker.latitude,
-                    "Description": this.state.detailInfo,
+                    "Description": _des,//this.state.detailInfo,
                     "Price": this.state.price.replace('.', '').replace('.', '').replace('.', '').replace('.', ''),
                     "Acreage": this.state.acreage,
                     "Toilet": "",
@@ -1171,6 +1210,100 @@ export default class UpdateRoomScreen extends React.Component {
                                 value={this.state.detailInfo}
                                 onChangeText={(detailInfo) => this.setState({ detailInfo })}
                             />
+
+                            {/* English Detail Info */}
+                            <TouchableOpacity
+                                style={{
+                                    marginTop: 30, zIndex: 20,
+                                    flexDirection: 'row', alignContent: 'center', alignItems: 'center',
+                                    // borderWidth: 1,
+                                    //padding: 10,
+
+                                }}
+                                onPress={() => {
+                                    this._postTranslator('English', this.state.detailInfo, 'en')
+                                }}
+                            >
+                                <Ionicons style={{ paddingLeft: 20, paddingBottom: Platform.OS == 'ios' ? 20 : 0, fontSize: responsiveFontSize(2.5), color: '#73aa2a' }} name="ios-arrow-forward-outline" />
+                                <Text style={{
+                                    paddingLeft: 5, paddingBottom: 3,
+                                    fontSize: responsiveFontSize(1.8), color: '#9B9D9D'
+                                }}>{translate("Automatic translation to English")}</Text>
+
+                            </TouchableOpacity>
+
+                            <FormInput
+                                ref='roomInfoEnglishInput'
+                                returnKeyType={"done"}
+                                onSubmitEditing={(event) => {
+                                    //this._postRoomAsync();
+                                    Keyboard.dismiss();
+                                }}
+                                onFocus={(event) => {
+                                    this._scrollToInput(event.target)
+                                }}
+                                containerStyle={{ borderWidth: 0.5, borderColor: '#73aa2a', borderRadius: 10, marginTop: 10 }}
+                                inputStyle={{ padding: 10, height: 120, paddingRight: Platform.OS == 'ios' ? 50 : 0 }}
+                                placeholder='English'//{translate("Please enter detailed information")}
+                                multiline={true}
+                                //numberOfLines={5}
+                                //keyboardType='default'
+                                autoCapitalize='sentences'
+                                //maxLength={300}
+                                clearButtonMode='always'
+                                underlineColorAndroid='#fff'
+                                blurOnSubmit={false}
+                                value={this.state.detailInfoEnglish}
+                                onChangeText={(detailInfoEnglish) => this.setState({ detailInfoEnglish })}
+                            />
+
+                            {/* Chinease Detail Info */}
+
+                            <TouchableOpacity
+                                style={{
+                                    marginTop: 30, zIndex: 20,
+                                    flexDirection: 'row', alignContent: 'center', alignItems: 'center',
+                                    // borderWidth: 1,
+                                    //padding: 10,
+
+                                }}
+                                onPress={() => {
+                                    this._postTranslator('English', this.state.detailInfo, 'zh')
+                                }}
+                            >
+                                <Ionicons style={{ paddingLeft: 20, paddingBottom: Platform.OS == 'ios' ? 20 : 0, fontSize: responsiveFontSize(2.5), color: '#73aa2a' }} name="ios-arrow-forward-outline" />
+                                <Text style={{
+                                    paddingLeft: 5, paddingBottom: 3,
+                                    fontSize: responsiveFontSize(1.8), color: '#9B9D9D'
+                                }}>{translate("Automatic translation to Chinese")}</Text>
+
+                            </TouchableOpacity>
+
+                            <FormInput
+                                ref='roomInfoChineaseInput'
+                                returnKeyType={"done"}
+                                onSubmitEditing={(event) => {
+                                    //this._postRoomAsync();
+                                    Keyboard.dismiss();
+                                }}
+                                onFocus={(event) => {
+                                    this._scrollToInput(event.target)
+                                }}
+                                containerStyle={{ borderWidth: 0.5, borderColor: '#73aa2a', borderRadius: 10, marginTop: 10 }}
+                                inputStyle={{ padding: 10, height: 120, paddingRight: Platform.OS == 'ios' ? 50 : 0 }}
+                                placeholder='中文'//{translate("Please enter detailed information")}
+                                multiline={true}
+                                //numberOfLines={5}
+                                //keyboardType='default'
+                                autoCapitalize='sentences'
+                                //maxLength={300}
+                                clearButtonMode='always'
+                                underlineColorAndroid='#fff'
+                                blurOnSubmit={false}
+                                value={this.state.detailInfoChinease}
+                                onChangeText={(detailInfoChinease) => this.setState({ detailInfoChinease })}
+                            />
+
                         </KeyboardAvoidingView>
                     </View>
                     {/* <KeyboardSpacer /> */}

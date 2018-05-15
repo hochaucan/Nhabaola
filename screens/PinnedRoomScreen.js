@@ -29,7 +29,10 @@ import { responsiveHeight, responsiveWidth, responsiveFontSize } from 'react-nat
 import deleteImageAsync from '../api/deleteImageAsync'
 import convertAmountToWording from '../api/convertAmountToWording'
 import globalVariable from '../components/Global'
-import { translate } from 'react-native-translate/dist';
+import enTranslation from '../components/en.json';
+import zhTranslation from '../components/zh.json';
+import viTranslation from '../components/vi.json';
+import { setLocalization, translate, Translate } from 'react-native-translate';
 
 var { height, width } = Dimensions.get('window');
 
@@ -69,10 +72,14 @@ export default class PinnedRoomScreen extends React.Component {
             // toDate: topDate,
             searchFlatlistKey: '',
             flatListIsEnd: false,
+            isVietnamease: false,
+            isEnglish: false,
+            isChinease: false,
         }
     }
 
     componentWillMount() {
+        this._getLanguageFromStorageAsync();
         roomBox = [];
         this._getProfileFromStorageAsync();
         this._getCategoryFromStorageAsync();
@@ -92,6 +99,32 @@ export default class PinnedRoomScreen extends React.Component {
     // _moveToRoomDetail = (user) => {
     //     this.props.navigation.navigate('RoomDetailScreen', { ...user });
     // };
+
+    _getLanguageFromStorageAsync = async () => {
+        try {
+            var value = await AsyncStorage.getItem('language');
+
+            if (value !== null) {
+                if (value == 'enTranslation') {
+                    setLocalization(enTranslation)
+                    this.setState({ isEnglish: true, isVietnamease: false, isChinease: false })
+                } else if (value == 'zhTranslation') {
+                    setLocalization(zhTranslation)
+                    this.setState({ isEnglish: false, isVietnamease: false, isChinease: true })
+                }
+                else {
+                    setLocalization(viTranslation)
+                    this.setState({ isEnglish: false, isVietnamease: true, isChinease: false })
+                }
+            } else {
+                setLocalization(viTranslation)
+                this.setState({ isEnglish: false, isVietnamease: true, isChinease: false })
+            }
+
+        } catch (e) {
+            console.log(e);
+        }
+    }
 
     onRefreshScreen = data => {
         this.setState(data);
@@ -118,8 +151,6 @@ export default class PinnedRoomScreen extends React.Component {
             console.log(e);
         }
 
-        //alert(JSON.stringify(profile))
-        //alert(profile)
     }
 
     _getCategoryFromStorageAsync = async () => {
@@ -135,13 +166,10 @@ export default class PinnedRoomScreen extends React.Component {
         } catch (e) {
             console.log(e);
         }
-
-        // alert(JSON.stringify(this.state.roomCategory))
     }
 
     _getRoomBoxByUserAsync = async (isNew) => {
         await this.setState({ refresh: true })
-        //alert(JSON.stringify(this.state.profile))
 
         if (!isNew) { // Loading more page 
             this.setState((prevState, props) => ({
@@ -196,211 +224,211 @@ export default class PinnedRoomScreen extends React.Component {
         this._getRoomBoxByUserAsync(true);
     }
 
-    _deleteRoomBoxAsync = async (item) => {
-        //await this.setState({ refresh: true })
-        //alert(this.state.profile)
-        // alert(JSON.stringify(item.Images))
+    // _deleteRoomBoxAsync = async (item) => {
+    //     //await this.setState({ refresh: true })
+    //     //alert(this.state.profile)
+    //     // alert(JSON.stringify(item.Images))
 
-        //let deleteResult = deleteResponse.json();
+    //     //let deleteResult = deleteResponse.json();
 
 
-        //alert( JSON.stringify(deleteResponse))
+    //     //alert( JSON.stringify(deleteResponse))
 
-        //return;
+    //     //return;
 
-        try {
-            await fetch("http://nhabaola.vn/api/RoomBox/FO_RoomBox_Del", {
-                method: 'POST',
-                headers: {
-                    Accept: 'application/json',
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    "ID": item.ID,
-                    "CreatedBy": this.state.profile.ID,
-                    "UpdatedBy": this.state.profile.UpdatedBy
-                }),
-            })
-                .then((response) => response.json())
-                .then((responseJson) => {
+    //     try {
+    //         await fetch("http://nhabaola.vn/api/RoomBox/FO_RoomBox_Del", {
+    //             method: 'POST',
+    //             headers: {
+    //                 Accept: 'application/json',
+    //                 'Content-Type': 'application/json',
+    //             },
+    //             body: JSON.stringify({
+    //                 "ID": item.ID,
+    //                 "CreatedBy": this.state.profile.ID,
+    //                 "UpdatedBy": this.state.profile.UpdatedBy
+    //             }),
+    //         })
+    //             .then((response) => response.json())
+    //             .then((responseJson) => {
 
-                    if (JSON.stringify(responseJson.ErrorCode) === "12") {
-                        if (Platform.OS === 'android') {
-                            ToastAndroid.showWithGravity('Xóa thành công!', ToastAndroid.SHORT, ToastAndroid.TOP);
-                        }
-                        else {
-                            Alert.alert('Xóa thành công!');
-                        }
+    //                 if (JSON.stringify(responseJson.ErrorCode) === "12") {
+    //                     if (Platform.OS === 'android') {
+    //                         ToastAndroid.showWithGravity('Xóa thành công!', ToastAndroid.SHORT, ToastAndroid.TOP);
+    //                     }
+    //                     else {
+    //                         Alert.alert('Xóa thành công!');
+    //                     }
 
-                        this._getRoomBoxByUserAsync(true);
-                        let deleteResponse = deleteImageAsync(item.Images);
+    //                     this._getRoomBoxByUserAsync(true);
+    //                     let deleteResponse = deleteImageAsync(item.Images);
 
-                    }
-                    //this.setState({ refresh: false })
-                    //alert(JSON.stringify(responseJson))
+    //                 }
+    //                 //this.setState({ refresh: false })
+    //                 //alert(JSON.stringify(responseJson))
 
-                }).
-                catch((error) => { console.log(error) });
-        } catch (error) {
-            console.log(error)
-        }
+    //             }).
+    //             catch((error) => { console.log(error) });
+    //     } catch (error) {
+    //         console.log(error)
+    //     }
 
-    }
+    // }
 
-    _setTopAsync = async (id) => {
-        //await this.setState({ refresh: true })
-        //alert(this.state.profile)
-        this.popupLoadingIndicator.show();
+    // _setTopAsync = async (id) => {
+    //     //await this.setState({ refresh: true })
+    //     //alert(this.state.profile)
+    //     this.popupLoadingIndicator.show();
 
-        try {
-            await fetch("http://nhabaola.vn//api/RoomBox/FO_RoomBox_SetTop", {
-                method: 'POST',
-                headers: {
-                    Accept: 'application/json',
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    "ID": id,
-                    "IsTop": "true",
-                    "UpdatedBy": this.state.profile.UpdatedBy,
-                    "CreatedBy": this.state.profile.ID
-                }),
-            })
-                .then((response) => response.json())
-                .then((responseJson) => {
+    //     try {
+    //         await fetch("http://nhabaola.vn//api/RoomBox/FO_RoomBox_SetTop", {
+    //             method: 'POST',
+    //             headers: {
+    //                 Accept: 'application/json',
+    //                 'Content-Type': 'application/json',
+    //             },
+    //             body: JSON.stringify({
+    //                 "ID": id,
+    //                 "IsTop": "true",
+    //                 "UpdatedBy": this.state.profile.UpdatedBy,
+    //                 "CreatedBy": this.state.profile.ID
+    //             }),
+    //         })
+    //             .then((response) => response.json())
+    //             .then((responseJson) => {
 
-                    if (JSON.stringify(responseJson.ErrorCode) === "0") {
-                        if (Platform.OS === 'android') {
-                            ToastAndroid.showWithGravity('Đưa tin lên đầu thành công!', ToastAndroid.SHORT, ToastAndroid.TOP);
-                        }
-                        else {
-                            Alert.alert('Đưa tin lên đầu thành công!');
-                        }
+    //                 if (JSON.stringify(responseJson.ErrorCode) === "0") {
+    //                     if (Platform.OS === 'android') {
+    //                         ToastAndroid.showWithGravity('Đưa tin lên đầu thành công!', ToastAndroid.SHORT, ToastAndroid.TOP);
+    //                     }
+    //                     else {
+    //                         Alert.alert('Đưa tin lên đầu thành công!');
+    //                     }
 
-                        this.popupLoadingIndicator.dismiss();
-                    }
+    //                     this.popupLoadingIndicator.dismiss();
+    //                 }
 
-                }).
-                catch((error) => { console.log(error) });
-        } catch (error) {
-            console.log(error)
-        }
+    //             }).
+    //             catch((error) => { console.log(error) });
+    //     } catch (error) {
+    //         console.log(error)
+    //     }
 
-    }
+    // }
 
     _shouldItemUpdate = (prev, next) => {
         return prev.item !== next.item;
     }
 
-    _updateRoomAsync = async (room) => {
-        // // Calculate Images fields
-        // var isNotify = !room.Images.split('|')[1]
-        // var images = globalVariable.PHONE_TOKEN + '|' + isNotify + room.Images.substring(room.Images.indexOf("http") - 1)
+    // _updateRoomAsync = async (room) => {
+    //     // // Calculate Images fields
+    //     // var isNotify = !room.Images.split('|')[1]
+    //     // var images = globalVariable.PHONE_TOKEN + '|' + isNotify + room.Images.substring(room.Images.indexOf("http") - 1)
 
-        //this._getRoomBoxByUserAsync(true)
-        //alert(images)
-        // return;
+    //     //this._getRoomBoxByUserAsync(true)
+    //     //alert(images)
+    //     // return;
 
-        //Loading
-        // this.popupLoadingIndicator.show();
+    //     //Loading
+    //     // this.popupLoadingIndicator.show();
 
-        // Calculate Images fields
-        var isNotify = room.Images.split('|')[1] == 'true' ? 'false' : 'true';
-        var images = globalVariable.PHONE_TOKEN + '|' + isNotify + room.Images.substring(room.Images.indexOf("http") - 1)
-        // alert(images)
-        try {
-            await fetch("http://nhabaola.vn/api/RoomBox/FO_RoomBox_Edit", {
-                method: 'POST',
-                headers: {
-                    Accept: 'application/json',
-                    'Content-Type': 'application/json',
-                },
+    //     // Calculate Images fields
+    //     var isNotify = room.Images.split('|')[1] == 'true' ? 'false' : 'true';
+    //     var images = globalVariable.PHONE_TOKEN + '|' + isNotify + room.Images.substring(room.Images.indexOf("http") - 1)
+    //     // alert(images)
+    //     try {
+    //         await fetch("http://nhabaola.vn/api/RoomBox/FO_RoomBox_Edit", {
+    //             method: 'POST',
+    //             headers: {
+    //                 Accept: 'application/json',
+    //                 'Content-Type': 'application/json',
+    //             },
 
-                body: JSON.stringify({
-                    "ID": room.ID,
-                    "Title": room.Title,
-                    "Images": images,
-                    "CategoryID": room.CategoryID,
-                    "Address": room.Address,
-                    "Longitude": room.Longitude,
-                    "Latitude": room.Latitude,
-                    "Description": room.Description,
-                    "Price": room.Price.replace('.', '').replace('.', '').replace('.', '').replace('.', ''),
-                    "Acreage": room.Acreage,
-                    "Toilet": "",
-                    "Bedroom": "",
-                    "AirConditioner": "",
-                    "ContactPhone": room.ContactPhone,
-                    "FromDate": minDate,//room.FromDate,
-                    "ToDate": room.ToDate,
-                    "IsTop": "true",
-                    "IsPinned": "false",
-                    "IsHighlight": room.IsHighlight,
-                    "HighlightFromDate": minDate,//room.HighlightFromDate,
-                    "HighlightToDate": room.HighlightToDate,
-                    "IsActive": "true",
-                    "CreatedBy": this.state.profile.ID,
-                    "UpdatedBy": this.state.profile.UpdatedBy,
-                }),
-            })
-                .then((response) => response.json())
-                .then((responseJson) => {
+    //             body: JSON.stringify({
+    //                 "ID": room.ID,
+    //                 "Title": room.Title,
+    //                 "Images": images,
+    //                 "CategoryID": room.CategoryID,
+    //                 "Address": room.Address,
+    //                 "Longitude": room.Longitude,
+    //                 "Latitude": room.Latitude,
+    //                 "Description": room.Description,
+    //                 "Price": room.Price.replace('.', '').replace('.', '').replace('.', '').replace('.', ''),
+    //                 "Acreage": room.Acreage,
+    //                 "Toilet": "",
+    //                 "Bedroom": "",
+    //                 "AirConditioner": "",
+    //                 "ContactPhone": room.ContactPhone,
+    //                 "FromDate": minDate,//room.FromDate,
+    //                 "ToDate": room.ToDate,
+    //                 "IsTop": "true",
+    //                 "IsPinned": "false",
+    //                 "IsHighlight": room.IsHighlight,
+    //                 "HighlightFromDate": minDate,//room.HighlightFromDate,
+    //                 "HighlightToDate": room.HighlightToDate,
+    //                 "IsActive": "true",
+    //                 "CreatedBy": this.state.profile.ID,
+    //                 "UpdatedBy": this.state.profile.UpdatedBy,
+    //             }),
+    //         })
+    //             .then((response) => response.json())
+    //             .then((responseJson) => {
 
-                    //alert(JSON.stringify(responseJson))
+    //                 //alert(JSON.stringify(responseJson))
 
-                    if (JSON.stringify(responseJson.ErrorCode) === "11") {//Update successful
+    //                 if (JSON.stringify(responseJson.ErrorCode) === "11") {//Update successful
 
-                        //Refresh Room
-                        this._getRoomBoxByUserAsync(true)
+    //                     //Refresh Room
+    //                     this._getRoomBoxByUserAsync(true)
 
-                        // if (Platform.OS === 'android') {
-                        //     ToastAndroid.showWithGravity('Đăng ký nhận thông báo thành công!', ToastAndroid.SHORT, ToastAndroid.TOP);
-                        // }
-                        // else {
-                        //     Alert.alert('Đăng ký nhận thông báo thành công!');
-                        // }
+    //                     // if (Platform.OS === 'android') {
+    //                     //     ToastAndroid.showWithGravity('Đăng ký nhận thông báo thành công!', ToastAndroid.SHORT, ToastAndroid.TOP);
+    //                     // }
+    //                     // else {
+    //                     //     Alert.alert('Đăng ký nhận thông báo thành công!');
+    //                     // }
 
-                    } else { // Lỗi
+    //                 } else { // Lỗi
 
-                        if (Platform.OS === 'android') {
-                            ToastAndroid.showWithGravity('Lỗi, vui lòng liên hệ Admin trong mục Giúp Đỡ!', ToastAndroid.SHORT, ToastAndroid.TOP);
-                        }
-                        else {
-                            Alert.alert('Thông báo', 'Lỗi, vui lòng liên hệ Admin trong mục Giúp Đỡ!');
-                        }
-                    }
-                    // if (JSON.stringify(responseJson.ErrorCode) === "3") {
+    //                     if (Platform.OS === 'android') {
+    //                         ToastAndroid.showWithGravity('Lỗi, vui lòng liên hệ Admin trong mục Giúp Đỡ!', ToastAndroid.SHORT, ToastAndroid.TOP);
+    //                     }
+    //                     else {
+    //                         Alert.alert('Thông báo', 'Lỗi, vui lòng liên hệ Admin trong mục Giúp Đỡ!');
+    //                     }
+    //                 }
+    //                 // if (JSON.stringify(responseJson.ErrorCode) === "3") {
 
-                    //     if (Platform.OS === 'android') {
-                    //         ToastAndroid.showWithGravity('Ngày bắt đầu hiệu lực phải lớn hơn ngày hiện tại', ToastAndroid.SHORT, ToastAndroid.CENTER);
-                    //     }
-                    //     else {
-                    //         Alert.alert('Ngày bắt đầu hiệu lực phải lớn hơn ngày hiện tại');
-                    //     }
-                    //     //this._getRoomBoxByUserAsync(true);
-                    // }
-
-
-                    //alert(JSON.stringify(responseJson))
-
-                    //this.props.navigation.navigate('Home');
-                    // HomeScreen.refreshRoomBoxAfterPost();
-                    //this.props.navigation.state.params.onSelect({ selected: true });
-                    //this.props.navigation.goBack();
-                    //  this.props.navigation.state.params._getWalletAsync();
-                    // this.props.navigation.state.params.onRefreshScreen({ refreshScreen: true });
+    //                 //     if (Platform.OS === 'android') {
+    //                 //         ToastAndroid.showWithGravity('Ngày bắt đầu hiệu lực phải lớn hơn ngày hiện tại', ToastAndroid.SHORT, ToastAndroid.CENTER);
+    //                 //     }
+    //                 //     else {
+    //                 //         Alert.alert('Ngày bắt đầu hiệu lực phải lớn hơn ngày hiện tại');
+    //                 //     }
+    //                 //     //this._getRoomBoxByUserAsync(true);
+    //                 // }
 
 
-                    this.popupLoadingIndicator.dismiss();
+    //                 //alert(JSON.stringify(responseJson))
 
-                }).
-                catch((error) => { console.log(error) });
-        } catch (error) {
-            console.log(error)
-        }
+    //                 //this.props.navigation.navigate('Home');
+    //                 // HomeScreen.refreshRoomBoxAfterPost();
+    //                 //this.props.navigation.state.params.onSelect({ selected: true });
+    //                 //this.props.navigation.goBack();
+    //                 //  this.props.navigation.state.params._getWalletAsync();
+    //                 // this.props.navigation.state.params.onRefreshScreen({ refreshScreen: true });
 
 
-    }
+    //                 this.popupLoadingIndicator.dismiss();
+
+    //             }).
+    //             catch((error) => { console.log(error) });
+    //     } catch (error) {
+    //         console.log(error)
+    //     }
+
+
+    // }
 
 
     render() {
@@ -422,22 +450,6 @@ export default class PinnedRoomScreen extends React.Component {
                     </TouchableOpacity>
                     <Text style={{ marginLeft: 20, color: '#fff', fontSize: responsiveFontSize(2.2), justifyContent: 'center' }}>{translate("Pinned")}</Text>
                 </View>
-
-
-
-                {/* <View style={{ flexDirection: 'row', padding: 20, }}>
-                    <TouchableOpacity
-                        style={{}}
-                        onPress={() => {
-
-                            this.props.navigation.goBack()
-                            this.props.navigation.state.params.onRefreshScreen();
-                            //this.props.navigation.state.params.onRefreshScreen({ refreshScreen: true });
-                        }}>
-                        <Ionicons style={{ fontSize: 28, color: '#a4d227', }} name='md-arrow-back'></Ionicons>
-                    </TouchableOpacity>
-                    <Text style={{ marginLeft: 20, color: '#73aa2a', fontSize: 20, justifyContent: 'center' }}>Tin Bạn Đã Đăng</Text>
-                </View> */}
 
                 <View style={styles.searchRoolResultBox}>
 
@@ -542,14 +554,9 @@ export default class PinnedRoomScreen extends React.Component {
                                                     )
                                                 })
                                             } */}
-                                            <Text style={styles.searchCardPostDate}>Ngày đăng: {item.UpdatedDate}</Text>
+                                            <Text style={styles.searchCardPostDate}>{translate("Registered Date")}: {item.UpdatedDate}</Text>
                                             <View style={styles.searchCardPriceBox}>
-                                                {/* <TextMask
-                                                    style={{ flex: 1, }}
-                                                    value={convertAmountToWording(item.Price)}
-                                                    type={'money'}
-                                                    options={{ suffixUnit: ' đ', precision: 0, unit: ' ', separator: ' ' }}
-                                                /> */}
+
 
                                                 <Text style={{ flex: 1, fontSize: responsiveFontSize(1.8) }}>{convertAmountToWording(item.Price)}</Text>
 
@@ -562,13 +569,16 @@ export default class PinnedRoomScreen extends React.Component {
                                                             y.ID == item.CategoryID &&
                                                             <Text
                                                                 style={{ flex: 1, fontSize: responsiveFontSize(1.8), textAlign: 'center', color: '#73aa2a' }}
-                                                                key={i}>{y.CatName}</Text>
+                                                                key={i}>{this.state.isVietnamease ? y.CatName : this.state.isEnglish ? y.CatImg.split('|')[0] : y.CatImg.split('|')[1]}</Text>
                                                         )
                                                     })
                                                 }
 
                                                 {!item.IsActive &&
-                                                    <Text style={{ flex: 1, fontSize: responsiveFontSize(1.8), color: 'red', textAlign: 'center' }}>Hết hạn</Text>
+                                                    <Text style={{
+                                                        flex: 1, fontSize: responsiveFontSize(1.8),
+                                                        color: 'red', textAlign: 'center'
+                                                    }}>{translate("Expired")}</Text>
                                                 }
 
                                             </View>
@@ -639,7 +649,7 @@ export default class PinnedRoomScreen extends React.Component {
                                         style={{ flex: 1, flexDirection: 'row', alignItems: 'center' }}
                                     >
                                         <Ionicons style={{ fontSize: 12, marginRight: 5 }} name="md-timer" />
-                                        <Text style={{ fontSize: responsiveFontSize(1.8), }}>Ngày hiệu lực</Text>
+                                        <Text style={{ fontSize: responsiveFontSize(1.8), }}>{translate("Effective date")}</Text>
                                     </View>
                                     <Text style={{ flex: 1, fontSize: responsiveFontSize(1.8), textAlign: 'center', color: '#9B9D9D' }}>{item.FromDate}</Text>
                                     <Text style={{ color: '#9B9D9D' }}> - </Text>
@@ -653,7 +663,7 @@ export default class PinnedRoomScreen extends React.Component {
                                             style={{ flex: 1, flexDirection: 'row', alignItems: 'center' }}
                                         >
                                             <Ionicons style={{ fontSize: 12, marginRight: 5 }} name="md-sunny" />
-                                            <Text style={{ fontSize: responsiveFontSize(1.8), }}>Ngày nổi bật</Text>
+                                            <Text style={{ fontSize: responsiveFontSize(1.8), }}>{translate("Highlight date")}</Text>
                                         </View>
                                         <Text style={{ flex: 1, fontSize: responsiveFontSize(1.8), textAlign: 'center', color: '#9B9D9D' }}>{item.HighlightFromDate}</Text>
                                         <Text style={{ color: '#9B9D9D' }}> - </Text>
@@ -727,17 +737,17 @@ export default class PinnedRoomScreen extends React.Component {
 
 
                                             Alert.alert(
-                                                'Thông báo',
-                                                'Bạn chắc chắn xóa đánh dấu Tin này?',
+                                                translate("Notice"),
+                                                translate("Are you sure to delete"),
                                                 [
                                                     {
-                                                        text: 'Hủy', onPress: () => {
+                                                        text: translate("Cancel"), onPress: () => {
                                                             // this._deleteRoomBoxAsync(item);
                                                         }
                                                     },
                                                     {
-                                                        text: 'Đồng ý', onPress: () => {
-                                                            // this._deleteRoomBoxAsync(item);
+                                                        text: translate("Agree"), onPress: () => {
+                                                            //this._deleteRoomBoxAsync(item);
                                                         }
                                                     },
                                                 ]
@@ -748,7 +758,7 @@ export default class PinnedRoomScreen extends React.Component {
                                         }}
                                     >
                                         <Ionicons style={{ fontSize: 12, marginRight: 5 }} name="md-trash" />
-                                        <Text>Xóa</Text>
+                                        <Text>{translate("Delete")}</Text>
                                     </TouchableOpacity>
                                 </View>
                             </View>

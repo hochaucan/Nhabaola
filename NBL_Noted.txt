@@ -468,7 +468,7 @@ translate("Retype")
 translate("Delete")
  translate("Error")
   translate("Contact")
-  {translate("Expired")
+  translate("Expired")
  translate("Cellphone")
   translate("Price")
   translate("RoomId")
@@ -597,6 +597,7 @@ translate("Please enter a comment")
 translate("Comment successfully")
 translate("Do you want to send a message to this poster")
 translate("Find the way")
+translate("Highlight date")
 
 
 

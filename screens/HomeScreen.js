@@ -2236,13 +2236,13 @@ export default class HomeScreen extends React.Component {
                   ellipsizeMode='tail'
                   numberOfLines={2}
                 >
-                  Địa chỉ:   {item.Address}</Text>
+                  {translate("Address")}:   {item.Address}</Text>
                 <Text
                   style={{ marginTop: 10, color: '#9B9D9D', fontSize: responsiveFontSize(1.8) }}
                   ellipsizeMode='tail'
                   numberOfLines={2}
                 >
-                  {item.Description}</Text>
+                  {item.Description.indexOf('###') > -1 ? (this.state.isVietnamease ? item.Description.split('###')[0] : this.state.isEnglish ? item.Description.split('###')[1] : item.Description.split('###')[2]) : item.Description}</Text>
 
                 {/* <Text style={styles.cardDesText}>
                   {item.Description}
@@ -2339,7 +2339,7 @@ export default class HomeScreen extends React.Component {
                           },
                           {
                             text: translate("Agree"), onPress: () => {
-                              this._handleFacebookLogin(item.Title, item.Description
+                              this._handleFacebookLogin(item.Title, item.Description.indexOf('###') > -1 ? (this.state.isVietnamease ? item.Description.split('###')[0] : this.state.isEnglish ? item.Description.split('###')[1] : item.Description.split('###')[2]) : item.Description
                                 + '\n\n\n' + translate("Install the Nhabaola Application for more Real Estate")
                                 + '\n - iOS: https://itunes.apple.com/vn/app/nhabaola/id1287451307?mt=8'
                                 + '\n - Android: ' + 'https://play.google.com/store/apps/details?id=vn.nhabaola.nhabaola')
@@ -2365,6 +2365,7 @@ export default class HomeScreen extends React.Component {
 
                       const _contactName = item.ContactPhone.indexOf('|') > -1 ? item.ContactPhone.split('|')[1] : item.AccountName
                       const _contactPhone = item.ContactPhone.indexOf('|') > -1 ? item.ContactPhone.split('|')[0] : item.ContactPhone
+                      const _description =  item.Description.indexOf('###') > -1 ? (this.state.isVietnamease ? item.Description.split('###')[0] : this.state.isEnglish ? item.Description.split('###')[1] : item.Description.split('###')[2]) : item.Description
 
                       if (Platform.OS == 'ios') {
                         Share.share({
@@ -2374,10 +2375,10 @@ export default class HomeScreen extends React.Component {
                             + "\n\n" + translate("Type of real estate") + ": " + loadBDS
                             + "\n" + translate("Price") + ": " + item.Price + " đồng"
                             + "\n" + translate("Area") + ": " + item.Acreage + " " + translate("Square meters")
-                            + "\n" + translate("Address") + ": " + item.Address + "\n\n" + translate("Description") + ":\n" + item.Description
-                            + "\n\n" + translate("Installation") + ": "
-                            + "\nAndroid: \nhttps://play.google.com/store/apps/details?id=vn.nhabaola.nhabaola"
-                            + "\n\niOS: \nhttps://itunes.apple.com/vn/app/nhabaola/id1287451307?mt=8",
+                            + "\n" + translate("Address") + ": " + item.Address + "\n\n" + translate("Description") + ":\n" + _description
+                              + "\n\n" + translate("Installation") + ": "
+                              + "\nAndroid: \nhttps://play.google.com/store/apps/details?id=vn.nhabaola.nhabaola"
+                              + "\n\niOS: \nhttps://itunes.apple.com/vn/app/nhabaola/id1287451307?mt=8",
                           //url: 'https://itunes.apple.com/vn/app/nhabaola/id1287451307?mt=8',
                           title: translate("Share from Nhabaola application")
                         }, {
@@ -2397,10 +2398,10 @@ export default class HomeScreen extends React.Component {
                             + "\n\n" + translate("Type of real estate") + ": " + loadBDS
                             + "\n" + translate("Price") + ": " + item.Price + " đồng"
                             + "\n" + translate("Area") + ": " + item.Acreage + " " + translate("Square meters")
-                            + "\n" + translate("Address") + ": " + item.Address + "\n\n" + translate("Description") + ":\n" + item.Description
-                            + "\n\n" + translate("Installation") + ": "
-                            + "\niOS: \nhttps://itunes.apple.com/vn/app/nhabaola/id1287451307?mt=8"
-                            + "\n\nAndroid: \nhttps://play.google.com/store/apps/details?id=vn.nhabaola.nhabaola",
+                            + "\n" + translate("Address") + ": " + item.Address + "\n\n" + translate("Description") + ":\n" + _description
+                              + "\n\n" + translate("Installation") + ": "
+                              + "\niOS: \nhttps://itunes.apple.com/vn/app/nhabaola/id1287451307?mt=8"
+                              + "\n\nAndroid: \nhttps://play.google.com/store/apps/details?id=vn.nhabaola.nhabaola",
                           url: 'https://play.google.com/store/apps/details?id=vn.nhabaola.nhabaola',
                           title: translate("Share from Nhabaola application")
                         }, {

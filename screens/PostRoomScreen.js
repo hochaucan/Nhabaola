@@ -118,6 +118,8 @@ export default class PostRoomScreen extends React.Component {
             isVietnamease: false,
             isEnglish: false,
             isChinease: false,
+            detailInfoEnglish: '',
+            detailInfoChinease: '',
         }
     }
 
@@ -419,6 +421,7 @@ export default class PostRoomScreen extends React.Component {
             this.setState({ imageUrl: this.state.imageUrl + uploadResult.ImagePath })
         }
 
+        let _des = this.state.detailInfo + (this.state.detailInfoEnglish != '' ? '\n\n###\n' + this.state.detailInfoEnglish : '') + (this.state.detailInfoChinease != '' ? '\n\n###\n' + this.state.detailInfoChinease : '')
 
         try {
             await fetch("http://nhabaola.vn/api/RoomBox/FO_RoomBox_Add", {
@@ -435,7 +438,7 @@ export default class PostRoomScreen extends React.Component {
                     "Address": this.state.selectedAddress,
                     "Longitude": this.state.searchingMaker.longitude,
                     "Latitude": this.state.searchingMaker.latitude,
-                    "Description": this.state.detailInfo,
+                    "Description": _des,
                     "Price": this.state.price.replace('.', '').replace('.', '').replace('.', '').replace('.', ''),
                     "Acreage": this.state.acreage,
                     "Toilet": "",
@@ -483,7 +486,40 @@ export default class PostRoomScreen extends React.Component {
                         else {
                             Alert.alert(translate("Notice"), translate("Wallets are not enough. Please top up money to your wallet"));
                         }
-                    } else {
+                    }
+                    else if (JSON.stringify(responseJson.ErrorCode) === "3") {
+                        if (Platform.OS === 'android') {
+                            ToastAndroid.showWithGravity(translate("The effective date must be greater than the current date"), ToastAndroid.SHORT, ToastAndroid.TOP);
+                        }
+                        else {
+                            Alert.alert(translate("Notice"), translate("The effective date must be greater than the current date"));
+                        }
+                    }
+                    else if (JSON.stringify(responseJson.ErrorCode) === "4") {
+                        if (Platform.OS === 'android') {
+                            ToastAndroid.showWithGravity(translate("The effective date must be less than the end date"), ToastAndroid.SHORT, ToastAndroid.TOP);
+                        }
+                        else {
+                            Alert.alert(translate("Notice"), translate("The effective date must be less than the end date"));
+                        }
+                    }
+                    else if (JSON.stringify(responseJson.ErrorCode) === "5") {
+                        if (Platform.OS === 'android') {
+                            ToastAndroid.showWithGravity(translate("The start highlight date must be greater than the current date"), ToastAndroid.SHORT, ToastAndroid.TOP);
+                        }
+                        else {
+                            Alert.alert(translate("Notice"), translate("The start highlight date must be greater than the current date"));
+                        }
+                    }
+                    else if (JSON.stringify(responseJson.ErrorCode) === "6") {
+                        if (Platform.OS === 'android') {
+                            ToastAndroid.showWithGravity(translate("The start highlight date must be less than end date"), ToastAndroid.SHORT, ToastAndroid.TOP);
+                        }
+                        else {
+                            Alert.alert(translate("Notice"), translate("TThe start highlight date must be less than end date"));
+                        }
+                    }
+                    else {
                         if (Platform.OS === 'android') {
                             ToastAndroid.showWithGravity(translate("Error") + JSON.stringify(responseJson) + translate("Please contact Admin in the Help menu"), ToastAndroid.SHORT, ToastAndroid.TOP);
                         }
@@ -535,6 +571,46 @@ export default class PostRoomScreen extends React.Component {
         //this.scroll.props.scrollToPosition(0, 20)
         //alert(reactNode)
     }
+
+
+
+    _postTranslator = async (lang, textAPI, langAPI) => {
+
+        this.popupLoadingIndicator.show()
+
+        var keyAPI = "trnsl.1.1.20130922T110455Z.4a9208e68c61a760.f819c1db302ba637c2bea1befa4db9f784e9fbb8";
+
+        try {
+            await fetch('https://translate.yandex.net/api/v1.5/tr.json/translate?key='
+                + keyAPI
+                + '&lang='
+                + langAPI//encodeURIComponent(langAPI)
+                + '&text='
+                + textAPI, {//encodeURIComponent(textAPI), {
+                })
+                .then((response) => response.json())
+                .then((responseJson) => {
+
+                    if (JSON.stringify(responseJson.code) == '200') {
+                        //alert(JSON.stringify(responseJson))
+
+                        if (langAPI == 'en') {
+                            this.setState({ detailInfoEnglish: JSON.stringify(responseJson.text).replace('["', '').replace('"]', '') })
+                        } else {// zh
+                            this.setState({ detailInfoChinease: JSON.stringify(responseJson.text).replace('["', '').replace('"]', '') })
+                        }
+                    }
+                    this.popupLoadingIndicator.dismiss()
+                }).
+                catch((error) => { console.log(error) });
+        } catch (error) {
+            console.log(error)
+        }
+
+    }
+
+
+
 
     render() {
 
@@ -1084,13 +1160,19 @@ export default class PostRoomScreen extends React.Component {
                                         }}
                                     />
                                 </View>
+
+
+
                             </View>
                         }
                         <KeyboardAvoidingView behavior={Platform.OS == 'ios' ? 'height' : 'padding'}
-                            style={{ marginBottom: Platform.OS == 'ios' ? 140 : 30 }}
+                            style={{ marginBottom: Platform.OS == 'ios' ? 420 : 90 }}
                         >
+
+
                             {/* Detail Room Information */}
                             <FormLabel style={{ marginTop: 10, }}>{translate("Details")}:</FormLabel>
+
                             <FormInput
                                 ref='roomInfoInput'
                                 returnKeyType={"done"}
@@ -1115,6 +1197,101 @@ export default class PostRoomScreen extends React.Component {
                                 value={this.state.detailInfo}
                                 onChangeText={(detailInfo) => this.setState({ detailInfo })}
                             />
+
+
+                            {/* English Detail Info */}
+                            <TouchableOpacity
+                                style={{
+                                    marginTop: 30, zIndex: 20,
+                                    flexDirection: 'row', alignContent: 'center', alignItems: 'center',
+                                    // borderWidth: 1,
+                                    //padding: 10,
+
+                                }}
+                                onPress={() => {
+                                    this._postTranslator('English', this.state.detailInfo, 'en')
+                                }}
+                            >
+                                <Ionicons style={{ paddingLeft: 20, paddingBottom: Platform.OS == 'ios' ? 20 : 0, fontSize: responsiveFontSize(2.5), color: '#73aa2a' }} name="ios-arrow-forward-outline" />
+                                <Text style={{
+                                    paddingLeft: 5, paddingBottom: 3,
+                                    fontSize: responsiveFontSize(1.8), color: '#9B9D9D'
+                                }}>{translate("Automatic translation to English")}</Text>
+
+                            </TouchableOpacity>
+
+                            <FormInput
+                                ref='roomInfoEnglishInput'
+                                returnKeyType={"done"}
+                                onSubmitEditing={(event) => {
+                                    //this._postRoomAsync();
+                                    Keyboard.dismiss();
+                                }}
+                                onFocus={(event) => {
+                                    this._scrollToInput(event.target)
+                                }}
+                                containerStyle={{ borderWidth: 0.5, borderColor: '#73aa2a', borderRadius: 10, marginTop: 10 }}
+                                inputStyle={{ padding: 10, height: 120, paddingRight: Platform.OS == 'ios' ? 50 : 0 }}
+                                placeholder='English'//{translate("Please enter detailed information")}
+                                multiline={true}
+                                //numberOfLines={5}
+                                //keyboardType='default'
+                                autoCapitalize='sentences'
+                                //maxLength={300}
+                                clearButtonMode='always'
+                                underlineColorAndroid='#fff'
+                                blurOnSubmit={false}
+                                value={this.state.detailInfoEnglish}
+                                onChangeText={(detailInfoEnglish) => this.setState({ detailInfoEnglish })}
+                            />
+
+                            {/* Chinease Detail Info */}
+
+                            <TouchableOpacity
+                                style={{
+                                    marginTop: 30, zIndex: 20,
+                                    flexDirection: 'row', alignContent: 'center', alignItems: 'center',
+                                    // borderWidth: 1,
+                                    //padding: 10,
+
+                                }}
+                                onPress={() => {
+                                    this._postTranslator('English', this.state.detailInfo, 'zh')
+                                }}
+                            >
+                                <Ionicons style={{ paddingLeft: 20, paddingBottom: Platform.OS == 'ios' ? 20 : 0, fontSize: responsiveFontSize(2.5), color: '#73aa2a' }} name="ios-arrow-forward-outline" />
+                                <Text style={{
+                                    paddingLeft: 5, paddingBottom: 3,
+                                    fontSize: responsiveFontSize(1.8), color: '#9B9D9D'
+                                }}>{translate("Automatic translation to Chinese")}</Text>
+
+                            </TouchableOpacity>
+
+                            <FormInput
+                                ref='roomInfoChineaseInput'
+                                returnKeyType={"done"}
+                                onSubmitEditing={(event) => {
+                                    //this._postRoomAsync();
+                                    Keyboard.dismiss();
+                                }}
+                                onFocus={(event) => {
+                                    this._scrollToInput(event.target)
+                                }}
+                                containerStyle={{ borderWidth: 0.5, borderColor: '#73aa2a', borderRadius: 10, marginTop: 10 }}
+                                inputStyle={{ padding: 10, height: 120, paddingRight: Platform.OS == 'ios' ? 50 : 0 }}
+                                placeholder='中文'//{translate("Please enter detailed information")}
+                                multiline={true}
+                                //numberOfLines={5}
+                                //keyboardType='default'
+                                autoCapitalize='sentences'
+                                //maxLength={300}
+                                clearButtonMode='always'
+                                underlineColorAndroid='#fff'
+                                blurOnSubmit={false}
+                                value={this.state.detailInfoChinease}
+                                onChangeText={(detailInfoChinease) => this.setState({ detailInfoChinease })}
+                            />
+
                         </KeyboardAvoidingView>
                     </View>
                     {/* <KeyboardSpacer /> */}

@@ -180,5 +180,12 @@
   "Comment":"Comment",
   "Do you want to send a message to this poster":"Do you want to send a message to this poster?",
   "Your post at the address":"Your post at the address",
-  "Find the way":"Find the way"
+  "Find the way":"Find the way",
+
+  "The effective date must be greater than the current date":"The effective date must be greater than the current date",
+  "The effective date must be less than the end date":"The effective date must be less than the end date",
+  "The start highlight date must be greater than the current date":"The start highlight date must be greater than the current date",
+  "The start highlight date must be less than end date":"The start highlight date must be less than end date",
+  "Automatic translation to English":"Automatic translation to English",
+  "Automatic translation to Chinese":"Automatic translation to Chinese"
 }
