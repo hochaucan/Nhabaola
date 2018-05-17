@@ -187,5 +187,7 @@
   "The start highlight date must be greater than the current date":"The start highlight date must be greater than the current date",
   "The start highlight date must be less than end date":"The start highlight date must be less than end date",
   "Automatic translation to English":"Automatic translation to English",
-  "Automatic translation to Chinese":"Automatic translation to Chinese"
+  "Automatic translation to Chinese":"Automatic translation to Chinese",
+  "Post Now":"Post Now",
+  "Chat now":"Chat now"
 }

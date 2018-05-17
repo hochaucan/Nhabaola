@@ -187,5 +187,7 @@
   "The start highlight date must be greater than the current date":"开始突出显示日期必须大于当前日期",
   "The start highlight date must be less than end date":"开始突出显示日期必须小于结束日期",
   "Automatic translation to English":"自动翻译成英文",
-  "Automatic translation to Chinese":"自动翻译成中文"
+  "Automatic translation to Chinese":"自动翻译成中文",
+  "Post Now":"现在发布",
+  "Chat now":"立即聊天"
 }

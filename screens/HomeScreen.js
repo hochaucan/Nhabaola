@@ -49,6 +49,7 @@ import zhTranslation from '../components/zh.json';
 import viTranslation from '../components/vi.json';
 import { setLocalization, translate, Translate } from 'react-native-translate';
 import SearchScreen from './SearchScreen';
+import SimplePicker from 'react-native-simple-picker';
 
 const homePlace = {
   description: 'Home',
@@ -155,13 +156,14 @@ export default class HomeScreen extends React.Component {
       ratingRoomId: 0,
       reportRoomId: 0,
       flatListIsEnd: false,
-      roomByCatHeigh: new Animated.Value(40),
+      roomByCatHeigh: new Animated.Value(0),
       highLightBackgroundOpacity: new Animated.Value(-100),
       languageOpacity: new Animated.Value(0),
       isInternetIssue: false,
       isVietnamease: false,
       isEnglish: false,
       isChinease: false,
+      //iosSelectedCategory: translate("All real estate"),
     }
 
     // state = { selected: false };
@@ -359,8 +361,6 @@ export default class HomeScreen extends React.Component {
     // Remove Push Notification
     this._notificationSubscription && this._notificationSubscription.remove();
 
-
-
   }
 
 
@@ -406,9 +406,9 @@ export default class HomeScreen extends React.Component {
       Animated.timing( // Show Category
         this.state.roomByCatHeigh,
         {
-          toValue: 40,
+          toValue: 0,
           // easing: Easing.linear,
-          duration: 50,
+          duration: 10,
         }
       ).start();
 
@@ -427,9 +427,9 @@ export default class HomeScreen extends React.Component {
       Animated.timing( // Hide Category
         this.state.roomByCatHeigh,
         {
-          toValue: 0,
+          toValue: -50,
           // easing: Easing.linear,
-          duration: 50,
+          duration: 10,
         }
       ).start();
 
@@ -1752,95 +1752,179 @@ export default class HomeScreen extends React.Component {
         <Animated.View
           style={{
             flexDirection: 'row',
+            padding: 10,
             alignContent: 'center',
             alignItems: 'center',
             justifyContent: 'center',
+            marginTop: this.state.roomByCatHeigh
+            //height: this.state.roomByCatHeigh
             //opacity: this.state.languageOpacity,//0.2,
           }}
         >
-          {/* Vietnamese */}
-          <TouchableOpacity
+
+          <View
             style={{
-              padding: 10,
-
-            }}
-            onPress={async () => {
-              setLocalization(viTranslation);
-              this.setState({ isVietnamease: true, isEnglish: false, isChinease: false })
-              this._getRoomBoxAsync(true)
-              if (Platform.OS === 'android') {
-                ToastAndroid.showWithGravity(translate("You have switched languages to Vietnamease"), ToastAndroid.SHORT, ToastAndroid.TOP);
-              }
-              else {
-                Alert.alert(translate("Notice"), translate("You have switched languages to Vietnamease"))
-              }
-              await this._saveStorageAsync('language', 'viTranslation')
-              this.forceUpdate()
-
+              flex: 3,
+              //alignItems: 'flex-start'
             }}
           >
-            <Text style={{
-              fontSize: responsiveFontSize(2),
-              color: this.state.isVietnamease ? '#73aa2a' : '#a4d227',
+            <TouchableOpacity
+              style={{
+                // justifyContent: 'center',
+                // alignContent: 'center'
+              }}
+              onPress={() => {
+                //this.refs.pickerCategory.show();
+                this.state.profile
+                  ?
+                  //this.props.navigation.navigate('PostRoomScreen', { onSelect: this.onSelect })
+                  this.props.navigation.navigate('PostRoomScreen', {
+                    onRefreshScreen: this.onRefreshScreen,
+                    _getWalletAsync: this._getWalletAsync,
+                  })
+                  :
+                  Platform.OS === 'android'
+                    ? ToastAndroid.showWithGravity(translate('Please login'), ToastAndroid.SHORT, ToastAndroid.TOP)
+                    : Alert.alert(translate('Please login'))
+              }}
+            >
+              <Text
+                style={{
+                  borderWidth: 0.5,
+                  borderColor: '#73aa2a',
+                  borderRadius: 18,
+                  padding: 8,
+                  // padding: 8,
+                  // paddingLeft: 10,
+                  // paddingTop: 6,
+                  // paddingBottom: 6,
+                  // paddingRight: 10,
+                  textAlign: 'center',
+                  color: '#73aa2a',
+                  fontSize: responsiveFontSize(2)
+                }}
+              >{translate("Post Now")}</Text>
 
-            }}>Tiếng Việt</Text>
-          </TouchableOpacity>
+            </TouchableOpacity>
+            {/* <SimplePicker
+              ref={'pickerCategory'}
+              options={this.state.roomCategory.map((y, i) => y.ID)}
+              labels={this.state.roomCategory.map((y, i) => this.state.isVietnamease ? y.CatName : this.state.isEnglish ? y.CatImg.split('|')[0] : y.CatImg.split('|')[1])}
+              confirmText={translate("Agree")}
+              cancelText={translate("Cancel")}
+              itemStyle={{
+                fontSize: 25,
+                color: '#73aa2a',
+                textAlign: 'center',
+                fontWeight: 'bold',
+              }}
+              onSubmit={async (option) => {
+                await this.setState({ selectedCategory: option });
+                this.state.roomCategory.map((y, i) => {
+                  if (y.ID === option) {
+                    this.setState({ iosSelectedCategory: this.state.isVietnamease ? y.CatName : this.state.isEnglish ? y.CatImg.split('|')[0] : y.CatImg.split('|')[1] })
+                  }
+                })
 
-          {/* English */}
-          <TouchableOpacity
+                //this._getRoomByFilter();
+              }} */}
+            />
+          </View>
+
+          {/* Language */}
+          <View
             style={{
-              padding: 10,
-
-            }}
-            onPress={async () => {
-              setLocalization(enTranslation);
-              this.setState({ isVietnamease: false, isEnglish: true, isChinease: false })
-              this._getRoomBoxAsync(true)
-              if (Platform.OS === 'android') {
-                ToastAndroid.showWithGravity(translate("You have switched languages to English"), ToastAndroid.SHORT, ToastAndroid.TOP);
-              }
-              else {
-                Alert.alert(translate("Notice"), translate("You have switched languages to English"))
-              }
-              await this._saveStorageAsync('language', 'enTranslation')
-              this.forceUpdate()
-
+              flex: 2,
+              flexDirection: 'row',
+              justifyContent: 'flex-end'
             }}
           >
-            <Text style={{
-              fontSize: responsiveFontSize(2),
-              color: this.state.isEnglish ? '#73aa2a' : '#a4d227',
-            }}>English</Text>
-          </TouchableOpacity>
 
-          {/* Chinease */}
-          <TouchableOpacity
-            style={{
-              padding: 10,
+            {/* Vietnamese */}
+            <TouchableOpacity
+              style={{
+                padding: 5,
 
-            }}
 
-            onPress={async () => {
-              setLocalization(zhTranslation);
-              this.setState({ isVietnamease: false, isEnglish: false, isChinease: true })
-              this._getRoomBoxAsync(true)
-              if (Platform.OS === 'android') {
-                ToastAndroid.showWithGravity(translate("You have switched languages to Chinease"), ToastAndroid.SHORT, ToastAndroid.TOP);
-              }
-              else {
-                Alert.alert(translate("Notice"), translate("You have switched languages to Chinease"))
-              }
-              await this._saveStorageAsync('language', 'zhTranslation')
-              this.forceUpdate()
+              }}
+              onPress={async () => {
+                setLocalization(viTranslation);
+                this.setState({ isVietnamease: true, isEnglish: false, isChinease: false })
+                this._getRoomBoxAsync(true)
+                if (Platform.OS === 'android') {
+                  ToastAndroid.showWithGravity(translate("You have switched languages to Vietnamease"), ToastAndroid.SHORT, ToastAndroid.TOP);
+                }
+                else {
+                  Alert.alert(translate("Notice"), translate("You have switched languages to Vietnamease"))
+                }
+                await this._saveStorageAsync('language', 'viTranslation')
+                this.forceUpdate()
 
-            }}
-          >
-            <Text style={{
-              fontSize: responsiveFontSize(2),
-              color: this.state.isChinease ? '#73aa2a' : '#a4d227',
-            }}>中文</Text>
-          </TouchableOpacity>
+              }}
+            >
+              <Text style={{
+                fontSize: responsiveFontSize(2),
+                color: this.state.isVietnamease ? '#73aa2a' : '#9B9D9D',
 
+              }}>VI</Text>
+            </TouchableOpacity>
+
+            {/* English */}
+            <TouchableOpacity
+              style={{
+                padding: 5,
+
+              }}
+              onPress={async () => {
+                setLocalization(enTranslation);
+                this.setState({ isVietnamease: false, isEnglish: true, isChinease: false })
+                this._getRoomBoxAsync(true)
+                if (Platform.OS === 'android') {
+                  ToastAndroid.showWithGravity(translate("You have switched languages to English"), ToastAndroid.SHORT, ToastAndroid.TOP);
+                }
+                else {
+                  Alert.alert(translate("Notice"), translate("You have switched languages to English"))
+                }
+                await this._saveStorageAsync('language', 'enTranslation')
+                this.forceUpdate()
+
+              }}
+            >
+              <Text style={{
+                fontSize: responsiveFontSize(2),
+                color: this.state.isEnglish ? '#73aa2a' : '#9B9D9D',
+              }}>EN</Text>
+            </TouchableOpacity>
+
+            {/* Chinease */}
+            <TouchableOpacity
+              style={{
+                padding: 5,
+
+              }}
+
+              onPress={async () => {
+                setLocalization(zhTranslation);
+                this.setState({ isVietnamease: false, isEnglish: false, isChinease: true })
+                this._getRoomBoxAsync(true)
+                if (Platform.OS === 'android') {
+                  ToastAndroid.showWithGravity(translate("You have switched languages to Chinease"), ToastAndroid.SHORT, ToastAndroid.TOP);
+                }
+                else {
+                  Alert.alert(translate("Notice"), translate("You have switched languages to Chinease"))
+                }
+                await this._saveStorageAsync('language', 'zhTranslation')
+                this.forceUpdate()
+
+              }}
+            >
+              <Text style={{
+                fontSize: responsiveFontSize(2),
+                color: this.state.isChinease ? '#73aa2a' : '#9B9D9D',
+              }}>中文</Text>
+            </TouchableOpacity>
+
+          </View>
           {/* <Translate value="Post"/> */}
         </Animated.View>
 
@@ -1886,7 +1970,7 @@ export default class HomeScreen extends React.Component {
           </TouchableOpacity>
         </Animated.View> */}
 
-        <Animated.View style={{
+        {/* <Animated.View style={{
           flexDirection: 'row',
           height: this.state.roomByCatHeigh, //40
           marginTop: 4,
@@ -1894,28 +1978,15 @@ export default class HomeScreen extends React.Component {
           marginBottom: 5,
           zIndex: 30,
         }}
-        >
+        > */}
 
 
-          <TouchableOpacity
+        {/* <TouchableOpacity
             style={{
               marginRight: 10,
               height: 50,
-              // // position: 'absolute',
-              // //left: 2,//this.state.highLightBackgroundOpacity,//2,
-              // //top: Platform.OS == 'ios' ? 42.5 : 44,//12,
               zIndex: 30,
-              // backgroundColor: '#fff',
-              // //opacity: 0.85,//this.state.highLightBackgroundOpacity,
-              // borderRadius: Platform.OS == 'ios' ? 10 : 50,
-              // borderWidth: 0.5,
-              // borderColor: '#9B9D9D',
-
-              // elevation: 10,
-              // shadowColor: '#000',
-              // shadowOffset: { width: 0, height: 2 },
-              // shadowOpacity: 0.2,
-              // shadowRadius: 2,
+           
             }}
             onPress={() => {
 
@@ -1935,9 +2006,9 @@ export default class HomeScreen extends React.Component {
 
 
             }}>{translate("Highlight")}</Text>
-          </TouchableOpacity>
+          </TouchableOpacity> */}
 
-          <FlatList
+        {/* <FlatList
             //onScroll={this._onScroll}
             // ref='homepage'
             //extraData={this.state}
@@ -1960,9 +2031,7 @@ export default class HomeScreen extends React.Component {
               //   this._getRoomBoxAsync(false);
               // }
 
-              {/* this.setState({
-              refresh: true
-            }); */}
+            
             }}
 
             data={this.state.roomCategory}
@@ -1972,17 +2041,7 @@ export default class HomeScreen extends React.Component {
                 marginRight: 10,
               }}>
 
-                {/* <SocialIcon
-                  type='medium'
-                  raised={true}
-                  onPress={this._handleFacebookLogin}
-                /> */}
-                {/* <Icon
-                  raised
-                  name='ios-home'
-                  type='ionicon'
-                  color='#f50'
-                  onPress={() => this._handleFacebookLogin} /> */}
+            
                 <TouchableOpacity
                   onPress={() => {
                     //alert("can")
@@ -2009,11 +2068,10 @@ export default class HomeScreen extends React.Component {
 
             }
             keyExtractor={item => item.ID + 'nhabaola'}
+          /> */}
 
-          /* horizontal={false}
-          numColumns={3} */
-          />
-        </Animated.View>
+
+        {/* </Animated.View> */}
 
 
         {/* Flatlist RoomBox */}
@@ -2365,7 +2423,7 @@ export default class HomeScreen extends React.Component {
 
                       const _contactName = item.ContactPhone.indexOf('|') > -1 ? item.ContactPhone.split('|')[1] : item.AccountName
                       const _contactPhone = item.ContactPhone.indexOf('|') > -1 ? item.ContactPhone.split('|')[0] : item.ContactPhone
-                      const _description =  item.Description.indexOf('###') > -1 ? (this.state.isVietnamease ? item.Description.split('###')[0] : this.state.isEnglish ? item.Description.split('###')[1] : item.Description.split('###')[2]) : item.Description
+                      const _description = item.Description.indexOf('###') > -1 ? (this.state.isVietnamease ? item.Description.split('###')[0] : this.state.isEnglish ? item.Description.split('###')[1] : item.Description.split('###')[2]) : item.Description
 
                       if (Platform.OS == 'ios') {
                         Share.share({
@@ -2376,9 +2434,9 @@ export default class HomeScreen extends React.Component {
                             + "\n" + translate("Price") + ": " + item.Price + " đồng"
                             + "\n" + translate("Area") + ": " + item.Acreage + " " + translate("Square meters")
                             + "\n" + translate("Address") + ": " + item.Address + "\n\n" + translate("Description") + ":\n" + _description
-                              + "\n\n" + translate("Installation") + ": "
-                              + "\nAndroid: \nhttps://play.google.com/store/apps/details?id=vn.nhabaola.nhabaola"
-                              + "\n\niOS: \nhttps://itunes.apple.com/vn/app/nhabaola/id1287451307?mt=8",
+                            + "\n\n" + translate("Installation") + ": "
+                            + "\nAndroid: \nhttps://play.google.com/store/apps/details?id=vn.nhabaola.nhabaola"
+                            + "\n\niOS: \nhttps://itunes.apple.com/vn/app/nhabaola/id1287451307?mt=8",
                           //url: 'https://itunes.apple.com/vn/app/nhabaola/id1287451307?mt=8',
                           title: translate("Share from Nhabaola application")
                         }, {
@@ -2399,9 +2457,9 @@ export default class HomeScreen extends React.Component {
                             + "\n" + translate("Price") + ": " + item.Price + " đồng"
                             + "\n" + translate("Area") + ": " + item.Acreage + " " + translate("Square meters")
                             + "\n" + translate("Address") + ": " + item.Address + "\n\n" + translate("Description") + ":\n" + _description
-                              + "\n\n" + translate("Installation") + ": "
-                              + "\niOS: \nhttps://itunes.apple.com/vn/app/nhabaola/id1287451307?mt=8"
-                              + "\n\nAndroid: \nhttps://play.google.com/store/apps/details?id=vn.nhabaola.nhabaola",
+                            + "\n\n" + translate("Installation") + ": "
+                            + "\niOS: \nhttps://itunes.apple.com/vn/app/nhabaola/id1287451307?mt=8"
+                            + "\n\nAndroid: \nhttps://play.google.com/store/apps/details?id=vn.nhabaola.nhabaola",
                           url: 'https://play.google.com/store/apps/details?id=vn.nhabaola.nhabaola',
                           title: translate("Share from Nhabaola application")
                         }, {

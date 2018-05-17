@@ -115,7 +115,7 @@ export default class RoomByCategoryScreen extends React.Component {
       selectedCategory: '0',
       page: 1,
       roomPageIndex: 0,
-      roomPageCount: 200,
+      roomPageCount: 10,
 
       // Login
       modalLogin: false,

@@ -1002,7 +1002,7 @@ export default class ProfileScreen extends React.Component {
                         this.setState({ modalHelp: false })
                     }}
                 >
-                    <View style={{ flexDirection: 'row', padding: 20, marginTop: Platform.OS === 'ios' ? 20 : 0, }}>
+                    <View style={{ flexDirection: 'row', padding: 20, marginTop: Platform.OS === 'ios' ? 20 : 0, alignItems: 'center' }}>
                         <TouchableOpacity
                             style={{}}
                             onPress={() => this.setState({ modalHelp: false })}>
@@ -1013,7 +1013,7 @@ export default class ProfileScreen extends React.Component {
                             fontSize: responsiveFontSize(2.2), justifyContent: 'center'
                         }}>{translate("Contact help")}</Text>
                     </View>
-                    <ScrollView style={{ flex: 1, padding: 20, }}>
+                    <ScrollView style={{ flex: 1, paddingLeft: 20, paddingRight: 20, paddingBottom: 20 }}>
 
                         <Text style={{
                             fontSize: responsiveFontSize(2),
@@ -1027,7 +1027,7 @@ export default class ProfileScreen extends React.Component {
                             <Text style={{
                                 fontSize: responsiveFontSize(2),
                                 flex: 4, color: '#9B9D9D'
-                            }} >0973730111, 0905588639</Text>
+                            }} >0973730111, 0905588639, 0907028003</Text>
                         </View>
                         <View style={{ marginTop: 5, flexDirection: 'row' }}>
                             <Text style={{
@@ -1039,16 +1039,7 @@ export default class ProfileScreen extends React.Component {
                                 flex: 4, color: '#9B9D9D'
                             }} >hochaucan@gmail.com</Text>
                         </View>
-                        <View style={{ marginTop: 5, flexDirection: 'row' }}>
-                            <Text style={{
-                                fontSize: responsiveFontSize(2),
-                                flex: 2, color: '#000'
-                            }} >Skyle:</Text>
-                            <Text style={{
-                                fontSize: responsiveFontSize(2),
-                                flex: 4, color: '#9B9D9D'
-                            }} >hochaucan</Text>
-                        </View>
+
                         <View style={{ marginTop: 5, flexDirection: 'row' }}>
                             <Text style={{
                                 fontSize: responsiveFontSize(2), flex: 2,
@@ -1059,6 +1050,87 @@ export default class ProfileScreen extends React.Component {
                                 color: '#9B9D9D'
                             }} > https://www.facebook.com/nhabaola/</Text>
                         </View>
+                        <View style={{
+                            marginTop: 10, flexDirection: 'row',
+                            alignItems: 'center',
+                        }}>
+                            <Text style={{
+                                fontSize: responsiveFontSize(2),
+                                flex: 2,
+                                color: '#000'
+                            }} >{translate("Chat now")}:</Text>
+
+                            <TouchableOpacity
+                                style={{
+                                    lexDirection: 'row',
+                                    flex: 2,
+                                    //alignItems: 'center',
+                                }}
+                                onPress={() => {
+                                    //const FANPAGE_ID = '1750146621679564'
+                                    //const URL_FOR_APP = `fb://page/${FANPAGE_ID}`
+                                    const URL_FOR_BROWSER = 'http://m.me/ho.can.7'
+                                    Linking.canOpenURL(URL_FOR_BROWSER)
+                                        .then((supported) => {
+                                            if (!supported) {
+                                                Linking.openURL(URL_FOR_BROWSER)
+                                            } else {
+                                                Linking.openURL(URL_FOR_BROWSER)
+                                            }
+                                        })
+                                        .catch(err => console.error('An error occurred', err))
+                                }}
+                            >
+
+                                <Image
+                                    style={{}}
+                                    source={require('../assets/icons/chat_fm.png')} />
+
+
+                                {/* <Text style={{
+                                    fontSize: responsiveFontSize(2),
+                                    //flex: 4, 
+                                    color: '#9B9D9D'
+                                }} > <Ionicons style={{ fontSize: responsiveFontSize(2.5) }} name="ios-chatbubbles" /> Admin</Text> */}
+                            </TouchableOpacity>
+
+
+                            <TouchableOpacity
+                                style={{
+                                    lexDirection: 'row',
+                                    flex: 2,
+                                    //alignItems: 'center',
+                                }}
+                                onPress={() => {
+                                    //const FANPAGE_ID = '1750146621679564'
+                                    //const URL_FOR_APP = `fb://page/${FANPAGE_ID}`
+                                    const URL_FOR_BROWSER = 'http://zalo.me/0963988367'//'http://m.me/ho.can.7'
+                                    Linking.canOpenURL(URL_FOR_BROWSER)
+                                        .then((supported) => {
+                                            if (!supported) {
+                                                Linking.openURL(URL_FOR_BROWSER)
+                                            } else {
+                                                Linking.openURL(URL_FOR_BROWSER)
+                                            }
+                                        })
+                                        .catch(err => console.error('An error occurred', err))
+                                }}
+                            >
+
+                                <Image
+                                    style={{}}
+                                    source={require('../assets/icons/chat_zalo.png')} />
+
+
+                                {/* <Text style={{
+                                    fontSize: responsiveFontSize(2),
+                                    //flex: 4, 
+                                    color: '#9B9D9D'
+                                }} > <Ionicons style={{ fontSize: responsiveFontSize(2.5) }} name="ios-chatbubbles" /> Admin</Text> */}
+                            </TouchableOpacity>
+
+                        </View>
+
                         <Text style={{
                             fontSize: responsiveFontSize(2), color: '#73aa2a',
                             marginTop: 25, marginBottom: 5
@@ -1068,7 +1140,7 @@ export default class ProfileScreen extends React.Component {
                             onPress={() => {
                                 //const FANPAGE_ID = '1750146621679564'
                                 //const URL_FOR_APP = `fb://page/${FANPAGE_ID}`
-                                const URL_FOR_BROWSER = 'https://docs.google.com/document/d/1AJZpbCWJNlba-jgOmq00-iwhF0-l1Z0_XxfW9JafAqk/edit'
+                                const URL_FOR_BROWSER = 'https://www.youtube.com/watch?v=KqEJ4m3OylQ'//'https://docs.google.com/document/d/1AJZpbCWJNlba-jgOmq00-iwhF0-l1Z0_XxfW9JafAqk/edit'
                                 Linking.canOpenURL(URL_FOR_BROWSER)
                                     .then((supported) => {
                                         if (!supported) {
@@ -1080,16 +1152,48 @@ export default class ProfileScreen extends React.Component {
                                     .catch(err => console.error('An error occurred', err))
                             }}
                         >
-                            <Text style={{ alignItems: 'center', fontSize: responsiveFontSize(2) }}>https://docs.google.com/document/d/1AJZpbCWJNlba-jgOmq00-iwhF0-l1Z0_XxfW9JafAqk</Text>
+                            {/* <Text style={{ alignItems: 'center', fontSize: responsiveFontSize(2) }}>https://docs.google.com/document/d/1AJZpbCWJNlba-jgOmq00-iwhF0-l1Z0_XxfW9JafAqk</Text> */}
                             <Ionicons style={{
-                                color: '#a4d227',
+                                color: '#6c6d6d',
                                 fontSize: responsiveFontSize(2.5),
                                 marginLeft: 5,
-                            }} name='md-arrow-forward' />
+                                marginRight:5,
+                            }} name='ios-arrow-dropright-outline' />
+                            <Text
+                                style={{ alignItems: 'center', fontSize: responsiveFontSize(2) }}
+                            > {translate("Post")}</Text>
                         </TouchableOpacity>
 
                         {/* <Accordion
-                            sections={SECTIONS}
+                            sections={
+
+                                [
+                                    {
+                                        title: 'Đăng tin',
+                                        content: 'Đang cập nhật...',
+                                    },
+                                    {
+                                        title: 'Cập nhật tin',
+                                        content: 'Đang cập nhật...',
+                                    },
+                                    {
+                                        title: 'Nạp ví tiền',
+                                        content: 'Đang cập nhật...',
+                                    },
+                                    {
+                                        title: 'Đổi mật khẩu',
+                                        content: 'Đang cập nhật...',
+                                    },
+                                    {
+                                        title: 'Đổi thông tin cá nhân',
+                                        content: 'Đang cập nhật...',
+                                    },
+                                    {
+                                        title: 'Quên mật khẩu',
+                                        content: 'Đang cập nhật...',
+                                    },
+                                ]
+                            }
                             renderHeader={this._renderHeader}
                             renderContent={this._renderContent}
                             easing='bounce'
