@@ -1072,7 +1072,7 @@ export default class ProfileScreen extends React.Component {
                                     onPress={() => {
                                         //const FANPAGE_ID = '1750146621679564'
                                         //const URL_FOR_APP = `fb://page/${FANPAGE_ID}`
-                                        const URL_FOR_BROWSER = 'http://m.me/ho.can.7'
+                                        const URL_FOR_BROWSER = 'http://m.me/thomas.ho.5492216'//ho.can.7'
                                         Linking.canOpenURL(URL_FOR_BROWSER)
                                             .then((supported) => {
                                                 if (!supported) {
@@ -1142,7 +1142,7 @@ export default class ProfileScreen extends React.Component {
                                     onPress={() => {
                                         //const FANPAGE_ID = '1750146621679564'
                                         //const URL_FOR_APP = `fb://page/${FANPAGE_ID}`
-                                        const URL_FOR_BROWSER = 'https://api.whatsapp.com/send?phone=+84973730111'//'http://zalo.me/0963988367'//'http://m.me/ho.can.7'
+                                        const URL_FOR_BROWSER = 'https://api.whatsapp.com/send?phone=+84963988367'//'http://zalo.me/0963988367'//'http://m.me/ho.can.7'
                                         Linking.canOpenURL(URL_FOR_BROWSER)
                                             .then((supported) => {
                                                 if (!supported) {
