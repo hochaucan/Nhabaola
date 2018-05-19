@@ -49,7 +49,6 @@ import zhTranslation from '../components/zh.json';
 import viTranslation from '../components/vi.json';
 import { setLocalization, translate, Translate } from 'react-native-translate';
 import SearchScreen from './SearchScreen';
-import SimplePicker from 'react-native-simple-picker';
 
 const homePlace = {
   description: 'Home',
@@ -163,7 +162,6 @@ export default class HomeScreen extends React.Component {
       isVietnamease: false,
       isEnglish: false,
       isChinease: false,
-      //iosSelectedCategory: translate("All real estate"),
     }
 
     // state = { selected: false };
@@ -361,6 +359,8 @@ export default class HomeScreen extends React.Component {
     // Remove Push Notification
     this._notificationSubscription && this._notificationSubscription.remove();
 
+
+
   }
 
 
@@ -408,7 +408,7 @@ export default class HomeScreen extends React.Component {
         {
           toValue: 0,
           // easing: Easing.linear,
-          duration: 10,
+          duration: 60,
         }
       ).start();
 
@@ -427,9 +427,9 @@ export default class HomeScreen extends React.Component {
       Animated.timing( // Hide Category
         this.state.roomByCatHeigh,
         {
-          toValue: -50,
+          toValue: -100,
           // easing: Easing.linear,
-          duration: 10,
+          duration: 50,
         }
       ).start();
 
@@ -444,6 +444,8 @@ export default class HomeScreen extends React.Component {
     }
     // Update your scroll position
     this._listViewOffset = currentOffset
+    // setTimeout(() => { }, 50)
+
 
 
     //   Animated.timing(
@@ -1751,100 +1753,29 @@ export default class HomeScreen extends React.Component {
         {/* Multi Language */}
         <Animated.View
           style={{
-            flexDirection: 'row',
-            padding: 10,
+            //  flexDirection: 'row',
             alignContent: 'center',
             alignItems: 'center',
             justifyContent: 'center',
-            marginTop: this.state.roomByCatHeigh
-            //height: this.state.roomByCatHeigh
+            marginTop: this.state.roomByCatHeigh,
+            paddingBottom:10,
             //opacity: this.state.languageOpacity,//0.2,
           }}
         >
 
           <View
             style={{
-              flex: 3,
-              //alignItems: 'flex-start'
-            }}
-          >
-            <TouchableOpacity
-              style={{
-                // justifyContent: 'center',
-                // alignContent: 'center'
-              }}
-              onPress={() => {
-                //this.refs.pickerCategory.show();
-                this.state.profile
-                  ?
-                  //this.props.navigation.navigate('PostRoomScreen', { onSelect: this.onSelect })
-                  this.props.navigation.navigate('PostRoomScreen', {
-                    onRefreshScreen: this.onRefreshScreen,
-                    _getWalletAsync: this._getWalletAsync,
-                  })
-                  :
-                  Platform.OS === 'android'
-                    ? ToastAndroid.showWithGravity(translate('Please login'), ToastAndroid.SHORT, ToastAndroid.TOP)
-                    : Alert.alert(translate('Please login'))
-              }}
-            >
-              <Text
-                style={{
-                  borderWidth: 0.5,
-                  borderColor: '#73aa2a',
-                  borderRadius: 18,
-                  padding: 8,
-                  // padding: 8,
-                  // paddingLeft: 10,
-                  // paddingTop: 6,
-                  // paddingBottom: 6,
-                  // paddingRight: 10,
-                  textAlign: 'center',
-                  color: '#73aa2a',
-                  fontSize: responsiveFontSize(2)
-                }}
-              >{translate("Post Now")}</Text>
-
-            </TouchableOpacity>
-            {/* <SimplePicker
-              ref={'pickerCategory'}
-              options={this.state.roomCategory.map((y, i) => y.ID)}
-              labels={this.state.roomCategory.map((y, i) => this.state.isVietnamease ? y.CatName : this.state.isEnglish ? y.CatImg.split('|')[0] : y.CatImg.split('|')[1])}
-              confirmText={translate("Agree")}
-              cancelText={translate("Cancel")}
-              itemStyle={{
-                fontSize: 25,
-                color: '#73aa2a',
-                textAlign: 'center',
-                fontWeight: 'bold',
-              }}
-              onSubmit={async (option) => {
-                await this.setState({ selectedCategory: option });
-                this.state.roomCategory.map((y, i) => {
-                  if (y.ID === option) {
-                    this.setState({ iosSelectedCategory: this.state.isVietnamease ? y.CatName : this.state.isEnglish ? y.CatImg.split('|')[0] : y.CatImg.split('|')[1] })
-                  }
-                })
-
-                //this._getRoomByFilter();
-              }} */}
-            />
-          </View>
-
-          {/* Language */}
-          <View
-            style={{
-              flex: 2,
               flexDirection: 'row',
-              justifyContent: 'flex-end'
+              alignContent: 'center',
+              alignItems: 'center',
+              justifyContent: 'center',
+              //opacity: this.state.languageOpacity,//0.2,
             }}
           >
-
             {/* Vietnamese */}
             <TouchableOpacity
               style={{
-                padding: 5,
-
+                padding: 10,
 
               }}
               onPress={async () => {
@@ -1864,15 +1795,15 @@ export default class HomeScreen extends React.Component {
             >
               <Text style={{
                 fontSize: responsiveFontSize(2),
-                color: this.state.isVietnamease ? '#73aa2a' : '#9B9D9D',
+                color: this.state.isVietnamease ? '#73aa2a' : '#a4d227',
 
-              }}>VI</Text>
+              }}>Tiếng Việt</Text>
             </TouchableOpacity>
 
             {/* English */}
             <TouchableOpacity
               style={{
-                padding: 5,
+                padding: 10,
 
               }}
               onPress={async () => {
@@ -1892,14 +1823,14 @@ export default class HomeScreen extends React.Component {
             >
               <Text style={{
                 fontSize: responsiveFontSize(2),
-                color: this.state.isEnglish ? '#73aa2a' : '#9B9D9D',
-              }}>EN</Text>
+                color: this.state.isEnglish ? '#73aa2a' : '#a4d227',
+              }}>English</Text>
             </TouchableOpacity>
 
             {/* Chinease */}
             <TouchableOpacity
               style={{
-                padding: 5,
+                padding: 10,
 
               }}
 
@@ -1920,73 +1851,20 @@ export default class HomeScreen extends React.Component {
             >
               <Text style={{
                 fontSize: responsiveFontSize(2),
-                color: this.state.isChinease ? '#73aa2a' : '#9B9D9D',
+                color: this.state.isChinease ? '#73aa2a' : '#a4d227',
               }}>中文</Text>
             </TouchableOpacity>
-
           </View>
           {/* <Translate value="Post"/> */}
-        </Animated.View>
-
-        {/* Flatlist Category */}
-        {/* <Animated.View style={{
-          marginRight: 10,
-          // position: 'absolute',
-          left: 2,//this.state.highLightBackgroundOpacity,//2,
-          //top: Platform.OS == 'ios' ? 42.5 : 44,//12,
-          zIndex: 20,
-          backgroundColor: '#fff',
-          opacity: 0.85,//this.state.highLightBackgroundOpacity,
-          borderRadius: Platform.OS == 'ios' ? 10 : 50,
-          borderWidth: 0.5,
-          borderColor: '#9B9D9D',
-
-          // elevation: 10,
-          // shadowColor: '#000',
-          // shadowOffset: { width: 0, height: 2 },
-          // shadowOpacity: 0.2,
-          // shadowRadius: 2,
-        }}>
-
-          <TouchableOpacity
-            style={{
-
-            }}
-            onPress={() => {
-
-              this.props.navigation.navigate('RoomByCategoryScreen', { CategoryID: 0, CategoryName: translate("Highlight") })
-
-            }}
-          >
-            <Text style={{
-              // marginTop: 5,
-              fontSize: responsiveFontSize(1.5),
-              color: '#6c6d6d',
-              // backgroundColor: '#a4d227',
-
-              padding: 10,
-
-            }}>{translate("Highlight")}</Text>
-          </TouchableOpacity>
-        </Animated.View> */}
-
-        {/* <Animated.View style={{
-          flexDirection: 'row',
-          height: this.state.roomByCatHeigh, //40
-          marginTop: 4,
-          marginLeft: 2,//2,//70,
-          marginBottom: 5,
-          zIndex: 30,
-        }}
-        > */}
+          {/* </Animated.View> */}
 
 
-        {/* <TouchableOpacity
+
+          {/* <TouchableOpacity
             style={{
               marginRight: 10,
               height: 50,
-              zIndex: 30,
-           
+              // zIndex: 30,           
             }}
             onPress={() => {
 
@@ -2008,7 +1886,8 @@ export default class HomeScreen extends React.Component {
             }}>{translate("Highlight")}</Text>
           </TouchableOpacity> */}
 
-        {/* <FlatList
+          {/* Flatlist Category */}
+          <FlatList
             //onScroll={this._onScroll}
             // ref='homepage'
             //extraData={this.state}
@@ -2031,7 +1910,9 @@ export default class HomeScreen extends React.Component {
               //   this._getRoomBoxAsync(false);
               // }
 
-            
+              {/* this.setState({
+              refresh: true
+            }); */}
             }}
 
             data={this.state.roomCategory}
@@ -2041,7 +1922,17 @@ export default class HomeScreen extends React.Component {
                 marginRight: 10,
               }}>
 
-            
+                {/* <SocialIcon
+                  type='medium'
+                  raised={true}
+                  onPress={this._handleFacebookLogin}
+                /> */}
+                {/* <Icon
+                  raised
+                  name='ios-home'
+                  type='ionicon'
+                  color='#f50'
+                  onPress={() => this._handleFacebookLogin} /> */}
                 <TouchableOpacity
                   onPress={() => {
                     //alert("can")
@@ -2068,10 +1959,11 @@ export default class HomeScreen extends React.Component {
 
             }
             keyExtractor={item => item.ID + 'nhabaola'}
-          /> */}
 
-
-        {/* </Animated.View> */}
+          /* horizontal={false}
+          numColumns={3} */
+          />
+        </Animated.View>
 
 
         {/* Flatlist RoomBox */}
@@ -2173,9 +2065,7 @@ export default class HomeScreen extends React.Component {
                 marginLeft: 5,
                 marginBottom: 5,
                 //  alignItems: 'center',
-
               }}
-
               >
                 <Ionicons style={{
                   color: '#7E7E7E',
@@ -2589,7 +2479,6 @@ export default class HomeScreen extends React.Component {
 
 
               {/* {this.state.refreshScreen &&
-
               <ActionButton.Item buttonColor='#a4d227' title="Testing" onPress={() => {
                 // alert(this.state.selected)
               }}>
@@ -3089,12 +2978,10 @@ export default class HomeScreen extends React.Component {
             >
               ----- Hoặc đăng nhập bằng -----
             </FormLabel>
-
             <Animated.View style={{
               position: 'relative',
               top: this.state.animation.loginPositionTop, marginTop: 5, flexDirection: 'row',
               alignItems: 'center', justifyContent: 'center'
-
             }}>
               <SocialIcon
                 type='facebook'
@@ -3261,12 +3148,10 @@ export default class HomeScreen extends React.Component {
             >
               ----- Hoặc đăng nhập bằng -----
             </FormLabel>
-
             <Animated.View style={{
               position: 'relative',
               top: this.state.animation.loginPositionTop, marginTop: 5, flexDirection: 'row',
               alignItems: 'center', justifyContent: 'center'
-
             }}>
               <SocialIcon
                 type='facebook'
@@ -3516,8 +3401,6 @@ export default class HomeScreen extends React.Component {
           }}
         >
           <ScrollView>
-
-
             <View style={{ flexDirection: 'row', padding: 20, justifyContent: 'center', alignItems: 'center' }}>
               <TouchableOpacity
                 style={{}}
@@ -3536,10 +3419,8 @@ export default class HomeScreen extends React.Component {
                 }
                 <Text style={{}}>Hình đại diện</Text>
               </TouchableOpacity>
-
             </View>
             <View>
-
               <Animated.View style={{ position: 'relative', left: this.state.animation.usernamePostionLeft, flexDirection: 'row', padding: 10, }}>
                 <Ionicons style={{ flex: 2, fontSize: 22, paddingTop: 12, textAlign: 'center', }} name='md-call' />
                 <FormInput
@@ -3556,7 +3437,6 @@ export default class HomeScreen extends React.Component {
                   <FormLabel
                     containerStyle={{
                       alignItems: 'center', justifyContent: 'center',
-
                     }}
                   >
                     (Xác nhận ĐT)
@@ -3598,10 +3478,8 @@ export default class HomeScreen extends React.Component {
                   value={this.state.registerFullName}
                   onChangeText={(registerFullName) => { this.setState({ registerFullName }) }}
                 />
-
               </Animated.View>
               <Animated.View style={{ position: 'relative', left: this.state.animation.passwordPositionLeft, flexDirection: 'row', padding: 10, paddingTop: 0, }}>
-
                 <FormInput
                   containerStyle={{ flex: 1, borderWidth: 0.6, borderColor: '#9B9D9D', borderRadius: 10, padding: 5, marginTop: 10, }}
                   inputStyle={{}}
@@ -3615,7 +3493,6 @@ export default class HomeScreen extends React.Component {
               </Animated.View>
               
             </View>
-
             <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center', marginTop: 20, }}>
               <Button
                 buttonStyle={{ backgroundColor: '#9B9D9D', padding: 10, borderRadius: 5, }}
@@ -3632,10 +3509,8 @@ export default class HomeScreen extends React.Component {
                     registerFullName: null,
                     registerConfirmCellPhone: null,
                   })
-
                 }}
               />
-
               <Button
                 buttonStyle={{ backgroundColor: '#73aa2a', padding: 10, borderRadius: 5, }}
                 raised={false}

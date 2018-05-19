@@ -1060,75 +1060,113 @@ export default class ProfileScreen extends React.Component {
                                 color: '#000'
                             }} >{translate("Chat now")}:</Text>
 
-                            <TouchableOpacity
-                                style={{
-                                    lexDirection: 'row',
-                                    flex: 2,
-                                    //alignItems: 'center',
-                                }}
-                                onPress={() => {
-                                    //const FANPAGE_ID = '1750146621679564'
-                                    //const URL_FOR_APP = `fb://page/${FANPAGE_ID}`
-                                    const URL_FOR_BROWSER = 'http://m.me/ho.can.7'
-                                    Linking.canOpenURL(URL_FOR_BROWSER)
-                                        .then((supported) => {
-                                            if (!supported) {
-                                                Linking.openURL(URL_FOR_BROWSER)
-                                            } else {
-                                                Linking.openURL(URL_FOR_BROWSER)
-                                            }
-                                        })
-                                        .catch(err => console.error('An error occurred', err))
-                                }}
+                            <View
+                                style={{ flex: 4, flexDirection: 'row' }}
                             >
+                                <TouchableOpacity
+                                    style={{
+                                        // lexDirection: 'row',
+                                        //flex: 2,
+                                        //alignItems: 'center',
+                                    }}
+                                    onPress={() => {
+                                        //const FANPAGE_ID = '1750146621679564'
+                                        //const URL_FOR_APP = `fb://page/${FANPAGE_ID}`
+                                        const URL_FOR_BROWSER = 'http://m.me/ho.can.7'
+                                        Linking.canOpenURL(URL_FOR_BROWSER)
+                                            .then((supported) => {
+                                                if (!supported) {
+                                                    Linking.openURL(URL_FOR_BROWSER)
+                                                } else {
+                                                    Linking.openURL(URL_FOR_BROWSER)
+                                                }
+                                            })
+                                            .catch(err => console.error('An error occurred', err))
+                                    }}
+                                >
 
-                                <Image
-                                    style={{}}
-                                    source={require('../assets/icons/chat_fm.png')} />
+                                    <Image
+                                        style={{}}
+                                        source={require('../assets/icons/chat_fm.png')} />
 
 
-                                {/* <Text style={{
+                                    {/* <Text style={{
                                     fontSize: responsiveFontSize(2),
                                     //flex: 4, 
                                     color: '#9B9D9D'
                                 }} > <Ionicons style={{ fontSize: responsiveFontSize(2.5) }} name="ios-chatbubbles" /> Admin</Text> */}
-                            </TouchableOpacity>
+                                </TouchableOpacity>
 
 
-                            <TouchableOpacity
-                                style={{
-                                    lexDirection: 'row',
-                                    flex: 2,
-                                    //alignItems: 'center',
-                                }}
-                                onPress={() => {
-                                    //const FANPAGE_ID = '1750146621679564'
-                                    //const URL_FOR_APP = `fb://page/${FANPAGE_ID}`
-                                    const URL_FOR_BROWSER = 'http://zalo.me/0963988367'//'http://m.me/ho.can.7'
-                                    Linking.canOpenURL(URL_FOR_BROWSER)
-                                        .then((supported) => {
-                                            if (!supported) {
-                                                Linking.openURL(URL_FOR_BROWSER)
-                                            } else {
-                                                Linking.openURL(URL_FOR_BROWSER)
-                                            }
-                                        })
-                                        .catch(err => console.error('An error occurred', err))
-                                }}
-                            >
+                                <TouchableOpacity
+                                    style={{
+                                        // lexDirection: 'row',
+                                        //flex: 1,
+                                        marginLeft: 20,
+                                        //alignItems: 'center',
+                                    }}
+                                    onPress={() => {
+                                        //const FANPAGE_ID = '1750146621679564'
+                                        //const URL_FOR_APP = `fb://page/${FANPAGE_ID}`
+                                        const URL_FOR_BROWSER = 'http://zalo.me/0963988367'//'http://m.me/ho.can.7'
+                                        Linking.canOpenURL(URL_FOR_BROWSER)
+                                            .then((supported) => {
+                                                if (!supported) {
+                                                    Linking.openURL(URL_FOR_BROWSER)
+                                                } else {
+                                                    Linking.openURL(URL_FOR_BROWSER)
+                                                }
+                                            })
+                                            .catch(err => console.error('An error occurred', err))
+                                    }}
+                                >
 
-                                <Image
-                                    style={{}}
-                                    source={require('../assets/icons/chat_zalo.png')} />
+                                    <Image
+                                        style={{}}
+                                        source={require('../assets/icons/chat_zalo.png')} />
 
 
-                                {/* <Text style={{
+                                    {/* <Text style={{
                                     fontSize: responsiveFontSize(2),
                                     //flex: 4, 
                                     color: '#9B9D9D'
                                 }} > <Ionicons style={{ fontSize: responsiveFontSize(2.5) }} name="ios-chatbubbles" /> Admin</Text> */}
-                            </TouchableOpacity>
+                                </TouchableOpacity>
+                                <TouchableOpacity
+                                    style={{
+                                        // lexDirection: 'row',
+                                        //flex: 1,
+                                        marginLeft: 20,
+                                        //alignItems: 'center',
+                                    }}
+                                    onPress={() => {
+                                        //const FANPAGE_ID = '1750146621679564'
+                                        //const URL_FOR_APP = `fb://page/${FANPAGE_ID}`
+                                        const URL_FOR_BROWSER = 'https://api.whatsapp.com/send?phone=+84973730111'//'http://zalo.me/0963988367'//'http://m.me/ho.can.7'
+                                        Linking.canOpenURL(URL_FOR_BROWSER)
+                                            .then((supported) => {
+                                                if (!supported) {
+                                                    Linking.openURL(URL_FOR_BROWSER)
+                                                } else {
+                                                    Linking.openURL(URL_FOR_BROWSER)
+                                                }
+                                            })
+                                            .catch(err => console.error('An error occurred', err))
+                                    }}
+                                >
 
+                                    <Image
+                                        style={{}}
+                                        source={require('../assets/icons/chat_whatapps.png')} />
+
+
+                                    {/* <Text style={{
+                                    fontSize: responsiveFontSize(2),
+                                    //flex: 4, 
+                                    color: '#9B9D9D'
+                                }} > <Ionicons style={{ fontSize: responsiveFontSize(2.5) }} name="ios-chatbubbles" /> Admin</Text> */}
+                                </TouchableOpacity>
+                            </View>
                         </View>
 
                         <Text style={{
@@ -1157,7 +1195,7 @@ export default class ProfileScreen extends React.Component {
                                 color: '#6c6d6d',
                                 fontSize: responsiveFontSize(2.5),
                                 marginLeft: 5,
-                                marginRight:5,
+                                marginRight: 5,
                             }} name='ios-arrow-dropright-outline' />
                             <Text
                                 style={{ alignItems: 'center', fontSize: responsiveFontSize(2) }}
