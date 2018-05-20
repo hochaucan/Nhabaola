@@ -189,5 +189,11 @@
   "Automatic translation to English":"自动翻译成英文",
   "Automatic translation to Chinese":"自动翻译成中文",
   "Post Now":"现在发布",
-  "Chat now":"现在支持"
+  "Chat now":"现在支持",
+  "QR Pay":"QR支付",
+  "QR Top Up":"QR充值",
+  "Top up successfully":"充值成功！",
+  "QR has been used":"QR已被使用",
+  "QR is invalid":"QR无效！",
+  "Wallet available":"钱包可用"
 }

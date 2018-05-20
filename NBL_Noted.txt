@@ -504,6 +504,7 @@ translate("Delete")
 translate("Clear filter")
   translate("Finding")
   translate("Change avatar")
+  translate("QR Pay")
   translate("Set top")
   translate("Greater than") 
   translate("Less than") 
@@ -598,6 +599,9 @@ translate("Comment successfully")
 translate("Do you want to send a message to this poster")
 translate("Find the way")
 translate("Highlight date")
+translate("QR has been used")
+translate("Top up successfully")
+translate("QR is invalid")
 
 
 

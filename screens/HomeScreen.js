@@ -23,7 +23,7 @@ import {
   Keyboard,
   Easing,
 } from 'react-native';
-import { WebBrowser, ImagePicker, Facebook, Google, Notifications, Permissions } from 'expo';
+import { WebBrowser, ImagePicker, Facebook, Google, Notifications, Permissions, BarCodeScanner } from 'expo';
 import { MonoText } from '../components/StyledText';
 import ActionButton from 'react-native-action-button';
 import Icon from 'react-native-vector-icons/Ionicons';
@@ -69,6 +69,8 @@ const LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO;
 
 const roomBox = [];
 const roomBoxByID = null;
+const isScanQR = false;
+
 function numberWithCommas(x) {
   return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
 }
@@ -162,6 +164,7 @@ export default class HomeScreen extends React.Component {
       isVietnamease: false,
       isEnglish: false,
       isChinease: false,
+      //isScanQR: false,
     }
 
     // state = { selected: false };
@@ -1704,6 +1707,106 @@ export default class HomeScreen extends React.Component {
     return prev.item !== next.item;
   }
 
+  _handleBarCodeRead = async (data) => {
+    // Alert.alert(
+    //   'Scan successful!',
+    //   JSON.stringify(data.data)
+    // );
+
+
+    if (isScanQR) {
+      isScanQR = await false
+
+      if (data.data.indexOf("nbl") <= -1) {
+
+        this.popupQRPay.dismiss();
+
+        if (Platform.OS === 'android') {
+          ToastAndroid.showWithGravity(translate("QR is invalid"), ToastAndroid.SHORT, ToastAndroid.TOP);
+        }
+        else {
+          Alert.alert(translate("Notice"), translate("QR is invalid"));
+        }
+        return;
+      }
+
+      try {
+        await fetch("http://nhabaola.vn/api/Wallet/FO_Wallet_TopUp", {
+          method: 'POST',
+          headers: {
+            Accept: 'application/json',
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            "UserID": this.state.profile.ID,
+            "Code": data.data,
+            "CreatedBy": this.state.profile.ID,
+            "UpdatedBy": this.state.profile.UpdatedBy,
+
+
+            // "UserID": "10",
+            // "Code": "ntp-1905-1985-HCM-DN",
+            // "CreatedBy": "10",
+            // "UpdatedBy": "b2650091aaffa1da86dae09963d52649"
+          }),
+        })
+          .then((response) => response.json())
+          .then((responseJson) => {
+
+            //alert(JSON.stringify(responseJson))
+
+            if (JSON.stringify(responseJson.ErrorCode) === "22") {
+              //isScanQR = ''
+              if (Platform.OS === 'android') {
+                ToastAndroid.showWithGravity(translate("Top up successfully") + '\n'
+                  + JSON.stringify(responseJson.obj.Description) + '\n'
+                  + translate("Wallet available") + ': ' + JSON.stringify(responseJson.obj.CurrentAmount), ToastAndroid.SHORT, ToastAndroid.TOP);
+              }
+              else {
+                Alert.alert(translate("Notice"), translate("Top up successfully") + '\n'
+                  + JSON.stringify(responseJson.obj.Description) + '\n'
+                  + translate("Wallet available") + ': ' + JSON.stringify(responseJson.obj.CurrentAmount)
+                );
+              }
+            }
+            else if (JSON.stringify(responseJson.ErrorCode) === "21") {
+              // isScanQR = ''
+              if (Platform.OS === 'android') {
+                ToastAndroid.showWithGravity(translate("QR has been used"), ToastAndroid.SHORT, ToastAndroid.TOP);
+              }
+              else {
+                Alert.alert(translate("Notice"), translate("QR has been used"));
+              }
+            }
+            else {
+              //isScanQR = ''
+              if (Platform.OS === 'android') {
+                ToastAndroid.showWithGravity(translate("Error") + JSON.stringify(responseJson) + translate("Please contact Admin in the Help menu"), ToastAndroid.SHORT, ToastAndroid.TOP);
+              }
+              else {
+                Alert.alert(translate("Notice"), translate("Error") + JSON.stringify(responseJson) + translate("Please contact Admin in the Help menu"));
+              }
+            }
+
+            // this._saveStorageAsync('FO_Category_GetAllData', JSON.stringify(responseJson.obj))
+
+            this.popupQRPay.dismiss();
+            //this.setState({
+
+            // })
+          }).
+          catch((error) => { console.log(error) });
+      } catch (error) {
+        console.log(error)
+      }
+
+      // alert(isScanQR)
+      //isScanQR = await false
+    }
+
+
+
+  };
 
   render() {
     let { image } = this.state;
@@ -1758,7 +1861,7 @@ export default class HomeScreen extends React.Component {
             alignItems: 'center',
             justifyContent: 'center',
             marginTop: this.state.roomByCatHeigh,
-            paddingBottom:10,
+            paddingBottom: 10,
             //opacity: this.state.languageOpacity,//0.2,
           }}
         >
@@ -2507,7 +2610,8 @@ export default class HomeScreen extends React.Component {
                   textContainerStyle={{ backgroundColor: '#73aa2a' }}
                   textStyle={{ color: '#fff' }}
                   title={numberWithCommas(this.state.wallet) + " đ"} onPress={() => {
-                    //alert(this.state.selected)
+                    this.popupSelectedImage.show()
+
                   }}>
                   <Icon name="logo-usd" style={styles.actionButtonIcon} />
                 </ActionButton.Item>
@@ -3525,45 +3629,84 @@ export default class HomeScreen extends React.Component {
         </Modal> */}
 
 
-        {/* Popup select image library or camera */}
+
+        {/* Popup QR scanner */}
         <PopupDialog
           ref={(popupSelectedImage) => { this.popupSelectedImage = popupSelectedImage; }}
           dialogAnimation={new ScaleAnimation()}
           dialogStyle={{ marginBottom: 10, width: width * 0.9, height: 130, justifyContent: 'center', padding: 20 }}
-          dismissOnTouchOutside={false}
+          dismissOnTouchOutside={true}
+        //onShown={() => { this.setState({ isScanQR: true }) }}
         >
           <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'center', alignContent: 'center' }}>
             <TouchableOpacity
-              style={{ justifyContent: 'center', alignContent: 'center', paddingRight: 30 }}
+              style={{ flex: 2, justifyContent: 'center', alignContent: 'center' }}
               onPress={async () => {
                 this.popupSelectedImage.dismiss();
-                this._pickImageAsync('library', 'registerAccountImage')
-                await this.setState({ modalRegisterAccount: true })
+                //this._pickImageAsync('library', this.state.selectedImages)
               }}
             >
               <Ionicons style={{
                 fontSize: 40, borderRadius: 10,
-                backgroundColor: '#a4d227', color: '#fff', textAlign: 'center', padding: 10
-              }} name='ios-folder-open' >
+                //backgroundColor: '#a4d227',
+                color: '#a4d227', textAlign: 'center', padding: 10
+              }} name='ios-qr-scanner' >
               </Ionicons>
-              <Text style={{ textAlign: 'center', marginTop: 5 }}>{translate("Image library")}</Text>
+              <Text style={{ textAlign: 'center', marginTop: 5 }}>{translate("QR Pay")}</Text>
             </TouchableOpacity>
+            <View style={{ flex: 1 }}></View>
             <TouchableOpacity
-              style={{ justifyContent: 'center', alignContent: 'center', }}
+              style={{ flex: 2, justifyContent: 'center', alignContent: 'center', }}
               onPress={async () => {
                 this.popupSelectedImage.dismiss();
-                this._pickImageAsync('camera', 'registerAccountImage')
-                await this.setState({ modalRegisterAccount: true })
+                this.popupQRPay.show()
+                //this._pickImageAsync('camera', this.state.selectedImages)
               }}
             >
+
               <Ionicons style={{
                 fontSize: 40, borderRadius: 10,
-                backgroundColor: '#a4d227', color: '#fff', textAlign: 'center', padding: 10
-              }} name='md-camera' />
-              <Text style={{ textAlign: 'center', marginTop: 5 }}>{translate("Camera")}</Text>
+                // backgroundColor: '#a4d227', 
+                color: '#a4d227', textAlign: 'center', padding: 10
+              }} name='md-qr-scanner' />
+              <Text style={{ textAlign: 'center', marginTop: 5 }}>{translate("QR Top Up")}</Text>
             </TouchableOpacity>
           </View>
         </PopupDialog>
+
+
+
+        {/* Popup QR Pay */}
+        <PopupDialog
+          ref={(popupQRPay) => { this.popupQRPay = popupQRPay; }}
+          dialogAnimation={new ScaleAnimation()}
+          dialogStyle={{ marginBottom: 10, width: responsiveWidth(90), height: responsiveHeight(80), justifyContent: 'center', padding: 20 }}
+          dismissOnTouchOutside={true}
+          // onDismissed={() => { this.setState({ isScanQR: false }) }}
+          onShown={() => { isScanQR = true }}
+        >
+          <View style={{
+            flex: 1,
+            //flexDirection: 'row',
+            justifyContent: 'center', alignContent: 'center'
+          }}>
+
+            <Text style={{
+              textAlign: 'center', marginTop: 5,
+              marginBottom: 10, color: '#73aa2a',
+              textAlign: 'center'
+            }}>{translate("QR Top Up")}</Text>
+            <BarCodeScanner
+              onBarCodeRead={
+                this._handleBarCodeRead
+              }
+              style={{ width: responsiveWidth(80), height: responsiveHeight(60) }}
+            />
+
+
+          </View>
+        </PopupDialog>
+
 
 
         {/* Popup Loading Indicator */}

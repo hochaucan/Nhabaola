@@ -188,5 +188,11 @@
   "Automatic translation to English": "Dịch tự động sang Tiếng Anh",
   "Automatic translation to Chinese": "Dịch tự động sang Tiếng Hoa",
   "Post Now": "Đăng Tin Ngay",
-  "Chat now": "Hỗ trợ ngay"
+  "Chat now": "Hỗ trợ ngay",
+  "QR Pay": "QR Trả Tiền",
+  "QR Top Up":"QR Nạp Tiền",
+  "Top up successfully":"Nạp tiền thành công!",
+  "QR has been used":"QR Nạp Tiền đã được sử dụng",
+  "QR is invalid":"QR không hợp lệ!",
+  "Wallet available":"Ví tiền hiện có"
 }

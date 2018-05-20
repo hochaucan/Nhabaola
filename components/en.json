@@ -189,5 +189,11 @@
   "Automatic translation to English":"Automatic translation to English",
   "Automatic translation to Chinese":"Automatic translation to Chinese",
   "Post Now":"Post Now",
-  "Chat now":"Chat now"
+  "Chat now":"Chat now",
+  "QR Pay":"QR Pay",
+  "QR Top Up":"QR Top Up",
+  "Top up successfully":"Top up successfully!",
+  "QR has been used":"QR has been used",
+  "QR is invalid":"QR is invalid!",
+  "Wallet available":"Wallet available"
 }
