@@ -20,7 +20,7 @@ import {
     Linking,
 } from 'react-native';
 import { ExpoLinksView } from '@expo/samples';
-import { Constants, ImagePicker } from 'expo';
+import { Constants, ImagePicker, BarCodeScanner } from 'expo';
 import { Ionicons } from '@expo/vector-icons';
 import PopupDialog, { SlideAnimation, ScaleAnimation, DialogTitle, DialogButton } from 'react-native-popup-dialog';
 import { CheckBox, Rating, Button, FormLabel, FormInput, SocialIcon, FormValidationMessage } from 'react-native-elements'
@@ -65,6 +65,8 @@ function numberWithCommas(x) {
 //         content: 'Đang cập nhật...',
 //     },
 // ];
+
+const isScanQR = false;
 
 function funcformatDateDDMMYYYY(_date) {
     var _newdate = new Date(_date);
@@ -438,6 +440,107 @@ export default class ProfileScreen extends React.Component {
     //     alert("nextProps.items")
     // }
 
+    _handleBarCodeRead = async (data) => {
+        // Alert.alert(
+        //   'Scan successful!',
+        //   JSON.stringify(data.data)
+        // );
+
+
+        if (isScanQR) {
+            isScanQR = await false
+
+            if (data.data.indexOf("nbl") <= -1) {
+
+                this.popupQRPay.dismiss();
+
+                if (Platform.OS === 'android') {
+                    ToastAndroid.showWithGravity(translate("QR is invalid"), ToastAndroid.SHORT, ToastAndroid.TOP);
+                }
+                else {
+                    Alert.alert(translate("Notice"), translate("QR is invalid"));
+                }
+                return;
+            }
+
+            try {
+                await fetch("http://nhabaola.vn/api/Wallet/FO_Wallet_TopUp", {
+                    method: 'POST',
+                    headers: {
+                        Accept: 'application/json',
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        "UserID": this.state.profile.ID,
+                        "Code": data.data,
+                        "CreatedBy": this.state.profile.ID,
+                        "UpdatedBy": this.state.profile.UpdatedBy,
+
+
+                        // "UserID": "10",
+                        // "Code": "ntp-1905-1985-HCM-DN",
+                        // "CreatedBy": "10",
+                        // "UpdatedBy": "b2650091aaffa1da86dae09963d52649"
+                    }),
+                })
+                    .then((response) => response.json())
+                    .then((responseJson) => {
+
+                        //alert(JSON.stringify(responseJson))
+
+                        if (JSON.stringify(responseJson.ErrorCode) === "22") {
+                            //isScanQR = ''
+                            if (Platform.OS === 'android') {
+                                ToastAndroid.showWithGravity(translate("Top up successfully") + '\n'
+                                    + JSON.stringify(responseJson.obj.Description) + '\n'
+                                    + translate("Wallet available") + ': ' + JSON.stringify(responseJson.obj.CurrentAmount), ToastAndroid.SHORT, ToastAndroid.TOP);
+                            }
+                            else {
+                                Alert.alert(translate("Notice"), translate("Top up successfully") + '\n'
+                                    + JSON.stringify(responseJson.obj.Description) + '\n'
+                                    + translate("Wallet available") + ': ' + JSON.stringify(responseJson.obj.CurrentAmount)
+                                );
+                            }
+                        }
+                        else if (JSON.stringify(responseJson.ErrorCode) === "21") {
+                            // isScanQR = ''
+                            if (Platform.OS === 'android') {
+                                ToastAndroid.showWithGravity(translate("QR has been used"), ToastAndroid.SHORT, ToastAndroid.TOP);
+                            }
+                            else {
+                                Alert.alert(translate("Notice"), translate("QR has been used"));
+                            }
+                        }
+                        else {
+                            //isScanQR = ''
+                            if (Platform.OS === 'android') {
+                                ToastAndroid.showWithGravity(translate("Error") + JSON.stringify(responseJson) + translate("Please contact Admin in the Help menu"), ToastAndroid.SHORT, ToastAndroid.TOP);
+                            }
+                            else {
+                                Alert.alert(translate("Notice"), translate("Error") + JSON.stringify(responseJson) + translate("Please contact Admin in the Help menu"));
+                            }
+                        }
+
+                        // this._saveStorageAsync('FO_Category_GetAllData', JSON.stringify(responseJson.obj))
+
+                        this.popupQRPay.dismiss();
+                        //this.setState({
+
+                        // })
+                    }).
+                    catch((error) => { console.log(error) });
+            } catch (error) {
+                console.log(error)
+            }
+
+            // alert(isScanQR)
+            //isScanQR = await false
+        }
+
+
+
+    };
+
     render() {
         return (
             <View style={styles.container}>
@@ -545,7 +648,13 @@ export default class ProfileScreen extends React.Component {
                             <Text>  {translate("Pinned")}</Text>
                         </Ionicons>
                     </TouchableOpacity>
-                    <TouchableOpacity style={styles.profileMenuItem}>
+                    <TouchableOpacity style={styles.profileMenuItem}
+                        onPress={() => {
+                            if (Platform.OS == 'ios') {
+                                this.popupSelectedImage.show()
+                            }
+                        }}
+                    >
                         <Ionicons style={styles.profileMenuItemText} name='logo-usd'>
                             <Text style={{}}>  {translate("Wallet")}:  </Text>
                             <Text style={{ color: '#73aa2a' }}>{numberWithCommas(this.state.wallet)} đ</Text>
@@ -1240,55 +1349,110 @@ export default class ProfileScreen extends React.Component {
                     </ScrollView>
                 </Modal>
 
-                {/* Modal Posted Room History*/}
-                {/* <Modal
-                    animationType={"slide"}
-                    transparent={false}
-                    visible={this.state.modalPostedRoomHistory}
-                    onRequestClose={() => { alert("Modal has been closed.") }}
+                {/* Popup QR scanner */}
+                <PopupDialog
+                    ref={(popupSelectedImage) => { this.popupSelectedImage = popupSelectedImage; }}
+                    dialogAnimation={new ScaleAnimation()}
+                    dialogStyle={{ marginBottom: 10, width: width * 0.9, height: 130, justifyContent: 'center', padding: 20 }}
+                    dismissOnTouchOutside={true}
+                //onShown={() => { this.setState({ isScanQR: true }) }}
                 >
-                    <View style={{ flexDirection: 'row', padding: 20, }}>
+                    <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'center', alignContent: 'center' }}>
                         <TouchableOpacity
-                            style={{}}
-                            onPress={() => this.setState({ modalPostedRoomHistory: false, })}>
-                            <Ionicons style={{ fontSize: 28, color: '#a4d227', }} name='md-arrow-back'></Ionicons>
+                            style={{ flex: 2, justifyContent: 'center', alignContent: 'center' }}
+                            onPress={async () => {
+                                this.popupSelectedImage.dismiss();
+                                //this._pickImageAsync('library', this.state.selectedImages)
+                            }}
+                        >
+                            <Ionicons style={{
+                                fontSize: 40, borderRadius: 10,
+                                //backgroundColor: '#a4d227',
+                                color: '#a4d227', textAlign: 'center', padding: 10
+                            }} name='ios-qr-scanner' >
+                            </Ionicons>
+                            <Text style={{ textAlign: 'center', marginTop: 5 }}>{translate("QR Pay")}</Text>
                         </TouchableOpacity>
-                        <Text style={{ marginLeft: 20, color: '#73aa2a', fontSize: 20, justifyContent: 'center' }}>Tin Bạn Đã Đăng</Text>
-                    </View>
-                    <ScrollView>
-                        <View style={styles.searchRoolResultBox}>
-                            <FlatList
-                                
-                                ref='refPostedRoomHistory'
-                                data={this.state.postedRoomHistoryData}
-                                renderItem={({ item }) =>
-                                    <TouchableOpacity
-                                        style={styles.searchCardImage}
-                                        onPress={() => this._moveToRoomDetail(item)}
-                                    >
-                                        <View style={styles.searchCard}>
-                                            <Image
-                                                style={styles.searchCardImage}
-                                                source={{ uri: item.picture.large }} />
+                        <View style={{ flex: 1 }}></View>
+                        <TouchableOpacity
+                            style={{ flex: 2, justifyContent: 'center', alignContent: 'center', }}
+                            onPress={async () => {
+                                this.popupSelectedImage.dismiss();
+                                this.popupQRPay.show()
+                                //this._pickImageAsync('camera', this.state.selectedImages)
+                            }}
+                        >
 
-                                            <View style={styles.searchCardTextBox}>
-                                                <Text style={styles.searchCardAddress}>{item.location.street} {item.location.city}</Text>
-                                                <Text style={styles.searchCardPostDate}>Ngày đăng: {item.registered}</Text>
-                                                <View style={styles.searchCardPriceBox}>
-                                                    <Text style={styles.searchCardPrice}>Giá: 2.000.000 đ</Text>
-                                                    <Ionicons style={styles.searCardDistanceIcon} name='md-pin' >  3 km</Ionicons>
-                                                   
-                                                </View>
-                                            </View>
-                                        </View>
-                                    </TouchableOpacity>
+                            <Ionicons style={{
+                                fontSize: 40, borderRadius: 10,
+                                // backgroundColor: '#a4d227', 
+                                color: '#a4d227', textAlign: 'center', padding: 10
+                            }} name='md-qr-scanner' />
+                            <Text style={{ textAlign: 'center', marginTop: 5 }}>{translate("QR Top Up")}</Text>
+                        </TouchableOpacity>
+                    </View>
+                </PopupDialog>
+
+
+
+                {/* Popup QR Pay */}
+                {Platform.OS == 'ios' &&
+                    <PopupDialog
+                        ref={(popupQRPay) => { this.popupQRPay = popupQRPay; }}
+                        dialogAnimation={new ScaleAnimation()}
+                        dialogStyle={{
+                            marginBottom: 10,
+                            width: responsiveWidth(90),
+                            height: responsiveHeight(80),
+                            justifyContent: 'center', padding: 20,
+                        }}
+                        //dialogTitle={<DialogTitle title={translate("QR Top Up")} />}
+                        dismissOnTouchOutside={false}
+                        // onDismissed={() => { this.setState({ isScanQR: false }) }}
+                        // actions={<DialogButton text={translate("Cancel")} align="center" onPress={() => this.popupQRPay.dismiss()} />}
+                        onShown={() => { isScanQR = true }}
+                    >
+                        <View style={{
+                            flex: 1,
+                            //flexDirection: 'row',
+                            justifyContent: 'center', alignContent: 'center'
+                        }}>
+
+                            <Text style={{
+                                textAlign: 'center', marginTop: 5,
+                                marginBottom: 10, color: '#73aa2a',
+                                textAlign: 'center',
+                                fontSize: responsiveFontSize(2.2)
+                            }}>{translate("QR Top Up")}</Text>
+                            <BarCodeScanner
+                                onBarCodeRead={
+                                    this._handleBarCodeRead
                                 }
-                                keyExtractor={item => item.email}
+                                style={{
+                                    width: responsiveWidth(80),
+                                    height: responsiveHeight(60)
+                                }}
                             />
+                            <TouchableOpacity
+                                onPress={() => {
+                                    this.popupQRPay.dismiss()
+                                }}
+                            >
+
+                                <Text style={{
+                                    textAlign: 'center',
+                                    paddingTop: 15,
+                                    //marginBottom: 10,
+                                    color: '#6c6d6d',
+                                    textAlign: 'center',
+                                    fontSize: responsiveFontSize(2),
+                                }}>{translate("Cancel")}</Text>
+                            </TouchableOpacity>
+
                         </View>
-                      
-                    </ScrollView>
-                </Modal> */}
+                    </PopupDialog>
+                }
+
             </View>
         );
     }

@@ -3680,9 +3680,16 @@ export default class HomeScreen extends React.Component {
         <PopupDialog
           ref={(popupQRPay) => { this.popupQRPay = popupQRPay; }}
           dialogAnimation={new ScaleAnimation()}
-          dialogStyle={{ marginBottom: 10, width: responsiveWidth(90), height: responsiveHeight(80), justifyContent: 'center', padding: 20 }}
-          dismissOnTouchOutside={true}
+          dialogStyle={{
+            marginBottom: 10,
+            width: responsiveWidth(90),
+            height: responsiveHeight(80),
+            justifyContent: 'center', padding: 20,
+          }}
+          //dialogTitle={<DialogTitle title={translate("QR Top Up")} />}
+          dismissOnTouchOutside={false}
           // onDismissed={() => { this.setState({ isScanQR: false }) }}
+          // actions={<DialogButton text={translate("Cancel")} align="center" onPress={() => this.popupQRPay.dismiss()} />}
           onShown={() => { isScanQR = true }}
         >
           <View style={{
@@ -3694,15 +3701,33 @@ export default class HomeScreen extends React.Component {
             <Text style={{
               textAlign: 'center', marginTop: 5,
               marginBottom: 10, color: '#73aa2a',
-              textAlign: 'center'
+              textAlign: 'center',
+              fontSize: responsiveFontSize(2.2)
             }}>{translate("QR Top Up")}</Text>
             <BarCodeScanner
               onBarCodeRead={
                 this._handleBarCodeRead
               }
-              style={{ width: responsiveWidth(80), height: responsiveHeight(60) }}
+              style={{
+                width: responsiveWidth(80),
+                height: responsiveHeight(60)
+              }}
             />
+            <TouchableOpacity
+              onPress={() => {
+                this.popupQRPay.dismiss()
+              }}
+            >
 
+              <Text style={{
+                textAlign: 'center',
+                paddingTop: 15,
+                //marginBottom: 10,
+                color: '#6c6d6d',
+                textAlign: 'center',
+                fontSize: responsiveFontSize(2),
+              }}>{translate("Cancel")}</Text>
+            </TouchableOpacity>
 
           </View>
         </PopupDialog>
