@@ -898,14 +898,21 @@ export default class RoomDetailScreen extends React.Component {
                     </View>
 
                     {this.state.roomBox.IsHighlight &&
-                        <Image
-                            style={{
-                                position: 'absolute', right: 15, zIndex: 10,
-                                width: responsiveWidth(25),
-                                height: responsiveWidth(25), top: 5
-                            }}
-                            source={require('../assets/images/nbl-highlight.gif')}
-                        />
+
+                        <Ionicons style={{
+                            position: 'absolute', right: 15, top: 30, zIndex: 10,
+                            fontSize: responsiveFontSize(6),
+                            color: '#73aa2a'
+                        }} name="ios-flame" />
+
+                        // <Image
+                        //     style={{
+                        //         position: 'absolute', right: 15, zIndex: 10,
+                        //         width: responsiveWidth(25),
+                        //         height: responsiveWidth(25), top: 5
+                        //     }}
+                        //     source={require('../assets/images/nbl-highlight.gif')}
+                        // />
                     }
 
                 </View>

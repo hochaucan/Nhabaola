@@ -300,29 +300,29 @@ export default class RoomByCategoryScreen extends React.Component {
 
   _getLanguageFromStorageAsync = async () => {
     try {
-        var value = await AsyncStorage.getItem('language');
+      var value = await AsyncStorage.getItem('language');
 
-        if (value !== null) {
-            if (value == 'enTranslation') {
-                setLocalization(enTranslation)
-                this.setState({ isEnglish: true, isVietnamease: false, isChinease: false })
-            } else if (value == 'zhTranslation') {
-                setLocalization(zhTranslation)
-                this.setState({ isEnglish: false, isVietnamease: false, isChinease: true })
-            }
-            else {
-                setLocalization(viTranslation)
-                this.setState({ isEnglish: false, isVietnamease: true, isChinease: false })
-            }
-        } else {
-            setLocalization(viTranslation)
-            this.setState({ isEnglish: false, isVietnamease: true, isChinease: false })
+      if (value !== null) {
+        if (value == 'enTranslation') {
+          setLocalization(enTranslation)
+          this.setState({ isEnglish: true, isVietnamease: false, isChinease: false })
+        } else if (value == 'zhTranslation') {
+          setLocalization(zhTranslation)
+          this.setState({ isEnglish: false, isVietnamease: false, isChinease: true })
         }
+        else {
+          setLocalization(viTranslation)
+          this.setState({ isEnglish: false, isVietnamease: true, isChinease: false })
+        }
+      } else {
+        setLocalization(viTranslation)
+        this.setState({ isEnglish: false, isVietnamease: true, isChinease: false })
+      }
 
     } catch (e) {
-        console.log(e);
+      console.log(e);
     }
-}
+  }
 
   // _onScroll = (event) => {
   //   // Simple fade-in / fade-out animation
@@ -1683,13 +1683,20 @@ export default class RoomByCategoryScreen extends React.Component {
 
               {/* Highlight */}
               {item.IsHighlight &&
-                <Image
-                  style={{
-                    position: 'absolute', right: 15, zIndex: 10, width: responsiveWidth(30),
-                    height: responsiveWidth(30), top: 20
-                  }}
-                  source={require('../assets/images/nbl-highlight.gif')}
-                />
+
+                <Ionicons style={{
+                  position: 'absolute', right: 15, top: 30, zIndex: 10,
+                  fontSize: responsiveFontSize(6),
+                  color: '#73aa2a'
+                }} name="ios-flame" />
+
+                // <Image
+                //   style={{
+                //     position: 'absolute', right: 15, zIndex: 10, width: responsiveWidth(30),
+                //     height: responsiveWidth(30), top: 20
+                //   }}
+                //   source={require('../assets/images/nbl-highlight.gif')}
+                // />
               }
 
               {/* Wartermark */}

@@ -26,6 +26,7 @@
     "react-native-google-places-autocomplete": "^1.3.3",
     "react-native-keyboard-aware-scroll-view": "^0.4.1",
     "react-native-masked-text": "^1.6.2",
+    "react-native-modal-dropdown": "^0.6.2",
     "react-native-popup-dialog": "^0.9.35",
     "react-native-responsive-dimensions": "^1.0.1",
     "react-native-simple-picker": "^2.0.0",

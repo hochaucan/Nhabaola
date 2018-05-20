@@ -49,6 +49,8 @@ import zhTranslation from '../components/zh.json';
 import viTranslation from '../components/vi.json';
 import { setLocalization, translate, Translate } from 'react-native-translate';
 import SearchScreen from './SearchScreen';
+import ModalDropdown from 'react-native-modal-dropdown';
+import SimplePicker from 'react-native-simple-picker';
 
 const homePlace = {
   description: 'Home',
@@ -164,7 +166,7 @@ export default class HomeScreen extends React.Component {
       isVietnamease: false,
       isEnglish: false,
       isChinease: false,
-      //isScanQR: false,
+      iosSelectedCategory: translate("All real estate"),
     }
 
     // state = { selected: false };
@@ -1853,220 +1855,232 @@ export default class HomeScreen extends React.Component {
           </View>
         }
 
-        {/* Multi Language */}
+        {/* Sub Menu */}
         <Animated.View
           style={{
-            //  flexDirection: 'row',
-            alignContent: 'center',
-            alignItems: 'center',
-            justifyContent: 'center',
+            flexDirection: 'row',
+            height: 40,
+            borderBottomWidth: 0.5,
+            borderColor: '#73aa2a',
             marginTop: this.state.roomByCatHeigh,
-            paddingBottom: 10,
-            //opacity: this.state.languageOpacity,//0.2,
           }}
         >
-
-          <View
+          {/* Category */}
+          <TouchableOpacity
             style={{
-              flexDirection: 'row',
+              flex: 1,
+              borderRightWidth: 0.5,
+              borderColor: '#73aa2a',
               alignContent: 'center',
               alignItems: 'center',
               justifyContent: 'center',
-              //opacity: this.state.languageOpacity,//0.2,
+            }}
+
+            onPress={() => {
+              this.refs.pickerCategory.show()
             }}
           >
-            {/* Vietnamese */}
-            <TouchableOpacity
-              style={{
-                padding: 10,
+            <Ionicons style={{
+              fontSize: responsiveFontSize(4),
+              color: '#73aa2a'
+            }}
+              name='ios-menu-outline'
+            />
 
-              }}
-              onPress={async () => {
-                setLocalization(viTranslation);
-                this.setState({ isVietnamease: true, isEnglish: false, isChinease: false })
-                this._getRoomBoxAsync(true)
-                if (Platform.OS === 'android') {
-                  ToastAndroid.showWithGravity(translate("You have switched languages to Vietnamease"), ToastAndroid.SHORT, ToastAndroid.TOP);
-                }
-                else {
-                  Alert.alert(translate("Notice"), translate("You have switched languages to Vietnamease"))
-                }
-                await this._saveStorageAsync('language', 'viTranslation')
-                this.forceUpdate()
+            {/* <Text
+              style={{
 
               }}
             >
-              <Text style={{
-                fontSize: responsiveFontSize(2),
-                color: this.state.isVietnamease ? '#73aa2a' : '#a4d227',
+              {this.state.iosSelectedCategory}
+            </Text> */}
 
-              }}>Tiếng Việt</Text>
-            </TouchableOpacity>
-
-            {/* English */}
-            <TouchableOpacity
-              style={{
-                padding: 10,
-
+            <SimplePicker
+              ref={'pickerCategory'}
+              options={this.state.roomCategory.map((y, i) => y.ID)}
+              labels={this.state.roomCategory.map((y, i) => this.state.isVietnamease ? y.CatName : this.state.isEnglish ? y.CatImg.split('|')[0] : y.CatImg.split('|')[1])}
+              confirmText={translate("Agree")}
+              cancelText={translate("Cancel")}
+              itemStyle={{
+                fontSize: 25,
+                color: '#73aa2a',
+                textAlign: 'center',
+                fontWeight: 'bold',
               }}
-              onPress={async () => {
-                setLocalization(enTranslation);
-                this.setState({ isVietnamease: false, isEnglish: true, isChinease: false })
-                this._getRoomBoxAsync(true)
-                if (Platform.OS === 'android') {
-                  ToastAndroid.showWithGravity(translate("You have switched languages to English"), ToastAndroid.SHORT, ToastAndroid.TOP);
-                }
-                else {
-                  Alert.alert(translate("Notice"), translate("You have switched languages to English"))
-                }
-                await this._saveStorageAsync('language', 'enTranslation')
-                this.forceUpdate()
+              onSubmit={async (option, label) => {
 
+                let _catName = '';
+                this.state.roomCategory.map((y, i) => {
+                  if (y.ID === option) {
+                    _catName = this.state.isVietnamease ? y.CatName : this.state.isEnglish ? y.CatImg.split('|')[0] : y.CatImg.split('|')[1]
+
+                  }
+                })
+
+                this.props.navigation.navigate('RoomByCategoryScreen', {
+                  CategoryID: option,
+                  CategoryName: _catName
+                })
+
+                // await this.setState({ selectedCategory: option });
+                // this.state.roomCategory.map((y, i) => {
+                //   if (y.ID === option) {
+                //     this.setState({ iosSelectedCategory: this.state.isVietnamease ? y.CatName : this.state.isEnglish ? y.CatImg.split('|')[0] : y.CatImg.split('|')[1] })
+                //   }
+                // })
+
+                //this._getRoomByFilter();
               }}
-            >
-              <Text style={{
-                fontSize: responsiveFontSize(2),
-                color: this.state.isEnglish ? '#73aa2a' : '#a4d227',
-              }}>English</Text>
-            </TouchableOpacity>
+            />
 
-            {/* Chinease */}
-            <TouchableOpacity
-              style={{
-                padding: 10,
 
+
+
+            {/* <ModalDropdown
+              options={this.state.roomCategory.map((y, i) => this.state.isVietnamease ? y.CatName : this.state.isEnglish ? y.CatImg.split('|')[0] : y.CatImg.split('|')[1])}
+              // defaultIndex={-1}
+              // defaultValue={this.state.dropdown_4_defaultValue}
+              // onDropdownWillShow={this._dropdown_4_willShow.bind(this)}
+              // onDropdownWillHide={this._dropdown_4_willHide.bind(this)}
+              onSelect={(idx, value) => {
+                alert(value + ' ' + idx)
               }}
 
-              onPress={async () => {
-                setLocalization(zhTranslation);
-                this.setState({ isVietnamease: false, isEnglish: false, isChinease: true })
-                this._getRoomBoxAsync(true)
-                if (Platform.OS === 'android') {
-                  ToastAndroid.showWithGravity(translate("You have switched languages to Chinease"), ToastAndroid.SHORT, ToastAndroid.TOP);
-                }
-                else {
-                  Alert.alert(translate("Notice"), translate("You have switched languages to Chinease"))
-                }
-                await this._saveStorageAsync('language', 'zhTranslation')
-                this.forceUpdate()
+            /> */}
+          </TouchableOpacity>
 
-              }}
-            >
-              <Text style={{
-                fontSize: responsiveFontSize(2),
-                color: this.state.isChinease ? '#73aa2a' : '#a4d227',
-              }}>中文</Text>
-            </TouchableOpacity>
-          </View>
-          {/* <Translate value="Post"/> */}
-          {/* </Animated.View> */}
-
-
-
-          {/* <TouchableOpacity
+          {/* Hot Room */}
+          <TouchableOpacity
             style={{
-              marginRight: 10,
-              height: 50,
-              // zIndex: 30,           
+              flex: 1,
+              borderRightWidth: 0.5,
+              borderColor: '#73aa2a',
+              alignContent: 'center',
+              alignItems: 'center',
+              justifyContent: 'center',
             }}
             onPress={() => {
-
-              this.props.navigation.navigate('RoomByCategoryScreen', { CategoryID: 0, CategoryName: translate("Highlight") })
-
+              this.props.navigation.navigate('RoomByCategoryScreen', { CategoryID: 0, CategoryName: "HOT" })
             }}
           >
-            <Text style={{
-              // marginTop: 5,
-              fontSize: responsiveFontSize(1.5),
-              color: '#73aa2a',//'#9B9D9D',
-              // backgroundColor: '#a4d227',
-              borderRadius: Platform.OS == 'ios' ? 10 : 50,
-              borderWidth: 1,
-              borderColor: '#a4d227',
-              padding: 10,
-
-
-            }}>{translate("Highlight")}</Text>
-          </TouchableOpacity> */}
-
-          {/* Flatlist Category */}
-          <FlatList
-            //onScroll={this._onScroll}
-            // ref='homepage'
-            //extraData={this.state}
-            refreshing={this.state.refreshCategory}
-            keyboardShouldPersistTaps="always"
-            removeClippedSubviews={true}
-            initialNumToRender={2}
-            shouldItemUpdate={this._shouldItemUpdate}
-            onRefresh={() => {
-              //this._refreshRoomBox()
+            <Ionicons style={{
+              fontSize: responsiveFontSize(4),
+              color: '#73aa2a'
             }}
-            horizontal={true}
-            showsHorizontalScrollIndicator={true}
-            onEndReachedThreshold={0.2}
-            onEndReached={() => {
-              // this.setState({
-              //   refresh: true
-              // });
-              // if (this.state.flatListIsEnd == false) {
-              //   this._getRoomBoxAsync(false);
-              // }
+              name='ios-flame'
+            />
+          </TouchableOpacity>
 
-              {/* this.setState({
-              refresh: true
-            }); */}
+          {/* Multi Language */}
+          <View
+            style={{
+              flex: 1,
+              alignContent: 'center',
+              alignItems: 'center',
+              justifyContent: 'center',
+              //borderRightWidth: 0.5,
+              //borderColor: '#73aa2a'
             }}
+          >
+            <View
+              style={{
+                flexDirection: 'row',
+                // alignContent: 'center',
+                // alignItems: 'center',
+                // justifyContent: 'center',
+                //opacity: this.state.languageOpacity,//0.2,
+              }}
+            >
+              {/* Vietnamese */}
+              <TouchableOpacity
+                style={{
+                  //padding: 8,
+                  paddingRight: 15,
 
-            data={this.state.roomCategory}
-            extraData={this.state}
-            renderItem={({ item }) =>
-              <View style={{
-                marginRight: 10,
-              }}>
+                }}
+                onPress={async () => {
+                  setLocalization(viTranslation);
+                  this.setState({ isVietnamease: true, isEnglish: false, isChinease: false })
+                  this._getRoomBoxAsync(true)
+                  if (Platform.OS === 'android') {
+                    ToastAndroid.showWithGravity(translate("You have switched languages to Vietnamease"), ToastAndroid.SHORT, ToastAndroid.TOP);
+                  }
+                  else {
+                    Alert.alert(translate("Notice"), translate("You have switched languages to Vietnamease"))
+                  }
+                  await this._saveStorageAsync('language', 'viTranslation')
+                  this.forceUpdate()
 
-                {/* <SocialIcon
-                  type='medium'
-                  raised={true}
-                  onPress={this._handleFacebookLogin}
-                /> */}
-                {/* <Icon
-                  raised
-                  name='ios-home'
-                  type='ionicon'
-                  color='#f50'
-                  onPress={() => this._handleFacebookLogin} /> */}
-                <TouchableOpacity
-                  onPress={() => {
-                    //alert("can")
-                    this.props.navigation.navigate('RoomByCategoryScreen', {
-                      CategoryID: item.ID,
-                      CategoryName: this.state.isVietnamease ? item.CatName : this.state.isEnglish ? item.CatImg.split('|')[0] : item.CatImg.split('|')[1]
-                    })
-                    //this.props.navigation.navigate('ProfileScreen', { key: 'CanHo' });
-                  }}
-                >
-                  <Text style={{
-                    // marginTop: 5,
-                    fontSize: responsiveFontSize(1.5),
-                    color: '#73aa2a',//'#9B9D9D',
-                    // backgroundColor: '#a4d227',
-                    borderRadius: Platform.OS == 'ios' ? 10 : 50,
-                    borderWidth: 1,
-                    borderColor: '#a4d227',
-                    padding: 10,
+                }}
+              >
+                <Text style={{
+                  fontSize: responsiveFontSize(1.7),
+                  color: this.state.isVietnamease ? '#73aa2a' : '#9B9D9D',
 
-                  }}>{this.state.isVietnamease ? item.CatName : this.state.isEnglish ? item.CatImg.split('|')[0] : item.CatImg.split('|')[1]}</Text>
-                </TouchableOpacity>
-              </View>
+                }}>VI</Text>
+              </TouchableOpacity>
 
-            }
-            keyExtractor={item => item.ID + 'nhabaola'}
+              {/* English */}
+              <TouchableOpacity
+                style={{
+                  paddingRight: 15,
 
-          /* horizontal={false}
-          numColumns={3} */
-          />
+                }}
+                onPress={async () => {
+                  setLocalization(enTranslation);
+                  this.setState({ isVietnamease: false, isEnglish: true, isChinease: false })
+                  this._getRoomBoxAsync(true)
+                  if (Platform.OS === 'android') {
+                    ToastAndroid.showWithGravity(translate("You have switched languages to English"), ToastAndroid.SHORT, ToastAndroid.TOP);
+                  }
+                  else {
+                    Alert.alert(translate("Notice"), translate("You have switched languages to English"))
+                  }
+                  await this._saveStorageAsync('language', 'enTranslation')
+                  this.forceUpdate()
+
+                }}
+              >
+                <Text style={{
+                  fontSize: responsiveFontSize(1.7),
+                  color: this.state.isEnglish ? '#73aa2a' : '#9B9D9D',
+                }}>EN</Text>
+              </TouchableOpacity>
+
+              {/* Chinease */}
+              <TouchableOpacity
+                style={{
+                  // padding: 8,
+
+                }}
+
+                onPress={async () => {
+                  setLocalization(zhTranslation);
+                  this.setState({ isVietnamease: false, isEnglish: false, isChinease: true })
+                  this._getRoomBoxAsync(true)
+                  if (Platform.OS === 'android') {
+                    ToastAndroid.showWithGravity(translate("You have switched languages to Chinease"), ToastAndroid.SHORT, ToastAndroid.TOP);
+                  }
+                  else {
+                    Alert.alert(translate("Notice"), translate("You have switched languages to Chinease"))
+                  }
+                  await this._saveStorageAsync('language', 'zhTranslation')
+                  this.forceUpdate()
+
+                }}
+              >
+                <Text style={{
+                  fontSize: responsiveFontSize(1.7),
+                  color: this.state.isChinease ? '#73aa2a' : '#9B9D9D',
+                }}>中文</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+
         </Animated.View>
+
+
+        {/* Multi Language */}
 
 
         {/* Flatlist RoomBox */}
@@ -2142,13 +2156,20 @@ export default class HomeScreen extends React.Component {
 
               {/* Highlight */}
               {item.IsHighlight &&
-                <Image
-                  style={{
-                    position: 'absolute', right: 15, zIndex: 10, width: responsiveWidth(30),
-                    height: responsiveWidth(30), top: 20
-                  }}
-                  source={require('../assets/images/nbl-highlight.gif')}
-                />
+
+                <Ionicons style={{
+                  position: 'absolute', right: 15, top: 30, zIndex: 10,
+                  fontSize: responsiveFontSize(6),
+                  color:'#73aa2a'
+                }} name="ios-flame" />
+
+                // <Image
+                //   style={{
+                //     position: 'absolute', right: 15, zIndex: 10, width: responsiveWidth(30),
+                //     height: responsiveWidth(30), top: 20
+                //   }}
+                //   source={require('../assets/images/nbl-highlight.gif')}
+                // />
               }
 
               {/* Wartermark */}
