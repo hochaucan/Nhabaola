@@ -237,6 +237,11 @@ const MARKERS = [
     // createMarker(5),
 ];
 
+const roomCords = {
+    latitude: null,
+    longitude: null,
+}
+
 
 const DEFAULT_PADDING = { top: 40, right: 40, bottom: 40, left: 40 };
 const roomBox = [];
@@ -294,24 +299,27 @@ export default class SearchScreen extends React.Component {
             watchLocation: null,
 
             refreshFlatlist: false,
-            roomPageIndex: 5,
-            roomPageCount: 5,
+            page: 1,
+            roomPageIndex: 0,
+            roomPageCount: 50,
             roomCategory: [],
             selectedCategory: '',
             countMapLoad: 0,
-            houseCoords: {
-                latitude: null,
-                longitude: null,
-            },
+            // houseCoords: {
+            //     latitude: null,
+            //     longitude: null,
+            // },
             isSearching: false,
             isFocusSearchTextInput: false,
-            houseListHeigh: new Animated.Value(responsiveHeight(10)),
+            houseListHeigh: new Animated.Value(responsiveHeight(13)),
             isHouseList: false,
             searchLoading: false,
             profile: null,
             isVietnamease: false,
             isEnglish: false,
             isChinease: false,
+            pageEnd: 0,
+            roomCount: 0,
         }
     }
 
@@ -478,7 +486,7 @@ export default class SearchScreen extends React.Component {
 
         // Fit Maker to Map for Android
         setTimeout(() => {
-            this._getRoomByFilter();
+            this._getRoomByFilter(true);
         }, 1000);
 
 
@@ -596,32 +604,74 @@ export default class SearchScreen extends React.Component {
         }
     }
 
-    _getRoomByFilter = async () => {
+    _getRoomByFilter = async (isNew, isForward = true) => {
         //await this.setState({ refreshFlatlist: true })
         //this.popupLoadingIndicator.show()
 
         await this.setState({ searchLoading: true })
 
+
+
+        if (!isNew && isForward) { // Loading more page 
+            this.setState((prevState, props) => ({
+                page: prevState.page + 1,
+            }));
+            //this.setState({ page: this.state.page + 1 })
+        }
+        else if (!isNew && !isForward) { // Back to previous page
+            this.setState((prevState, props) => ({
+                page: prevState.page - 1,
+            }));
+        }
+        else { // Refresh page
+            // roomBox = await [];
+            // MARKERS = await [];
+            this.setState({ page: 1 })
+            //this.setState({ page: 1, flatListIsEnd: false })
+
+        }
+
+        this.setState({ // Calculate page index
+            roomPageIndex: (this.state.page - 1) * this.state.roomPageCount
+        })
+
+
+
+
+        // alert(this.state.roomPageCount + '  ' + this.state.roomPageIndex)
+
+
+
         roomBox = await [];
         MARKERS = await [];
 
         if (this.state.isSearching) {
-            await this.setState({
-                houseCoords: {
-                    latitude: parseFloat(this.state.searchingMaker.latitude),
-                    longitude: parseFloat(this.state.searchingMaker.longitude),
-                }
-            })
+            // await this.setState({
+            //     houseCoords: {
+            //         latitude: parseFloat(this.state.searchingMaker.latitude),
+            //         longitude: parseFloat(this.state.searchingMaker.longitude),
+            //     }
+            // })
+
+            roomCords = await {
+                latitude: parseFloat(this.state.searchingMaker.latitude),
+                longitude: parseFloat(this.state.searchingMaker.longitude),
+            }
 
         }
         else {
 
-            await this.setState({
-                houseCoords: {
-                    latitude: parseFloat(this.state.location.coords.latitude),
-                    longitude: parseFloat(this.state.location.coords.longitude),
-                }
-            })
+            // await this.setState({
+            //     houseCoords: {
+            //         latitude: parseFloat(this.state.location.coords.latitude),
+            //         longitude: parseFloat(this.state.location.coords.longitude),
+            //     }
+            // })
+
+            roomCords = await {
+                latitude: parseFloat(this.state.location.coords.latitude),
+                longitude: parseFloat(this.state.location.coords.longitude),
+            }
         }
 
         // Filter condition
@@ -634,7 +684,10 @@ export default class SearchScreen extends React.Component {
         // alert(this.state.minPrice + '  ' + this.state.maxPrice + '  ' + this.state.minAcreage + '  ' + this.state.maxAcreage + '  ' + this.state.selectedCategory)
 
         //Add current location to fix maker
-        MARKERS.push(this.state.houseCoords);
+        //MARKERS.push(this.state.houseCoords);
+
+        // alert(JSON.stringify(MARKERS))
+        MARKERS.push(roomCords);
 
         try {
             await fetch("http://nhabaola.vn/api/RoomBox/FO_RoomBox_GetDataByFindingBox", {
@@ -653,8 +706,10 @@ export default class SearchScreen extends React.Component {
                     "AcreageMin": this.state.minAcreage,
                     "AcreageMax": this.state.maxAcreage,
                     "SortOptionKey": "SortDistance",
-                    "PageIndex": "0",
-                    "PageCount": "1000"
+                    "PageIndex": this.state.roomPageIndex,
+                    "PageCount": this.state.roomPageCount
+                    // "PageIndex": "0",
+                    // "PageCount": "50"
 
 
 
@@ -674,19 +729,33 @@ export default class SearchScreen extends React.Component {
                 .then((response) => response.json())
                 .then((responseJson) => {
                     //alert(JSON.stringify(responseJson))
+
+                    //roomBox = responseJson.obj
+                    //alert(this.state.roomPageCount + '  ' + this.state.roomPageIndex)
                     responseJson.obj.map((y) => {
                         roomBox.push(y);
 
-                        this.setState({
-                            houseCoords: {
-                                latitude: parseFloat(y.Latitude),
-                                longitude: parseFloat(y.Longitude),
-                            }
-                        })
+                        // this.setState({
+                        //     houseCoords: {
+                        //         latitude: parseFloat(y.Latitude),
+                        //         longitude: parseFloat(y.Longitude),
+                        //     }
+                        // })
 
-                        MARKERS.push(this.state.houseCoords)
+                        roomCords = {
+                            latitude: parseFloat(y.Latitude),
+                            longitude: parseFloat(y.Longitude),
+                        }
+
+                        MARKERS.push(roomCords)
+                    })
+
+                    this.setState({
+                        roomCount: roomBox.length > 0 ? roomBox[0].Toilet : 0,
+                        pageEnd: roomBox.length > 0 ? (roomBox[0].Toilet / this.state.roomPageCount) : 0
                     })
                     this.setState({ searchLoading: false })
+
                 }).
                 catch((error) => { console.log(error) });
         } catch (error) {
@@ -705,7 +774,7 @@ export default class SearchScreen extends React.Component {
             Animated.timing(
                 this.state.houseListHeigh,
                 {
-                    toValue: responsiveHeight(10),
+                    toValue: responsiveHeight(13),
                     easing: Easing.bounce,
                     duration: 1200,
                 }
@@ -789,17 +858,18 @@ export default class SearchScreen extends React.Component {
                         color="#73aa2a"
                     />
                 }
-                {/* Filter lable */}
-                {!(this.state.selectedCategory == '' && this.state.unitPriceLable == '' && this.state.unitAcreageLable == '') &&
-                    <Text style={{
-                        //color: '#73aa2a',
-                        width: responsiveWidth(80),
+
+                {/* Searching Menu */}
+                <Animated.View
+                    style={{
+                        flexDirection: 'row',
+                        width: responsiveWidth(100),
                         position: 'absolute',
                         top: 10,
                         zIndex: 10,
                         backgroundColor: '#fff',
-                        padding: 5,
-                        fontSize: responsiveFontSize(1.6),
+                        paddingTop: Platform.OS == 'ios' ? 5 : 0,
+                        paddingBottom: Platform.OS == 'ios' ? 5 : 0,
                         elevation: 2,
                         borderRadius: 10,
                         opacity: 0.9,
@@ -807,230 +877,323 @@ export default class SearchScreen extends React.Component {
                         shadowOffset: { width: 0, height: 2 },
                         shadowOpacity: 0.2,
                         shadowRadius: 2,
-                    }}>{this.state.txtFilterResult}</Text>
+                    }}
+                >
+                    {/* Radius */}
+                    <View
+                        style={{
+                            flex: 4,
+                            flexDirection: 'row',
+                            alignContent: 'center',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            // borderWidth: 1,
+                        }}
+                    >
+
+                        <View style={{
+
+
+                        }}>
+
+                            {Platform.OS === 'ios' ?
+
+                                <TouchableOpacity
+                                    style={{
+                                        flexDirection: 'row',
+                                        justifyContent: 'center',
+                                        alignItems: 'center',
+                                        alignContent: 'center',
+                                    }}
+                                    onPress={() => {
+
+
+                                        this.refs.pickerRadius.show();
+                                    }}
+                                >
+
+                                    <Text style={{ justifyContent: 'center' }}>{translate("Radius")}: {this.state.radius} km</Text>
+                                    <Ionicons style={{ fontSize: responsiveFontSize(2.5), paddingLeft: 8 }} name='ios-arrow-dropdown-outline' />
+                                </TouchableOpacity>
+                                :
+                                <View
+                                    style={{
+                                        flexDirection: 'row',
+                                        justifyContent: 'center',
+                                        alignItems: 'center',
+                                        alignContent: 'center',
+                                    }}
+                                >
+
+
+                                    <Text style={{ paddingLeft: 5 }}>{translate("Radius")}: </Text>
+                                    <Picker // Android
+                                        style={{
+
+                                            width: 110,
+                                        }}
+                                        mode='dropdown'
+                                        selectedValue={this.state.radius}
+                                        onValueChange={async (itemValue, itemIndex) => {
+                                            await this.setState({ radius: itemValue })
+                                            this._getRoomByFilter(true);
+                                        }}>
+                                        <Picker.Item label="2 km" value="2" />
+                                        <Picker.Item label="4 km" value="4" />
+                                        <Picker.Item label="6 km" value="6" />
+                                        <Picker.Item label="8 km" value="8" />
+                                        <Picker.Item label="10 km" value="10" />
+                                        <Picker.Item label="12 km" value="12" />
+                                        <Picker.Item label="14 km" value="14" />
+                                        <Picker.Item label="16 km" value="16" />
+                                        <Picker.Item label="18 km" value="18" />
+                                        <Picker.Item label="20 km" value="20" />
+                                        <Picker.Item label="30 km" value="30" />
+                                        <Picker.Item label="40 km" value="40" />
+                                        <Picker.Item label="50 km" value="50" />
+                                    </Picker>
+                                </View>
+                            }
+
+                        </View>
+
+
+                        <SimplePicker
+                            ref={'pickerRadius'}
+                            options={['2', '4', '6', '8', '10', '12', '14', '16', '18', '20', '30', '40', '50']}
+                            labels={['2 km', '4 km', '6 km', '8 km', '10 km', '12 km', '14 km', '16 km', '18 km', '20 km', '30 km', '40 km', '50 km']}
+                            confirmText={translate("Agree")}
+                            cancelText={translate("Cancel")}
+                            itemStyle={{
+                                fontSize: 25,
+                                color: '#73aa2a',
+                                textAlign: 'center',
+                                fontWeight: 'bold',
+                            }}
+                            onSubmit={async (option) => {
+                                await this.setState({ radius: option, });
+                                this._getRoomByFilter(true);
+                            }}
+                        />
+                    </View>
+
+
+                    {/* Filter */}
+                    <TouchableOpacity
+                        style={{
+                            flex: 2,
+                            alignContent: 'center',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                        }}
+                        onPress={() => {
+                            this.setState({ modalSearchFilterVisible: true })
+                        }}
+                    >
+                        {/* <View style={{
+                            backgroundColor: '#a4d227', padding: 5, borderRadius: 10, width: 32,
+                            height: 32, justifyContent: 'center',
+                            alignItems: 'center', elevation: 2,
+                            shadowColor: '#000',
+                            shadowOffset: { width: 0, height: 2 },
+                            shadowOpacity: 0.2,
+                            shadowRadius: 2,
+                        }}> */}
+                        <Ionicons style={{
+                            fontSize: responsiveFontSize(4),
+                            color: '#73aa2a',
+                            //textAlign: 'center'
+                        }} name='ios-funnel-outline' />
+                        {/* </View> */}
+                    </TouchableOpacity>
+
+                    {/* Search location */}
+                    <TouchableOpacity
+                        style={{
+                            flex: 2,
+                            alignContent: 'center',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                        }}
+                        onPress={() => {
+                            this.popupSearching.show();
+                        }}
+                    >
+                        {/* <View style={{
+                            backgroundColor: '#8fb722', padding: 5, borderRadius: 10, width: 32,
+                            height: 32, justifyContent: 'center',
+                            alignItems: 'center', elevation: 2,
+                            shadowColor: '#000',
+                            shadowOffset: { width: 0, height: 2 },
+                            shadowOpacity: 0.2,
+                            shadowRadius: 2,
+                        }}> */}
+                        <Ionicons style={{
+                            fontSize: responsiveFontSize(4),
+                            color: '#73aa2a',
+                        }} name='ios-search-outline' />
+                        {/* </View> */}
+                    </TouchableOpacity>
+
+                    {/* Broachcast */}
+                    <TouchableOpacity
+                        style={{
+                            flex: 2,
+                            alignContent: 'center',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+
+                        }}
+                        onPress={async () => {
+                            //this.setState({ modalSearchFilterVisible: true })
+                            // roomBox.map((y) => {
+                            await this._getProfileFromStorageAsync();
+
+                            if (this.state.profile == null) {
+                                if (Platform.OS == 'ios') {
+                                    Alert.alert(translate("Notice"), translate("Please login"))
+                                } else {
+                                    ToastAndroid.showWithGravity(translate("Please login"), ToastAndroid.SHORT, ToastAndroid.TOP)
+                                }
+
+                            } else {
+                                Alert.alert(
+                                    translate("Notice"),
+                                    translate("Do you want to send a message to all Search Posters on the Map"),
+                                    [
+                                        {
+                                            text: translate("Cancel"), onPress: () => {
+
+                                            }
+                                        },
+                                        {
+                                            text: translate("Agree"), onPress: () => {
+                                                roomBox.map((y) => {
+                                                    // Notify Landlord 
+                                                    if (y.Images.split('|')[1] == 'true') {
+                                                        notifyNBLAsync(y.Images.split('|')[0]//globalVariable.ADMIN_PUSH_TOKEN
+                                                            , { "screen": "RoomDetailScreen", "params": { "roomBoxID": y.ID } } //{ ...roombox }
+                                                            , "default"
+                                                            , this.state.profile.FullName + "-" + this.state.profile.UserName + " " + translate("Search") + ":"
+                                                            , this.state.txtFilterResult
+                                                            + ", " + translate("Radius within") + " " + this.state.radius + " " + translate("km from the searcher's location, including your post at the address") + ": "
+                                                            + y.Address
+                                                        ); //pushToken, data, sound, title, body
+                                                    }
+                                                })
+
+                                                if (Platform.OS === 'android') {
+                                                    ToastAndroid.showWithGravity(translate("Send message successfully"), ToastAndroid.SHORT, ToastAndroid.TOP);
+                                                }
+                                                else {
+                                                    Alert.alert(translate("Notice"), translate("Send message successfully"));
+                                                }
+                                            }
+                                        },
+                                    ]
+                                );
+                            }
+
+                            // })
+
+
+                        }}
+                    >
+                        {/* <View style={{
+                            backgroundColor: '#a4d227', padding: 5, borderRadius: 10, width: 32,
+                            height: 32, justifyContent: 'center',
+                            alignItems: 'center', elevation: 2,
+                            shadowColor: '#000',
+                            shadowOffset: { width: 0, height: 2 },
+                            shadowOpacity: 0.2,
+                            shadowRadius: 2,
+                        }}> */}
+                        <Ionicons style={{
+                            fontSize: responsiveFontSize(4),
+                            color: '#73aa2a',
+                        }} name='md-megaphone' />
+                        {/* </View> */}
+                    </TouchableOpacity>
+
+                </Animated.View>
+
+                {/* Filter lable */}
+                {!(this.state.selectedCategory == '' && this.state.unitPriceLable == '' && this.state.unitAcreageLable == '') &&
+                    <View
+                        style={{
+                            flexDirection: 'row',
+                            alignContent: 'center',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            position: 'absolute',
+                            top: 55,
+                            zIndex: 10,
+                            backgroundColor: '#fff',
+                            padding: 5,
+                            //fontSize: responsiveFontSize(1.6),
+                            elevation: 2,
+                            borderRadius: 10,
+                            opacity: 0.9,
+                            shadowColor: '#000',
+                            shadowOffset: { width: 0, height: 2 },
+                            shadowOpacity: 0.2,
+                            shadowRadius: 2,
+
+                        }}
+                    >
+                        <Text style={{
+                            //color: '#73aa2a',
+                            width: responsiveWidth(100),
+                            //position: 'absolute',
+                            textAlign: 'center',
+                            //padding: 5,
+                            flex: 9,
+                            // top: 55,
+                            // zIndex: 10,
+                            // backgroundColor: '#fff',
+                            // padding: 5,
+                            fontSize: responsiveFontSize(1.6),
+                            // elevation: 2,
+                            // borderRadius: 10,
+                            // opacity: 0.9,
+                            // shadowColor: '#000',
+                            // shadowOffset: { width: 0, height: 2 },
+                            // shadowOpacity: 0.2,
+                            // shadowRadius: 2,
+                        }}>{this.state.txtFilterResult}</Text>
+
+                        <TouchableOpacity
+                            style={{
+                                flex: 1,
+                            }}
+                            onPress={() => {
+                                this.setState({
+                                    txtFilterResult: null,
+                                    multiSliderPriceValue: [0, 10],
+                                    multiSliderAreaValue: [0, 10],
+                                    selectedCategory: '',
+                                    selectedBDS: translate("All real estate"),
+                                    selectedUnitAcreage: 'acmv',
+                                    selectedUnitPrice: 'ptr',
+                                    iosSelectedCategory: translate("All real estate"),
+                                })
+                                this.setState({ modalSearchFilterVisible: false });
+                                this._getRoomByFilter(true);
+                            }}
+                        >
+                            <Ionicons style={{ fontSize: responsiveFontSize(3), textAlign: 'center' }} name='ios-close' />
+                        </TouchableOpacity>
+                    </View>
 
                 }
 
-                {/* Radius */}
-                <View style={{
-                    flexDirection: 'row',
-                    position: 'absolute',
-                    backgroundColor: '#fff',
-                    zIndex: 10,
-                    top: 45,
-                    paddingLeft: 10,
-                    paddingTop: Platform.OS == 'ios' ? 5 : 0,
-                    paddingBottom: Platform.OS == 'ios' ? 5 : 0,
-                    borderRadius: 10,
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                    elevation: 2,
-                    opacity: 0.9,
-                    width: Platform.OS == 'ios' ? 100 : 130,//responsiveWidth(40)
-
-                    shadowColor: '#000',
-                    shadowOffset: { width: 0, height: 2 },
-                    shadowOpacity: 0.2,
-                    shadowRadius: 2,
-
-                }}>
-                    <Text style={{ width: 30, paddingLeft: Platform.OS == 'ios' ? 0 : 5 }}>{translate("Radius")}: </Text>
-                    {Platform.OS === 'ios' ?
-
-                        <TouchableOpacity
-                            style={{ padding: 5 }}
-                            onPress={() => {
-
-
-                                this.refs.pickerRadius.show();
-                            }}
-                        >
-
-                            <Text style={{}}>{this.state.radius} km</Text>
-                        </TouchableOpacity>
-                        :
-                        <Picker // Android
-                            style={{
-
-                                width: 110,
-                            }}
-                            mode='dropdown'
-                            selectedValue={this.state.radius}
-                            onValueChange={async (itemValue, itemIndex) => {
-                                await this.setState({ radius: itemValue })
-                                this._getRoomByFilter();
-                            }}>
-                            <Picker.Item label="2 km" value="2" />
-                            <Picker.Item label="4 km" value="4" />
-                            <Picker.Item label="6 km" value="6" />
-                            <Picker.Item label="8 km" value="8" />
-                            <Picker.Item label="10 km" value="10" />
-                            <Picker.Item label="12 km" value="12" />
-                            <Picker.Item label="14 km" value="14" />
-                            <Picker.Item label="16 km" value="16" />
-                            <Picker.Item label="18 km" value="18" />
-                            <Picker.Item label="20 km" value="20" />
-                            <Picker.Item label="30 km" value="30" />
-                            <Picker.Item label="40 km" value="40" />
-                            <Picker.Item label="50 km" value="50" />
-                        </Picker>
-                    }
-
-                </View>
-
-
-                <SimplePicker
-                    ref={'pickerRadius'}
-                    options={['2', '4', '6', '8', '10', '12', '14', '16', '18', '20', '30', '40', '50']}
-                    labels={['2 km', '4 km', '6 km', '8 km', '10 km', '12 km', '14 km', '16 km', '18 km', '20 km', '30 km', '40 km', '50 km']}
-                    confirmText={translate("Agree")}
-                    cancelText={translate("Cancel")}
-                    itemStyle={{
-                        fontSize: 25,
-                        color: '#73aa2a',
-                        textAlign: 'center',
-                        fontWeight: 'bold',
-                    }}
-                    onSubmit={async (option) => {
-                        await this.setState({ radius: option, });
-                        this._getRoomByFilter();
-                    }}
-                />
-
-
-                {/* Filter */}
-                <TouchableOpacity
-                    style={{
-                        height: 40, position: 'absolute',
-                        top: 10,//responsiveHeight(2),
-                        zIndex: 10,
-                        right: 15,
-                        //left: 10,
-                    }}
-                    onPress={() => {
-                        this.setState({ modalSearchFilterVisible: true })
-                    }}
-                >
-                    <View style={{
-                        backgroundColor: '#a4d227', padding: 5, borderRadius: 10, width: 32,
-                        height: 32, justifyContent: 'center',
-                        alignItems: 'center', elevation: 2,
-                        shadowColor: '#000',
-                        shadowOffset: { width: 0, height: 2 },
-                        shadowOpacity: 0.2,
-                        shadowRadius: 2,
-                    }}>
-                        <Ionicons style={{ fontSize: 25, color: '#fff', textAlign: 'center' }} name='ios-funnel-outline' />
-                    </View>
-                </TouchableOpacity>
-
-                {/* Broachcast */}
-                <TouchableOpacity
-                    style={{
-                        height: 40, position: 'absolute',
-                        top: 50,//responsiveHeight(2),
-                        zIndex: 10,
-                        right: 15,
-
-                    }}
-                    onPress={async () => {
-                        //this.setState({ modalSearchFilterVisible: true })
-                        // roomBox.map((y) => {
-                        await this._getProfileFromStorageAsync();
-
-                        if (this.state.profile == null) {
-                            if (Platform.OS == 'ios') {
-                                Alert.alert(translate("Notice"), translate("Please login"))
-                            } else {
-                                ToastAndroid.showWithGravity(translate("Please login"), ToastAndroid.SHORT, ToastAndroid.TOP)
-                            }
-
-                        } else {
-                            Alert.alert(
-                                translate("Notice"),
-                                translate("Do you want to send a message to all Search Posters on the Map"),
-                                [
-                                    {
-                                        text: translate("Cancel"), onPress: () => {
-
-                                        }
-                                    },
-                                    {
-                                        text: translate("Agree"), onPress: () => {
-                                            roomBox.map((y) => {
-                                                // Notify Landlord 
-                                                if (y.Images.split('|')[1] == 'true') {
-                                                    notifyNBLAsync(y.Images.split('|')[0]//globalVariable.ADMIN_PUSH_TOKEN
-                                                        , { "screen": "RoomDetailScreen", "params": { "roomBoxID": y.ID } } //{ ...roombox }
-                                                        , "default"
-                                                        , this.state.profile.FullName + "-" + this.state.profile.UserName + " " + translate("Search") + ":"
-                                                        , this.state.txtFilterResult
-                                                        + ", " + translate("Radius within") + " " + this.state.radius + " " + translate("km from the searcher's location, including your post at the address") + ": "
-                                                        + y.Address
-                                                    ); //pushToken, data, sound, title, body
-                                                }
-                                            })
-
-                                            if (Platform.OS === 'android') {
-                                                ToastAndroid.showWithGravity(translate("Send message successfully"), ToastAndroid.SHORT, ToastAndroid.TOP);
-                                            }
-                                            else {
-                                                Alert.alert(translate("Notice"), translate("Send message successfully"));
-                                            }
-                                        }
-                                    },
-                                ]
-                            );
-                        }
-
-                        // })
-
-
-                    }}
-                >
-                    <View style={{
-                        backgroundColor: '#a4d227', padding: 5, borderRadius: 10, width: 32,
-                        height: 32, justifyContent: 'center',
-                        alignItems: 'center', elevation: 2,
-                        shadowColor: '#000',
-                        shadowOffset: { width: 0, height: 2 },
-                        shadowOpacity: 0.2,
-                        shadowRadius: 2,
-                    }}>
-                        <Ionicons style={{ fontSize: 25, color: '#fff', textAlign: 'center' }} name='md-megaphone' />
-                    </View>
-                </TouchableOpacity>
-
-                {/* Search location */}
-                <TouchableOpacity
-                    style={{
-                        height: 40, position: 'absolute',
-                        top: 90,//responsiveHeight(10),
-                        zIndex: 10, right: 15,
-                    }}
-                    onPress={() => {
-                        this.popupSearching.show();
-                    }}
-                >
-                    <View style={{
-                        backgroundColor: '#8fb722', padding: 5, borderRadius: 10, width: 32,
-                        height: 32, justifyContent: 'center',
-                        alignItems: 'center', elevation: 2,
-                        shadowColor: '#000',
-                        shadowOffset: { width: 0, height: 2 },
-                        shadowOpacity: 0.2,
-                        shadowRadius: 2,
-                    }}>
-                        <Ionicons style={{ fontSize: 25, color: '#fff', textAlign: 'center' }} name='ios-search-outline' />
-                    </View>
-                </TouchableOpacity>
 
                 {/* Get current location */}
                 <TouchableOpacity
                     style={{
-                        height: 40, position: 'absolute',
+                        height: 50, position: 'absolute',
                         //top: responsiveHeight(18), 
-                        bottom: 55,
+                        bottom: 65,
                         zIndex: 20,
                         opacity: 0.9,
                         right: 15, backgroundColor: 'transparent'
@@ -1155,7 +1318,7 @@ export default class SearchScreen extends React.Component {
                                         Animated.timing(
                                             this.state.houseListHeigh,
                                             {
-                                                toValue: responsiveHeight(10),
+                                                toValue: responsiveHeight(13),
                                                 easing: Easing.bounce,
                                                 duration: 1200,
                                             }
@@ -1309,8 +1472,24 @@ export default class SearchScreen extends React.Component {
                     </MapView>
                 }
 
-                {/* {
-                    roomBox.length >= 1 && */}
+                {/* <View
+                    style={{
+                        width: width,
+                        height: this.state.houseListHeigh, //responsiveHeight(28),
+                        backgroundColor: 'transparent',
+                        zIndex: 10,
+                        position: 'absolute',
+                        padding: 10,
+                        bottom: 0,
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                    }}
+                >
+
+                </View> */}
+
+
+                {/* Room List */}
                 < Animated.View style={{
                     width: width,
                     height: this.state.houseListHeigh, //responsiveHeight(28),
@@ -1364,7 +1543,7 @@ export default class SearchScreen extends React.Component {
                                 Animated.timing(                  // Animate over time
                                     this.state.houseListHeigh,            // The animated value to drive
                                     {
-                                        toValue: this.state.isHouseList ? responsiveHeight(10) : responsiveHeight(60),
+                                        toValue: this.state.isHouseList ? responsiveHeight(13) : responsiveHeight(60),
                                         easing: Easing.bounce,
                                         duration: 1200,              // Make it take a while
                                     }
@@ -1378,15 +1557,116 @@ export default class SearchScreen extends React.Component {
                             <Ionicons style={{
                                 color: '#9B9D9D',
                                 textAlign: 'center',
-                                fontSize: responsiveFontSize(3),
+                                fontSize: responsiveFontSize(4),
+                                elevation:2,
+                                shadowColor: '#000',
+                                shadowOffset: { width: 0, height: 2 },
+                                shadowOpacity: 0.2,
+                                shadowRadius: 2,
                                 //marginTop: -3,
 
                             }} name={this.state.isHouseList ? 'ios-arrow-dropdown-circle-outline' : 'ios-arrow-dropup-circle-outline'} />
                         </TouchableOpacity>
-                        <Text style={{
-                            color: '#73aa2a', paddingBottom: 4,
-                            fontSize: responsiveFontSize(2)
-                        }}>{translate("Finding")} {roomBox.length}</Text>
+
+                        <View
+                            style={{
+                                flexDirection: 'row',
+                                alignContent: 'center',
+                                alignItems: 'center',
+                                justifyContent: 'center'
+                            }}
+                        >
+                            <View
+                                style={{
+                                    flex: 1,
+                                }}
+                            >
+                                <Text style={{
+                                    color: '#73aa2a',
+                                    //paddingBottom: 4,
+                                    fontSize: responsiveFontSize(2),
+
+                                    // }}>{translate("Finding")}  {roomBox.length}</Text>
+                                }}>{translate("Finding")}  {this.state.roomCount}</Text>
+                            </View>
+
+                            <View
+                                style={{
+                                    flex: 1,
+                                    flexDirection: 'row',
+                                    alignContent: 'center',
+                                    alignItems: 'center',
+                                    justifyContent: 'center'
+                                }}
+                            >
+
+                                <Text
+                                    style={{
+                                        marginRight: 12,
+                                        fontSize: responsiveFontSize(2),
+                                        color: '#9B9D9D'
+                                    }}
+                                >
+                                    {this.state.roomPageIndex + 1} - {(this.state.roomPageIndex + this.state.roomPageCount) > this.state.roomCount ? this.state.roomCount : (this.state.roomPageIndex + this.state.roomPageCount)}
+                                </Text>
+                                <TouchableOpacity
+                                    style={{
+
+                                    }}
+                                    onPress={() => {
+
+                                        if (this.state.page > 1) {
+                                            this._getRoomByFilter(false, false)
+                                        }
+                                    }}
+                                >
+                                    <Ionicons style={{
+                                        color: this.state.page > 1 ? '#73aa2a' : '#fff',
+                                        fontSize: responsiveFontSize(4),
+                                        // marginRight: 5,
+                                    }}
+                                        name='ios-arrow-back'
+                                    />
+                                </TouchableOpacity>
+                                <Text
+                                    style={{
+                                        marginLeft: 5,
+                                        marginRight: 5,
+                                        fontSize: responsiveFontSize(1.8),
+                                        color: '#73aa2a'
+                                    }}
+                                >{translate("Page")} {this.state.page}</Text>
+
+
+                                <TouchableOpacity
+                                    style={{
+
+                                    }}
+                                    onPress={() => {
+
+                                        this.setState({
+                                            pageEnd: this.state.roomCount > 0 ? (this.state.roomCount / this.state.roomPageCount) : 0
+                                        })
+
+                                        //alert(this.state.pageEnd)
+
+                                        if (this.state.page <= this.state.pageEnd) {
+
+                                            this._getRoomByFilter(false, true)
+                                        }
+                                    }}
+                                >
+                                    <Ionicons style={{
+                                        color: this.state.page <= this.state.pageEnd ? '#73aa2a' : '#fff',
+                                        fontSize: responsiveFontSize(4),
+                                    }}
+                                        name='ios-arrow-forward'
+                                    />
+                                </TouchableOpacity>
+
+                            </View>
+                        </View>
+
                         <FlatList
                             //onScroll={this._onScroll}
                             // ref='searchresult'
@@ -1900,7 +2180,7 @@ export default class SearchScreen extends React.Component {
                                                     iosSelectedCategory: translate("All real estate"),
                                                 })
                                                 this.setState({ modalSearchFilterVisible: false });
-                                                this._getRoomByFilter();
+                                                this._getRoomByFilter(true);
                                                 // this.fitAllMarkers();
                                             }}
                                         />
@@ -1940,7 +2220,7 @@ export default class SearchScreen extends React.Component {
 
                                             })
 
-                                            this._getRoomByFilter();
+                                            this._getRoomByFilter(true);
 
 
                                             // this.setState({
@@ -2003,7 +2283,7 @@ export default class SearchScreen extends React.Component {
                             //this.map.animateToRegion(this.state.mapRegion, 1000);
 
                             this.map.animateToCoordinate(this.state.searchingMaker, 1000)
-                            this._getRoomByFilter()
+                            this._getRoomByFilter(true)
 
                             {/* 
                             let currentMaker = {

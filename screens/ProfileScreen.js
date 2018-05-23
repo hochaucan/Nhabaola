@@ -1518,7 +1518,7 @@ const styles = StyleSheet.create({
 
 
     profileMenuItemText: {
-        fontSize: 16,
+        fontSize: responsiveFontSize(4),//16,
         height: 20,
     },
     profileMenuItem: {

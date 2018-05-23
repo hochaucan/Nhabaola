@@ -27,7 +27,7 @@
   "Highlight": "Highlight",
   "Retrieve password": "Retrieve password",
   "Contact help": "Contact help",
-  "Type of real estate": "Real estate type",
+  "Type of real estate": "Real estate",
   "Password": "Password",
   "Square meters": "Square meters",
   "Contact Person": "Contact Person",
@@ -41,7 +41,7 @@
   "To": "To",
   "Personal information": "Personal information",
   "Rent": "Rent",
-  "Personal page": "Personal",
+  "Personal page": "Profile",
   "Wallet": "Wallet",
   "Villa": "Villa",
   "Please input address": "Please input address",
@@ -195,5 +195,6 @@
   "Top up successfully":"Top up successfully!",
   "QR has been used":"QR has been used",
   "QR is invalid":"QR is invalid!",
-  "Wallet available":"Wallet available"
+  "Wallet available":"Wallet available",
+  "Page":"Page"
 }

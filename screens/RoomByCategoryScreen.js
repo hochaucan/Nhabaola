@@ -1181,7 +1181,7 @@ export default class RoomByCategoryScreen extends React.Component {
         },
         body: JSON.stringify({
           "PageIndex": this.state.roomPageIndex,
-          "PageCount": this.state.roomPageCount
+          "PageCount": '500'//this.state.roomPageCount
 
         }),
       })

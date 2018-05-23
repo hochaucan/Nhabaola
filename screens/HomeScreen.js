@@ -166,6 +166,7 @@ export default class HomeScreen extends React.Component {
       isEnglish: false,
       isChinease: false,
       iosSelectedCategory: translate("All real estate"),
+      isEnableQR: false,
     }
 
     // state = { selected: false };
@@ -1769,6 +1770,8 @@ export default class HomeScreen extends React.Component {
                   + translate("Wallet available") + ': ' + JSON.stringify(responseJson.obj.CurrentAmount)
                 );
               }
+
+              this._getWalletAsync()
             }
             else if (JSON.stringify(responseJson.ErrorCode) === "21") {
               // isScanQR = ''
@@ -2315,6 +2318,9 @@ export default class HomeScreen extends React.Component {
               //bgColor={"red"}
               offsetX={20}
               offsetY={55}
+            // onPress={() => {
+            //   this.setState({ isEnableQR: true })
+            // }}
             >
 
               {this.state.profile === null &&
@@ -2407,7 +2413,9 @@ export default class HomeScreen extends React.Component {
                   textContainerStyle={{ backgroundColor: '#73aa2a' }}
                   textStyle={{ color: '#fff' }}
                   title={numberWithCommas(this.state.wallet) + " đ"} onPress={() => {
+
                     this.popupSelectedImage.show()
+                    //this.setState({ isEnableQR: true })
 
                   }}>
                   <Icon name="logo-usd" style={styles.actionButtonIcon} />
@@ -2427,18 +2435,81 @@ export default class HomeScreen extends React.Component {
           style={{
             //position:'absolute',
             flexDirection: 'row',
-            height: 43,
+            height: 45,
             borderTopWidth: 0.5,
             borderColor: '#73aa2a',
             //marginTop: this.state.roomByCatHeigh,
             shadowColor: '#000',
-            shadowOffset: { width: 0, height: 2 },
+            shadowOffset: { width: 0, height: 1 },
             shadowOpacity: 0.2,
             shadowRadius: 2,
-            
+
           }}
         >
-          {/* Hot Room */}
+          {/* QR */}
+          <TouchableOpacity
+            style={{
+              flex: 2,
+              //borderRightWidth: 0.5,
+              // borderColor: '#73aa2a',
+              alignContent: 'center',
+              alignItems: 'center',
+              justifyContent: 'center',
+            }}
+            onPress={() => {
+
+              if (this.state.profile === null) {
+
+                if (Platform.OS == 'ios') {
+                  this.setState({ modalLogin: true })
+                } else {
+                  this.popupLogin.show()
+                }
+
+
+                const timing = Animated.timing;
+                Animated.parallel([
+                  timing(this.state.animation.usernamePostionLeft, {
+                    toValue: 0,
+                    duration: 900
+                  }),
+                  timing(this.state.animation.passwordPositionLeft, {
+                    toValue: 0,
+                    duration: 1100
+                  }),
+                  timing(this.state.animation.loginPositionTop, {
+                    toValue: 0,
+                    duration: 700
+                  }),
+                  timing(this.state.animation.statusPositionTop, {
+                    toValue: 0,
+                    duration: 700
+                  })
+
+                ]).start()
+              } else {
+                this.props.navigation.navigate("ProfileScreen", {
+                  onRefreshScreen: this.onRefreshScreen,
+                  _getWalletAsync: this._getWalletAsync
+                });
+              }
+            }}
+          >
+            {this.state.profile ?
+              <Image source={{ uri: this.state.profile.Avarta }} style={{ width: 30, height: 30, borderRadius: Platform.OS === 'ios' ? 15 : 100, }} />
+              :
+              <Ionicons style={{
+                fontSize: responsiveFontSize(4),
+                color: '#73aa2a'
+              }}
+                name='md-person'
+              />
+            }
+
+            {/* <Text style={{ fontSize: responsiveFontSize(1.4), color: '#73aa2a' }}>QR</Text> */}
+          </TouchableOpacity>
+
+          {/* QR */}
           <TouchableOpacity
             style={{
               flex: 2,
@@ -2458,7 +2529,7 @@ export default class HomeScreen extends React.Component {
             }}
               name='ios-qr-scanner'
             />
-            <Text style={{ fontSize: responsiveFontSize(1.3), color: '#73aa2a' }}>QR</Text>
+            <Text style={{ fontSize: responsiveFontSize(1.4), color: '#73aa2a' }}>QR</Text>
           </TouchableOpacity>
 
 
@@ -2483,7 +2554,7 @@ export default class HomeScreen extends React.Component {
             }}
               name='ios-menu-outline'
             />
-            <Text style={{ fontSize: responsiveFontSize(1.3), color: '#73aa2a' }}>{translate("Type of real estate")}</Text>
+            <Text style={{ fontSize: responsiveFontSize(1.4), color: '#73aa2a' }}>{translate("Type of real estate")}</Text>
 
             <SimplePicker
               ref={'pickerCategory'}
@@ -2536,13 +2607,13 @@ export default class HomeScreen extends React.Component {
             }}
               name='ios-flame'
             />
-            <Text style={{ fontSize: responsiveFontSize(1.3), color: '#73aa2a' }}>Hot</Text>
+            <Text style={{ fontSize: responsiveFontSize(1.4), color: '#73aa2a' }}>Hot</Text>
           </TouchableOpacity>
 
           {/* Multi Language */}
           <View
             style={{
-              flex: 3,
+              flex: 4,
               alignContent: 'center',
               alignItems: 'center',
               justifyContent: 'center',
@@ -3699,6 +3770,7 @@ export default class HomeScreen extends React.Component {
 
 
         {/* Popup QR Pay */}
+        {/* {this.state.isEnableQR && */}
         <PopupDialog
           ref={(popupQRPay) => { this.popupQRPay = popupQRPay; }}
           dialogAnimation={new ScaleAnimation()}
@@ -3753,7 +3825,7 @@ export default class HomeScreen extends React.Component {
 
           </View>
         </PopupDialog>
-
+        {/* } */}
 
 
         {/* Popup Loading Indicator */}

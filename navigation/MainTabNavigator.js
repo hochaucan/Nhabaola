@@ -11,7 +11,7 @@ import HomeScreen from '../screens/HomeScreen';
 import Testing from '../screens/Testing';
 import ProfileScreen from '../screens/ProfileScreen';
 import SearchScreen from '../screens/SearchScreen';
-import RegisterRoomScreen from '../screens/RegisterRoomScreen';
+// import RegisterRoomScreen from '../screens/RegisterRoomScreen';
 
 
 export default TabNavigator(
