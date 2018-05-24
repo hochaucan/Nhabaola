@@ -1203,10 +1203,8 @@ export default class PostRoomScreen extends React.Component {
                             <TouchableOpacity
                                 style={{
                                     marginTop: 30, zIndex: 20,
-                                    flexDirection: 'row', alignContent: 'center', alignItems: 'center',
-                                    // borderWidth: 1,
-                                    //padding: 10,
-
+                                    flexDirection: 'row',
+                                    alignContent: 'center', alignItems: 'center', //justifyContent: 'center',
                                 }}
                                 onPress={() => {
                                     this._postTranslator('English', this.state.detailInfo, 'en')
@@ -1215,7 +1213,7 @@ export default class PostRoomScreen extends React.Component {
                                 <Ionicons style={{ paddingLeft: 20, paddingBottom: Platform.OS == 'ios' ? 20 : 0, fontSize: responsiveFontSize(2.5), color: '#73aa2a' }} name="ios-arrow-forward-outline" />
                                 <Text style={{
                                     paddingLeft: 5, paddingBottom: 3,
-                                    fontSize: responsiveFontSize(1.8), color: '#9B9D9D'
+                                    fontSize: responsiveFontSize(1.8), color: '#73aa2a'
                                 }}>{translate("Automatic translation to English")}</Text>
 
                             </TouchableOpacity>
@@ -1262,7 +1260,7 @@ export default class PostRoomScreen extends React.Component {
                                 <Ionicons style={{ paddingLeft: 20, paddingBottom: Platform.OS == 'ios' ? 20 : 0, fontSize: responsiveFontSize(2.5), color: '#73aa2a' }} name="ios-arrow-forward-outline" />
                                 <Text style={{
                                     paddingLeft: 5, paddingBottom: 3,
-                                    fontSize: responsiveFontSize(1.8), color: '#9B9D9D'
+                                    fontSize: responsiveFontSize(1.8), color: '#73aa2a'
                                 }}>{translate("Automatic translation to Chinese")}</Text>
 
                             </TouchableOpacity>

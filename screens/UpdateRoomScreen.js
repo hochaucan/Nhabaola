@@ -1224,10 +1224,14 @@ export default class UpdateRoomScreen extends React.Component {
                                     this._postTranslator('English', this.state.detailInfo, 'en')
                                 }}
                             >
-                                <Ionicons style={{ paddingLeft: 20, paddingBottom: Platform.OS == 'ios' ? 20 : 0, fontSize: responsiveFontSize(2.5), color: '#73aa2a' }} name="ios-arrow-forward-outline" />
+                                <Ionicons style={{
+                                    paddingLeft: 20,
+                                    // paddingBottom: Platform.OS == 'ios' ? 20 : 0,
+                                    fontSize: responsiveFontSize(2.5), color: '#73aa2a'
+                                }} name="ios-arrow-forward-outline" />
                                 <Text style={{
                                     paddingLeft: 5, paddingBottom: 3,
-                                    fontSize: responsiveFontSize(1.8), color: '#9B9D9D'
+                                    fontSize: responsiveFontSize(1.8), color: '#73aa2a'
                                 }}>{translate("Automatic translation to English")}</Text>
 
                             </TouchableOpacity>
@@ -1271,10 +1275,14 @@ export default class UpdateRoomScreen extends React.Component {
                                     this._postTranslator('English', this.state.detailInfo, 'zh')
                                 }}
                             >
-                                <Ionicons style={{ paddingLeft: 20, paddingBottom: Platform.OS == 'ios' ? 20 : 0, fontSize: responsiveFontSize(2.5), color: '#73aa2a' }} name="ios-arrow-forward-outline" />
+                                <Ionicons style={{
+                                    paddingLeft: 20,
+                                   // paddingBottom: Platform.OS == 'ios' ? 20 : 0,
+                                    fontSize: responsiveFontSize(2.5), color: '#73aa2a'
+                                }} name="ios-arrow-forward-outline" />
                                 <Text style={{
                                     paddingLeft: 5, paddingBottom: 3,
-                                    fontSize: responsiveFontSize(1.8), color: '#9B9D9D'
+                                    fontSize: responsiveFontSize(1.8), color: '#73aa2a'
                                 }}>{translate("Automatic translation to Chinese")}</Text>
 
                             </TouchableOpacity>
