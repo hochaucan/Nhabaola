@@ -47,6 +47,7 @@ import enTranslation from '../components/en.json';
 import zhTranslation from '../components/zh.json';
 import viTranslation from '../components/vi.json';
 import { setLocalization, translate, Translate } from 'react-native-translate';
+import DropdownAlert from 'react-native-dropdownalert';
 
 const homePlace = {
   description: 'Home',
@@ -1086,10 +1087,11 @@ export default class RoomByCategoryScreen extends React.Component {
     // alert(_roomId + "  " + _rate + "  " + this.state.profile.ID + "  " + this.state.sessionKey)
 
     if (Platform.OS == 'ios') {
-      this.setState({ modalLoading: true })
+      //this.setState({ modalLoading: true })
+      this.setState({ modalReport: false })
     }
     else {
-      this.popupLoadingIndicator.show()
+      // this.popupLoadingIndicator.show()
     }
 
     try {
@@ -1117,7 +1119,7 @@ export default class RoomByCategoryScreen extends React.Component {
               //ToastAndroid.showWithGravity('Cảm ơn bạn đã báo cáo chúng tôi!', ToastAndroid.SHORT, ToastAndroid.TOP);
             }
             else {
-              this.setState({ modalReport: false, })
+              //this.setState({ modalReport: false, })
               //Alert.alert('Thông báo', 'Cảm ơn bạn đã báo cáo chúng tôi!');
             }
 
@@ -1134,7 +1136,7 @@ export default class RoomByCategoryScreen extends React.Component {
               //ToastAndroid.showWithGravity('Lỗi ' + JSON.stringify(responseJson) + ', vui lòng liên hệ Admin trong mục Giúp Đỡ!', ToastAndroid.SHORT, ToastAndroid.TOP);
             }
             else {
-              this.setState({ modalReport: false })
+              //this.setState({ modalReport: false })
               //Alert.alert('Thông báo', 'Lỗi ' + JSON.stringify(responseJson) + ', vui lòng liên hệ Admin trong mục Giúp Đỡ!');
             }
           }
@@ -2895,7 +2897,8 @@ export default class RoomByCategoryScreen extends React.Component {
                     this._reportNBLAsync(5, this.state.reportRoomId)
                   }
 
-                  Alert.alert(translate("Notice"), translate("Thanks your for reporting to Nhabaola"));
+                  this.dropdown.alertWithType('success', translate("Notice"), translate("Thanks your for reporting to Nhabaola"));
+                  //Alert.alert(translate("Notice"), translate("Thanks your for reporting to Nhabaola"));
 
                   // Notify Admin 
                   notifyNBLAsync(globalVariable.ADMIN_PUSH_TOKEN
@@ -3133,59 +3136,88 @@ export default class RoomByCategoryScreen extends React.Component {
             color="#73aa2a"
           />
         </PopupDialog>
-
-        {/* Popup Congratulation For New Account */}
-        {/* <PopupDialog
-          ref={(popupCongraForNewAccount) => { this.popupCongraForNewAccount = popupCongraForNewAccount; }}
-          //dialogTitle={<DialogTitle title="Chúc Mừng Bạn" titleStyle={{}} titleTextStyle={{ color: '#73aa2a' }} />}
-          dialogAnimation={new ScaleAnimation()}
-          dialogStyle={{ marginBottom: 100, width: responsiveWidth(90), height: 100, justifyContent: 'center', padding: 20 }}
-        //dismissOnTouchOutside={false}
-        >
-          <View style={{ justifyContent: 'center', alignItems: 'center' }}>
-          
-            <Text style={{ fontSize: responsiveFontSize(2), color: '#73aa2a', marginBottom: 10, }}>Chúc Mừng Bạn</Text>
-            <Text>Bạn được tặng {numberWithCommas(this.state.wallet)} đồng vào Ví Tiền</Text>
-          </View>
-        </PopupDialog> */}
+        {/* DropdownAlert - https://github.com/testshallpass/react-native-dropdownalert */}
+        <DropdownAlert
+          ref={ref => this.dropdown = ref}
+          containerStyle={{}}
+          defaultContainer={{
+            opacity: 0.9,
+            padding: 5,
+            paddingTop: Platform.OS == 'ios' ? 20 : 0,
+            flexDirection: 'row'
+          }}
+          showCancel={true}
+          // onClose={data => {
+          //   this.setState({ modalLogin: true })
+          // }}
+          // onCancel={data => {
+          //   this.setState({ modalLogin: true })
+          // }}
+          // containerStyle={}
+          titleStyle={{
+            fontSize: responsiveFontSize(2.5),
+            textAlign: 'left',
+            fontWeight: 'bold', color: '#73aa2a', backgroundColor: 'transparent'
+          }}
+          messageStyle={{
+            fontSize: responsiveFontSize(2.2),
+            textAlign: 'left',
+            // fontWeight: 'bold',
+            color: '#6c6d6d',
+            backgroundColor: 'transparent',
+            paddingTop: 10,
+          }}
+          imageStyle={{
+            padding: 8, width: 36, height: 36, alignSelf: 'center'
+          }}
+          cancelBtnImageStyle={{
+            padding: 8, width: 36, height: 36, alignSelf: 'center',
+            backgroundColor: '#a4d227', borderRadius: 18,
+          }}
+          successColor={'#fff'}
+          successImageSrc={null}
+        //imageSrc={'https://facebook.github.io/react-native/docs/assets/favicon.png'}
+        // renderImage={(props) => this.renderImage(props)}
+        //renderCancel={(props) => this.renderImage(props)}
+        />
       </View >
     );
   }
 
-  _maybeRenderDevelopmentModeWarning() {
-    if (__DEV__) {
-      const learnMoreButton = (
-        <Text onPress={this._handleLearnMorePress} style={styles.helpLinkText}>
-          Learn more
-        </Text>
-      );
+  // _maybeRenderDevelopmentModeWarning() {
+  //   if (__DEV__) {
+  //     const learnMoreButton = (
+  //       <Text onPress={this._handleLearnMorePress} style={styles.helpLinkText}>
+  //         Learn more
+  //       </Text>
+  //     );
 
-      return (
-        <Text style={styles.developmentModeText}>
-          Development mode is enabled, your app will be slower but you can use
-          useful development tools. {learnMoreButton}
-        </Text>
-      );
-    } else {
-      return (
-        <Text style={styles.developmentModeText}>
-          You are not in development mode, your app will run at full speed.
-        </Text>
-      );
-    }
-  }
+  //     return (
+  //       <Text style={styles.developmentModeText}>
+  //         Development mode is enabled, your app will be slower but you can use
+  //         useful development tools. {learnMoreButton}
+  //       </Text>
+  //     );
+  //   } else {
+  //     return (
+  //       <Text style={styles.developmentModeText}>
+  //         You are not in development mode, your app will run at full speed.
+  //       </Text>
+  //     );
+  //   }
+  // }
 
-  _handleLearnMorePress = () => {
-    WebBrowser.openBrowserAsync(
-      'https://docs.expo.io/versions/latest/guides/development-mode'
-    );
-  };
+  // _handleLearnMorePress = () => {
+  //   WebBrowser.openBrowserAsync(
+  //     'https://docs.expo.io/versions/latest/guides/development-mode'
+  //   );
+  // };
 
-  _handleHelpPress = () => {
-    WebBrowser.openBrowserAsync(
-      'https://docs.expo.io/versions/latest/guides/up-and-running.html#can-t-see-your-changes'
-    );
-  };
+  // _handleHelpPress = () => {
+  //   WebBrowser.openBrowserAsync(
+  //     'https://docs.expo.io/versions/latest/guides/up-and-running.html#can-t-see-your-changes'
+  //   );
+  // };
 }
 
 const styles = StyleSheet.create({

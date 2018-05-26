@@ -40,6 +40,7 @@ import enTranslation from '../components/en.json';
 import zhTranslation from '../components/zh.json';
 import viTranslation from '../components/vi.json';
 import { setLocalization, translate, Translate } from 'react-native-translate';
+import DropdownAlert from 'react-native-dropdownalert';
 
 var { height, width } = Dimensions.get('window');
 
@@ -542,10 +543,11 @@ export default class RoomDetailScreen extends React.Component {
 
         // alert(_roomId + "  " + _rate + "  " + this.state.profile.ID + "  " + this.state.sessionKey)
         if (Platform.OS == 'ios') {
-            this.setState({ modalLoading: true })
+            this.setState({ modalReport: false })
+            //this.setState({ modalLoading: true })
         }
         else {
-            this.popupLoadingIndicator.show()
+            // this.popupLoadingIndicator.show()
         }
 
         try {
@@ -573,7 +575,7 @@ export default class RoomDetailScreen extends React.Component {
                             //ToastAndroid.showWithGravity('Cảm ơn bạn đã báo cáo chúng tôi!', ToastAndroid.SHORT, ToastAndroid.TOP);
                         }
                         else {
-                            this.setState({ modalReport: false })
+                            //this.setState({ modalReport: false })
                             //Alert.alert('Thông báo', 'Cảm ơn bạn đã báo cáo chúng tôi!');
                         }
 
@@ -1709,7 +1711,8 @@ export default class RoomDetailScreen extends React.Component {
                                         this._reportNBLAsync(5, this.state.roomBox.ID)
                                     }
 
-                                    Alert.alert(translate("Notice"), translate("Thanks your for reporting to Nhabaola"));
+                                    this.dropdown.alertWithType('success', translate("Notice"), translate("Thanks your for reporting to Nhabaola"));
+                                    //Alert.alert(translate("Notice"), translate("Thanks your for reporting to Nhabaola"));
 
                                     // Notify Admin 
                                     notifyNBLAsync(globalVariable.ADMIN_PUSH_TOKEN
@@ -1725,6 +1728,51 @@ export default class RoomDetailScreen extends React.Component {
                     </View>
 
                 </Modal>
+
+                {/* DropdownAlert - https://github.com/testshallpass/react-native-dropdownalert */}
+                <DropdownAlert
+                    ref={ref => this.dropdown = ref}
+                    containerStyle={{}}
+                    defaultContainer={{
+                        opacity: 0.9,
+                        padding: 5,
+                        paddingTop: Platform.OS == 'ios' ? 20 : 0,
+                        flexDirection: 'row'
+                    }}
+                    showCancel={true}
+                    // onClose={data => {
+                    //   this.setState({ modalLogin: true })
+                    // }}
+                    // onCancel={data => {
+                    //   this.setState({ modalLogin: true })
+                    // }}
+                    // containerStyle={}
+                    titleStyle={{
+                        fontSize: responsiveFontSize(2.5),
+                        textAlign: 'left',
+                        fontWeight: 'bold', color: '#73aa2a', backgroundColor: 'transparent'
+                    }}
+                    messageStyle={{
+                        fontSize: responsiveFontSize(2.2),
+                        textAlign: 'left',
+                        // fontWeight: 'bold',
+                        color: '#6c6d6d',
+                        backgroundColor: 'transparent',
+                        paddingTop: 10,
+                    }}
+                    imageStyle={{
+                        padding: 8, width: 36, height: 36, alignSelf: 'center'
+                    }}
+                    cancelBtnImageStyle={{
+                        padding: 8, width: 36, height: 36, alignSelf: 'center',
+                        backgroundColor: '#a4d227', borderRadius: 18,
+                    }}
+                    successColor={'#fff'}
+                    successImageSrc={null}
+                //imageSrc={'https://facebook.github.io/react-native/docs/assets/favicon.png'}
+                // renderImage={(props) => this.renderImage(props)}
+                //renderCancel={(props) => this.renderImage(props)}
+                />
             </View>
         );
     }

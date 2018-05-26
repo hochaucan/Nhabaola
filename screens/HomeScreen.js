@@ -52,6 +52,7 @@ import { setLocalization, translate, Translate } from 'react-native-translate';
 import SearchScreen from './SearchScreen';
 import SimplePicker from 'react-native-simple-picker';
 import ModalDropdown from 'react-native-modal-dropdown';
+import DropdownAlert from 'react-native-dropdownalert';
 
 const homePlace = {
   description: 'Home',
@@ -716,29 +717,36 @@ export default class HomeScreen extends React.Component {
 
           }
           else { // Login False
+
             if (Platform.OS === 'android') {
               ToastAndroid.showWithGravity(translate("Incorrect username or password"), ToastAndroid.SHORT, ToastAndroid.TOP);
             }
             else {
-              // this.setState({ modalLogin: false })
-              Alert.alert(translate("Notice"), translate("Incorrect username or password"), [
-                {
-                  text: translate("Cancel"), onPress: () => {
-                    this.setState({
-                      modalLoading: false,
-                      loginUsername: '',
-                      loginPassword: '',
-                    })
-                  }
-                }
-                , {
-                  text: translate("Retype"), onPress: () => {
-                    this.setState({ modalLogin: true })
-                    this.refs.iosUserNameInput.focus()
-                    //Loading                  
-                    this.setState({ modalLoading: false })
-                  }
-                }]);
+
+              this.setState({ modalLoading: false })
+              this.dropdown.alertWithType('success', translate("Notice"), translate("Incorrect username or password"));
+              setTimeout(() => { this.setState({ modalLogin: true }) }, 4000)
+
+              // setTimeout(() => {
+              //   Alert.alert(translate("Notice"), translate("Incorrect username or password"), [
+              //     {
+              //       text: translate("Cancel"), onPress: () => {
+              //         this.setState({
+              //           modalLoading: false,
+              //           loginUsername: '',
+              //           loginPassword: '',
+              //         })
+              //       }
+              //     }
+              //     , {
+              //       text: translate("Retype"), onPress: () => {
+              //         this.setState({ modalLogin: true })
+              //         this.refs.iosUserNameInput.focus()
+              //         //Loading                  
+              //         this.setState({ modalLoading: false })
+              //       }
+              //     }]);
+              // }, 1000)
             }
 
             saveStorageAsync('FO_Account_Login', '')
@@ -1309,11 +1317,14 @@ export default class HomeScreen extends React.Component {
     // alert(_roomId + "  " + _rate + "  " + this.state.profile.ID + "  " + this.state.sessionKey)
 
     if (Platform.OS == 'ios') {
-      this.setState({ modalLoading: true })
+      //this.setState({ modalLoading: true })
+      this.setState({ modalReport: false })
     }
     else {
-      this.popupLoadingIndicator.show()
+      //this.popupLoadingIndicator.show()
     }
+
+
 
     try {
       await fetch("http://nhabaola.vn/api/ReportComment/FO_ReportComment_Add", {
@@ -1340,7 +1351,7 @@ export default class HomeScreen extends React.Component {
               //ToastAndroid.showWithGravity('Cảm ơn bạn đã báo cáo chúng tôi!', ToastAndroid.SHORT, ToastAndroid.TOP);
             }
             else {
-              this.setState({ modalReport: false, })
+              //this.setState({ modalReport: false, })
               //Alert.alert('Thông báo', 'Cảm ơn bạn đã báo cáo chúng tôi!');
             }
 
@@ -1513,28 +1524,36 @@ export default class HomeScreen extends React.Component {
           if (JSON.stringify(responseJson.ErrorCode) === "23") { // Username is not exist
 
             if (Platform.OS == 'ios') {
-              this.setState({ modalResetPassword1: false })
-              Alert.alert(translate("Notice"), translate("This account does not exist"),
-                [
-                  {
-                    text: translate("Cancel"),
-                    onPress: () => {
-                      this.setState({ modalLoading: false })
-                      this.setState({ resetPasswordUsername: '' })
-                    }
-                  },
-                  {
-                    text: translate("Retype"),
-                    onPress: () => {
-                      this.setState({ modalResetPassword1: true })
-                      this.refs.iosResetUserNameInput.focus()
-                      //Loading                  
-                      this.setState({ modalLoading: false })
-                    }
 
-                  }
+              this.setState({ modalLoading: false })
+              this.dropdown.alertWithType('success', translate("Notice"), translate("This account does not exist"));
+              setTimeout(() => { this.setState({ modalResetPassword1: true }) }, 4000)
 
-                ]);
+              // this.setState({ modalLoading: false })
+
+              // setTimeout(() => {
+              //   Alert.alert(translate("Notice"), translate("This account does not exist"),
+              //     [
+              //       {
+              //         text: translate("Cancel"),
+              //         onPress: () => {
+              //           this.setState({ modalLoading: false })
+              //           this.setState({ resetPasswordUsername: '' })
+              //         }
+              //       },
+              //       {
+              //         text: translate("Retype"),
+              //         onPress: () => {
+              //           this.setState({ modalResetPassword1: true })
+              //           this.refs.iosResetUserNameInput.focus()
+              //           //Loading                  
+              //           this.setState({ modalLoading: false })
+              //         }
+
+              //       }
+
+              //     ]);
+              // }, 1000)
             } else {
               ToastAndroid.showWithGravity(translate("This account does not exist"), ToastAndroid.SHORT, ToastAndroid.TOP);
             }
@@ -1652,31 +1671,38 @@ export default class HomeScreen extends React.Component {
               ToastAndroid.showWithGravity(translate("Incorrect activation code"), ToastAndroid.SHORT, ToastAndroid.TOP);
             }
             else {
-              this.setState({ modalResetPassword2: false })
-              Alert.alert(translate("Notice"), translate("Incorrect activation code"),
-                [
-                  {
-                    text: translate("Cancel"),
-                    onPress: () => {
-                      this.setState({
-                        modalLoading: false,
-                        resetPasswordNewPassword: '',
-                        resetPasswordActiveKey: ''
-                      })
-                    }
-                  },
-                  {
-                    text: translate("Retype"),
-                    onPress: () => {
-                      this.setState({ modalResetPassword2: true })
-                      this.refs.ActiveKeyInput.focus();
 
-                      //Loading                  
-                      this.setState({ modalLoading: false })
-                    }
-                  }
-                ]
-              );
+              this.setState({ modalLoading: false })
+              this.dropdown.alertWithType('success', translate("Notice"), translate("Incorrect activation code"));
+              setTimeout(() => { this.setState({ modalResetPassword2: true }) }, 4000)
+
+              // this.setState({ modalLoading: false })
+              // setTimeout(() => {
+              //   Alert.alert(translate("Notice"), translate("Incorrect activation code"),
+              //     [
+              //       {
+              //         text: translate("Cancel"),
+              //         onPress: () => {
+              //           this.setState({
+              //             modalLoading: false,
+              //             resetPasswordNewPassword: '',
+              //             resetPasswordActiveKey: ''
+              //           })
+              //         }
+              //       },
+              //       {
+              //         text: translate("Retype"),
+              //         onPress: () => {
+              //           this.setState({ modalResetPassword2: true })
+              //           this.refs.ActiveKeyInput.focus();
+
+              //           //Loading                  
+              //           this.setState({ modalLoading: false })
+              //         }
+              //       }
+              //     ]
+              //   );
+              // }, 1000)
             }
 
             this.refs.ActiveKeyInput.focus()
@@ -1829,7 +1855,20 @@ export default class HomeScreen extends React.Component {
         {this.state.modalLoading &&
 
           <ActivityIndicator
-            style={{ position: 'absolute', left: responsiveWidth(45), top: 30 }}
+            style={{
+              position: 'absolute',
+              left: responsiveWidth(42),
+              top: 30,
+              backgroundColor: '#fff',
+              zIndex: 30,
+              padding: 15,
+              opacity: 0.9,
+              borderRadius: 15,
+              shadowColor: '#000',
+              shadowOffset: { width: 0, height: 2 },
+              shadowOpacity: 0.2,
+              shadowRadius: 2,
+            }}
             animating={true}
             size="large"
             color="#73aa2a"
@@ -2636,8 +2675,8 @@ export default class HomeScreen extends React.Component {
                   elevation: 2,
                   height: responsiveHeight(40),
                   marginTop: -65,
-                  //  marginBottom: 60,
                   marginLeft: -responsiveWidth(25),
+                  borderRadius: 10,
                 }}
                 dropdownTextStyle={{ textAlign: 'center' }}
                 defaultValue={''}
@@ -2658,7 +2697,7 @@ export default class HomeScreen extends React.Component {
                     >
                       <View style={{
                         //backgroundColor: evenRow ? '#a4d227' : 'white',
-                        borderWidth: 0.3,
+                        borderBottomWidth: 0.3,
                         borderColor: '#73aa2a'
                       }}>
                         {/* <Image style={{width:20,height:20}}
@@ -3580,7 +3619,7 @@ export default class HomeScreen extends React.Component {
           }}
         >
 
-          {this.state.modalLoading &&
+          {/* {this.state.modalLoading &&
 
             <ActivityIndicator
               style={{ position: 'absolute', left: responsiveWidth(45), top: 30 }}
@@ -3589,7 +3628,7 @@ export default class HomeScreen extends React.Component {
               color="#73aa2a"
             />
 
-          }
+          } */}
 
 
           <View
@@ -3660,7 +3699,8 @@ export default class HomeScreen extends React.Component {
                     this._reportNBLAsync(5, this.state.reportRoomId)
                   }
 
-                  Alert.alert(translate("Notice"), translate("Thanks your for reporting to Nhabaola"));
+                  this.dropdown.alertWithType('success', translate("Notice"), translate("Thanks your for reporting to Nhabaola"));
+                  // Alert.alert(translate("Notice"), translate("Thanks your for reporting to Nhabaola"));
 
                   // Notify Admin 
                   notifyNBLAsync(globalVariable.ADMIN_PUSH_TOKEN
@@ -3970,44 +4010,102 @@ export default class HomeScreen extends React.Component {
             <Text>{translate("You get")} {numberWithCommas(this.state.wallet)} {translate("dong in wallet")}</Text>
           </View>
         </PopupDialog>
+
+
+        {/* DropdownAlert - https://github.com/testshallpass/react-native-dropdownalert */}
+        <DropdownAlert
+          ref={ref => this.dropdown = ref}
+          containerStyle={{}}
+          defaultContainer={{
+            opacity: 0.9,
+            padding: 5,
+            paddingTop: Platform.OS == 'ios' ? 20 : 0,
+            flexDirection: 'row'
+          }}
+          showCancel={true}
+          // onClose={data => {
+          //   this.setState({ modalLogin: true })
+          // }}
+          // onCancel={data => {
+          //   this.setState({ modalLogin: true })
+          // }}
+          // containerStyle={}
+          titleStyle={{
+            fontSize: responsiveFontSize(2.5),
+            textAlign: 'left',
+            fontWeight: 'bold', color: '#73aa2a', backgroundColor: 'transparent'
+          }}
+          messageStyle={{
+            fontSize: responsiveFontSize(2.2),
+            textAlign: 'left',
+            // fontWeight: 'bold',
+            color: '#6c6d6d',
+            backgroundColor: 'transparent',
+            paddingTop: 10,
+          }}
+          imageStyle={{
+            padding: 8, width: 36, height: 36, alignSelf: 'center'
+          }}
+          cancelBtnImageStyle={{
+            padding: 8, width: 36, height: 36, alignSelf: 'center',
+            backgroundColor: '#a4d227', borderRadius: 18,
+          }}
+          successColor={'#fff'}
+          successImageSrc={null}
+        //imageSrc={'https://facebook.github.io/react-native/docs/assets/favicon.png'}
+        // renderImage={(props) => this.renderImage(props)}
+        //renderCancel={(props) => this.renderImage(props)}
+        />
       </View >
     );
   }
 
-  _maybeRenderDevelopmentModeWarning() {
-    if (__DEV__) {
-      const learnMoreButton = (
-        <Text onPress={this._handleLearnMorePress} style={styles.helpLinkText}>
-          Learn more
-        </Text>
-      );
 
-      return (
-        <Text style={styles.developmentModeText}>
-          Development mode is enabled, your app will be slower but you can use
-          useful development tools. {learnMoreButton}
-        </Text>
-      );
-    } else {
-      return (
-        <Text style={styles.developmentModeText}>
-          You are not in development mode, your app will run at full speed.
-        </Text>
-      );
-    }
-  }
+  // closeAction() {
+  //   this.dropdown.close();
+  // }
+  // handleClose(data) {
+  //   console.log(data);
+  // }
+  // handleCancel(data) {
+  //   console.log(data);
+  // }
 
-  _handleLearnMorePress = () => {
-    WebBrowser.openBrowserAsync(
-      'https://docs.expo.io/versions/latest/guides/development-mode'
-    );
-  };
 
-  _handleHelpPress = () => {
-    WebBrowser.openBrowserAsync(
-      'https://docs.expo.io/versions/latest/guides/up-and-running.html#can-t-see-your-changes'
-    );
-  };
+  // _maybeRenderDevelopmentModeWarning() {
+  //   if (__DEV__) {
+  //     const learnMoreButton = (
+  //       <Text onPress={this._handleLearnMorePress} style={styles.helpLinkText}>
+  //         Learn more
+  //       </Text>
+  //     );
+
+  //     return (
+  //       <Text style={styles.developmentModeText}>
+  //         Development mode is enabled, your app will be slower but you can use
+  //         useful development tools. {learnMoreButton}
+  //       </Text>
+  //     );
+  //   } else {
+  //     return (
+  //       <Text style={styles.developmentModeText}>
+  //         You are not in development mode, your app will run at full speed.
+  //       </Text>
+  //     );
+  //   }
+  // }
+
+  // _handleLearnMorePress = () => {
+  //   WebBrowser.openBrowserAsync(
+  //     'https://docs.expo.io/versions/latest/guides/development-mode'
+  //   );
+  // };
+
+  // _handleHelpPress = () => {
+  //   WebBrowser.openBrowserAsync(
+  //     'https://docs.expo.io/versions/latest/guides/up-and-running.html#can-t-see-your-changes'
+  //   );
+  // };
 }
 
 const styles = StyleSheet.create({

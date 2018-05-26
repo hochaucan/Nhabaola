@@ -1403,8 +1403,9 @@ export default class SearchScreen extends React.Component {
                                         fontSize: responsiveFontSize(1.2),
                                         borderRadius: Platform.OS == 'ios' ? 0 : 5,
                                         borderWidth: 1,
-                                        borderColor: item.IsHighlight ? '#fff' : '#a4d227'
+                                        borderColor: item.IsHighlight ? '#fff' : '#a4d227',
                                         //opacity: 0.8,
+                                        zIndex: item.IsHighlight ? 30 : 10
 
                                     }}>{convertAmountToWording(item.Price)}</Text>
 
