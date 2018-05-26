@@ -42,6 +42,7 @@ import enTranslation from '../components/en.json';
 import zhTranslation from '../components/zh.json';
 import viTranslation from '../components/vi.json';
 import { setLocalization, translate, Translate } from 'react-native-translate';
+import ModalDropdown from 'react-native-modal-dropdown';
 
 var { height, width } = Dimensions.get('window');
 
@@ -245,6 +246,7 @@ const roomCords = {
 
 const DEFAULT_PADDING = { top: 40, right: 40, bottom: 40, left: 40 };
 const roomBox = [];
+const pageSize = [];
 
 export default class SearchScreen extends React.Component {
 
@@ -604,7 +606,7 @@ export default class SearchScreen extends React.Component {
         }
     }
 
-    _getRoomByFilter = async (isNew, isForward = true) => {
+    _getRoomByFilter = async (isNew, isForward = true, _page = 0) => {
         //await this.setState({ refreshFlatlist: true })
         //this.popupLoadingIndicator.show()
 
@@ -631,9 +633,18 @@ export default class SearchScreen extends React.Component {
 
         }
 
-        this.setState({ // Calculate page index
-            roomPageIndex: (this.state.page - 1) * this.state.roomPageCount
-        })
+        if (_page != 0) {
+            this.setState({ // Calculate page index
+                //roomPageIndex: (this.state.page - 1) * this.state.roomPageCount
+                roomPageIndex: (_page - 1) * this.state.roomPageCount,
+                page: _page
+            })
+        } else {
+            this.setState({ // Calculate page index
+                roomPageIndex: (this.state.page - 1) * this.state.roomPageCount
+                //roomPageIndex: _page != 0 ? (_page - 1) * this.state.roomPageCount : (this.state.page - 1) * this.state.roomPageCount
+            })
+        }
 
 
 
@@ -644,6 +655,7 @@ export default class SearchScreen extends React.Component {
 
         roomBox = await [];
         MARKERS = await [];
+        pageSize = await [];
 
         if (this.state.isSearching) {
             // await this.setState({
@@ -754,6 +766,12 @@ export default class SearchScreen extends React.Component {
                         roomCount: roomBox.length > 0 ? roomBox[0].Toilet : 0,
                         pageEnd: roomBox.length > 0 ? (roomBox[0].Toilet / this.state.roomPageCount) : 0
                     })
+
+                    // Calculate PageSize
+                    for (let i = 1; i < this.state.pageEnd + 1; i++) {
+                        pageSize.push(i)
+                    }
+
                     this.setState({ searchLoading: false })
 
                 }).
@@ -915,19 +933,62 @@ export default class SearchScreen extends React.Component {
                                     <Text style={{ justifyContent: 'center' }}>{translate("Radius")}: {this.state.radius} km</Text>
                                     <Ionicons style={{ fontSize: responsiveFontSize(2.5), paddingLeft: 8 }} name='ios-arrow-dropdown-outline' />
                                 </TouchableOpacity>
-                                :
+
+                                : // Adnroid
                                 <View
                                     style={{
                                         flexDirection: 'row',
                                         justifyContent: 'center',
                                         alignItems: 'center',
                                         alignContent: 'center',
+                                        paddingTop: 10,
+                                        paddingBottom: 10,
                                     }}
                                 >
 
 
-                                    <Text style={{ paddingLeft: 5 }}>{translate("Radius")}: </Text>
-                                    <Picker // Android
+                                    {/* <Text style={{ paddingLeft: 5 }}>{translate("Radius")}: </Text> */}
+
+                                    <ModalDropdown
+                                        //options={['option 1', 'option 2']}
+                                        options={[2, 4, 6, 8, 10, 12, 14, 16, 18, 20, 30, 40, 50]}
+                                        style={{
+                                            // marginRight: 2,
+                                            // marginLeft: 2,
+                                            // flexDirection: 'row',
+                                            // alignContent: 'center',
+                                            // alignItems: 'center',
+                                            // justifyContent: 'center'
+                                            // paddingTop:5,
+                                            // paddingBottom:5,
+
+                                        }}
+                                        dropdownStyle={{ width: 60, marginTop: -15, elevation: 2 }}
+                                        dropdownTextStyle={{ textAlign: 'center' }}
+                                        defaultValue='2'
+                                        //  onDropdownWillShow={this._dropdown_5_willShow.bind(this)}
+                                        // onDropdownWillHide={this._dropdown_5_willHide.bind(this)}
+                                        onSelect={async (idx, value) => {
+                                            await this.setState({ radius: value })
+                                            this._getRoomByFilter(true);
+                                        }}
+
+                                    >
+
+                                        <Text
+                                            style={{
+                                                marginLeft: 5,
+                                                marginRight: 5,
+                                                fontSize: responsiveFontSize(2),
+                                                //color: '#73aa2a'
+                                            }}
+                                        >{translate("Radius")}: {this.state.radius} km  <Ionicons style={{ marginLeft: 2 }} name='ios-arrow-dropdown' /></Text>
+
+                                    </ModalDropdown>
+
+
+
+                                    {/* <Picker // Android
                                         style={{
 
                                             width: 110,
@@ -951,7 +1012,7 @@ export default class SearchScreen extends React.Component {
                                         <Picker.Item label="30 km" value="30" />
                                         <Picker.Item label="40 km" value="40" />
                                         <Picker.Item label="50 km" value="50" />
-                                    </Picker>
+                                    </Picker> */}
                                 </View>
                             }
 
@@ -1558,7 +1619,7 @@ export default class SearchScreen extends React.Component {
                                 color: '#9B9D9D',
                                 textAlign: 'center',
                                 fontSize: responsiveFontSize(4),
-                                elevation:2,
+                                elevation: 2,
                                 shadowColor: '#000',
                                 shadowOffset: { width: 0, height: 2 },
                                 shadowOpacity: 0.2,
@@ -1602,8 +1663,8 @@ export default class SearchScreen extends React.Component {
 
                                 <Text
                                     style={{
-                                        marginRight: 12,
-                                        fontSize: responsiveFontSize(2),
+                                        marginRight: 3,
+                                        fontSize: responsiveFontSize(1.8),
                                         color: '#9B9D9D'
                                     }}
                                 >
@@ -1628,15 +1689,48 @@ export default class SearchScreen extends React.Component {
                                         name='ios-arrow-back'
                                     />
                                 </TouchableOpacity>
-                                <Text
+
+                                {/* <Text
                                     style={{
                                         marginLeft: 5,
                                         marginRight: 5,
                                         fontSize: responsiveFontSize(1.8),
                                         color: '#73aa2a'
                                     }}
-                                >{translate("Page")} {this.state.page}</Text>
+                                >{translate("Page")} {this.state.page}</Text> */}
+                                <ModalDropdown
+                                    //options={['option 1', 'option 2']}
+                                    options={pageSize}
+                                    style={{
+                                        // marginRight: 2,
+                                        // marginLeft: 2,
+                                        // flexDirection: 'row',
+                                        // alignContent: 'center',
+                                        // alignItems: 'center',
+                                        // justifyContent: 'center'
 
+                                    }}
+                                    dropdownStyle={{ width: 50 }}
+                                    defaultValue='0'
+                                    //  onDropdownWillShow={this._dropdown_5_willShow.bind(this)}
+                                    // onDropdownWillHide={this._dropdown_5_willHide.bind(this)}
+                                    onSelect={(idx, value) => {
+                                        // alert(value)
+                                        this._getRoomByFilter(false, true, value)
+                                    }}
+
+                                >
+
+                                    <Text
+                                        style={{
+                                            marginLeft: 5,
+                                            marginRight: 5,
+                                            fontSize: responsiveFontSize(1.8),
+                                            color: '#73aa2a'
+                                        }}
+                                    >{translate("Page")} {this.state.page} <Ionicons style={{ marginLeft: 2 }} name='ios-arrow-dropdown' /></Text>
+
+                                </ModalDropdown>
 
                                 <TouchableOpacity
                                     style={{

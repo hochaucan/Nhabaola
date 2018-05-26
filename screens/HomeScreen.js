@@ -22,6 +22,7 @@ import {
   AsyncStorage,
   Keyboard,
   Easing,
+  TouchableHighlight
 } from 'react-native';
 import { WebBrowser, ImagePicker, Facebook, Google, Notifications, Permissions, BarCodeScanner } from 'expo';
 import { MonoText } from '../components/StyledText';
@@ -50,6 +51,7 @@ import viTranslation from '../components/vi.json';
 import { setLocalization, translate, Translate } from 'react-native-translate';
 import SearchScreen from './SearchScreen';
 import SimplePicker from 'react-native-simple-picker';
+import ModalDropdown from 'react-native-modal-dropdown';
 
 const homePlace = {
   description: 'Home',
@@ -71,6 +73,7 @@ const LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO;
 const roomBox = [];
 const roomBoxByID = null;
 const isScanQR = false;
+
 
 function numberWithCommas(x) {
   return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
@@ -664,7 +667,7 @@ export default class HomeScreen extends React.Component {
     else {
       this.popupLoadingIndicator.show()
     }
-
+    this.setState({ modalLogin: false })
 
     try {
       await fetch("http://nhabaola.vn/api/Account/FO_Account_Login", {
@@ -682,11 +685,11 @@ export default class HomeScreen extends React.Component {
         .then((response) => response.json())
         .then((responseJson) => {
 
-
+          // alert(JSON.stringify(responseJson))
           if (responseJson.obj.UpdatedBy != "") { // Login successful
 
             if (Platform.OS == 'ios') {
-              this.setState({ modalLogin: false, })
+              this.setState({ modalLoading: false, modalLogin: false })
             }
             else {
               this.popupLogin.dismiss()
@@ -708,7 +711,6 @@ export default class HomeScreen extends React.Component {
             if (Platform.OS === 'android') {
               ToastAndroid.showWithGravity(translate("Login successful"), ToastAndroid.SHORT, ToastAndroid.TOP);
             } else {
-              // this.setState({ modalLogin: false })
               Alert.alert(translate("Notice"), translate("Login successful"));
             }
 
@@ -718,11 +720,12 @@ export default class HomeScreen extends React.Component {
               ToastAndroid.showWithGravity(translate("Incorrect username or password"), ToastAndroid.SHORT, ToastAndroid.TOP);
             }
             else {
-              this.setState({ modalLogin: false })
+              // this.setState({ modalLogin: false })
               Alert.alert(translate("Notice"), translate("Incorrect username or password"), [
                 {
                   text: translate("Cancel"), onPress: () => {
                     this.setState({
+                      modalLoading: false,
                       loginUsername: '',
                       loginPassword: '',
                     })
@@ -744,9 +747,9 @@ export default class HomeScreen extends React.Component {
             saveStorageAsync('loginPassword', '')
             this.setState({ profile: null, sessionKey: null })
           }
-
+          //alert("can")
           this.popupLoadingIndicator.dismiss();
-          this.setState({ modalLoading: false })
+          this.setState({ modalLoading: false, modalLogin: false })
 
         }).
         catch((error) => { console.log(error) });
@@ -1491,7 +1494,7 @@ export default class HomeScreen extends React.Component {
     } else {
       this.popupLoadingIndicator.show()
     }
-
+    this.setState({ modalResetPassword1: false })
 
     try {
       await fetch("http://nhabaola.vn/api/ForgetPassword/FO_ForgetPassword_Add/", {
@@ -1516,6 +1519,7 @@ export default class HomeScreen extends React.Component {
                   {
                     text: translate("Cancel"),
                     onPress: () => {
+                      this.setState({ modalLoading: false })
                       this.setState({ resetPasswordUsername: '' })
                     }
                   },
@@ -1603,7 +1607,7 @@ export default class HomeScreen extends React.Component {
     } else {
       this.popupLoadingIndicator.show()
     }
-
+    this.setState({ modalResetPassword2: false })
 
     // Get Username and new Password after Reset password
     await this.setState({
@@ -1640,7 +1644,8 @@ export default class HomeScreen extends React.Component {
             this.setState({ resetPasswordUsername: '' })
 
             // Login after reset password
-            this._loginAfterRegisterAccountAsync();
+            this._loginAsync()
+            // this._loginAfterRegisterAccountAsync();
           }
           else {
             if (Platform.OS === 'android') { // Active Code not correct
@@ -1654,6 +1659,7 @@ export default class HomeScreen extends React.Component {
                     text: translate("Cancel"),
                     onPress: () => {
                       this.setState({
+                        modalLoading: false,
                         resetPasswordNewPassword: '',
                         resetPasswordActiveKey: ''
                       })
@@ -1812,12 +1818,25 @@ export default class HomeScreen extends React.Component {
 
   };
 
+
   render() {
     let { image } = this.state;
 
     return (
       // <View style={styles.container} key={this.state.refreshScreen}>
       <View style={styles.container} key={this.state.refreshScreen}>
+
+        {this.state.modalLoading &&
+
+          <ActivityIndicator
+            style={{ position: 'absolute', left: responsiveWidth(45), top: 30 }}
+            animating={true}
+            size="large"
+            color="#73aa2a"
+          />
+        }
+
+
         {this.state.isInternetIssue &&
           <View
             style={{
@@ -2446,7 +2465,7 @@ export default class HomeScreen extends React.Component {
 
           }}
         >
-          {/* QR */}
+          {/* Avartar */}
           <TouchableOpacity
             style={{
               flex: 2,
@@ -2545,7 +2564,12 @@ export default class HomeScreen extends React.Component {
             }}
 
             onPress={() => {
-              this.refs.pickerCategory.show()
+              if (Platform.OS == 'ios') {
+                this.refs.pickerCategory.show()
+              }
+              else {
+                this.refs.modalDropdownCategory.show()
+              }
             }}
           >
             <Ionicons style={{
@@ -2556,35 +2580,122 @@ export default class HomeScreen extends React.Component {
             />
             <Text style={{ fontSize: responsiveFontSize(1.4), color: '#73aa2a' }}>{translate("Type of real estate")}</Text>
 
-            <SimplePicker
-              ref={'pickerCategory'}
-              options={this.state.roomCategory.map((y, i) => y.ID)}
-              labels={this.state.roomCategory.map((y, i) => this.state.isVietnamease ? y.CatName : this.state.isEnglish ? y.CatImg.split('|')[0] : y.CatImg.split('|')[1])}
-              confirmText={translate("Agree")}
-              cancelText={translate("Cancel")}
-              itemStyle={{
-                fontSize: 25,
-                color: '#73aa2a',
-                textAlign: 'center',
-                fontWeight: 'bold',
-              }}
-              onSubmit={async (option, label) => {
+            {Platform.OS == 'ios' ?
 
-                let _catName = '';
-                this.state.roomCategory.map((y, i) => {
-                  if (y.ID === option) {
-                    _catName = this.state.isVietnamease ? y.CatName : this.state.isEnglish ? y.CatImg.split('|')[0] : y.CatImg.split('|')[1]
+              <SimplePicker
+                ref={'pickerCategory'}
+                options={this.state.roomCategory.map((y, i) => y.ID)}
+                labels={this.state.roomCategory.map((y, i) => this.state.isVietnamease ? y.CatName : this.state.isEnglish ? y.CatImg.split('|')[0] : y.CatImg.split('|')[1])}
+                confirmText={translate("Agree")}
+                cancelText={translate("Cancel")}
+                itemStyle={{
+                  fontSize: 25,
+                  color: '#73aa2a',
+                  textAlign: 'center',
+                  fontWeight: 'bold',
+                }}
+                onSubmit={async (option, label) => {
 
+                  let _catName = '';
+                  this.state.roomCategory.map((y, i) => {
+                    if (y.ID === option) {
+                      _catName = this.state.isVietnamease ? y.CatName : this.state.isEnglish ? y.CatImg.split('|')[0] : y.CatImg.split('|')[1]
+
+                    }
+                  })
+
+                  this.props.navigation.navigate('RoomByCategoryScreen', {
+                    CategoryID: option,
+                    CategoryName: _catName
+                  })
+                }}
+              />
+              : // Android
+              <ModalDropdown
+                ref="modalDropdownCategory"
+                options={this.state.roomCategory.map((y, i) => {
+                  return cat = {
+                    id: y.ID,
+                    name: this.state.isVietnamease ? y.CatName : this.state.isEnglish ? y.CatImg.split('|')[0] : y.CatImg.split('|')[1]
                   }
-                })
+                  //return '{"id":' + y.ID + ',"name":' + '"' + y.CatName + '"}'
+                  //return `{"id":"${y.ID}", "name":"${y.CatName}"}`;
+                })}
 
-                this.props.navigation.navigate('RoomByCategoryScreen', {
-                  CategoryID: option,
-                  CategoryName: _catName
-                })
-              }}
-            />
+                style={{
+                  // marginRight: 2,
+                  // marginLeft: 2,
+                  // flexDirection: 'row',
+                  // alignContent: 'center',
+                  // alignItems: 'center',
+                  // justifyContent: 'center'
 
+                }}
+                dropdownStyle={{
+                  width: responsiveWidth(50),
+                  elevation: 2,
+                  height: responsiveHeight(40),
+                  marginTop: -65,
+                  //  marginBottom: 60,
+                  marginLeft: -responsiveWidth(25),
+                }}
+                dropdownTextStyle={{ textAlign: 'center' }}
+                defaultValue={''}
+                //  onDropdownWillShow={this._dropdown_5_willShow.bind(this)}
+                // onDropdownWillHide={this._dropdown_5_willHide.bind(this)}
+                //options={DEMO_OPTIONS_2}
+                renderButtonText={(rowData) => {
+                  // const { name, age } = rowData;
+                  // return `${name} - ${age}`;
+                  return <Text style={{}}></Text>
+                }}
+                renderRow={(rowData, rowID, highlighted) => {
+                  //let icon = highlighted ? require('../assets/images/nbl-house_icon.png') : require('../assets/images/nbl-house_icon.png');
+                  let evenRow = rowID % 2;
+                  return (
+                    <TouchableOpacity underlayColor='cornflowerblue'
+                      style={{}}
+                    >
+                      <View style={{
+                        //backgroundColor: evenRow ? '#a4d227' : 'white',
+                        borderWidth: 0.3,
+                        borderColor: '#73aa2a'
+                      }}>
+                        {/* <Image style={{width:20,height:20}}
+            mode='stretch'
+            source={icon}
+          /> */}
+                        {/* <Text style={[styles.dropdown_2_row_text, highlighted && { color: 'mediumaquamarine' }]}> */}
+                        <Text style={{
+                          padding: 5,
+                          color: '#73aa2a'
+                        }}>
+                          {/* {`${rowData.id} ${rowData.name})`} */}
+                          {rowData.name}
+                        </Text>
+                      </View>
+                    </TouchableOpacity>
+                  );
+                }}
+                renderSeparator={(sectionID, rowID, adjacentRowHighlighted) => {
+                  // if (rowID == DEMO_OPTIONS_2.length - 1) return;
+                  // let key = `spr_${rowID}`;
+                  // return (<View style={styles.dropdown_2_separator}
+                  //   key={key}
+                  // />);
+                }}
+                onSelect={async (idx, value) => {
+                  //alert(JSON.stringify(value))
+
+                  this.props.navigation.navigate('RoomByCategoryScreen', {
+                    CategoryID: value.id,
+                    CategoryName: value.name
+                  })
+                }}
+              >
+              </ModalDropdown>
+
+            }
           </TouchableOpacity>
 
           {/* Hot Room */}
@@ -2798,7 +2909,7 @@ export default class HomeScreen extends React.Component {
             this.refs.iosResetUserNameInput.focus()
           }}
         >
-          {this.state.modalLoading &&
+          {/* {this.state.modalLoading &&
 
             <ActivityIndicator
               style={{ position: 'absolute', left: responsiveWidth(45), top: 30 }}
@@ -2807,7 +2918,7 @@ export default class HomeScreen extends React.Component {
               color="#73aa2a"
             />
 
-          }
+          } */}
 
           <View style={{
             padding: 20,
@@ -2972,13 +3083,13 @@ export default class HomeScreen extends React.Component {
           }}
         >
 
-          {this.state.modalLoading &&
+          {/* {this.state.modalLoading &&
             <ActivityIndicator
               style={{ position: 'absolute', left: responsiveWidth(45), top: 30 }}
               animating={true}
               size="large"
               color="#73aa2a"
-            />}
+            />} */}
 
           <View style={{
             padding: 15,
@@ -3215,7 +3326,7 @@ export default class HomeScreen extends React.Component {
 
           <View>
 
-            {this.state.modalLoading &&
+            {/* {this.state.modalLoading &&
 
               <ActivityIndicator
                 style={{ position: 'absolute', left: responsiveWidth(45), top: 30 }}
@@ -3223,7 +3334,7 @@ export default class HomeScreen extends React.Component {
                 size="large"
                 color="#73aa2a"
               />
-            }
+            } */}
 
             {/* Username */}
             <Animated.View style={{
