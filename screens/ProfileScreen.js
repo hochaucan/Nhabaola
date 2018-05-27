@@ -549,6 +549,8 @@ export default class ProfileScreen extends React.Component {
                         style={{ flexDirection: 'row', alignItems: 'center' }}
                         onPress={() => {
                             this.props.navigation.goBack()
+                            this.props.navigation.state.params.onRefreshScreen({ refreshScreen: true });
+                            this.props.navigation.state.params._getWalletAsync();
                         }}>
                         <Ionicons style={{ fontSize: 28, color: '#fff', paddingTop: 2 }} name='ios-arrow-back'></Ionicons>
 
@@ -1127,14 +1129,15 @@ export default class ProfileScreen extends React.Component {
                 >
                     <View style={{ flexDirection: 'row', padding: 20, marginTop: Platform.OS === 'ios' ? 20 : 0, alignItems: 'center' }}>
                         <TouchableOpacity
-                            style={{}}
+                            style={{ flexDirection: 'row', alignItems: 'center' }}
                             onPress={() => this.setState({ modalHelp: false })}>
-                            <Ionicons style={{ fontSize: 28, color: '#a4d227', }} name='md-arrow-back'></Ionicons>
+                            <Ionicons style={{ fontSize: 28, color: '#a4d227', paddingTop: 2 }} name='ios-arrow-back'></Ionicons>
+                            <Text style={{
+                                marginLeft: 10, color: '#73aa2a',
+                                fontSize: responsiveFontSize(2.2), justifyContent: 'center'
+                            }}>{translate("Contact help")}</Text>
                         </TouchableOpacity>
-                        <Text style={{
-                            marginLeft: 20, color: '#73aa2a',
-                            fontSize: responsiveFontSize(2.2), justifyContent: 'center'
-                        }}>{translate("Contact help")}</Text>
+
                     </View>
                     <ScrollView style={{ flex: 1, paddingLeft: 20, paddingRight: 20, paddingBottom: 20 }}>
 

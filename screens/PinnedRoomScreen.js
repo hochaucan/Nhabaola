@@ -438,6 +438,20 @@ export default class PinnedRoomScreen extends React.Component {
 
                 <View style={{ flexDirection: 'row', padding: 10, backgroundColor: '#a4d227', alignItems: 'center' }}>
                     <TouchableOpacity
+                        style={{ flexDirection: 'row', alignItems: 'center' }}
+                        onPress={() => {
+                            this.props.navigation.goBack()
+                            this.props.navigation.state.params.onRefreshScreen();
+                        }}>
+                        <Ionicons style={{ fontSize: 28, color: '#fff', paddingTop: 2 }} name='ios-arrow-back'></Ionicons>
+
+                        <Text style={{
+                            marginLeft: 10, color: '#fff',
+                            fontSize: responsiveFontSize(2), //justifyContent: 'center'
+                        }}>{translate("Pinned")}</Text>
+                    </TouchableOpacity>
+
+                    {/* <TouchableOpacity
                         style={{}}
                         onPress={() => {
                             this.props.navigation.goBack()
@@ -448,7 +462,7 @@ export default class PinnedRoomScreen extends React.Component {
                         }}>
                         <Ionicons style={{ fontSize: 28, color: '#fff', }} name='md-arrow-back'></Ionicons>
                     </TouchableOpacity>
-                    <Text style={{ marginLeft: 20, color: '#fff', fontSize: responsiveFontSize(2.2), justifyContent: 'center' }}>{translate("Pinned")}</Text>
+                    <Text style={{ marginLeft: 20, color: '#fff', fontSize: responsiveFontSize(2.2), justifyContent: 'center' }}>{translate("Pinned")}</Text> */}
                 </View>
 
                 <View style={styles.searchRoolResultBox}>

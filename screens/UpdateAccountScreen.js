@@ -39,6 +39,7 @@ import enTranslation from '../components/en.json';
 import zhTranslation from '../components/zh.json';
 import viTranslation from '../components/vi.json';
 import { setLocalization, translate, Translate } from 'react-native-translate';
+import KeyboardSpacer from 'react-native-keyboard-spacer';
 
 var { height, width } = Dimensions.get('window');
 
@@ -517,45 +518,47 @@ export default class UpdateAccountScreen extends React.Component {
 
                             </View>
                         </View>
-
-
-                        {/* Form Button */}
-                        <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center', marginTop: 20, }}>
-                            <Button
-                                buttonStyle={{ backgroundColor: '#9B9D9D', padding: 10, borderRadius: 5, }}
-                                raised={false}
-                                icon={{ name: 'ios-backspace', type: 'ionicon' }}
-                                title={translate("Cancel")}
-                                onPress={() => {
-                                    this.setState({
-                                        registerCellPhone: '',
-                                        //  registerPassword: '',
-                                        // registerConfirmPassword: '',
-                                        registerAccountImage: null,
-                                        registerFullName: '',
-                                        // registerConfirmCellPhone: '',
-                                        registerEmail: '',
-                                    })
-
-                                    this.props.navigation.goBack();
-                                }}
-                            />
-
-                            <Button
-                                buttonStyle={{ backgroundColor: '#73aa2a', padding: 10, borderRadius: 5, }}
-                                raised={false}
-                                icon={{ name: 'md-checkmark', type: 'ionicon' }}
-                                title={translate("Updates")}
-                                onPress={() => {
-                                    this._updateAccountAsync();
-                                }}
-                            />
-                        </View>
                         {/* The view that will animate to match the keyboards height */}
-                        {/* <KeyboardSpacer /> */}
-
+                        <KeyboardSpacer />
                     </KeyboardAvoidingView>
                 </KeyboardAwareScrollView>
+
+                {/* Form Button */}
+                <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center', marginTop: 20, }}>
+                    <Button
+                        buttonStyle={{ backgroundColor: '#9B9D9D', padding: 10, borderRadius: 5, }}
+                        raised={false}
+                        icon={{ name: 'ios-backspace', type: 'ionicon' }}
+                        title={translate("Cancel")}
+                        onPress={() => {
+                            this.setState({
+                                registerCellPhone: '',
+                                //  registerPassword: '',
+                                // registerConfirmPassword: '',
+                                registerAccountImage: null,
+                                registerFullName: '',
+                                // registerConfirmCellPhone: '',
+                                registerEmail: '',
+                            })
+
+                            this.props.navigation.goBack();
+                        }}
+                    />
+
+                    <Button
+                        buttonStyle={{ backgroundColor: '#73aa2a', padding: 10, borderRadius: 5, }}
+                        raised={false}
+                        icon={{ name: 'md-checkmark', type: 'ionicon' }}
+                        title={translate("Updates")}
+                        onPress={() => {
+                            this._updateAccountAsync();
+                        }}
+                    />
+                </View>
+                {/* The view that will animate to match the keyboards height */}
+                {/* <KeyboardSpacer /> */}
+
+
 
 
                 {/* Popup select image library or camera */}

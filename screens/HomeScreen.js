@@ -2013,7 +2013,7 @@ export default class HomeScreen extends React.Component {
                             .catch(err => console.error('An error occurred', err))
                         }}
                       >
-                        <Image style={{ width: 18, height: 28, marginLeft: 10, }} source={require('../assets/icons/chat_fm.png')} />
+                        <Image style={{ width: 18, height: 25, marginLeft: 10, }} source={require('../assets/icons/chat_fm.png')} />
                       </TouchableOpacity>
                     }
 
@@ -2043,7 +2043,7 @@ export default class HomeScreen extends React.Component {
                             .catch(err => console.error('An error occurred', err))
                         }}
                       >
-                        <Image style={{ width: 18, height: 28, marginLeft: 10, }} source={require('../assets/icons/chat_zalo.png')} />
+                        <Image style={{ width: 18, height: 25, marginLeft: 15, }} source={require('../assets/icons/chat_zalo.png')} />
                       </TouchableOpacity>
                     }
 
@@ -2073,7 +2073,7 @@ export default class HomeScreen extends React.Component {
                             .catch(err => console.error('An error occurred', err))
                         }}
                       >
-                        <Image style={{ width: 18, height: 28, marginLeft: 10, }} source={require('../assets/icons/chat_whatapps.png')} />
+                        <Image style={{ width: 18, height: 20, marginLeft: 15, }} source={require('../assets/icons/chat_whatapps.png')} />
                       </TouchableOpacity>
                     }
 

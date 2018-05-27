@@ -758,6 +758,19 @@ export default class RoomDetailScreen extends React.Component {
                 {/* Header */}
                 <View style={{ flexDirection: 'row', padding: 10, backgroundColor: '#a4d227', alignItems: 'center' }}>
                     <TouchableOpacity
+                        style={{ flexDirection: 'row', alignItems: 'center' }}
+                        onPress={() => {
+                            this.props.navigation.goBack()
+                        }}>
+                        <Ionicons style={{ fontSize: 28, color: '#fff', paddingTop: 2 }} name='ios-arrow-back'></Ionicons>
+
+                        <Text style={{
+                            marginLeft: 10, color: '#fff',
+                            fontSize: responsiveFontSize(2), //justifyContent: 'center'
+                        }}>{translate("Details")}</Text>
+                    </TouchableOpacity>
+
+                    {/* <TouchableOpacity
                         style={{}}
                         onPress={() => {
                             this.props.navigation.goBack()
@@ -770,7 +783,7 @@ export default class RoomDetailScreen extends React.Component {
                     <Text style={{
                         marginLeft: 20, color: '#fff',
                         fontSize: responsiveFontSize(2.2), justifyContent: 'center'
-                    }}>{translate("Details")}</Text>
+                    }}>{translate("Details")}</Text> */}
 
                     {/* Update in Room Detail */}
                     {/* {this.state.roomBox.CreatedBy == this.state.profile.ID &&
