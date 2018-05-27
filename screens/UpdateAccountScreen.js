@@ -20,6 +20,7 @@ import {
     ToastAndroid,
     ActivityIndicator,
     Keyboard,
+    KeyboardAvoidingView,
 } from 'react-native';
 import { WebBrowser, ImagePicker, Facebook } from 'expo';
 import { MonoText } from '../components/StyledText';
@@ -59,6 +60,9 @@ export default class UpdateAccountScreen extends React.Component {
             registerAccountImage: null,
             registerFullName: '',
             registerEmail: '',
+            registerFacebookMessanger: '',
+            registerZalo: '',
+            registerWhatapps: '',
         }
     }
 
@@ -77,7 +81,26 @@ export default class UpdateAccountScreen extends React.Component {
 
 
         this.setState({
-            registerFullName: this.state.profile.FullName,
+            registerFullName: this.state.profile.FullName.indexOf('|') > -1 ? this.state.profile.FullName.split('|')[0] : this.state.profile.FullName,
+
+            registerFacebookMessanger: this.state.profile.FullName.indexOf('http://m.me/') > -1
+                ?
+                (this.state.profile.FullName.slice(this.state.profile.FullName.indexOf('http://m.me/'),
+                    this.state.profile.FullName.indexOf('|', this.state.profile.FullName.indexOf('http://m.me/'))).replace('http://m.me/', ''))
+                : '',
+
+            registerZalo: this.state.profile.FullName.indexOf('http://zalo.me/') > -1
+                ?
+                (this.state.profile.FullName.slice(this.state.profile.FullName.indexOf('http://zalo.me/'),
+                    this.state.profile.FullName.indexOf('|', this.state.profile.FullName.indexOf('http://zalo.me/'))).replace('http://zalo.me/', ''))
+                : '',
+
+            registerWhatapps: this.state.profile.FullName.indexOf('https://api.whatsapp.com/') > -1
+                ?
+                (this.state.profile.FullName.slice(this.state.profile.FullName.indexOf('https://api.whatsapp.com/'),
+                    this.state.profile.FullName.indexOf('|', this.state.profile.FullName.indexOf('https://api.whatsapp.com/'))).replace('https://api.whatsapp.com/send?phone=', ''))
+                : '',
+
             registerAccountImage: this.state.profile.Avarta,
             registerEmail: this.state.profile.Email,
             registerCellPhone: this.state.profile.UserName,
@@ -134,6 +157,17 @@ export default class UpdateAccountScreen extends React.Component {
 
         this.popupLoadingIndicator.show();
 
+        // Register Chat account
+        let _fullName = this.state.registerFullName
+        if (this.state.registerFacebookMessanger != '') { _fullName = _fullName + '|http://m.me/' + this.state.registerFacebookMessanger }
+        if (this.state.registerZalo != '') { _fullName = _fullName + '|http://zalo.me/' + this.state.registerZalo }
+        if (this.state.registerWhatapps != '') { _fullName = _fullName + '|https://api.whatsapp.com/send?phone=' + this.state.registerWhatapps }
+        if (_fullName.indexOf('|') > -1) { _fullName = _fullName + '|' }
+
+        //alert(_fullName)
+        //return
+
+        // Upload Avatar
         if (this.state.registerAccountImage != null) {
             if (!this.state.registerAccountImage.match("http")) {
                 let uploadResponse = await uploadImageAsync(this.state.registerAccountImage);
@@ -159,7 +193,7 @@ export default class UpdateAccountScreen extends React.Component {
                 body: JSON.stringify({
 
                     "ID": this.state.profile.ID,
-                    "FullName": this.state.registerFullName,
+                    "FullName": _fullName,//this.state.registerFullName,
                     "Email": this.state.registerEmail,
                     "Sex": Platform.OS == 'ios' ? '0' : '1',
                     "Avarta": this.state.registerAccountImage, //uploadResult.location,
@@ -182,7 +216,7 @@ export default class UpdateAccountScreen extends React.Component {
                             profile: {
                                 ID: this.state.profile.ID,
                                 UserName: this.state.profile.UserName,
-                                FullName: this.state.registerFullName,
+                                FullName: _fullName,//this.state.registerFullName,
                                 Email: this.state.registerEmail,
                                 Avarta: this.state.registerAccountImage,
                                 YearOfBirth: this.state.profile.YearOfBirth,
@@ -256,46 +290,83 @@ export default class UpdateAccountScreen extends React.Component {
             <View style={{ flex: 1, backgroundColor: '#fff', paddingBottom: 20, }}>
                 <View style={{ flexDirection: 'row', padding: 10, backgroundColor: '#a4d227', alignItems: 'center' }}>
                     <TouchableOpacity
+                        style={{ flexDirection: 'row', alignItems: 'center' }}
+                        onPress={() => {
+                            this.props.navigation.goBack()
+                        }}>
+                        <Ionicons style={{ fontSize: 28, color: '#fff', paddingTop: 2 }} name='ios-arrow-back'></Ionicons>
+
+                        <Text style={{
+                            marginLeft: 10, color: '#fff',
+                            fontSize: responsiveFontSize(2), //justifyContent: 'center'
+                        }}>{translate("Personal information")}</Text>
+                    </TouchableOpacity>
+
+                    {/* <TouchableOpacity
                         style={{}}
                         onPress={() => {
                             this.props.navigation.goBack()
 
                         }}>
-                        <Ionicons style={{ fontSize: 28, color: '#fff', }} name='md-arrow-back'></Ionicons>
+                        <Ionicons style={{ fontSize: 28, color: '#fff', }} name='ios-arrow-back'></Ionicons>
                     </TouchableOpacity>
                     <Text style={{
                         marginLeft: 20, color: '#fff',
                         fontSize: responsiveFontSize(2), justifyContent: 'center'
-                    }}>{translate("Personal information")}</Text>
+                    }}>{translate("Personal information")}</Text> */}
                 </View>
                 <KeyboardAwareScrollView
                     innerRef={ref => { this.scroll = ref }}
                 >
-                    <View style={{ flexDirection: 'row', padding: 20, justifyContent: 'center', alignItems: 'center' }}>
-                        <TouchableOpacity
-                            style={{}}
-                            onPress={async () => {
-                                this.popupSelectedImage.show()
-                            }
-                            }
-                        >
-                            <Ionicons style={{ opacity: 0.7, fontSize: 100, color: '#73aa2a', flex: 1, textAlign: 'center', }} name='ios-contact' />
-                            {this.state.registerAccountImage
-                                && <Image source={{ uri: this.state.registerAccountImage }}
-                                    style={{ width: 80, height: 80, borderRadius: Platform.OS === 'ios' ? 40 : 100, marginTop: Platform.OS === 'ios' ? -99 : -90, marginLeft: Platform.OS === 'ios' ? 7 : 1, marginBottom: 10, }}
-                                />
-                            }
-                            <Text style={{}}>{translate("Avatar")}</Text>
-                        </TouchableOpacity>
+                    <KeyboardAvoidingView behavior={Platform.OS == 'ios' ? 'height' : 'padding'}>
+                        <View style={{
+                            flexDirection: 'row',
+                            padding: 20, justifyContent: 'center', alignItems: 'center', alignContent: 'center',
+                        }}>
+                            <TouchableOpacity
+                                style={{ justifyContent: 'center', alignItems: 'center', alignContent: 'center' }}
+                                onPress={async () => {
+                                    this.popupSelectedImage.show()
+                                }
+                                }
+                            >
 
-                    </View>
-                    <View>
-                        {/* Cellphone */}
-                        <View style={{ position: 'relative', flexDirection: 'row', }}>
-                            <Ionicons style={{ flex: 2, fontSize: 22, paddingTop: 12, textAlign: 'center', }} name='md-call' />
-                            <Text style={{ flex: 15, marginLeft: 10, color: '#73aa2a', marginTop: 10, }}>{this.state.registerCellPhone}</Text>
 
-                            {/* <FormInput
+                                {this.state.registerAccountImage
+                                    ? <Image source={{ uri: this.state.registerAccountImage }}
+                                        style={{
+                                            width: 80, height: 80,
+                                            borderRadius: Platform.OS === 'ios' ? 40 : 100,
+                                            marginBottom: 10,
+                                            // marginTop: Platform.OS === 'ios' ? -99 : -90,
+                                            // marginLeft: Platform.OS === 'ios' ? 7 : 1, marginBottom: 10,
+                                        }}
+                                    />
+                                    :
+                                    <Ionicons style={{ opacity: 0.7, fontSize: 100, color: '#73aa2a', flex: 1, textAlign: 'center', }} name='ios-contact' />
+
+                                }
+
+
+                                {/* <Ionicons style={{ opacity: 0.7, fontSize: 100, color: '#73aa2a', flex: 1, textAlign: 'center', }} name='ios-contact' />
+                                {this.state.registerAccountImage
+                                    && <Image source={{ uri: this.state.registerAccountImage }}
+                                        style={{ width: 80, height: 80, borderRadius: Platform.OS === 'ios' ? 40 : 100, marginTop: Platform.OS === 'ios' ? -99 : -90, marginLeft: Platform.OS === 'ios' ? 7 : 1, marginBottom: 10, }}
+                                    />
+                                } */}
+
+
+                                <Text style={{}}>{translate("Avatar")}</Text>
+                            </TouchableOpacity>
+
+                        </View>
+                        <View>
+                            {/* Cellphone */}
+                            <View style={{ position: 'relative', flexDirection: 'row', }}>
+                                <Ionicons style={{ flex: 2, fontSize: 22, paddingTop: 12, textAlign: 'center', }} name='md-call' />
+                                <Text style={{ flex: 15, marginLeft: 10, color: '#73aa2a', marginTop: 10, }}>{this.state.registerCellPhone}</Text>
+
+                                {/* <FormInput
                                 containerStyle={{ flex: 15, marginLeft: Platform.OS === 'ios' ? 20 : 10 }}
                                 inputStyle={{ paddingLeft: Platform.OS === 'android' ? 4 : 0 }}
                                 placeholder='Số điện thoại'
@@ -305,7 +376,7 @@ export default class UpdateAccountScreen extends React.Component {
                                 onChangeText={(registerCellPhone) => this.setState({ registerCellPhone })}
                                 value={this.state.registerCellPhone}
                             /> */}
-                            {/* <TouchableOpacity>
+                                {/* <TouchableOpacity>
                                 <FormLabel
                                     containerStyle={{
                                         alignItems: 'center', justifyContent: 'center',
@@ -315,92 +386,176 @@ export default class UpdateAccountScreen extends React.Component {
                                     (Xác nhận ĐT)
                             </FormLabel>
                             </TouchableOpacity> */}
+                            </View>
+
+                            {/* Fulllname */}
+                            <View style={{ flexDirection: 'row', padding: 10, paddingTop: 0, }}>
+                                <Ionicons style={{ flex: 1, fontSize: 22, paddingTop: 12, textAlign: 'center', }} name='ios-person' />
+                                <FormInput
+                                    ref='fullNameInput'
+                                    returnKeyType={"next"}
+                                    onSubmitEditing={(event) => {
+                                        this.refs.emailInput.focus();
+                                    }}
+                                    onFocus={(event) => {
+                                        this._scrollToInput(event.target)
+                                    }}
+                                    containerStyle={{ flex: 15, marginLeft: Platform.OS === 'ios' ? 22 : 18 }}
+                                    inputStyle={{ paddingLeft: Platform.OS === 'android' ? 4 : 0 }}
+                                    placeholder={translate("Name")}
+                                    underlineColorAndroid={'#73aa2a'}
+                                    value={this.state.registerFullName}
+                                    onChangeText={(registerFullName) => { this.setState({ registerFullName }) }}
+                                />
+
+                            </View>
+                            {/* Email */}
+                            <View style={{ flexDirection: 'row', padding: 10, paddingTop: 0, }}>
+                                <Ionicons style={{ flex: 1, fontSize: 22, paddingTop: 12, textAlign: 'center', }} name='ios-mail' />
+                                <FormInput
+                                    ref='emailInput'
+                                    returnKeyType={"next"}
+                                    onSubmitEditing={(event) => {
+                                        // Keyboard.dismiss();
+                                        //this._updateAccountAsync();
+                                        this.refs.fmInput.focus();
+                                    }}
+                                    onFocus={(event) => {
+                                        this._scrollToInput(event.target)
+                                    }}
+                                    containerStyle={{ flex: 15, marginLeft: Platform.OS === 'ios' ? 22 : 18 }}
+                                    inputStyle={{ paddingLeft: Platform.OS === 'android' ? 4 : 0 }}
+                                    placeholder={translate("Email (to retrieve password)")}
+                                    keyboardType='email-address'
+                                    underlineColorAndroid={'#73aa2a'}
+                                    value={this.state.registerEmail}
+                                    onChangeText={(registerEmail) => { this.setState({ registerEmail }) }}
+                                />
+
+                            </View>
+                            {/* Facebook Messenger */}
+                            <View style={{ flexDirection: 'row', padding: 10, paddingTop: 0, }}>
+                                <Ionicons style={{ flex: 1, fontSize: 20, paddingTop: 12, textAlign: 'center', }} name='ios-chatbubbles' />
+                                <FormInput
+                                    ref='fmInput'
+                                    returnKeyType={"next"}
+                                    onSubmitEditing={(event) => {
+                                        // Keyboard.dismiss()
+                                        //this._registerAccountAsync();
+                                        this.refs.zaloInput.focus();
+                                    }}
+                                    containerStyle={{ flex: 15, marginLeft: Platform.OS === 'ios' ? 22 : 18 }}
+                                    inputStyle={{ paddingLeft: Platform.OS === 'android' ? 4 : 0 }}
+                                    placeholder={'F Messenger (thomas.ho.5492216)'}
+                                    // keyboardType='email-address'
+                                    underlineColorAndroid={'#73aa2a'}
+                                    value={this.state.registerFacebookMessanger}
+                                    onChangeText={(registerFacebookMessanger) => {
+                                        this.setState({ registerFacebookMessanger })
+                                    }}
+                                    onFocus={(event) => {
+                                        this._scrollToInput(event.target)
+
+                                    }}
+                                />
+
+                            </View>
+
+                            {/* Zalo Messenger */}
+                            <View style={{ flexDirection: 'row', padding: 10, paddingTop: 0, }}>
+                                <Ionicons style={{ flex: 1, fontSize: 22, paddingTop: 12, textAlign: 'center', color: '#fff' }} name='ios-chatbubbles' />
+                                <FormInput
+                                    ref='zaloInput'
+                                    returnKeyType={"next"}
+                                    onSubmitEditing={(event) => {
+                                        //Keyboard.dismiss()
+                                        //this._registerAccountAsync();
+                                        this.refs.whatappsInput.focus();
+                                    }}
+                                    containerStyle={{ flex: 15, marginLeft: Platform.OS === 'ios' ? 22 : 18 }}
+                                    inputStyle={{ paddingLeft: Platform.OS === 'android' ? 4 : 0 }}
+                                    placeholder={'Zalo (0963988367)'}
+                                    // keyboardType='email-address'
+                                    underlineColorAndroid={'#73aa2a'}
+                                    value={this.state.registerZalo}
+                                    onChangeText={(registerZalo) => {
+                                        this.setState({ registerZalo })
+                                    }}
+                                    onFocus={(event) => {
+                                        this._scrollToInput(event.target)
+
+                                    }}
+                                />
+
+                            </View>
+
+                            {/* Whatapps Messenger */}
+                            <View style={{ flexDirection: 'row', padding: 10, paddingTop: 0, }}>
+                                <Ionicons style={{ flex: 1, fontSize: 22, paddingTop: 12, textAlign: 'center', color: '#fff' }} name='ios-chatbubbles' />
+                                <FormInput
+                                    ref='whatappsInput'
+                                    // returnKeyType={"next"}
+                                    returnKeyType={"done"}
+                                    onSubmitEditing={(event) => {
+                                        Keyboard.dismiss()
+                                        //this._registerAccountAsync();
+                                    }}
+                                    containerStyle={{ flex: 15, marginLeft: Platform.OS === 'ios' ? 22 : 18 }}
+                                    inputStyle={{ paddingLeft: Platform.OS === 'android' ? 4 : 0 }}
+                                    placeholder={'Whatapps (+84963988367)'}
+                                    // keyboardType='email-address'
+                                    underlineColorAndroid={'#73aa2a'}
+                                    value={this.state.registerWhatapps}
+                                    onChangeText={(registerWhatapps) => {
+                                        this.setState({ registerWhatapps })
+                                    }}
+                                    onFocus={(event) => {
+                                        this._scrollToInput(event.target)
+
+                                    }}
+                                />
+
+                            </View>
                         </View>
 
-                        {/* Fulllname */}
-                        <View style={{ flexDirection: 'row', padding: 10, paddingTop: 0, }}>
-                            <Ionicons style={{ flex: 1, fontSize: 22, paddingTop: 12, textAlign: 'center', }} name='ios-person' />
-                            <FormInput
-                                ref='fullNameInput'
-                                returnKeyType={"next"}
-                                onSubmitEditing={(event) => {
-                                    this.refs.emailInput.focus();
+
+                        {/* Form Button */}
+                        <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center', marginTop: 20, }}>
+                            <Button
+                                buttonStyle={{ backgroundColor: '#9B9D9D', padding: 10, borderRadius: 5, }}
+                                raised={false}
+                                icon={{ name: 'ios-backspace', type: 'ionicon' }}
+                                title={translate("Cancel")}
+                                onPress={() => {
+                                    this.setState({
+                                        registerCellPhone: '',
+                                        //  registerPassword: '',
+                                        // registerConfirmPassword: '',
+                                        registerAccountImage: null,
+                                        registerFullName: '',
+                                        // registerConfirmCellPhone: '',
+                                        registerEmail: '',
+                                    })
+
+                                    this.props.navigation.goBack();
                                 }}
-                                onFocus={(event) => {
-                                    this._scrollToInput(event.target)
-                                }}
-                                containerStyle={{ flex: 15, marginLeft: Platform.OS === 'ios' ? 22 : 18 }}
-                                inputStyle={{ paddingLeft: Platform.OS === 'android' ? 4 : 0 }}
-                                placeholder={translate("Name")}
-                                underlineColorAndroid={'#73aa2a'}
-                                value={this.state.registerFullName}
-                                onChangeText={(registerFullName) => { this.setState({ registerFullName }) }}
                             />
 
-                        </View>
-                        {/* Email */}
-                        <View style={{ flexDirection: 'row', padding: 10, paddingTop: 0, }}>
-                            <Ionicons style={{ flex: 1, fontSize: 22, paddingTop: 12, textAlign: 'center', }} name='ios-mail' />
-                            <FormInput
-                                ref='emailInput'
-                                returnKeyType={"done"}
-                                onSubmitEditing={(event) => {
-                                    Keyboard.dismiss();
-                                    //this._updateAccountAsync();
+                            <Button
+                                buttonStyle={{ backgroundColor: '#73aa2a', padding: 10, borderRadius: 5, }}
+                                raised={false}
+                                icon={{ name: 'md-checkmark', type: 'ionicon' }}
+                                title={translate("Updates")}
+                                onPress={() => {
+                                    this._updateAccountAsync();
                                 }}
-                                onFocus={(event) => {
-                                    this._scrollToInput(event.target)
-                                }}
-                                containerStyle={{ flex: 15, marginLeft: Platform.OS === 'ios' ? 22 : 18 }}
-                                inputStyle={{ paddingLeft: Platform.OS === 'android' ? 4 : 0 }}
-                                placeholder={translate("Email (to retrieve password)")}
-                                keyboardType='email-address'
-                                underlineColorAndroid={'#73aa2a'}
-                                value={this.state.registerEmail}
-                                onChangeText={(registerEmail) => { this.setState({ registerEmail }) }}
                             />
-
                         </View>
-                    </View>
+                        {/* The view that will animate to match the keyboards height */}
+                        {/* <KeyboardSpacer /> */}
 
-
-
-                    {/* Form Button */}
-                    <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center', marginTop: 20, }}>
-                        <Button
-                            buttonStyle={{ backgroundColor: '#9B9D9D', padding: 10, borderRadius: 5, }}
-                            raised={false}
-                            icon={{ name: 'ios-backspace', type: 'ionicon' }}
-                            title={translate("Cancel")}
-                            onPress={() => {
-                                this.setState({
-                                    registerCellPhone: '',
-                                    //  registerPassword: '',
-                                    // registerConfirmPassword: '',
-                                    registerAccountImage: null,
-                                    registerFullName: '',
-                                    // registerConfirmCellPhone: '',
-                                    registerEmail: '',
-                                })
-
-                                this.props.navigation.goBack();
-                            }}
-                        />
-
-                        <Button
-                            buttonStyle={{ backgroundColor: '#73aa2a', padding: 10, borderRadius: 5, }}
-                            raised={false}
-                            icon={{ name: 'md-checkmark', type: 'ionicon' }}
-                            title={translate("Updates")}
-                            onPress={() => {
-                                this._updateAccountAsync();
-                            }}
-                        />
-                    </View>
-                    {/* The view that will animate to match the keyboards height */}
-                    {/* <KeyboardSpacer /> */}
+                    </KeyboardAvoidingView>
                 </KeyboardAwareScrollView>
-
 
 
                 {/* Popup select image library or camera */}

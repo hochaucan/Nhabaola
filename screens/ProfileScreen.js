@@ -546,6 +546,20 @@ export default class ProfileScreen extends React.Component {
             <View style={styles.container}>
                 <View style={{ flexDirection: 'row', padding: 10, backgroundColor: '#a4d227', alignItems: 'center' }}>
                     <TouchableOpacity
+                        style={{ flexDirection: 'row', alignItems: 'center' }}
+                        onPress={() => {
+                            this.props.navigation.goBack()
+                        }}>
+                        <Ionicons style={{ fontSize: 28, color: '#fff', paddingTop: 2 }} name='ios-arrow-back'></Ionicons>
+
+                        <Text style={{
+                            marginLeft: 10, color: '#fff',
+                            fontSize: responsiveFontSize(2), //justifyContent: 'center'
+                        }}>{translate("Personal page")}</Text>
+                    </TouchableOpacity>
+
+
+                    {/* <TouchableOpacity
                         style={{}}
                         onPress={() => {
                             this.props.navigation.goBack()
@@ -558,7 +572,7 @@ export default class ProfileScreen extends React.Component {
                     <Text style={{
                         marginLeft: 20, color: '#fff',
                         fontSize: responsiveFontSize(2.2), justifyContent: 'center'
-                    }}>{translate("Personal page")}</Text>
+                    }}>{translate("Personal page")}</Text> */}
                 </View>
                 <View style={{
                     //height: 80,
@@ -588,7 +602,7 @@ export default class ProfileScreen extends React.Component {
                         {this.state.profile
                             ?
                             <View style={{ flex: 4, paddingLeft: 20, marginTop: 10 }}>
-                                <Text style={styles.cardAvatarName}>{this.state.profile.FullName}</Text>
+                                <Text style={styles.cardAvatarName}>{this.state.profile.FullName.indexOf('|') > -1 ? this.state.profile.FullName.split('|')[0] : this.state.profile.FullName}</Text>
                                 <Text style={styles.cardAvatarAddress}>{translate("Registered Date")}: {funcformatDateDDMMYYYY(this.state.profile.RegistryDate)}</Text>
                                 <TouchableOpacity style={styles.cardAvatarPhoneBox}>
                                     <Ionicons style={styles.cardAvatarPhoneIcon} name='logo-whatsapp' />

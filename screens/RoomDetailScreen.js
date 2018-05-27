@@ -17,6 +17,7 @@ import {
     KeyboardAvoidingView,
     Alert,
     ActivityIndicator,
+    Linking,
 } from 'react-native';
 import { ExpoLinksView } from '@expo/samples';
 import { Constants, Facebook } from 'expo';
@@ -548,6 +549,7 @@ export default class RoomDetailScreen extends React.Component {
         }
         else {
             // this.popupLoadingIndicator.show()
+            this.popupReportNBL.dismiss()
         }
 
         try {
@@ -569,7 +571,7 @@ export default class RoomDetailScreen extends React.Component {
                 .then((responseJson) => {
 
                     if (JSON.stringify(responseJson.ErrorCode) === "0") { // Report successful
-                        this.popupReportNBL.dismiss();
+                        //this.popupReportNBL.dismiss();
 
                         if (Platform.OS === 'android') {
                             //ToastAndroid.showWithGravity('Cảm ơn bạn đã báo cáo chúng tôi!', ToastAndroid.SHORT, ToastAndroid.TOP);
@@ -599,7 +601,7 @@ export default class RoomDetailScreen extends React.Component {
                         this.setState({ modalLoading: false })
                     }
                     else {
-                        this.popupLoadingIndicator.dismiss()
+                        // this.popupLoadingIndicator.dismiss()
                     }
 
                 }).
@@ -878,7 +880,123 @@ export default class RoomDetailScreen extends React.Component {
                         </TouchableOpacity>
                     </View>
                     <View style={styles.cardAvatarTextBox}>
-                        <Text style={styles.cardAvatarName}>{this.state.roomBox.AccountName}</Text>
+                        <View
+                            style={{
+                                flexDirection: 'row',
+                                // alignContent: 'center',
+                                alignItems: 'center',
+                                // justifyContent: 'center',
+                                // paddingTop: 10
+                            }}
+                        >
+
+                            <Text style={styles.cardAvatarName}>
+                                {this.state.roomBox.AccountName.indexOf('|') > -1 ? this.state.roomBox.AccountName.split('|')[0] : this.state.roomBox.AccountName}
+
+                                {/* {
+                                this.state.roomBox.AccountName.indexOf('http://m.me/') > -1
+                                    ?
+                                    this.state.roomBox.AccountName.slice(this.state.roomBox.AccountName.indexOf('http://m.me/'),
+                                        this.state.roomBox.AccountName.indexOf('|', this.state.roomBox.AccountName.indexOf('http://m.me/')))
+
+                                    :
+                                    this.state.roomBox.AccountName
+                            } */}
+                            </Text>
+
+                            {/* Facebook Messenger */}
+                            {
+                                this.state.roomBox.AccountName.indexOf('http://m.me/') > -1 &&
+                                <TouchableOpacity
+                                    style={{
+                                        // lexDirection: 'row',
+                                        //flex: 2,
+                                        //alignItems: 'center',
+                                    }}
+                                    onPress={() => {
+                                        //const FANPAGE_ID = '1750146621679564'
+                                        //const URL_FOR_APP = `fb://page/${FANPAGE_ID}`
+                                        const URL_FOR_BROWSER = this.state.roomBox.AccountName.slice(this.state.roomBox.AccountName.indexOf('http://m.me/'),
+                                            this.state.roomBox.AccountName.indexOf('|', this.state.roomBox.AccountName.indexOf('http://m.me/')))//'http://m.me/thomas.ho.5492216'//ho.can.7'
+
+                                        Linking.canOpenURL(URL_FOR_BROWSER)
+                                            .then((supported) => {
+                                                if (!supported) {
+                                                    Linking.openURL(URL_FOR_BROWSER)
+                                                } else {
+                                                    Linking.openURL(URL_FOR_BROWSER)
+                                                }
+                                            })
+                                            .catch(err => console.error('An error occurred', err))
+                                    }}
+                                >
+                                    <Image style={{ width: 20, height: 30, marginLeft: 15, }} source={require('../assets/icons/chat_fm.png')} />
+                                </TouchableOpacity>
+                            }
+
+                            {/* Zalo Messenger */}
+                            {
+                                this.state.roomBox.AccountName.indexOf('http://zalo.me/') > -1 &&
+                                <TouchableOpacity
+                                    style={{
+                                        // lexDirection: 'row',
+                                        //flex: 2,
+                                        //alignItems: 'center',
+                                    }}
+                                    onPress={() => {
+                                        //const FANPAGE_ID = '1750146621679564'
+                                        //const URL_FOR_APP = `fb://page/${FANPAGE_ID}`
+                                        const URL_FOR_BROWSER = this.state.roomBox.AccountName.slice(this.state.roomBox.AccountName.indexOf('http://zalo.me/'),
+                                            this.state.roomBox.AccountName.indexOf('|', this.state.roomBox.AccountName.indexOf('http://zalo.me/')))//'http://m.me/thomas.ho.5492216'//ho.can.7'
+
+                                        Linking.canOpenURL(URL_FOR_BROWSER)
+                                            .then((supported) => {
+                                                if (!supported) {
+                                                    Linking.openURL(URL_FOR_BROWSER)
+                                                } else {
+                                                    Linking.openURL(URL_FOR_BROWSER)
+                                                }
+                                            })
+                                            .catch(err => console.error('An error occurred', err))
+                                    }}
+                                >
+                                    <Image style={{ width: 18, height: 28, marginLeft: 20, }} source={require('../assets/icons/chat_zalo.png')} />
+                                </TouchableOpacity>
+                            }
+
+                            {/* Whatapps Messenger */}
+                            {
+                                this.state.roomBox.AccountName.indexOf('https://api.whatsapp.com/') > -1 &&
+                                <TouchableOpacity
+                                    style={{
+                                        // lexDirection: 'row',
+                                        //flex: 2,
+                                        //alignItems: 'center',
+                                    }}
+                                    onPress={() => {
+                                        //const FANPAGE_ID = '1750146621679564'
+                                        //const URL_FOR_APP = `fb://page/${FANPAGE_ID}`
+                                        const URL_FOR_BROWSER = this.state.roomBox.AccountName.slice(this.state.roomBox.AccountName.indexOf('https://api.whatsapp.com/'),
+                                            this.state.roomBox.AccountName.indexOf('|', this.state.roomBox.AccountName.indexOf('https://api.whatsapp.com/')))//'http://m.me/thomas.ho.5492216'//ho.can.7'
+
+                                        Linking.canOpenURL(URL_FOR_BROWSER)
+                                            .then((supported) => {
+                                                if (!supported) {
+                                                    Linking.openURL(URL_FOR_BROWSER)
+                                                } else {
+                                                    Linking.openURL(URL_FOR_BROWSER)
+                                                }
+                                            })
+                                            .catch(err => console.error('An error occurred', err))
+                                    }}
+                                >
+                                    <Image style={{ width: 20, height: 25, marginLeft: 20, }} source={require('../assets/icons/chat_whatapps.png')} />
+                                </TouchableOpacity>
+                            }
+
+
+
+                        </View>
                         <TouchableOpacity style={styles.cardAvatarPhoneBox}
                             onPress={() => {
                                 Communications.phonecall(
@@ -899,10 +1017,11 @@ export default class RoomDetailScreen extends React.Component {
                         </TouchableOpacity>
                     </View>
 
+                    {/* highlight */}
                     {this.state.roomBox.IsHighlight &&
 
                         <Ionicons style={{
-                            position: 'absolute', right: 15, top: 30, zIndex: 10,
+                            position: 'absolute', right: 15, top: 50, zIndex: 10,
                             fontSize: responsiveFontSize(6),
                             color: '#73aa2a'
                         }} name="ios-flame" />
@@ -1252,7 +1371,7 @@ export default class RoomDetailScreen extends React.Component {
 
                                         })
 
-                                        const _contactName = this.state.roomBox.ContactPhone.indexOf('|') > -1 ? this.state.roomBox.ContactPhone.split('|')[1] : this.state.roomBox.AccountName
+                                        const _contactName = this.state.roomBox.ContactPhone.indexOf('|') > -1 ? this.state.roomBox.ContactPhone.split('|')[1] : this.state.roomBox.AccountName.indexOf('|') > -1 ? this.state.roomBox.AccountName.split('|')[0] : this.state.roomBox.AccountName
                                         const _contactPhone = this.state.roomBox.ContactPhone.indexOf('|') > -1 ? this.state.roomBox.ContactPhone.split('|')[0] : this.state.roomBox.ContactPhone
                                         const _description = this.state.roomBox.Description.indexOf("###") > -1 ? (this.state.isVietnamease ? this.state.roomBox.Description.split('###')[0] : this.state.isEnglish ? this.state.roomBox.Description.split('###')[1] : this.state.roomBox.Description.split('###')[2]) : this.state.roomBox.Description
 

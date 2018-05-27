@@ -22,7 +22,9 @@ import {
   AsyncStorage,
   Keyboard,
   Easing,
-  TouchableHighlight
+  TouchableHighlight,
+  Linking,
+
 } from 'react-native';
 import { WebBrowser, ImagePicker, Facebook, Google, Notifications, Permissions, BarCodeScanner } from 'expo';
 import { MonoText } from '../components/StyledText';
@@ -1322,6 +1324,7 @@ export default class HomeScreen extends React.Component {
     }
     else {
       //this.popupLoadingIndicator.show()
+      this.popupReportNBL.dismiss()
     }
 
 
@@ -1345,7 +1348,7 @@ export default class HomeScreen extends React.Component {
         .then((responseJson) => {
           //alert(_reportTypeId)
           if (JSON.stringify(responseJson.ErrorCode) === "0") { // Report successful
-            this.popupReportNBL.dismiss();
+            //this.popupReportNBL.dismiss();
 
             if (Platform.OS === 'android') {
               //ToastAndroid.showWithGravity('Cảm ơn bạn đã báo cáo chúng tôi!', ToastAndroid.SHORT, ToastAndroid.TOP);
@@ -1377,7 +1380,7 @@ export default class HomeScreen extends React.Component {
             this.setState({ modalLoading: false })
           }
           else {
-            this.popupLoadingIndicator.dismiss()
+            // this.popupLoadingIndicator.dismiss()
           }
 
         }).
@@ -1864,10 +1867,10 @@ export default class HomeScreen extends React.Component {
               padding: 15,
               opacity: 0.9,
               borderRadius: 15,
-              shadowColor: '#000',
-              shadowOffset: { width: 0, height: 2 },
-              shadowOpacity: 0.2,
-              shadowRadius: 2,
+              // shadowColor: '#000',
+              // shadowOffset: { width: 0, height: 2 },
+              // shadowOpacity: 0.2,
+              // shadowRadius: 2,
             }}
             animating={true}
             size="large"
@@ -1968,7 +1971,117 @@ export default class HomeScreen extends React.Component {
                   </TouchableOpacity>
                 </View>
                 <View style={styles.cardAvatarTextBox}>
-                  <Text style={styles.cardAvatarName}>{item.AccountName}</Text>
+                  <View
+                    style={{
+                      flexDirection: 'row',
+                      // alignContent: 'center',
+                      alignItems: 'center',
+                      // justifyContent: 'center',
+                      // paddingTop: 10
+                    }}
+                  >
+                    <Text style={styles.cardAvatarName}>{item.AccountName.indexOf('|') > -1
+                      ?
+                      item.AccountName.split('|')[0]
+                      :
+                      item.AccountName
+                    }</Text>
+
+                    {/* Facebook Messenger */}
+                    {
+                      item.AccountName.indexOf('http://m.me/') > -1 &&
+                      <TouchableOpacity
+                        style={{
+                          // lexDirection: 'row',
+                          //flex: 2,
+                          //alignItems: 'center',
+                        }}
+                        onPress={() => {
+                          //const FANPAGE_ID = '1750146621679564'
+                          //const URL_FOR_APP = `fb://page/${FANPAGE_ID}`
+                          const URL_FOR_BROWSER = item.AccountName.slice(item.AccountName.indexOf('http://m.me/'),
+                            item.AccountName.indexOf('|', item.AccountName.indexOf('http://m.me/')))//'http://m.me/thomas.ho.5492216'//ho.can.7'
+
+                          Linking.canOpenURL(URL_FOR_BROWSER)
+                            .then((supported) => {
+                              if (!supported) {
+                                Linking.openURL(URL_FOR_BROWSER)
+                              } else {
+                                Linking.openURL(URL_FOR_BROWSER)
+                              }
+                            })
+                            .catch(err => console.error('An error occurred', err))
+                        }}
+                      >
+                        <Image style={{ width: 18, height: 28, marginLeft: 10, }} source={require('../assets/icons/chat_fm.png')} />
+                      </TouchableOpacity>
+                    }
+
+                    {/* Zalo Messenger */}
+                    {
+                      item.AccountName.indexOf('http://zalo.me/') > -1 &&
+                      <TouchableOpacity
+                        style={{
+                          // lexDirection: 'row',
+                          //flex: 2,
+                          //alignItems: 'center',
+                        }}
+                        onPress={() => {
+                          //const FANPAGE_ID = '1750146621679564'
+                          //const URL_FOR_APP = `fb://page/${FANPAGE_ID}`
+                          const URL_FOR_BROWSER = item.AccountName.slice(item.AccountName.indexOf('http://zalo.me/'),
+                            item.AccountName.indexOf('|', item.AccountName.indexOf('http://zalo.me/')))//'http://m.me/thomas.ho.5492216'//ho.can.7'
+
+                          Linking.canOpenURL(URL_FOR_BROWSER)
+                            .then((supported) => {
+                              if (!supported) {
+                                Linking.openURL(URL_FOR_BROWSER)
+                              } else {
+                                Linking.openURL(URL_FOR_BROWSER)
+                              }
+                            })
+                            .catch(err => console.error('An error occurred', err))
+                        }}
+                      >
+                        <Image style={{ width: 18, height: 28, marginLeft: 10, }} source={require('../assets/icons/chat_zalo.png')} />
+                      </TouchableOpacity>
+                    }
+
+                    {/* Whatapps Messenger */}
+                    {
+                      item.AccountName.indexOf('https://api.whatsapp.com/') > -1 &&
+                      <TouchableOpacity
+                        style={{
+                          // lexDirection: 'row',
+                          //flex: 2,
+                          //alignItems: 'center',
+                        }}
+                        onPress={() => {
+                          //const FANPAGE_ID = '1750146621679564'
+                          //const URL_FOR_APP = `fb://page/${FANPAGE_ID}`
+                          const URL_FOR_BROWSER = item.AccountName.slice(item.AccountName.indexOf('https://api.whatsapp.com/'),
+                            item.AccountName.indexOf('|', item.AccountName.indexOf('https://api.whatsapp.com/')))//'http://m.me/thomas.ho.5492216'//ho.can.7'
+
+                          Linking.canOpenURL(URL_FOR_BROWSER)
+                            .then((supported) => {
+                              if (!supported) {
+                                Linking.openURL(URL_FOR_BROWSER)
+                              } else {
+                                Linking.openURL(URL_FOR_BROWSER)
+                              }
+                            })
+                            .catch(err => console.error('An error occurred', err))
+                        }}
+                      >
+                        <Image style={{ width: 18, height: 28, marginLeft: 10, }} source={require('../assets/icons/chat_whatapps.png')} />
+                      </TouchableOpacity>
+                    }
+
+
+                    {/* <Ionicons style={{ marginLeft: 5, marginRight: 5, color: '#73aa2a' }} name='ios-arrow-forward' />
+                    <Text style={{ fontSize: responsiveFontSize(1.8), color: '#6c6d6d' }}>Chat ngay</Text> */}
+
+                  </View>
                   <TouchableOpacity style={styles.cardAvatarPhoneBox}
                     onPress={() => {
                       Communications.phonecall(
@@ -2017,25 +2130,6 @@ export default class HomeScreen extends React.Component {
                 }}
                 source={require('../images/app-icon.png')}
               />
-
-              {/* Posting Date */}
-              {/* <View style={{
-                flexDirection: 'row',
-                marginLeft: 5,
-                marginBottom: 5,
-                //  alignItems: 'center',
-              }}
-              >
-                <Ionicons style={{
-                  color: '#7E7E7E',
-                  fontSize: responsiveFontSize(1.8),
-                }} name='md-time' />
-                <Text style={{
-                  color: '#7E7E7E',
-                  fontSize: responsiveFontSize(1.4),//13,
-                  paddingLeft: 2,
-                }}>: {item.UpdatedDate}</Text>
-              </View> */}
 
               <TouchableWithoutFeedback
                 style={{
@@ -2270,7 +2364,11 @@ export default class HomeScreen extends React.Component {
                         }
                       })
 
-                      const _contactName = item.ContactPhone.indexOf('|') > -1 ? item.ContactPhone.split('|')[1] : item.AccountName
+                      const _contactName = item.ContactPhone.indexOf('|') > -1 ? item.ContactPhone.split('|')[1] : item.AccountName.indexOf('|') > -1
+                        ?
+                        item.AccountName.split('|')[0]
+                        :
+                        item.AccountName
                       const _contactPhone = item.ContactPhone.indexOf('|') > -1 ? item.ContactPhone.split('|')[0] : item.ContactPhone
                       const _description = item.Description.indexOf('###') > -1 ? (this.state.isVietnamease ? item.Description.split('###')[0] : this.state.isEnglish ? item.Description.split('###')[1] : item.Description.split('###')[2]) : item.Description
 
