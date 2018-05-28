@@ -1395,21 +1395,42 @@ export default class SearchScreen extends React.Component {
                             >
                                 <View style={{
                                     justifyContent: 'center', alignItems: 'center',
+                                    backgroundColor: item.IsHighlight ? 'red' : '#5f8c23',
+                                    borderRadius: 6,//Platform.OS == 'ios' ? 0 : 5,
+                                    borderWidth: 1,
+                                    borderColor: item.IsHighlight ? '#fff' : '#a4d227',
+
+                                    //opacity: 0.8,
+                                    zIndex: item.IsHighlight ? 30 : 10,
+                                    shadowColor: '#000',
+                                    shadowOffset: { width: 0, height: 2 },
+                                    shadowOpacity: 0.2,
+                                    shadowRadius: 2,
+
                                 }}>
                                     <Text style={{
-                                        backgroundColor: item.IsHighlight ? 'red' : '#5f8c23',
+                                        // backgroundColor: item.IsHighlight ? 'red' : '#5f8c23',
                                         color: '#fff',
                                         padding: 5,
                                         fontSize: responsiveFontSize(1.2),
-                                        borderRadius: Platform.OS == 'ios' ? 0 : 5,
-                                        borderWidth: 1,
-                                        borderColor: item.IsHighlight ? '#fff' : '#a4d227',
-                                        //opacity: 0.8,
-                                        zIndex: item.IsHighlight ? 30 : 10
+                                        // borderRadius: Platform.OS == 'ios' ? 0 : 5,
+                                        // borderWidth: 1,
+                                        // borderColor: item.IsHighlight ? '#fff' : '#a4d227',
+                                        // //opacity: 0.8,
+                                        // zIndex: item.IsHighlight ? 30 : 10
 
                                     }}>{convertAmountToWording(item.Price)}</Text>
 
-
+                                    {/* {
+                                        this.state.roomCategory.map((y, i) => {
+                                            return (
+                                                y.ID == item.CategoryID &&
+                                                <Text
+                                                    style={{ flex: 2, fontSize: responsiveFontSize(0.8), color: '#fff', }}
+                                                    key={i}>{this.state.isVietnamease ? y.CatName : this.state.isEnglish ? y.CatImg.split('|')[0] : y.CatImg.split('|')[1]}</Text>
+                                            )
+                                        })
+                                    } */}
                                     {/* {item.IsHighlight &&
                                         <Image
                                             source={require('../assets/images/nbl-house_icon.png')}
@@ -1573,6 +1594,10 @@ export default class SearchScreen extends React.Component {
                             elevation: 2,
                             opacity: 0.9,
                             paddingTop: 0,
+                            shadowColor: '#000',
+                            shadowOffset: { width: 0, height: 2 },
+                            shadowOpacity: 0.2,
+                            shadowRadius: 2,
                         }}
                     >
                         <TouchableOpacity
