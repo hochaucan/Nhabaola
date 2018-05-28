@@ -4118,7 +4118,11 @@ export default class HomeScreen extends React.Component {
             opacity: 0.9,
             padding: 5,
             paddingTop: Platform.OS == 'ios' ? 20 : 0,
-            flexDirection: 'row'
+            flexDirection: 'row',
+            shadowColor: '#000',
+            shadowOffset: { width: 0, height: 2 },
+            shadowOpacity: 0.2,
+            shadowRadius: 2,
           }}
           showCancel={true}
           // onClose={data => {
