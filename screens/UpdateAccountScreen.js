@@ -435,8 +435,9 @@ export default class UpdateAccountScreen extends React.Component {
 
                             </View>
                             {/* Facebook Messenger */}
-                            <View style={{ flexDirection: 'row', padding: 10, paddingTop: 0, }}>
-                                <Ionicons style={{ flex: 1, fontSize: 20, paddingTop: 12, textAlign: 'center', }} name='ios-chatbubbles' />
+                            <View style={{ flexDirection: 'row', padding: 10, paddingTop: 0, alignItems: 'center' }}>
+                                {/* <Ionicons style={{ flex: 1, fontSize: 20, paddingTop: 12, textAlign: 'center', }} name='ios-chatbubbles' /> */}
+                                <Image style={{ flex: 1, paddingTop: 12, width: 25, height: 25 }} source={require('../assets/icons/chat_fm.png')} />
                                 <FormInput
                                     ref='fmInput'
                                     returnKeyType={"next"}
@@ -463,8 +464,9 @@ export default class UpdateAccountScreen extends React.Component {
                             </View>
 
                             {/* Zalo Messenger */}
-                            <View style={{ flexDirection: 'row', padding: 10, paddingTop: 0, }}>
-                                <Ionicons style={{ flex: 1, fontSize: 22, paddingTop: 12, textAlign: 'center', color: '#fff' }} name='ios-chatbubbles' />
+                            <View style={{ flexDirection: 'row', padding: 10, paddingTop: 0, alignItems: 'center' }}>
+                                {/* <Ionicons style={{ flex: 1, fontSize: 22, paddingTop: 12, textAlign: 'center', color: '#fff' }} name='ios-chatbubbles' /> */}
+                                <Image style={{ flex: 1, paddingTop: 12, width: 25, height: 25 }} source={require('../assets/icons/chat_zalo.png')} />
                                 <FormInput
                                     ref='zaloInput'
                                     returnKeyType={"next"}
@@ -491,8 +493,9 @@ export default class UpdateAccountScreen extends React.Component {
                             </View>
 
                             {/* Whatapps Messenger */}
-                            <View style={{ flexDirection: 'row', padding: 10, paddingTop: 0, }}>
-                                <Ionicons style={{ flex: 1, fontSize: 22, paddingTop: 12, textAlign: 'center', color: '#fff' }} name='ios-chatbubbles' />
+                            <View style={{ flexDirection: 'row', padding: 10, paddingTop: 0, alignItems: 'center' }}>
+                                {/* <Ionicons style={{ flex: 1, fontSize: 22, paddingTop: 12, textAlign: 'center', color: '#fff' }} name='ios-chatbubbles' /> */}
+                                <Image style={{ flex: 1, paddingTop: 12, width: 30, height: 22 }} source={require('../assets/icons/chat_whatapps.png')} />
                                 <FormInput
                                     ref='whatappsInput'
                                     // returnKeyType={"next"}
