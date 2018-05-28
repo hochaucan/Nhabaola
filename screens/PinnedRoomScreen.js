@@ -220,6 +220,72 @@ export default class PinnedRoomScreen extends React.Component {
 
     }
 
+
+    _deletePinnedByUserAsync = async (pinnedID) => {
+
+        // alert(pinnedID + '  '+ this.state.profile.ID)
+        // return;
+
+        this.popupLoadingIndicator.show();
+
+        try {
+            await fetch("http://nhabaola.vn/api/RoomBox/FO_RoomBox_Pinned_Del", {
+                method: 'POST',
+                headers: {
+                    Accept: 'application/json',
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+
+                    "ID": pinnedID,
+                    "CreatedBy": this.state.profile.ID,
+                    "UpdatedBy": this.state.profile.UpdatedBy,
+                }),
+            })
+                .then((response) => response.json())
+                .then((responseJson) => {
+
+                    this.popupLoadingIndicator.dismiss();
+
+                    if (JSON.stringify(responseJson.ErrorCode) === "0") { // Delete successful
+                        if (Platform.OS === 'android') {
+                            ToastAndroid.showWithGravity(translate("Delete successfully"), ToastAndroid.SHORT, ToastAndroid.TOP);
+                        }
+                        else {
+                            Alert.alert(translate("Delete successfully"));
+                        }
+
+                        this._getRoomBoxByUserAsync(true);
+
+
+                    } else { // Delete Error
+                        if (Platform.OS === 'android') {
+                            ToastAndroid.showWithGravity(translate("Error") + JSON.stringify(responseJson) + translate("Please contact Admin in the Help menu"), ToastAndroid.SHORT, ToastAndroid.TOP);
+                        }
+                        else {
+                            Alert.alert(translate("Notice"), translate("Error") + JSON.stringify(responseJson) + translate("Please contact Admin in the Help menu"));
+                        }
+                    }
+
+                    // responseJson.obj.map((y) => {
+                    //     roomBox.push(y);
+
+                    // })
+                    // this.setState({ refresh: false })
+
+                    // // End Flatlist
+                    // if (JSON.stringify(responseJson.obj.length) == '0') {
+                    //     this.setState({ flatListIsEnd: true, })
+                    // }
+                }).
+                catch((error) => { console.log(error) });
+        } catch (error) {
+            console.log(error)
+        }
+
+    }
+
+
     _refreshRoomBox() {
         this._getRoomBoxByUserAsync(true);
     }
@@ -761,7 +827,7 @@ export default class PinnedRoomScreen extends React.Component {
                                                     },
                                                     {
                                                         text: translate("Agree"), onPress: () => {
-                                                            //this._deleteRoomBoxAsync(item);
+                                                           this._deletePinnedByUserAsync(item.ID)
                                                         }
                                                     },
                                                 ]
