@@ -1763,6 +1763,7 @@ export default class HomeScreen extends React.Component {
         }
         else {
           Alert.alert(translate("Notice"), translate("QR is invalid"));
+          // this.dropdown.alertWithType('success', translate("Notice"), translate("QR is invalid"));
         }
         return;
       }
@@ -1791,18 +1792,19 @@ export default class HomeScreen extends React.Component {
           .then((responseJson) => {
 
             //alert(JSON.stringify(responseJson))
+            // this.popupQRPay.dismiss();
 
             if (JSON.stringify(responseJson.ErrorCode) === "22") {
               //isScanQR = ''
               if (Platform.OS === 'android') {
                 ToastAndroid.showWithGravity(translate("Top up successfully") + '\n'
                   + JSON.stringify(responseJson.obj.Description) + '\n'
-                  + translate("Wallet available") + ': ' + JSON.stringify(responseJson.obj.CurrentAmount), ToastAndroid.SHORT, ToastAndroid.TOP);
+                  + translate("Wallet available") + ': ' + numberWithCommas(JSON.stringify(responseJson.obj.CurrentAmount)) + ' đ', ToastAndroid.LONG, ToastAndroid.TOP);
               }
               else {
                 Alert.alert(translate("Notice"), translate("Top up successfully") + '\n'
                   + JSON.stringify(responseJson.obj.Description) + '\n'
-                  + translate("Wallet available") + ': ' + JSON.stringify(responseJson.obj.CurrentAmount)
+                  + translate("Wallet available") + ': ' + numberWithCommas(JSON.stringify(responseJson.obj.CurrentAmount)) + ' đ'
                 );
               }
 
@@ -1815,6 +1817,7 @@ export default class HomeScreen extends React.Component {
               }
               else {
                 Alert.alert(translate("Notice"), translate("QR has been used"));
+                //this.dropdown.alertWithType('success', translate("Notice"), translate("QR has been used"));
               }
             }
             else {
@@ -1824,14 +1827,16 @@ export default class HomeScreen extends React.Component {
               }
               else {
                 Alert.alert(translate("Notice"), translate("Error") + JSON.stringify(responseJson) + translate("Please contact Admin in the Help menu"));
+                // this.dropdown.alertWithType('success', translate("Notice"), translate("Error") + JSON.stringify(responseJson) + translate("Please contact Admin in the Help menu"));
               }
             }
 
             // this._saveStorageAsync('FO_Category_GetAllData', JSON.stringify(responseJson.obj))
 
             this.popupQRPay.dismiss();
-            //this.setState({
 
+            // this.setState({
+            //   isEnableQR: false
             // })
           }).
           catch((error) => { console.log(error) });
@@ -1843,8 +1848,10 @@ export default class HomeScreen extends React.Component {
       //isScanQR = await false
     }
 
-
-
+    await this.setState({
+      isEnableQR: false
+    })
+    
   };
 
 
@@ -2676,7 +2683,25 @@ export default class HomeScreen extends React.Component {
               justifyContent: 'center',
             }}
             onPress={() => {
-              this.popupSelectedImage.show()
+              if (this.state.profile === null) {
+                if (Platform.OS == 'ios') {
+                  Alert.alert(translate("Notice"), translate("Please login"))
+                } else {
+                  ToastAndroid.showWithGravity(translate("Please login"), ToastAndroid.SHORT, ToastAndroid.TOP)
+                }
+              } else {
+
+                // this.setState({ isEnableQR: true })
+                this.popupSelectedImage.show()
+
+                // this.props.navigation.navigate("QRScreen", {
+                //   onRefreshScreen: this.onRefreshScreen,
+                //   _getWalletAsync: this._getWalletAsync
+                // });
+
+              }
+
+
             }}
           >
             <Ionicons style={{
@@ -4000,9 +4025,10 @@ export default class HomeScreen extends React.Component {
             <TouchableOpacity
               style={{ flex: 2, justifyContent: 'center', alignContent: 'center', }}
               onPress={async () => {
-                this.popupSelectedImage.dismiss();
+                await this.setState({ isEnableQR: true })
+                await this.popupSelectedImage.dismiss();
                 this.popupQRPay.show()
-                //this._pickImageAsync('camera', this.state.selectedImages)
+                // this.setState({ modalQRScan: true })
               }}
             >
 
@@ -4017,64 +4043,63 @@ export default class HomeScreen extends React.Component {
         </PopupDialog>
 
 
-
         {/* Popup QR Pay */}
-        {/* {this.state.isEnableQR && */}
-        <PopupDialog
-          ref={(popupQRPay) => { this.popupQRPay = popupQRPay; }}
-          dialogAnimation={new ScaleAnimation()}
-          dialogStyle={{
-            marginBottom: 10,
-            width: responsiveWidth(90),
-            height: responsiveHeight(80),
-            justifyContent: 'center', padding: 20,
-          }}
-          //dialogTitle={<DialogTitle title={translate("QR Top Up")} />}
-          dismissOnTouchOutside={false}
-          // onDismissed={() => { this.setState({ isScanQR: false }) }}
-          // actions={<DialogButton text={translate("Cancel")} align="center" onPress={() => this.popupQRPay.dismiss()} />}
-          onShown={() => { isScanQR = true }}
-        >
-          <View style={{
-            flex: 1,
-            //flexDirection: 'row',
-            justifyContent: 'center', alignContent: 'center'
-          }}>
-
-            <Text style={{
-              textAlign: 'center', marginTop: 5,
-              marginBottom: 10, color: '#73aa2a',
-              textAlign: 'center',
-              fontSize: responsiveFontSize(2.2)
-            }}>{translate("QR Top Up")}</Text>
-            <BarCodeScanner
-              onBarCodeRead={
-                this._handleBarCodeRead
-              }
-              style={{
-                width: responsiveWidth(80),
-                height: responsiveHeight(60)
-              }}
-            />
-            <TouchableOpacity
-              onPress={() => {
-                this.popupQRPay.dismiss()
-              }}
-            >
+        {this.state.isEnableQR &&
+          <PopupDialog
+            ref={(popupQRPay) => { this.popupQRPay = popupQRPay; }}
+            dialogAnimation={new ScaleAnimation()}
+            dialogStyle={{
+              marginBottom: 10,
+              width: responsiveWidth(90),
+              height: responsiveHeight(80),
+              justifyContent: 'center', padding: 20,
+            }}
+            //dialogTitle={<DialogTitle title={translate("QR Top Up")} />}
+            dismissOnTouchOutside={false}
+            // onDismissed={() => { this.setState({ isScanQR: false }) }}
+            // actions={<DialogButton text={translate("Cancel")} align="center" onPress={() => this.popupQRPay.dismiss()} />}
+            onShown={() => { isScanQR = true }}
+          >
+            <View style={{
+              flex: 1,
+              //flexDirection: 'row',
+              justifyContent: 'center', alignContent: 'center'
+            }}>
 
               <Text style={{
+                textAlign: 'center', marginTop: 5,
+                marginBottom: 10, color: '#73aa2a',
                 textAlign: 'center',
-                paddingTop: 15,
-                //marginBottom: 10,
-                color: '#6c6d6d',
-                textAlign: 'center',
-                fontSize: responsiveFontSize(2),
-              }}>{translate("Cancel")}</Text>
-            </TouchableOpacity>
+                fontSize: responsiveFontSize(2.2)
+              }}>{translate("QR Top Up")}</Text>
+              <BarCodeScanner
+                onBarCodeRead={
+                  this._handleBarCodeRead
+                }
+                style={{
+                  width: responsiveWidth(80),
+                  height: responsiveHeight(60)
+                }}
+              />
+              <TouchableOpacity
+                onPress={() => {
+                  this.popupQRPay.dismiss()
+                }}
+              >
 
-          </View>
-        </PopupDialog>
-        {/* } */}
+                <Text style={{
+                  textAlign: 'center',
+                  padding: 20,
+                  //marginBottom: 10,
+                  color: '#6c6d6d',
+                  textAlign: 'center',
+                  fontSize: responsiveFontSize(2.2),
+                }}>{translate("Cancel")}</Text>
+              </TouchableOpacity>
+
+            </View>
+          </PopupDialog>
+        }
 
 
         {/* Popup Loading Indicator */}

@@ -76,6 +76,25 @@ if (Platform.OS === 'android') {
                             Alert.alert('Thông báo', 'Bình luận thành công!');
                         }
 
+
+
+* CHECK LOGIN
+  if (this.state.profile === null) {
+                        if (Platform.OS == 'ios') {
+                          Alert.alert(translate("Notice"), translate("Please login"))
+                        } else {
+                          ToastAndroid.showWithGravity(translate("Please login"), ToastAndroid.SHORT, ToastAndroid.TOP)
+                        }
+                      } else {
+                      
+
+
+                      }
+
+
+    this.dropdown.alertWithType('success', translate("Notice"), translate("QR has been used"));
+    
+
 * INFOPLIST IOS
 https://developer.apple.com/library/content/qa/qa1937/_index.html
 
