@@ -1851,7 +1851,7 @@ export default class HomeScreen extends React.Component {
     await this.setState({
       isEnableQR: false
     })
-    
+
   };
 
 
@@ -4066,6 +4066,8 @@ export default class HomeScreen extends React.Component {
               justifyContent: 'center', alignContent: 'center'
             }}>
 
+
+
               <Text style={{
                 textAlign: 'center', marginTop: 5,
                 marginBottom: 10, color: '#73aa2a',
@@ -4078,12 +4080,25 @@ export default class HomeScreen extends React.Component {
                 }
                 style={{
                   width: responsiveWidth(80),
-                  height: responsiveHeight(60)
+                  height: responsiveHeight(60),
+                  alignItems: 'center',
+                  alignContent: 'center',
+                  justifyContent: 'center',
                 }}
-              />
+              >
+                <Ionicons style={{
+                  fontSize: responsiveFontSize(25),
+                  zIndex: 25,
+                  textAlign: 'center',
+                  color: '#fff',
+                  opacity: 0.8,
+                }} name='ios-qr-scanner' />
+
+              </BarCodeScanner>
               <TouchableOpacity
                 onPress={() => {
                   this.popupQRPay.dismiss()
+                  this.setState({ isEnableQR: false })
                 }}
               >
 

@@ -116,6 +116,7 @@ export default class ProfileScreen extends React.Component {
             newPassword: '',
             confirmNewPassword: '',
             modalLoading: false,
+            isEnableQR: false,
         }
 
 
@@ -459,6 +460,7 @@ export default class ProfileScreen extends React.Component {
                 }
                 else {
                     Alert.alert(translate("Notice"), translate("QR is invalid"));
+                    // this.dropdown.alertWithType('success', translate("Notice"), translate("QR is invalid"));
                 }
                 return;
             }
@@ -487,20 +489,23 @@ export default class ProfileScreen extends React.Component {
                     .then((responseJson) => {
 
                         //alert(JSON.stringify(responseJson))
+                        // this.popupQRPay.dismiss();
 
                         if (JSON.stringify(responseJson.ErrorCode) === "22") {
                             //isScanQR = ''
                             if (Platform.OS === 'android') {
                                 ToastAndroid.showWithGravity(translate("Top up successfully") + '\n'
                                     + JSON.stringify(responseJson.obj.Description) + '\n'
-                                    + translate("Wallet available") + ': ' + JSON.stringify(responseJson.obj.CurrentAmount), ToastAndroid.SHORT, ToastAndroid.TOP);
+                                    + translate("Wallet available") + ': ' + numberWithCommas(JSON.stringify(responseJson.obj.CurrentAmount)) + ' đ', ToastAndroid.LONG, ToastAndroid.TOP);
                             }
                             else {
                                 Alert.alert(translate("Notice"), translate("Top up successfully") + '\n'
                                     + JSON.stringify(responseJson.obj.Description) + '\n'
-                                    + translate("Wallet available") + ': ' + JSON.stringify(responseJson.obj.CurrentAmount)
+                                    + translate("Wallet available") + ': ' + numberWithCommas(JSON.stringify(responseJson.obj.CurrentAmount)) + ' đ'
                                 );
                             }
+
+                            this._getWalletAsync()
                         }
                         else if (JSON.stringify(responseJson.ErrorCode) === "21") {
                             // isScanQR = ''
@@ -509,6 +514,7 @@ export default class ProfileScreen extends React.Component {
                             }
                             else {
                                 Alert.alert(translate("Notice"), translate("QR has been used"));
+                                //this.dropdown.alertWithType('success', translate("Notice"), translate("QR has been used"));
                             }
                         }
                         else {
@@ -518,14 +524,16 @@ export default class ProfileScreen extends React.Component {
                             }
                             else {
                                 Alert.alert(translate("Notice"), translate("Error") + JSON.stringify(responseJson) + translate("Please contact Admin in the Help menu"));
+                                // this.dropdown.alertWithType('success', translate("Notice"), translate("Error") + JSON.stringify(responseJson) + translate("Please contact Admin in the Help menu"));
                             }
                         }
 
                         // this._saveStorageAsync('FO_Category_GetAllData', JSON.stringify(responseJson.obj))
 
                         this.popupQRPay.dismiss();
-                        //this.setState({
 
+                        // this.setState({
+                        //   isEnableQR: false
                         // })
                     }).
                     catch((error) => { console.log(error) });
@@ -537,9 +545,12 @@ export default class ProfileScreen extends React.Component {
             //isScanQR = await false
         }
 
-
+        await this.setState({
+            isEnableQR: false
+        })
 
     };
+
 
     render() {
         return (
@@ -666,9 +677,9 @@ export default class ProfileScreen extends React.Component {
                     </TouchableOpacity>
                     <TouchableOpacity style={styles.profileMenuItem}
                         onPress={() => {
-                            if (Platform.OS == 'ios') {
-                                this.popupSelectedImage.show()
-                            }
+                            // if (Platform.OS == 'ios') {
+                            this.popupSelectedImage.show()
+                            // }
                         }}
                     >
                         <Ionicons style={styles.profileMenuItemText} name='logo-usd'>
@@ -1394,7 +1405,8 @@ export default class ProfileScreen extends React.Component {
                         <TouchableOpacity
                             style={{ flex: 2, justifyContent: 'center', alignContent: 'center', }}
                             onPress={async () => {
-                                this.popupSelectedImage.dismiss();
+                                await this.setState({ isEnableQR: true })
+                                await this.popupSelectedImage.dismiss();
                                 this.popupQRPay.show()
                                 //this._pickImageAsync('camera', this.state.selectedImages)
                             }}
@@ -1413,7 +1425,8 @@ export default class ProfileScreen extends React.Component {
 
 
                 {/* Popup QR Pay */}
-                {Platform.OS == 'ios' &&
+                {
+                    this.state.isEnableQR &&
                     <PopupDialog
                         ref={(popupQRPay) => { this.popupQRPay = popupQRPay; }}
                         dialogAnimation={new ScaleAnimation()}
@@ -1435,6 +1448,8 @@ export default class ProfileScreen extends React.Component {
                             justifyContent: 'center', alignContent: 'center'
                         }}>
 
+
+
                             <Text style={{
                                 textAlign: 'center', marginTop: 5,
                                 marginBottom: 10, color: '#73aa2a',
@@ -1447,27 +1462,41 @@ export default class ProfileScreen extends React.Component {
                                 }
                                 style={{
                                     width: responsiveWidth(80),
-                                    height: responsiveHeight(60)
+                                    height: responsiveHeight(60),
+                                    alignItems: 'center',
+                                    alignContent: 'center',
+                                    justifyContent: 'center',
                                 }}
-                            />
+                            >
+                                <Ionicons style={{
+                                    fontSize: responsiveFontSize(25),
+                                    zIndex: 25,
+                                    textAlign: 'center',
+                                    color: '#fff',
+                                    opacity: 0.8,
+                                }} name='ios-qr-scanner' />
+
+                            </BarCodeScanner>
                             <TouchableOpacity
                                 onPress={() => {
                                     this.popupQRPay.dismiss()
+                                    this.setState({ isEnableQR: false })
                                 }}
                             >
 
                                 <Text style={{
                                     textAlign: 'center',
-                                    paddingTop: 15,
+                                    padding: 20,
                                     //marginBottom: 10,
                                     color: '#6c6d6d',
                                     textAlign: 'center',
-                                    fontSize: responsiveFontSize(2),
+                                    fontSize: responsiveFontSize(2.2),
                                 }}>{translate("Cancel")}</Text>
                             </TouchableOpacity>
 
                         </View>
                     </PopupDialog>
+
                 }
 
             </View>
@@ -1536,7 +1565,7 @@ const styles = StyleSheet.create({
 
     profileMenuItemText: {
         fontSize: responsiveFontSize(2.2),//16,
-       // height: 20,
+        // height: 20,
     },
     profileMenuItem: {
         paddingBottom: 20,
