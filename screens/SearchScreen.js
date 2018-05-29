@@ -322,6 +322,8 @@ export default class SearchScreen extends React.Component {
             isChinease: false,
             pageEnd: 0,
             roomCount: 0,
+            // isSearchNotify: false,
+            registerLocation: null,
         }
     }
 
@@ -407,6 +409,7 @@ export default class SearchScreen extends React.Component {
         this._getLanguageFromStorageAsync();
         this._getLocationAsync();
         this._getCategoryFromStorageAsync();
+        this._getRegisterLocationFromStorageAsync()
     }
 
     componentDidMount() {
@@ -802,6 +805,255 @@ export default class SearchScreen extends React.Component {
         }
     }
 
+    _postFindingBoxAsync = async () => {
+        this.popupLoadingIndicator.show()
+
+        // Filter condition
+        this._getPriceByFilter();
+        this._getAcreageByFilter();
+        this.setState({
+            txtFilterResult: this.state.selectedBDS + this.state.unitPriceLable + this.state.unitAcreageLable
+        })
+
+        try {
+            await fetch("http://nhabaola.vn/api/FindingBox/FO_FindingBox_Add", {
+                method: 'POST',
+                headers: {
+                    Accept: 'application/json',
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    "UserName": this.state.profile.ID,
+                    "CategoryId": this.state.selectedCategory,
+                    "Longitude": this.state.isSearching === true ? this.state.searchingMaker.longitude : this.state.location.coords.longitude,//"106.6104477",
+                    "Latitude": this.state.isSearching === true ? this.state.searchingMaker.latitude : this.state.location.coords.latitude, //"10.7143264",
+                    "Radius": this.state.radius,
+                    "RoomPriceMin": this.state.minPrice,
+                    "RoomPriceMax": this.state.maxPrice,
+                    "AcreageMin": this.state.minAcreage,
+                    "AcreageMax": this.state.maxAcreage,
+                    "SortOptionKey": "SortDistance",
+                    "SessionKey": this.state.profile.UpdatedBy
+
+                }),
+            })
+                .then((response) => response.json())
+                .then((responseJson) => {
+                    if (JSON.stringify(responseJson.ErrorCode) === "0") { //  Successful
+                        this.setState({ registerLocation: this.state.txtFilterResult })
+                        saveStorageAsync('registerLocation', JSON.stringify(this.state.txtFilterResult))
+
+                        if (Platform.OS == 'ios') {
+                            Alert.alert(translate("Notice"), translate("Register notification successfully"))
+                        } else {
+                            ToastAndroid.showWithGravity(translate("Register notification successfully"), ToastAndroid.SHORT, ToastAndroid.TOP)
+                        }
+
+                    } else if (JSON.stringify(responseJson.ErrorCode) === "2") {
+                        if (Platform.OS == 'ios') {
+                            Alert.alert(translate("Notice"), translate("Please login"))
+                        } else {
+                            ToastAndroid.showWithGravity(translate("Please login"), ToastAndroid.SHORT, ToastAndroid.TOP)
+                        }
+                    }
+                    else {
+                        if (Platform.OS === 'android') {
+                            ToastAndroid.showWithGravity(translate("Error") + JSON.stringify(responseJson) + translate("Please contact Admin in the Help menu"), ToastAndroid.SHORT, ToastAndroid.TOP);
+                        }
+                        else {
+                            Alert.alert(translate("Notice"), translate("Error") + JSON.stringify(responseJson) + translate("Please contact Admin in the Help menu"));
+                        }
+                    }
+                    this.popupLoadingIndicator.dismiss();
+                }).
+                catch((error) => { console.log(error) });
+        } catch (error) {
+            console.log(error)
+        }
+
+    }
+
+    _getFindingBoxAsync = async (isNew, isForward = true, _page = 0) => {
+        this.popupLoadingIndicator.show()
+
+        if (!isNew && isForward) { // Loading more page 
+            this.setState((prevState, props) => ({
+                page: prevState.page + 1,
+            }));
+            //this.setState({ page: this.state.page + 1 })
+        }
+        else if (!isNew && !isForward) { // Back to previous page
+            this.setState((prevState, props) => ({
+                page: prevState.page - 1,
+            }));
+        }
+        else { // Refresh page
+            // roomBox = await [];
+            // MARKERS = await [];
+            this.setState({ page: 1 })
+            //this.setState({ page: 1, flatListIsEnd: false })
+
+        }
+
+        if (_page != 0) {
+            this.setState({ // Calculate page index
+                //roomPageIndex: (this.state.page - 1) * this.state.roomPageCount
+                roomPageIndex: (_page - 1) * this.state.roomPageCount,
+                page: _page
+            })
+        } else {
+            this.setState({ // Calculate page index
+                roomPageIndex: (this.state.page - 1) * this.state.roomPageCount
+                //roomPageIndex: _page != 0 ? (_page - 1) * this.state.roomPageCount : (this.state.page - 1) * this.state.roomPageCount
+            })
+        }
+
+        roomBox = await [];
+        MARKERS = await [];
+        pageSize = await [];
+
+        // if (this.state.isSearching) {
+        //     // await this.setState({
+        //     //     houseCoords: {
+        //     //         latitude: parseFloat(this.state.searchingMaker.latitude),
+        //     //         longitude: parseFloat(this.state.searchingMaker.longitude),
+        //     //     }
+        //     // })
+
+        //     roomCords = await {
+        //         latitude: parseFloat(this.state.searchingMaker.latitude),
+        //         longitude: parseFloat(this.state.searchingMaker.longitude),
+        //     }
+
+        // }
+        // else {
+
+        //     // await this.setState({
+        //     //     houseCoords: {
+        //     //         latitude: parseFloat(this.state.location.coords.latitude),
+        //     //         longitude: parseFloat(this.state.location.coords.longitude),
+        //     //     }
+        //     // })
+
+        //     roomCords = await {
+        //         latitude: parseFloat(this.state.location.coords.latitude),
+        //         longitude: parseFloat(this.state.location.coords.longitude),
+        //     }
+        // }
+
+        // Filter condition
+        this._getPriceByFilter();
+        this._getAcreageByFilter();
+        this.setState({
+            txtFilterResult: this.state.selectedBDS + this.state.unitPriceLable + this.state.unitAcreageLable
+        })
+
+        // alert(this.state.minPrice + '  ' + this.state.maxPrice + '  ' + this.state.minAcreage + '  ' + this.state.maxAcreage + '  ' + this.state.selectedCategory)
+
+        //Add current location to fix maker
+        //MARKERS.push(this.state.houseCoords);
+
+        // alert(JSON.stringify(MARKERS))
+        // MARKERS.push(roomCords);
+
+        try {
+            await fetch("http://nhabaola.vn/api/RoomBox/FO_RoomBox_GetDataByUserId", {
+                method: 'POST',
+                headers: {
+                    Accept: 'application/json',
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    "PageIndex": this.state.roomPageIndex,
+                    "PageCount": this.state.roomPageCount,
+                    "SessionKey": this.state.profile.UpdatedBy,
+                    "UserLogon": this.state.profile.ID
+                }),
+            })
+                .then((response) => response.json())
+                .then((responseJson) => {
+
+
+                    if (JSON.stringify(responseJson.ErrorCode) === "0") { //  Successful
+
+                        this.setState({
+                            txtFilterResult: this.state.registerLocation,
+                            selectedCategory: this.state.registerLocation,
+                            unitPriceLable: this.state.registerLocation,
+                            unitAcreageLable: this.state.registerLocation
+                        })
+
+                        //  this.state.selectedCategory == '' && this.state.unitPriceLable == '' && this.state.unitAcreageLable == ''
+                        //alert(JSON.stringify(responseJson))
+
+
+                        responseJson.roomList.map((y) => {
+                            roomBox.push(y);
+
+                            roomCords = {
+                                latitude: parseFloat(y.Latitude),
+                                longitude: parseFloat(y.Longitude),
+                            }
+
+                            MARKERS.push(roomCords)
+                        })
+
+
+                        this.setState({
+                            roomCount: roomBox.length > 0 ? roomBox[0].Toilet : 0,
+                            pageEnd: roomBox.length > 0 ? (roomBox[0].Toilet / this.state.roomPageCount) : 0
+                        })
+
+                        // Calculate PageSize
+                        for (let i = 1; i < this.state.pageEnd + 1; i++) {
+                            pageSize.push(i)
+                        }
+
+                    } else if (JSON.stringify(responseJson.ErrorCode) === "2") {
+                        if (Platform.OS == 'ios') {
+                            Alert.alert(translate("Notice"), translate("Please login"))
+                        } else {
+                            ToastAndroid.showWithGravity(translate("Please login"), ToastAndroid.SHORT, ToastAndroid.TOP)
+                        }
+                    }
+                    else {
+                        if (Platform.OS === 'android') {
+                            ToastAndroid.showWithGravity(translate("Error") + JSON.stringify(responseJson) + translate("Please contact Admin in the Help menu"), ToastAndroid.SHORT, ToastAndroid.TOP);
+                        }
+                        else {
+                            Alert.alert(translate("Notice"), translate("Error") + JSON.stringify(responseJson) + translate("Please contact Admin in the Help menu"));
+                        }
+                    }
+                    this.popupLoadingIndicator.dismiss();
+                }).
+                catch((error) => { console.log(error) });
+        } catch (error) {
+            console.log(error)
+        }
+
+        if (MARKERS.length > 1) {
+            this.fitAllMarkers() // Fix Maker fit window for iOS
+            setTimeout(() => { this.fitAllMarkers() }, 500)
+        } else {
+            // this._getLocationAsync();
+        }
+
+        // Set isHouseList to false
+        if (this.state.isHouseList) {
+            Animated.timing(
+                this.state.houseListHeigh,
+                {
+                    toValue: responsiveHeight(13),
+                    easing: Easing.bounce,
+                    duration: 1200,
+                }
+            ).start();
+
+            this.setState({ isHouseList: false })
+        }
+
+    }
+
     _getCategoryFromStorageAsync = async () => {
         try {
             var value = await AsyncStorage.getItem('FO_Category_GetAllData');
@@ -816,6 +1068,23 @@ export default class SearchScreen extends React.Component {
             console.log(e);
         }
     }
+
+
+    _getRegisterLocationFromStorageAsync = async () => {
+        try {
+            var value = await AsyncStorage.getItem('registerLocation');
+
+            if (value !== null) {
+                this.setState({
+                    registerLocation: JSON.parse(value)
+                })
+            }
+
+        } catch (e) {
+            console.log(e);
+        }
+    }
+
 
     _shouldItemUpdate = (prev, next) => {
         return prev.item !== next.item;
@@ -1068,6 +1337,7 @@ export default class SearchScreen extends React.Component {
                         {/* </View> */}
                     </TouchableOpacity>
 
+
                     {/* Search location */}
                     <TouchableOpacity
                         style={{
@@ -1094,6 +1364,85 @@ export default class SearchScreen extends React.Component {
                             color: '#73aa2a',
                         }} name='ios-search-outline' />
                         {/* </View> */}
+                    </TouchableOpacity>
+
+
+                    {/* Register Location */}
+                    <TouchableOpacity
+                        style={{
+                            flex: 2,
+                            alignContent: 'center',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                        }}
+                        onPress={async () => {
+                            await this._getProfileFromStorageAsync();
+
+                            if (this.state.profile == null) {
+                                if (Platform.OS == 'ios') {
+                                    Alert.alert(translate("Notice"), translate("Please login"))
+                                } else {
+                                    ToastAndroid.showWithGravity(translate("Please login"), ToastAndroid.SHORT, ToastAndroid.TOP)
+                                }
+
+                            } else {
+
+                                if (this.state.registerLocation) {
+                                    this.popupRegisterLocation.show()
+
+                                } else {
+                                    Alert.alert(
+                                        translate("Notice"),
+                                        translate("You want to subscribe to this Real Estate") + " \n\n" + this.state.txtFilterResult,
+                                        [
+                                            {
+                                                text: translate("Cancel"), onPress: () => {
+
+                                                }
+                                            },
+                                            {
+                                                text: translate("Agree"), onPress: () => {
+
+                                                    // this.setState({ isSearchNotify: true })
+
+                                                    this._postFindingBoxAsync()
+
+                                                    // roomBox.map((y) => {
+                                                    //     // Notify Landlord 
+                                                    //     if (y.Images.split('|')[1] == 'true') {
+                                                    //         notifyNBLAsync(y.Images.split('|')[0]//globalVariable.ADMIN_PUSH_TOKEN
+                                                    //             , { "screen": "RoomDetailScreen", "params": { "roomBoxID": y.ID } } //{ ...roombox }
+                                                    //             , "default"
+                                                    //             , this.state.profile.FullName + "-" + this.state.profile.UserName + " " + translate("Search") + ":"
+                                                    //             , this.state.txtFilterResult
+                                                    //             + ", " + translate("Radius within") + " " + this.state.radius + " " + translate("km from the searcher's location, including your post at the address") + ": "
+                                                    //             + y.Address
+                                                    //         ); //pushToken, data, sound, title, body
+                                                    //     }
+                                                    // })
+
+                                                    // if (Platform.OS === 'android') {
+                                                    //     ToastAndroid.showWithGravity(translate("Send message successfully"), ToastAndroid.SHORT, ToastAndroid.TOP);
+                                                    // }
+                                                    // else {
+                                                    //     Alert.alert(translate("Notice"), translate("Send message successfully"));
+                                                    // }
+                                                }
+                                            },
+                                        ]
+                                    );
+                                }
+                            }
+
+                        }}
+                    >
+
+                        <Ionicons style={{
+                            fontSize: responsiveFontSize(4),
+                            color: this.state.registerLocation ? '#a4d227' : '#73aa2a',
+                        }} name={this.state.registerLocation ? 'ios-notifications' : 'ios-notifications-off-outline'} />
+
+
                     </TouchableOpacity>
 
                     {/* Broachcast */}
@@ -2470,7 +2819,67 @@ export default class SearchScreen extends React.Component {
 
                 </PopupDialog>
 
+                {/* popup Register Location */}
+                <PopupDialog
+                    ref={(popupRegisterLocation) => { this.popupRegisterLocation = popupRegisterLocation; }}
+                    dialogAnimation={new ScaleAnimation()}
+                    dialogStyle={{ marginBottom: 10, width: width * 0.9, height: 130, justifyContent: 'center', padding: 20 }}
+                    dismissOnTouchOutside={true}
+                >
+                    <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'center', alignContent: 'center' }}>
+                        <TouchableOpacity
+                            style={{ flex: 2, justifyContent: 'center', alignContent: 'center' }}
+                            onPress={async () => {
 
+
+                                Alert.alert(
+                                    translate("Notice"),
+                                    translate("Do you want to turn off notification from NBL"),
+                                    [
+                                        {
+                                            text: translate("Cancel"), onPress: () => {
+
+                                            }
+                                        },
+                                        {
+                                            text: translate("Agree"), onPress: () => {
+
+                                                this.popupRegisterLocation.dismiss();
+                                                this.setState({ registerLocation: null })
+                                                saveStorageAsync('registerLocation', '')
+
+                                            }
+                                        },
+                                    ]
+                                );
+
+                            }}
+                        >
+                            <Ionicons style={{
+                                fontSize: 50, borderRadius: 10,
+                                //   backgroundColor: '#a4d227',
+                                color: '#a4d227', textAlign: 'center', padding: 10
+                            }} name='ios-notifications-off-outline' >
+                            </Ionicons>
+                            <Text style={{ textAlign: 'center', marginTop: 5 }}>{translate("Turn off notification")}</Text>
+                        </TouchableOpacity>
+                        <View style={{ flex: 1 }}></View>
+                        <TouchableOpacity
+                            style={{ flex: 2, justifyContent: 'center', alignContent: 'center', }}
+                            onPress={async () => {
+                                this.popupRegisterLocation.dismiss();
+                                this._getFindingBoxAsync(true)
+                            }}
+                        >
+                            <Ionicons style={{
+                                fontSize: 50, borderRadius: 10,
+                                // backgroundColor: '#a4d227',
+                                color: '#a4d227', textAlign: 'center', padding: 10
+                            }} name='ios-menu' />
+                            <Text style={{ textAlign: 'center', marginTop: 5 }}>{translate("List of real estate")}</Text>
+                        </TouchableOpacity>
+                    </View>
+                </PopupDialog>
 
                 {/* Popup Loading Indicator */}
                 <PopupDialog

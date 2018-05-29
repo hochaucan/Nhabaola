@@ -91,9 +91,44 @@ if (Platform.OS === 'android') {
 
                       }
 
-
+* MODAL ALERT
     this.dropdown.alertWithType('success', translate("Notice"), translate("QR has been used"));
-    
+
+* API EXAMPLE
+ _getCategoryAsync = async () => {
+    try {
+      await fetch("http://nhabaola.vn/api/Category/FO_Category_GetAllData", {
+        method: 'POST',
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          "PageIndex": "0",
+          "PageCount": "100",
+          "SessionKey": "Olala_SessionKey",
+          "UserLogon": "100"
+        }),
+      })
+        .then((response) => response.json())
+        .then((responseJson) => {
+
+   if (JSON.stringify(responseJson.ErrorCode) === "0") { //  Successful
+          this._saveStorageAsync('FO_Category_GetAllData', JSON.stringify(responseJson.obj))
+
+
+          this.setState({
+            roomCategory: responseJson.obj
+          })
+   }
+        }).
+        catch((error) => { console.log(error) });
+    } catch (error) {
+      console.log(error)
+    }
+
+  }
+
 
 * INFOPLIST IOS
 https://developer.apple.com/library/content/qa/qa1937/_index.html
@@ -622,6 +657,10 @@ translate("Highlight date")
 translate("QR has been used")
 translate("Top up successfully")
 translate("QR is invalid")
+translate("Register notification successfully")
+    translate("You want to subscribe to this Real Estate")
+    translate("Do you want to turn off notification from NBL")
+translate("Turn off notification")
 
 
 

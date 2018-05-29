@@ -195,5 +195,10 @@
   "QR has been used":"QR Nạp Tiền đã được sử dụng",
   "QR is invalid":"QR không hợp lệ!",
   "Wallet available":"Ví tiền hiện có",
-  "Page":"Trang"
+  "Page":"Trang",
+  "Register notification successfully":"Đăng ký nhận thông báo thành công!",
+  "You want to subscribe to this Real Estate":"Bạn muốn đăng ký nhận thông báo loại Bất Động Sản này từ NBL?",
+  "Do you want to turn off notification from NBL":"Bạn muốn tắt thông báo từ NBL?",
+  "Turn off notification":"Tắt nhận thông báo",
+  "List of real estate":"Danh sách BĐ"
 }

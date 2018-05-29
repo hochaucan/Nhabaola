@@ -196,5 +196,10 @@
   "QR has been used":"QR has been used",
   "QR is invalid":"QR is invalid!",
   "Wallet available":"Wallet available",
-  "Page":"Page"
+  "Page":"Page",
+  "Register notification successfully":"Register notification successfully!",
+  "You want to subscribe to this Real Estate":"Do you want to subscribe to this Real Estate from NBL?",
+  "Do you want to turn off notification from NBL":"Do you want to turn off notification from NBL?",
+  "Turn off notification":"Turn off notification",
+  "List of real estate":"List of real estate"
 }
