@@ -1536,7 +1536,7 @@ const styles = StyleSheet.create({
 
     profileMenuItemText: {
         fontSize: responsiveFontSize(2.2),//16,
-        height: 20,
+       // height: 20,
     },
     profileMenuItem: {
         paddingBottom: 20,
