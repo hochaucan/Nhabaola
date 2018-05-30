@@ -640,6 +640,7 @@ translate("km from the searcher's location, including your post at the address")
 translate("Send message successfully")
 translate("million") 
 translate("tens of millions") 
+translate("Nhbaola Policy")
 translate("one hundred million")
 translate("billion") 
 translate("tens of billion") 
@@ -661,6 +662,7 @@ translate("Register notification successfully")
     translate("You want to subscribe to this Real Estate")
     translate("Do you want to turn off notification from NBL")
 translate("Turn off notification")
+translate("App Rating")
 
 
 

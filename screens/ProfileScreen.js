@@ -773,6 +773,54 @@ export default class ProfileScreen extends React.Component {
                         </Ionicons>
                     </TouchableOpacity>
 
+                    {/* Policy */}
+                    <TouchableOpacity style={styles.profileMenuItem}
+                        onPress={() => {
+
+                            const URL_FOR_BROWSER = "https://drive.google.com/file/d/0B2isr9FvXieAQVg0dFFDYkNla3VoX2NZNGI0eUNMMExUWHFv/view?usp=drivesdk"
+
+                            Linking.canOpenURL(URL_FOR_BROWSER)
+                                .then((supported) => {
+                                    if (!supported) {
+                                        Linking.openURL(URL_FOR_BROWSER)
+                                    } else {
+                                        Linking.openURL(URL_FOR_BROWSER)
+                                    }
+                                })
+                                .catch(err => console.error('An error occurred', err))
+                        }}
+                    >
+                        <Ionicons style={styles.profileMenuItemText} name='md-document'>
+                            <Text>  {translate("Nhbaola Policy")}</Text>
+                        </Ionicons>
+                    </TouchableOpacity>
+
+                    {/* Apps Rating */}
+                    <TouchableOpacity style={styles.profileMenuItem}
+                        onPress={() => {
+                            let URL_FOR_BROWSER = ''
+                            if (Platform.OS == 'ios')
+                                URL_FOR_BROWSER = "https://itunes.apple.com/us/app/nhabaola/id1287451307?l=vi&ls=1&mt=8"
+                            else {
+                                URL_FOR_BROWSER = "https://play.google.com/store/apps/details?id=vn.nhabaola.nhabaola"
+                            }
+                            Linking.canOpenURL(URL_FOR_BROWSER)
+                                .then((supported) => {
+                                    if (!supported) {
+                                        Linking.openURL(URL_FOR_BROWSER)
+                                    } else {
+                                        Linking.openURL(URL_FOR_BROWSER)
+                                    }
+                                })
+                                .catch(err => console.error('An error occurred', err))
+                        }}
+                    >
+                        <Ionicons style={styles.profileMenuItemText} name='ios-star-half'>
+                            <Text>  {translate("App Rating")}</Text>
+                        </Ionicons>
+                    </TouchableOpacity>
+
+
                     {this.state.profile ?
                         <TouchableOpacity style={styles.profileMenuItem}
                             onPress={() => {

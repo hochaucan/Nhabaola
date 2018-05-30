@@ -53,7 +53,8 @@ const LATITUDE_DELTA = 0.02;
 const LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO;
 const SPACE = 0.01;
 let id = 0;
-
+const isRegisterRoom = false;
+const isFilterRoom = false;
 
 
 
@@ -410,6 +411,21 @@ export default class SearchScreen extends React.Component {
         this._getLocationAsync();
         this._getCategoryFromStorageAsync();
         this._getRegisterLocationFromStorageAsync()
+
+
+        // this._tabPressedListener = NavigationEvents.addListener(
+        //     'selectedTabPressed',
+        //     route => {
+        //         if (route.key === 'SearchScreen') {
+        //             //this._scrollToTop();
+        //             alert("can")
+        //         }
+        //     }
+        // );
+    }
+
+    componentWillUnmount() {
+        this._tabPressedListener.remove();
     }
 
     componentDidMount() {
@@ -803,10 +819,15 @@ export default class SearchScreen extends React.Component {
 
             this.setState({ isHouseList: false })
         }
+
+        // Specify Pagesize to Room Filter or Register Room
+        isFilterRoom = await true;
+        isRegisterRoom = await false;
     }
 
     _postFindingBoxAsync = async () => {
-        this.popupLoadingIndicator.show()
+        //this.popupLoadingIndicator.show()
+        this.setState({ searchLoading: true })
 
         // Filter condition
         this._getPriceByFilter();
@@ -864,7 +885,8 @@ export default class SearchScreen extends React.Component {
                             Alert.alert(translate("Notice"), translate("Error") + JSON.stringify(responseJson) + translate("Please contact Admin in the Help menu"));
                         }
                     }
-                    this.popupLoadingIndicator.dismiss();
+                    //this.popupLoadingIndicator.dismiss();
+                    this.setState({ searchLoading: false })
                 }).
                 catch((error) => { console.log(error) });
         } catch (error) {
@@ -874,7 +896,8 @@ export default class SearchScreen extends React.Component {
     }
 
     _getFindingBoxAsync = async (isNew, isForward = true, _page = 0) => {
-        this.popupLoadingIndicator.show()
+        //this.popupLoadingIndicator.show()
+        this.setState({ searchLoading: true })
 
         if (!isNew && isForward) { // Loading more page 
             this.setState((prevState, props) => ({
@@ -1024,7 +1047,8 @@ export default class SearchScreen extends React.Component {
                             Alert.alert(translate("Notice"), translate("Error") + JSON.stringify(responseJson) + translate("Please contact Admin in the Help menu"));
                         }
                     }
-                    this.popupLoadingIndicator.dismiss();
+                    //  this.popupLoadingIndicator.dismiss();
+                    this.setState({ searchLoading: false })
                 }).
                 catch((error) => { console.log(error) });
         } catch (error) {
@@ -1051,6 +1075,10 @@ export default class SearchScreen extends React.Component {
 
             this.setState({ isHouseList: false })
         }
+
+        // Specify Pagesize to Room Filter or Register Room
+        isFilterRoom = await false;
+        isRegisterRoom = await true;
 
     }
 
@@ -1621,6 +1649,23 @@ export default class SearchScreen extends React.Component {
                     }}
                     onPress={async () => {
                         await this.setState({ isSearching: false, searchingMaker: null, })
+
+                        if (isRegisterRoom) {
+                            this.setState({
+
+                                multiSliderPriceValue: [0, 10],
+                                multiSliderAreaValue: [0, 10],
+                                selectedCategory: '',
+                                selectedBDS: translate("All real estate"),
+                                selectedUnitAcreage: 'acmv',
+                                selectedUnitPrice: 'ptr',
+                                iosSelectedCategory: translate("All real estate"),
+                                txtFilterResult: null,
+                            })
+                            // this.setState({ modalSearchFilterVisible: false });
+                            //this._getRoomByFilter(true);
+                        }
+
                         this._getLocationAsync();
                     }}
                 >
@@ -2049,8 +2094,8 @@ export default class SearchScreen extends React.Component {
 
                                 <Text
                                     style={{
-                                        marginRight: 3,
-                                        fontSize: responsiveFontSize(1.8),
+                                        marginRight: 4,
+                                        fontSize: responsiveFontSize(1.7),
                                         color: '#9B9D9D'
                                     }}
                                 >
@@ -2063,7 +2108,11 @@ export default class SearchScreen extends React.Component {
                                     onPress={() => {
 
                                         if (this.state.page > 1) {
-                                            this._getRoomByFilter(false, false)
+                                            if (isFilterRoom) {
+                                                this._getRoomByFilter(false, false)
+                                            } else {
+                                                this._getFindingBoxAsync(false, false)
+                                            }
                                         }
                                     }}
                                 >
@@ -2102,7 +2151,13 @@ export default class SearchScreen extends React.Component {
                                     // onDropdownWillHide={this._dropdown_5_willHide.bind(this)}
                                     onSelect={(idx, value) => {
                                         // alert(value)
-                                        this._getRoomByFilter(false, true, value)
+                                        if (isFilterRoom) {
+                                            this._getRoomByFilter(false, true, value)
+                                        } else {
+                                            this._getFindingBoxAsync(false, true, value)
+                                        }
+
+
                                     }}
 
                                 >
@@ -2132,7 +2187,14 @@ export default class SearchScreen extends React.Component {
 
                                         if (this.state.page <= this.state.pageEnd) {
 
-                                            this._getRoomByFilter(false, true)
+
+
+                                            if (isFilterRoom) {
+                                                this._getRoomByFilter(false, true)
+                                            } else {
+                                                this._getFindingBoxAsync(false, true)
+                                            }
+
                                         }
                                     }}
                                 >
@@ -2838,8 +2900,8 @@ export default class SearchScreen extends React.Component {
                     dismissOnTouchOutside={true}
                 >
                     <View style={{
-                        flex: 1, flexDirection: 'row', justifyContent: 'flex-spacing',
-                         alignContent: 'center'
+                        flex: 1, flexDirection: 'row', justifyContent: 'space-between',
+                        alignContent: 'center'
                     }}>
                         <TouchableOpacity
                             style={{ flex: 2, justifyContent: 'center', alignContent: 'center' }}
@@ -2884,6 +2946,7 @@ export default class SearchScreen extends React.Component {
                             onPress={async () => {
                                 this.popupRegisterLocation.dismiss();
                                 this._getFindingBoxAsync(true)
+                                // this.setState({ roomPageIndex: 0, roomPageCount: 50, page: 1, })
                             }}
                         >
                             <Ionicons style={{
