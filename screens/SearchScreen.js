@@ -1551,26 +1551,37 @@ export default class SearchScreen extends React.Component {
 
                         }}
                     >
-                        <Text style={{
-                            //color: '#73aa2a',
-                            width: responsiveWidth(100),
-                            //position: 'absolute',
-                            textAlign: 'center',
-                            //padding: 5,
-                            flex: 9,
-                            // top: 55,
-                            // zIndex: 10,
-                            // backgroundColor: '#fff',
-                            // padding: 5,
-                            fontSize: responsiveFontSize(1.6),
-                            // elevation: 2,
-                            // borderRadius: 10,
-                            // opacity: 0.9,
-                            // shadowColor: '#000',
-                            // shadowOffset: { width: 0, height: 2 },
-                            // shadowOpacity: 0.2,
-                            // shadowRadius: 2,
-                        }}>{this.state.txtFilterResult}</Text>
+                        <TouchableOpacity
+                            style={{
+                                flex: 9,
+                                width: responsiveWidth(100),
+                            }}
+                            onPress={() => {
+                                this.setState({ modalSearchFilterVisible: true })
+                            }}
+                        >
+                            <Text style={{
+                                //color: '#73aa2a',
+                                //  width: responsiveWidth(100),
+                                //position: 'absolute',
+                                textAlign: 'center',
+                                //padding: 5,
+                                // flex: 9,
+                                // top: 55,
+                                // zIndex: 10,
+                                // backgroundColor: '#fff',
+                                // padding: 5,
+                                fontSize: responsiveFontSize(1.6),
+                                // elevation: 2,
+                                // borderRadius: 10,
+                                // opacity: 0.9,
+                                // shadowColor: '#000',
+                                // shadowOffset: { width: 0, height: 2 },
+                                // shadowOpacity: 0.2,
+                                // shadowRadius: 2,
+                            }}>{this.state.txtFilterResult}</Text>
+
+                        </TouchableOpacity>
 
                         <TouchableOpacity
                             style={{
@@ -2295,12 +2306,12 @@ export default class SearchScreen extends React.Component {
                         }}
                         onShow={() => {
                             this.setState({
-                                unitPriceSuffixLable: translate("million"),
-                                unitAcreageSuffixLable: translate("Tens of square meters"),
-                                selectedBDS: translate("All real estate"),
-                                iosSelectedCategory: translate("All real estate"),
+                                //  unitPriceSuffixLable: translate("million"),
+                                // unitAcreageSuffixLable: translate("Tens of square meters"),
+                                //  selectedBDS: translate("All real estate"),
+                                // iosSelectedCategory: translate("All real estate"),
                             })
-                            this._getLanguageFromStorageAsync()
+                            // this._getLanguageFromStorageAsync()
                         }}
                     >
                         <View style={{ flex: 1, marginTop: 30, padding: 10, }}>
@@ -2823,10 +2834,13 @@ export default class SearchScreen extends React.Component {
                 <PopupDialog
                     ref={(popupRegisterLocation) => { this.popupRegisterLocation = popupRegisterLocation; }}
                     dialogAnimation={new ScaleAnimation()}
-                    dialogStyle={{ marginBottom: 10, width: width * 0.9, height: 130, justifyContent: 'center', padding: 20 }}
+                    dialogStyle={{ marginBottom: 10, width: responsiveWidth(90), height: 150, justifyContent: 'center', padding: 20 }}
                     dismissOnTouchOutside={true}
                 >
-                    <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'center', alignContent: 'center' }}>
+                    <View style={{
+                        flex: 1, flexDirection: 'row', justifyContent: 'flex-spacing',
+                         alignContent: 'center'
+                    }}>
                         <TouchableOpacity
                             style={{ flex: 2, justifyContent: 'center', alignContent: 'center' }}
                             onPress={async () => {
@@ -2856,14 +2870,15 @@ export default class SearchScreen extends React.Component {
                             }}
                         >
                             <Ionicons style={{
-                                fontSize: 50, borderRadius: 10,
+                                fontSize: 50,
+                                //borderRadius: 10,
                                 //   backgroundColor: '#a4d227',
                                 color: '#a4d227', textAlign: 'center', padding: 10
                             }} name='ios-notifications-off-outline' >
                             </Ionicons>
                             <Text style={{ textAlign: 'center', marginTop: 5 }}>{translate("Turn off notification")}</Text>
                         </TouchableOpacity>
-                        <View style={{ flex: 1 }}></View>
+                        {/* <View style={{ flex: 1 }}></View> */}
                         <TouchableOpacity
                             style={{ flex: 2, justifyContent: 'center', alignContent: 'center', }}
                             onPress={async () => {
