@@ -425,7 +425,7 @@ export default class SearchScreen extends React.Component {
     }
 
     componentWillUnmount() {
-        this._tabPressedListener.remove();
+        //this._tabPressedListener.remove();
     }
 
     componentDidMount() {
@@ -2378,7 +2378,30 @@ export default class SearchScreen extends React.Component {
                     >
                         <View style={{ flex: 1, marginTop: 30, padding: 10, }}>
                             <View style={{ flex: 1, }}>
+                                <TouchableOpacity
+                                    style={{
+                                        position: 'absolute',
+                                        zIndex: 30,
+                                        right: 0,
+                                        top: -30,
+                                        padding: 15,
+                                        //  borderRadius: 20,
+                                        //  borderWidth:0.5,
+                                        shadowColor: '#000',
+                                        shadowOffset: { width: 0, height: 2 },
+                                        shadowOpacity: 0.2,
+                                        shadowRadius: 2,
+                                    }}
+                                    onPress={() => { this.setState({ modalSearchFilterVisible: false }) }}
+                                >
+                                    <Ionicons style={{
 
+                                        fontSize: responsiveFontSize(6),
+                                        //borderWidth: 0.5,
+
+
+                                    }} name='ios-close' />
+                                </TouchableOpacity>
                                 <FormLabel>{translate("Type of real estate")}:</FormLabel>
                                 <View style={{ flexDirection: 'row', marginBottom: 30, }}>
 
