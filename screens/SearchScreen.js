@@ -325,6 +325,7 @@ export default class SearchScreen extends React.Component {
             roomCount: 0,
             // isSearchNotify: false,
             registerLocation: null,
+            findingBoxMaker: null,
         }
     }
 
@@ -631,6 +632,23 @@ export default class SearchScreen extends React.Component {
 
         await this.setState({ searchLoading: true })
 
+        // Remove register location creteria
+        if (isRegisterRoom) {
+            this.setState({
+
+                multiSliderPriceValue: [0, 10],
+                multiSliderAreaValue: [0, 10],
+                selectedCategory: '',
+                selectedBDS: translate("All real estate"),
+                selectedUnitAcreage: 'acmv',
+                selectedUnitPrice: 'ptr',
+                iosSelectedCategory: translate("All real estate"),
+                txtFilterResult: null,
+                findingBoxMaker: null,
+            })
+            // this.setState({ modalSearchFilterVisible: false });
+            //this._getRoomByFilter(true);
+        }
 
 
         if (!isNew && isForward) { // Loading more page 
@@ -676,7 +694,7 @@ export default class SearchScreen extends React.Component {
         MARKERS = await [];
         pageSize = await [];
 
-        if (this.state.isSearching) {
+        if (this.state.isSearching) { // Maker for Searching
             // await this.setState({
             //     houseCoords: {
             //         latitude: parseFloat(this.state.searchingMaker.latitude),
@@ -690,7 +708,7 @@ export default class SearchScreen extends React.Component {
             }
 
         }
-        else {
+        else { // Maker of current location
 
             // await this.setState({
             //     houseCoords: {
@@ -899,33 +917,35 @@ export default class SearchScreen extends React.Component {
         //this.popupLoadingIndicator.show()
         this.setState({ searchLoading: true })
 
-        if (!isNew && isForward) { // Loading more page 
-            this.setState((prevState, props) => ({
+        if (!isNew && isForward) { // Loading more page or click Next page
+            await this.setState((prevState, props) => ({
                 page: prevState.page + 1,
             }));
             //this.setState({ page: this.state.page + 1 })
         }
         else if (!isNew && !isForward) { // Back to previous page
-            this.setState((prevState, props) => ({
+            await this.setState((prevState, props) => ({
                 page: prevState.page - 1,
             }));
         }
         else { // Refresh page
             // roomBox = await [];
             // MARKERS = await [];
-            this.setState({ page: 1 })
+            await this.setState({ page: 1 })
             //this.setState({ page: 1, flatListIsEnd: false })
 
         }
 
-        if (_page != 0) {
-            this.setState({ // Calculate page index
+        //  alert(this.state.roomPageIndex + ' ' + this.state.roomPageCount + ' ' + this.state.page)
+
+        if (_page != 0) { // Select Pagesize
+            await this.setState({ // Calculate page index
                 //roomPageIndex: (this.state.page - 1) * this.state.roomPageCount
                 roomPageIndex: (_page - 1) * this.state.roomPageCount,
                 page: _page
             })
         } else {
-            this.setState({ // Calculate page index
+            await this.setState({ // Calculate page index
                 roomPageIndex: (this.state.page - 1) * this.state.roomPageCount
                 //roomPageIndex: _page != 0 ? (_page - 1) * this.state.roomPageCount : (this.state.page - 1) * this.state.roomPageCount
             })
@@ -979,6 +999,8 @@ export default class SearchScreen extends React.Component {
         // alert(JSON.stringify(MARKERS))
         // MARKERS.push(roomCords);
 
+        // alert(this.state.roomPageIndex + ' ' + this.state.roomPageCount + ' ' + this.state.page)
+
         try {
             await fetch("http://nhabaola.vn/api/RoomBox/FO_RoomBox_GetDataByUserId", {
                 method: 'POST',
@@ -1021,6 +1043,14 @@ export default class SearchScreen extends React.Component {
                             MARKERS.push(roomCords)
                         })
 
+                        this.setState({
+                            findingBoxMaker: {
+                                latitude: parseFloat(responseJson.findingBoxItem.Latitude),
+                                longitude: parseFloat(responseJson.findingBoxItem.Longitude)
+                            },
+                            searchingMaker: null,
+                            radius: responseJson.findingBoxItem.Radius,
+                        })
 
                         this.setState({
                             roomCount: roomBox.length > 0 ? roomBox[0].Toilet : 0,
@@ -1376,6 +1406,7 @@ export default class SearchScreen extends React.Component {
                         }}
                         onPress={() => {
                             this.popupSearching.show();
+
                         }}
                     >
                         {/* <View style={{
@@ -1648,23 +1679,23 @@ export default class SearchScreen extends React.Component {
                         right: 15, backgroundColor: 'transparent'
                     }}
                     onPress={async () => {
-                        await this.setState({ isSearching: false, searchingMaker: null, })
+                        await this.setState({ isSearching: false, searchingMaker: null, findingBoxMaker: null })
 
-                        if (isRegisterRoom) {
-                            this.setState({
+                        // if (isRegisterRoom) {
+                        //     this.setState({
 
-                                multiSliderPriceValue: [0, 10],
-                                multiSliderAreaValue: [0, 10],
-                                selectedCategory: '',
-                                selectedBDS: translate("All real estate"),
-                                selectedUnitAcreage: 'acmv',
-                                selectedUnitPrice: 'ptr',
-                                iosSelectedCategory: translate("All real estate"),
-                                txtFilterResult: null,
-                            })
-                            // this.setState({ modalSearchFilterVisible: false });
-                            //this._getRoomByFilter(true);
-                        }
+                        //         multiSliderPriceValue: [0, 10],
+                        //         multiSliderAreaValue: [0, 10],
+                        //         selectedCategory: '',
+                        //         selectedBDS: translate("All real estate"),
+                        //         selectedUnitAcreage: 'acmv',
+                        //         selectedUnitPrice: 'ptr',
+                        //         iosSelectedCategory: translate("All real estate"),
+                        //         txtFilterResult: null,
+                        //     })
+                        //     // this.setState({ modalSearchFilterVisible: false });
+                        //     //this._getRoomByFilter(true);
+                        // }
 
                         this._getLocationAsync();
                     }}
@@ -1712,7 +1743,7 @@ export default class SearchScreen extends React.Component {
                         onPress={(e) => this.onMapPress(e)}
                     /* customMapStyle={customStyle} */
                     >
-                        {this.state.location && this.state.searchingMaker == null
+                        {this.state.location && this.state.searchingMaker == null && this.state.findingBoxMaker == null
                             ?
 
                             <MapView.Marker
@@ -1751,6 +1782,16 @@ export default class SearchScreen extends React.Component {
                             </MapView.Marker>
                             : null}
 
+                        {this.state.findingBoxMaker &&
+                            <MapView.Marker
+                                coordinate={this.state.findingBoxMaker}
+                                title={translate("Search location")}
+                            //description='Home'
+                            >
+
+                            </MapView.Marker>
+
+                        }
 
                         {/* <MapView.Circle
                                 center={currentMaker}
@@ -2845,6 +2886,8 @@ export default class SearchScreen extends React.Component {
                                 isSearching: true,
                             })
 
+
+
                             //this.map.animateToRegion(this.state.mapRegion, 1000);
 
                             this.map.animateToCoordinate(this.state.searchingMaker, 1000)
@@ -2968,8 +3011,9 @@ export default class SearchScreen extends React.Component {
                             style={{ flex: 2, justifyContent: 'center', alignContent: 'center', }}
                             onPress={async () => {
                                 this.popupRegisterLocation.dismiss();
+                                await this.setState({ roomPageIndex: 0, roomPageCount: 50, page: 1, })
                                 this._getFindingBoxAsync(true)
-                                // this.setState({ roomPageIndex: 0, roomPageCount: 50, page: 1, })
+
                             }}
                         >
                             <Ionicons style={{
