@@ -265,15 +265,26 @@ export default class SearchScreen extends React.Component {
     //     header: null,
     // })
 
-    static navigationOptions = (navigation) => ({
+    static navigationOptions = ({ navigation, navigationOptions }) => {
+        const { params } = navigation.state
+
+        return {
+            title: params ? params.otherParam : 'A Nested Details Screen',
+            /* These values are used instead of the shared configuration! */
+            // headerStyle: {
+            //     backgroundColor: navigationOptions.headerTintColor,
+            // },
+            // headerTintColor: navigationOptions.headerStyle.backgroundColor,
+        };
+
 
         //   title: navigation.getParam('otherParam', 'A Nested Details Screen'),
-        tabBarOnPress: alert(JSON.stringify(navigation)),
-        header: null,
+        //tabBarOnPress: alert(JSON.stringify(navigation)),
+        // header: null,
         // header: ({ state }) => ({
         //     right: <Button title={"Save"} onPress={navigation.state.params.handleSave} />
         // })
-    })
+    }
 
     constructor(props) {
         super(props);
@@ -349,11 +360,6 @@ export default class SearchScreen extends React.Component {
 
 
     }
-    // onNavigatorEvent(event) {
-    //     if (event.id === 'willAppear') {
-    //         // Load data now
-    //     }
-    // }
 
     _multiSliderPriceValuesChange = async (values) => {
         await this.setState({
@@ -394,14 +400,6 @@ export default class SearchScreen extends React.Component {
         });
     }
 
-
-    // _createTempMarker(modifier = 1, lat, long) {
-    //     return {
-    //         latitude: lat - (SPACE * modifier),
-    //         longitude: long - (SPACE * modifier),
-    //     };
-    // }
-
     _setModalVisible(visible) {
         this.setState({ modalVisible: visible });
     }
@@ -419,9 +417,9 @@ export default class SearchScreen extends React.Component {
     }
 
 
-    getVal(val) {
-        // console.warn(val);
-    }
+    // getVal(val) {
+    //     // console.warn(val);
+    // }
     componentWillMount = async () => {
         await this._getPermissionLOCATION();
         await this._getPermissionCAMERA();
@@ -433,7 +431,9 @@ export default class SearchScreen extends React.Component {
         this._getCategoryFromStorageAsync();
         this._getRegisterLocationFromStorageAsync()
 
-        this.props.navigation.state.params({ onRefreshScreen: this.saveDetails, }) //.navigate("SearchScreen", {
+        this.props.navigation.setParams({ otherParam: this._getLanguageFromStorageAsync()}) //'Updated!' })
+
+        //  this.props.navigation.state.params({ onRefreshScreen: this.saveDetails, }) //.navigate("SearchScreen", {
         // onRefreshScreen: this.saveDetails,
         //    _getWalletAsync: this._getWalletAsync
         // });
