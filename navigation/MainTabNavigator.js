@@ -101,7 +101,7 @@ export default TabNavigator(
     tabBarComponent: TabBarTop,
     tabBarPosition: 'top',
     animationEnabled: true,
-    swipeEnabled: true,
+    swipeEnabled: false,
     lazy: false,//Platform.OS == 'ios' ? false : false,
     tabBarOptions: {
       labelStyle: {

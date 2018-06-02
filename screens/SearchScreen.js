@@ -20,7 +20,7 @@ import {
     Animated,
     Easing,
     ToastAndroid,
-
+    DeviceEventEmitter,
 } from 'react-native';
 //import { ExpoLinksView } from '@expo/samples';
 import { Constants, Location, Permissions, Notifications } from 'expo';
@@ -248,7 +248,7 @@ const roomCords = {
 const DEFAULT_PADDING = { top: 40, right: 40, bottom: 40, left: 40 };
 const roomBox = [];
 const pageSize = [];
-const isRefresh = false;
+var temp = null;
 
 export default class SearchScreen extends React.Component {
 
@@ -265,25 +265,46 @@ export default class SearchScreen extends React.Component {
     //     header: null,
     // })
 
-    static navigationOptions = ({ navigation, navigationOptions }) => {
-        const { params } = navigation.state
+    // static navigationOptions = ({ navigation, navigationOptions }) => {
+    //     const { params } = navigation.state
 
+    //     return {
+    //         title: params ? params.otherParam : 'A Nested Details Screen',
+    //         /* These values are used instead of the shared configuration! */
+    //         // headerStyle: {
+    //         //     backgroundColor: navigationOptions.headerTintColor,
+    //         // },
+    //         // headerTintColor: navigationOptions.headerStyle.backgroundColor,
+    //     };
+
+
+    //     //   title: navigation.getParam('otherParam', 'A Nested Details Screen'),
+    //     //tabBarOnPress: alert(JSON.stringify(navigation)),
+    //     // header: null,
+    //     // header: ({ state }) => ({
+    //     //     right: <Button title={"Save"} onPress={navigation.state.params.handleSave} />
+    //     // })
+    // }
+
+    // static navigationOptions = ({ navigation }) => ({
+    //     //  tabBarOnPress:()=> navigation.state.params ? navigation.state.params.setLanguage : alert('can'),
+    //     //  title: navigation.state.params ? navigation.state.params.otherParam : 'A Nested Details Screen',
+    //     header: null,
+    // })
+
+    static navigationOptions = ({ navigation }) => {
         return {
-            title: params ? params.otherParam : 'A Nested Details Screen',
-            /* These values are used instead of the shared configuration! */
-            // headerStyle: {
-            //     backgroundColor: navigationOptions.headerTintColor,
-            // },
-            // headerTintColor: navigationOptions.headerStyle.backgroundColor,
-        };
+            tabBarOnPress: ({ previousScene, scene, jumpToIndex }) => {
+                // Inject event
+                DeviceEventEmitter.emit('updateLanguage')
 
+                //alert(JSON.stringify(navigation.state.params)) // navigation.state.params.setLanguage
 
-        //   title: navigation.getParam('otherParam', 'A Nested Details Screen'),
-        //tabBarOnPress: alert(JSON.stringify(navigation)),
-        // header: null,
-        // header: ({ state }) => ({
-        //     right: <Button title={"Save"} onPress={navigation.state.params.handleSave} />
-        // })
+                // Keep original behaviour
+                jumpToIndex(scene.index)
+            },
+            header: null
+        }
     }
 
     constructor(props) {
@@ -361,6 +382,10 @@ export default class SearchScreen extends React.Component {
 
     }
 
+    saveDetails() {
+        alert('Save Details');
+    }
+
     _multiSliderPriceValuesChange = async (values) => {
         await this.setState({
             multiSliderPriceValue: values,
@@ -431,7 +456,12 @@ export default class SearchScreen extends React.Component {
         this._getCategoryFromStorageAsync();
         this._getRegisterLocationFromStorageAsync()
 
-        this.props.navigation.setParams({ otherParam: this._getLanguageFromStorageAsync()}) //'Updated!' })
+
+
+        DeviceEventEmitter.addListener('updateLanguage', this._getLanguageFromStorageAsync.bind(this))
+        //temp = await this._getLanguageFromStorageAsync() 
+        // this.props.navigation.setParams({ otherParam: 'Updated!' }) //this._getLanguageFromStorageAsync()}) 
+        //this.props.navigation.setParams({ setLanguage: this._getLanguageFromStorageAsync() }) //this._getLanguageFromStorageAsync()}) 
 
         //  this.props.navigation.state.params({ onRefreshScreen: this.saveDetails, }) //.navigate("SearchScreen", {
         // onRefreshScreen: this.saveDetails,
@@ -451,12 +481,10 @@ export default class SearchScreen extends React.Component {
     }
 
     componentWillUnmount() {
-        //this._tabPressedListener.remove();
+        DeviceEventEmitter.removeAllListeners()
     }
 
-    saveDetails() {
-        alert('Save Details');
-    }
+
 
     componentDidMount() {
 
@@ -1217,7 +1245,6 @@ export default class SearchScreen extends React.Component {
             <View style={{
                 flex: 1,
             }}
-                key={isRefresh}
             >
 
                 {/* Loading Indicator */}
