@@ -248,21 +248,37 @@ const roomCords = {
 const DEFAULT_PADDING = { top: 40, right: 40, bottom: 40, left: 40 };
 const roomBox = [];
 const pageSize = [];
+const isRefresh = false;
 
 export default class SearchScreen extends React.Component {
 
-    static navigationOptions = {
-        tabBarLabel: 'Tìm kiếm',
-        // title: 'Links',
-        header: null,
-    };
+    // static navigationOptions = {
+    //     tabBarLabel: 'Tìm kiếm',
+    //     // title: 'Links',
+    //     header: null,
+    // };
 
     // static navigationOptions= () => ({
-    //     tabBarOnPress: alert("can")
+    //     tabBarOnPress:(navigation)=>{
+    //        // this.props.navigation.navigate('SearchScreen')
+    //          alert("can")},
+    //     header: null,
     // })
+
+    static navigationOptions = (navigation) => ({
+
+        //   title: navigation.getParam('otherParam', 'A Nested Details Screen'),
+        tabBarOnPress: alert(JSON.stringify(navigation)),
+        header: null,
+        // header: ({ state }) => ({
+        //     right: <Button title={"Save"} onPress={navigation.state.params.handleSave} />
+        // })
+    })
 
     constructor(props) {
         super(props);
+
+        //  this.props.navigation.setOnNavigatorEvent(this.onNavigatorEvent.bind(this));
 
         this.state = {
             mapRegion: null,//{ latitude: LATITUDE, longitude: LONGITUDE, latitudeDelta: LATITUDE_DELTA, longitudeDelta: LONGITUDE_DELTA },
@@ -333,7 +349,11 @@ export default class SearchScreen extends React.Component {
 
 
     }
-
+    // onNavigatorEvent(event) {
+    //     if (event.id === 'willAppear') {
+    //         // Load data now
+    //     }
+    // }
 
     _multiSliderPriceValuesChange = async (values) => {
         await this.setState({
@@ -413,6 +433,11 @@ export default class SearchScreen extends React.Component {
         this._getCategoryFromStorageAsync();
         this._getRegisterLocationFromStorageAsync()
 
+        this.props.navigation.state.params({ onRefreshScreen: this.saveDetails, }) //.navigate("SearchScreen", {
+        // onRefreshScreen: this.saveDetails,
+        //    _getWalletAsync: this._getWalletAsync
+        // });
+        //this.props.navigation.setParams({ otherParam: 'Updated!' })
 
         // this._tabPressedListener = NavigationEvents.addListener(
         //     'selectedTabPressed',
@@ -427,6 +452,10 @@ export default class SearchScreen extends React.Component {
 
     componentWillUnmount() {
         //this._tabPressedListener.remove();
+    }
+
+    saveDetails() {
+        alert('Save Details');
     }
 
     componentDidMount() {
@@ -1187,7 +1216,9 @@ export default class SearchScreen extends React.Component {
         return (
             <View style={{
                 flex: 1,
-            }}>
+            }}
+                key={isRefresh}
+            >
 
                 {/* Loading Indicator */}
                 {this.state.searchLoading &&

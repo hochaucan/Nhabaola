@@ -36,6 +36,9 @@ setTimeout(
 * YANDEX TRANSALTE API KEY
 trnsl.1.1.20180509T171052Z.84619fb9541e655c.9043b04a890697172a26a6422a20fafec15ea632
 
+* REACT NATIVE navigation
+https://wix.github.io/react-native-navigation/#/screen-api?id=screen-visibility
+
 
 * STREETVIEW
 https://stackoverflow.com/questions/387942/google-street-view-url
