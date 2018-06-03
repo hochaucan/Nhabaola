@@ -2643,12 +2643,54 @@ export default class HomeScreen extends React.Component {
               //bgColor={"red"}
               offsetX={20}
               offsetY={55}
-            // onPress={() => {
-            //   this.setState({ isEnableQR: true })
-            // }}
+              //renderIcon={<Icon name="ios-contact" style={styles.actionButtonIcon} />}
+              onPress={() => {
+                if (this.state.profile === null) {
+                  // if (Platform.OS == 'ios') {
+                  //   Alert.alert(translate("Notice"), translate("Please login"))
+                  // } else {
+                  //   ToastAndroid.showWithGravity(translate("Please login"), ToastAndroid.SHORT, ToastAndroid.TOP)
+                  // }
+                  if (Platform.OS == 'ios') {
+                    this.setState({ modalLogin: true })
+                  } else {
+                    this.popupLogin.show()
+                  }
+
+
+                  const timing = Animated.timing;
+                  Animated.parallel([
+                    timing(this.state.animation.usernamePostionLeft, {
+                      toValue: 0,
+                      duration: 900
+                    }),
+                    timing(this.state.animation.passwordPositionLeft, {
+                      toValue: 0,
+                      duration: 1100
+                    }),
+                    timing(this.state.animation.loginPositionTop, {
+                      toValue: 0,
+                      duration: 700
+                    }),
+                    timing(this.state.animation.statusPositionTop, {
+                      toValue: 0,
+                      duration: 700
+                    })
+
+                  ]).start()
+
+                } else { // Already Login
+
+
+                  this.props.navigation.navigate('PostRoomScreen', {
+                    onRefreshScreen: this.onRefreshScreen,
+                    _getWalletAsync: this._getWalletAsync,
+                  })
+                }
+              }}
             >
 
-              {this.state.profile === null &&
+              {/* {this.state.profile === null &&
                 <ActionButton.Item buttonColor='#a4d227'
                   textContainerStyle={{ backgroundColor: '#73aa2a' }}
                   textStyle={{ color: '#fff' }}
@@ -2685,8 +2727,8 @@ export default class HomeScreen extends React.Component {
                   }}>
                   <Icon name="ios-contact" style={styles.actionButtonIcon} />
                 </ActionButton.Item>
-              }
-              <ActionButton.Item buttonColor='#a4d227'
+              } */}
+              {/* <ActionButton.Item buttonColor='#a4d227'
                 textContainerStyle={{ backgroundColor: '#73aa2a' }}
                 textStyle={{ color: '#fff' }}
                 title={translate('Post')} onPress={() => {
@@ -2703,10 +2745,10 @@ export default class HomeScreen extends React.Component {
                       : Alert.alert(translate('Please login'))
 
 
-                  //this.popupLogin.show();
+
                 }}>
                 <Icon name="md-cloud-upload" style={styles.actionButtonIcon} />
-              </ActionButton.Item>
+              </ActionButton.Item> */}
 
 
               {/* {this.state.refreshScreen &&
@@ -2717,7 +2759,7 @@ export default class HomeScreen extends React.Component {
               </ActionButton.Item>
             } */}
 
-              {this.state.profile !== null &&
+              {/* {this.state.profile !== null &&
                 <ActionButton.Item buttonColor='#a4d227'
                   textContainerStyle={{ backgroundColor: '#73aa2a' }}
                   textStyle={{ color: '#fff' }}
@@ -2731,9 +2773,9 @@ export default class HomeScreen extends React.Component {
                   }}>
                   <Icon name="md-person" style={styles.actionButtonIcon} />
                 </ActionButton.Item>
-              }
+              } */}
 
-              {this.state.profile !== null &&
+              {/* {this.state.profile !== null &&
                 <ActionButton.Item buttonColor='#a4d227'
                   textContainerStyle={{ backgroundColor: '#73aa2a' }}
                   textStyle={{ color: '#fff' }}
@@ -2745,10 +2787,12 @@ export default class HomeScreen extends React.Component {
                   }}>
                   <Icon name="logo-usd" style={styles.actionButtonIcon} />
                 </ActionButton.Item>
-              }
+              } */}
               {/* <ActionButton.Item buttonColor='#1abc9c' title="All Tasks" onPress={() => { }}>
               <Icon name="md-done-all" style={styles.actionButtonIcon} />
             </ActionButton.Item> */}
+
+              {/* <Icon name="md-create" style={{ color: '#fff' }} /> */}
             </ActionButton>
             : null
         }
