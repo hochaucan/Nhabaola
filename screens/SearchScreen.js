@@ -3136,7 +3136,7 @@ export default class SearchScreen extends React.Component {
                                 color: '#a4d227', textAlign: 'center', padding: 10
                             }} name='ios-notifications-off-outline' >
                             </Ionicons>
-                            <Text style={{ textAlign: 'center', marginTop: 5 }}>{translate("Turn off notification")}</Text>
+                            <Text style={{ textAlign: 'center', marginTop: 5, fontSize: responsiveFontSize(2) }}>{translate("Turn off notification")}</Text>
                         </TouchableOpacity>
                         {/* <View style={{ flex: 1 }}></View> */}
                         <TouchableOpacity
@@ -3153,7 +3153,7 @@ export default class SearchScreen extends React.Component {
                                 // backgroundColor: '#a4d227',
                                 color: '#a4d227', textAlign: 'center', padding: 10
                             }} name='ios-menu' />
-                            <Text style={{ textAlign: 'center', marginTop: 5 }}>{translate("List of real estate")}</Text>
+                            <Text style={{ textAlign: 'center', marginTop: 5, fontSize: responsiveFontSize(2) }}>{translate("List of real estate")}</Text>
                         </TouchableOpacity>
                     </View>
                 </PopupDialog>
