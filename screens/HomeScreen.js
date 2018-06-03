@@ -76,7 +76,7 @@ const LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO;
 const roomBox = [];
 const roomBoxByID = null;
 const isScanQR = false;
-
+const Banner = [];
 
 function numberWithCommas(x) {
   return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
@@ -367,15 +367,17 @@ export default class HomeScreen extends React.Component {
     this._getRoomBoxAsync(true);
     this._getProfileFromStorageAsync();
     this._getSessionKeyFromStorageAsync();
+    //this._getBannerAsync()
 
     // Remove Push Notification
-    this._notificationSubscription && this._notificationSubscription.remove();
-
-
+    //this._notificationSubscription && this._notificationSubscription.remove();
 
   }
 
-
+  componentWillUnmount() {
+    // Remove Push Notification
+    this._notificationSubscription && this._notificationSubscription.remove();
+  }
 
   _onScroll = (event) => {
 
@@ -1514,6 +1516,8 @@ export default class HomeScreen extends React.Component {
       console.log(error)
     }
 
+    // Get Banner
+    this._getBannerAsync()
   }
 
   _getWalletAsync = async () => {
@@ -1920,6 +1924,51 @@ export default class HomeScreen extends React.Component {
 
   };
 
+  _getBannerAsync = async () => {
+
+    Banner = await [];
+
+    try {
+      await fetch("http://nhabaola.vn/api/Banner/FO_Banner_GetAllData", {
+        method: 'POST',
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          "PageIndex": "0",
+          "PageCount": "100"
+        }),
+      })
+        .then((response) => response.json())
+        .then((responseJson) => {
+
+          if (JSON.stringify(responseJson.ErrorCode) === "0") { //  Successful
+            //this._saveStorageAsync('FO_Category_GetAllData', JSON.stringify(responseJson.obj))
+
+            //Banner = responseJson.obj
+
+            responseJson.obj.map((y) => {
+              y.IsActive &&
+                Banner.push(y);
+            })
+
+          }
+          else { // Error
+            if (Platform.OS === 'android') {
+              ToastAndroid.showWithGravity(translate("Error") + JSON.stringify(responseJson) + translate("Please contact Admin in the Help menu"), ToastAndroid.SHORT, ToastAndroid.TOP);
+            }
+            else {
+              Alert.alert(translate("Notice"), translate("Error") + JSON.stringify(responseJson) + translate("Please contact Admin in the Help menu"));
+            }
+          }
+        }).
+        catch((error) => { console.log(error) });
+    } catch (error) {
+      console.log(error)
+    }
+
+  }
 
   render() {
     let { image } = this.state;
@@ -1991,8 +2040,44 @@ export default class HomeScreen extends React.Component {
           </View>
         }
 
+        {Banner.length > 0 &&
+          <View
+            style={{
+              height: 80,
+            }}
+          >
+            <Swiper
+              style={{}}
+              horizontal={true}
+              autoplay={true}
+              loop={false}
+              dotStyle={{ opacity: 0.5 }}
+              dotColor='#9B9D9D'
+              activeDotStyle={{ opacity: 0.8 }}
+              activeDotColor='#fff'
 
+            //showsButtons={true}
+            >
 
+              {
+                // this.state.roomBox.Images !== "" ?
+
+                Banner.map((y, i) => {
+
+                  return (
+                    <Image
+                      key={i}
+                      style={styles.cardImage}
+                      source={{ uri: y.Description }} />
+                  )
+
+                })
+                // :
+                // <Image source={require("../images/nha-bao-la.jpg")} />
+              }
+            </Swiper>
+          </View>
+        }
 
         {/* Flatlist RoomBox */}
         <FlatList
@@ -2055,7 +2140,7 @@ export default class HomeScreen extends React.Component {
                   >
                     <Text style={{
                       fontSize: responsiveFontSize(2),
-                      
+
                     }}>{item.AccountName.indexOf('|') > -1
                       ?
                       item.AccountName.split('|')[0]
@@ -2237,7 +2322,7 @@ export default class HomeScreen extends React.Component {
                 <Text
                   style={{
                     flex: 1, color: '#fff', fontWeight: '300',
-                    
+
                     fontSize: responsiveFontSize(1.7)
                   }}>
                   {translate("Price")}: {convertAmountToWording(item.Price)}
@@ -2251,7 +2336,7 @@ export default class HomeScreen extends React.Component {
                       <Text
                         style={{
                           flex: 2, color: '#fff', fontWeight: '300',
-                          
+
                           fontSize: responsiveFontSize(1.7), textAlign: 'right'
                         }}
                         key={i}>{this.state.isVietnamease ? y.CatName : this.state.isEnglish ? y.CatImg.split('|')[0] : y.CatImg.split('|')[1]}:  {item.Acreage} m</Text>
@@ -2260,7 +2345,7 @@ export default class HomeScreen extends React.Component {
                   })
                 }
                 {/* <Text style={{ flex: 1, textAlign: 'right', color: '#fff' }}> {item.CategoryID} Diện tích:   {item.Acreage} m</Text> */}
-                <Text style={{ fontSize: 8, marginBottom: 5, color: '#fff',  }}>2</Text>
+                <Text style={{ fontSize: 8, marginBottom: 5, color: '#fff', }}>2</Text>
 
               </View>
               <View style={styles.cardDesBox}>
@@ -2311,7 +2396,7 @@ export default class HomeScreen extends React.Component {
                 </View>
 
                 <Text style={{
-                  
+
                   fontSize: responsiveFontSize(1.8)
                 }}
                   ellipsizeMode='tail'
@@ -2321,7 +2406,7 @@ export default class HomeScreen extends React.Component {
                 <Text
                   style={{
                     marginTop: 10, color: '#9B9D9D', fontSize: responsiveFontSize(1.8),
-                    
+
                   }}
                   ellipsizeMode='tail'
                   numberOfLines={2}

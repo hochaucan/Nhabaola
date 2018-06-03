@@ -116,14 +116,22 @@ if (Platform.OS === 'android') {
         .then((response) => response.json())
         .then((responseJson) => {
 
-   if (JSON.stringify(responseJson.ErrorCode) === "0") { //  Successful
-          this._saveStorageAsync('FO_Category_GetAllData', JSON.stringify(responseJson.obj))
+          if (JSON.stringify(responseJson.ErrorCode) === "0") { //  Successful
+            this._saveStorageAsync('FO_Category_GetAllData', JSON.stringify(responseJson.obj))
 
 
-          this.setState({
-            roomCategory: responseJson.obj
-          })
-   }
+            this.setState({
+              roomCategory: responseJson.obj
+            })
+          }
+          else{ // Error
+            if (Platform.OS === 'android') {
+              ToastAndroid.showWithGravity(translate("Error") + JSON.stringify(responseJson) + translate("Please contact Admin in the Help menu"), ToastAndroid.SHORT, ToastAndroid.TOP);
+            }
+            else {
+              Alert.alert(translate("Notice"), translate("Error") + JSON.stringify(responseJson) + translate("Please contact Admin in the Help menu"));
+            }
+          }
         }).
         catch((error) => { console.log(error) });
     } catch (error) {
@@ -131,6 +139,10 @@ if (Platform.OS === 'android') {
     }
 
   }
+
+
+
+
 
 * NHABAOLA PROMOTION VIDEO
 https://youtu.be/-mjB3ULrocY
