@@ -833,7 +833,7 @@ export default class RoomDetailScreen extends React.Component {
 
                         <Text style={{
                             marginLeft: 10, color: '#fff',
-                            fontFamily: 'Arciform',
+                            
                             fontSize: responsiveFontSize(2), //justifyContent: 'center'
                         }}>{translate("Details")}</Text>
                     </TouchableOpacity>
@@ -978,7 +978,7 @@ export default class RoomDetailScreen extends React.Component {
 
                             <Text style={{
                                 fontSize: responsiveFontSize(2),
-                                fontFamily: 'Arciform',
+                                
                             }}>
                                 {this.state.roomBox.AccountName.indexOf('|') > -1 ? this.state.roomBox.AccountName.split('|')[0] : this.state.roomBox.AccountName}
 
@@ -1264,7 +1264,7 @@ export default class RoomDetailScreen extends React.Component {
                                 <Text
                                     style={{
                                         flex: 1, color: '#fff', fontWeight: '300',
-                                        fontFamily: 'Arciform',
+                                        
                                         fontSize: responsiveFontSize(1.7)
                                     }}>
                                     {translate("Price")}: {convertAmountToWording(numberWithCommas(this.state.roomBox.Price))}
@@ -1278,7 +1278,7 @@ export default class RoomDetailScreen extends React.Component {
                                             <Text
                                                 style={{
                                                     flex: 2, color: '#fff', fontWeight: '300',
-                                                    fontFamily: 'Arciform',
+                                                    
                                                     fontSize: responsiveFontSize(1.7), textAlign: 'right'
                                                 }}
                                                 key={i}>{this.state.isVietnamease ? y.CatName : this.state.isEnglish ? y.CatImg.split('|')[0] : y.CatImg.split('|')[1]}:  {this.state.roomBox.Acreage} m</Text>
@@ -1288,7 +1288,7 @@ export default class RoomDetailScreen extends React.Component {
                                 }
 
                                 {/* <Text style={{ flex: 1, textAlign: 'right', color: '#fff' }}>Diện tích:   {this.state.roomBox.Acreage} m</Text> */}
-                                <Text style={{ fontSize: 8, marginBottom: 5, color: '#fff', fontFamily: 'Arciform', }}>2</Text>
+                                <Text style={{ fontSize: 8, marginBottom: 5, color: '#fff',  }}>2</Text>
 
                             </View>
                         </View>
@@ -1342,7 +1342,7 @@ export default class RoomDetailScreen extends React.Component {
                             <Text style={{
                                 color: '#7E7E7E',
                                 textAlign: 'justify',
-                                fontFamily: 'Arciform',
+                                
                             }}>
                                 {this.state.roomBox.Description.indexOf("###") > -1 ? (this.state.isVietnamease ? this.state.roomBox.Description.split('###')[0] : this.state.isEnglish ? this.state.roomBox.Description.split('###')[1] : this.state.roomBox.Description.split('###')[2]) : this.state.roomBox.Description}
                             </Text>
@@ -1550,7 +1550,7 @@ export default class RoomDetailScreen extends React.Component {
 
 
                     <View style={styles.cardMapViewBox}>
-                        <Text style={{ marginBottom: 5, fontFamily: 'Arciform', }}>{translate("Address")}:  {this.state.roomBox.Address}</Text>
+                        <Text style={{ marginBottom: 5,  }}>{translate("Address")}:  {this.state.roomBox.Address}</Text>
                         <TouchableOpacity
                             style={{
                                 position: 'absolute', bottom: 25, left: 25, zIndex: 10,
@@ -1623,7 +1623,7 @@ export default class RoomDetailScreen extends React.Component {
                                     height: 40,
                                     padding: 5,
                                     borderRadius: 5,
-                                    fontFamily: 'Arciform',
+                                    
                                 }}
                                 ref='commentInput'
                                 returnKeyType={"done"}
@@ -1655,7 +1655,7 @@ export default class RoomDetailScreen extends React.Component {
                                     this._postCommentsAsync();
                                 }}
                             >
-                                <Text style={{ color: '#fff', fontFamily: 'Arciform', }}>{translate("Send")}</Text>
+                                <Text style={{ color: '#fff',  }}>{translate("Send")}</Text>
                             </TouchableOpacity>
                         </View>
 
@@ -1697,9 +1697,9 @@ export default class RoomDetailScreen extends React.Component {
                                         />
                                     </View>
                                     <View style={{ flex: 8 }}>
-                                        <Text style={{ color: '#73aa2a', fontSize: responsiveFontSize(1.6), marginLeft: -3, fontFamily: 'Arciform', }} > {item.FullName}</Text>
+                                        <Text style={{ color: '#73aa2a', fontSize: responsiveFontSize(1.6), marginLeft: -3,  }} > {item.FullName}</Text>
                                         <Text style={{ color: '#9B9D9D', fontSize: 10 }}>{item.UpdatedDate}</Text>
-                                        <Text style={{ fontFamily: 'Arciform', fontSize: responsiveFontSize(2) }}>{item.Content}</Text>
+                                        <Text style={{  fontSize: responsiveFontSize(2) }}>{item.Content}</Text>
                                     </View>
 
                                 </View>

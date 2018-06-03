@@ -1225,6 +1225,66 @@ export default class RoomByCategoryScreen extends React.Component {
   }
 
 
+  // _getRoomBoxHighlightAsync = async (isNew) => {
+  //   await this.setState({ refresh: true })
+
+  //   if (!isNew) { // Loading more page 
+  //     this.setState((prevState, props) => ({
+  //       page: prevState.page + 1,
+  //     }));
+  //   }
+  //   else { // Refresh page
+  //     roomBox = await [];
+  //     this.setState({ page: 1, flatListIsEnd: false })
+  //   }
+
+  //   this.setState({ // Calculate page index
+  //     roomPageIndex: (this.state.page - 1) * this.state.roomPageCount
+  //   })
+
+
+  //   try {
+  //     await fetch("http://nhabaola.vn/api/RoomBox/FO_RoomBox_GetAllData", {
+  //       method: 'POST',
+  //       headers: {
+  //         Accept: 'application/json',
+  //         'Content-Type': 'application/json',
+  //       },
+  //       body: JSON.stringify({
+  //         "PageIndex": this.state.roomPageIndex,
+  //         "PageCount": '500'//this.state.roomPageCount
+
+  //       }),
+  //     })
+  //       .then((response) => response.json())
+  //       .then((responseJson) => {
+  //         responseJson.obj.map((y) => {
+  //           if (y.IsHighlight) {
+  //             roomBox.push(y);
+  //           }
+  //         })
+
+  //         setTimeout(
+  //           () => {
+  //             this.setState({
+  //               refresh: false
+  //             })
+  //           },
+  //           1000);
+
+  //         // End Flatlist
+  //         if (JSON.stringify(responseJson.obj.length) == '0') {
+  //           this.setState({ flatListIsEnd: true, })
+  //         }
+
+  //       }).
+  //       catch((error) => { console.log(error) });
+  //   } catch (error) {
+  //     console.log(error)
+  //   }
+
+  // }
+
   _getRoomBoxHighlightAsync = async (isNew) => {
     await this.setState({ refresh: true })
 
@@ -1234,7 +1294,7 @@ export default class RoomByCategoryScreen extends React.Component {
       }));
     }
     else { // Refresh page
-      roomBox = [];
+      roomBox = await [];
       this.setState({ page: 1, flatListIsEnd: false })
     }
 
@@ -1242,9 +1302,10 @@ export default class RoomByCategoryScreen extends React.Component {
       roomPageIndex: (this.state.page - 1) * this.state.roomPageCount
     })
 
+    //alert(this.state.roomPageIndex)
 
     try {
-      await fetch("http://nhabaola.vn/api/RoomBox/FO_RoomBox_GetAllData", {
+      await fetch("http://nhabaola.vn/api/RoomBox/FO_RoomBox_GetAllDataByCategory", {
         method: 'POST',
         headers: {
           Accept: 'application/json',
@@ -1252,16 +1313,15 @@ export default class RoomByCategoryScreen extends React.Component {
         },
         body: JSON.stringify({
           "PageIndex": this.state.roomPageIndex,
-          "PageCount": '500'//this.state.roomPageCount
-
+          "PageCount": this.state.roomPageCount,
+          "CategoryID": "0"//this.props.navigation.state.params.CategoryID
         }),
       })
         .then((response) => response.json())
         .then((responseJson) => {
+
           responseJson.obj.map((y) => {
-            if (y.IsHighlight) {
-              roomBox.push(y);
-            }
+            roomBox.push(y);
           })
 
           setTimeout(
@@ -1285,6 +1345,7 @@ export default class RoomByCategoryScreen extends React.Component {
 
   }
 
+
   _getRoomBoxByCategoryAsync = async (isNew) => {
     await this.setState({ refresh: true })
 
@@ -1294,7 +1355,7 @@ export default class RoomByCategoryScreen extends React.Component {
       }));
     }
     else { // Refresh page
-      roomBox = [];
+      roomBox = await [];
       this.setState({ page: 1, flatListIsEnd: false })
     }
 
