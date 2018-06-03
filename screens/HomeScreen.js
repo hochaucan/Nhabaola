@@ -2053,12 +2053,15 @@ export default class HomeScreen extends React.Component {
                       // paddingTop: 10
                     }}
                   >
-                    <Text style={styles.cardAvatarName}>{item.AccountName.indexOf('|') > -1
+                    <Text style={{
+                      fontSize: responsiveFontSize(2),
+                      fontFamily: 'Arciform',
+                    }}>{item.AccountName.indexOf('|') > -1
                       ?
                       item.AccountName.split('|')[0]
                       :
                       item.AccountName
-                    }</Text>
+                      }</Text>
 
                     {/* Facebook Messenger */}
                     {
@@ -2166,6 +2169,7 @@ export default class HomeScreen extends React.Component {
                     <Ionicons style={styles.cardAvatarPhoneIcon} name='logo-whatsapp' />
                     <Text style={{
                       color: '#7E7E7E',
+
                       fontSize: responsiveFontSize(1.8),//13,
                       paddingLeft: 8,
                     }}>: {item.ContactPhone.indexOf("|") > -1 ? item.ContactPhone.split('|')[0] + '. LH: ' + item.ContactPhone.split('|')[1]
@@ -2233,6 +2237,7 @@ export default class HomeScreen extends React.Component {
                 <Text
                   style={{
                     flex: 1, color: '#fff', fontWeight: '300',
+                    fontFamily: 'Arciform',
                     fontSize: responsiveFontSize(1.7)
                   }}>
                   {translate("Price")}: {convertAmountToWording(item.Price)}
@@ -2246,6 +2251,7 @@ export default class HomeScreen extends React.Component {
                       <Text
                         style={{
                           flex: 2, color: '#fff', fontWeight: '300',
+                          fontFamily: 'Arciform',
                           fontSize: responsiveFontSize(1.7), textAlign: 'right'
                         }}
                         key={i}>{this.state.isVietnamease ? y.CatName : this.state.isEnglish ? y.CatImg.split('|')[0] : y.CatImg.split('|')[1]}:  {item.Acreage} m</Text>
@@ -2254,7 +2260,7 @@ export default class HomeScreen extends React.Component {
                   })
                 }
                 {/* <Text style={{ flex: 1, textAlign: 'right', color: '#fff' }}> {item.CategoryID} Diện tích:   {item.Acreage} m</Text> */}
-                <Text style={{ fontSize: 8, marginBottom: 5, color: '#fff' }}>2</Text>
+                <Text style={{ fontSize: 8, marginBottom: 5, color: '#fff', fontFamily: 'Arciform', }}>2</Text>
 
               </View>
               <View style={styles.cardDesBox}>
@@ -2305,6 +2311,7 @@ export default class HomeScreen extends React.Component {
                 </View>
 
                 <Text style={{
+                  fontFamily: 'Arciform',
                   fontSize: responsiveFontSize(1.8)
                 }}
                   ellipsizeMode='tail'
@@ -2312,7 +2319,10 @@ export default class HomeScreen extends React.Component {
                 >
                   {translate("Address")}:   {item.Address}</Text>
                 <Text
-                  style={{ marginTop: 10, color: '#9B9D9D', fontSize: responsiveFontSize(1.8) }}
+                  style={{
+                    marginTop: 10, color: '#9B9D9D', fontSize: responsiveFontSize(1.8),
+                    fontFamily:'Arciform',
+                  }}
                   ellipsizeMode='tail'
                   numberOfLines={2}
                 >
@@ -4366,9 +4376,9 @@ const styles = StyleSheet.create({
     //flex: 4,
     paddingLeft: 20,
   },
-  cardAvatarName: {
-    fontSize: responsiveFontSize(2),
-  },
+  // cardAvatarName: {
+  //   fontSize: responsiveFontSize(2),
+  // },
   cardAvatarPhoneBox: {
     //flex: 1,
     flexDirection: 'row',
