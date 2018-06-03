@@ -21,7 +21,7 @@ import UpdateRoomScreen from '../screens/UpdateRoomScreen';
 import UpdateAccountScreen from '../screens/UpdateAccountScreen';
 import RoomByCategoryScreen from '../screens/RoomByCategoryScreen';
 import PinnedRoomScreen from '../screens/PinnedRoomScreen';
-import QRScreen from '../screens/QRScreen';
+import MailboxScreen from '../screens/MailboxScreen';
 // export const ScreenStack = StackNavigator({
 //   Settings2: {
 //     screen: Settings3,
@@ -65,8 +65,8 @@ const RootStackNavigator = StackNavigator(
     PinnedRoomScreen: {
       screen: PinnedRoomScreen,
     },
-    QRScreen: {
-      screen: QRScreen,
+    MailboxScreen: {
+      screen: MailboxScreen,
     },
   },
   {

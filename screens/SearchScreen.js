@@ -382,9 +382,9 @@ export default class SearchScreen extends React.Component {
 
     }
 
-    saveDetails() {
-        alert('Save Details');
-    }
+    // saveDetails() {
+    //     alert('Save Details');
+    // }
 
     _multiSliderPriceValuesChange = async (values) => {
         await this.setState({
@@ -1228,6 +1228,70 @@ export default class SearchScreen extends React.Component {
         }
     }
 
+    _postMailboxAsync = async (_roomId, _toUserId, _AlertInfo) => {
+        //this.popupLoadingIndicator.show()
+        //alert(JSON.stringify(this.state.roomBox))
+
+
+        try {
+            await fetch("http://nhabaola.vn/api/Notification/FO_Notification_Add", {
+                method: 'POST',
+                headers: {
+                    Accept: 'application/json',
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+
+                    "UserId": _toUserId,
+                    "AlertOption": _roomId,
+                    "AlertInfo": _AlertInfo,
+                    "IsActive": "1",
+                    "CreatedBy": this.state.profile.ID,
+                    "UpdatedBy": this.state.profile.UpdatedBy
+
+                }),
+            })
+                .then((response) => response.json())
+                .then((responseJson) => {
+
+                    //alert(JSON.stringify(responseJson.ErrorCode))
+
+                    if (JSON.stringify(responseJson.ErrorCode) === "0") { // Report successful
+
+
+                        if (Platform.OS === 'android') {
+                            //ToastAndroid.showWithGravity('Cảm ơn bạn đã báo cáo chúng tôi!', ToastAndroid.SHORT, ToastAndroid.TOP);
+                        }
+                        else {
+                            //this.setState({ modalReport: false, })
+                            //Alert.alert('Thông báo', 'Cảm ơn bạn đã báo cáo chúng tôi!');
+                        }
+
+
+
+                    }
+                    else { //Post Error
+                        if (Platform.OS === 'android') {
+                            //ToastAndroid.showWithGravity('Lỗi ' + JSON.stringify(responseJson) + ', vui lòng liên hệ Admin trong mục Giúp Đỡ!', ToastAndroid.SHORT, ToastAndroid.TOP);
+                        }
+                        else {
+                            this.setState({ modalReport: false })
+                            //Alert.alert('Thông báo', 'Lỗi ' + JSON.stringify(responseJson) + ', vui lòng liên hệ Admin trong mục Giúp Đỡ!');
+                        }
+                    }
+
+
+                    // this.popupLoadingIndicator.dismiss()
+
+
+                }).
+                catch((error) => { console.log(error) });
+        } catch (error) {
+            console.log(error)
+        }
+
+    }
+
     render() {
 
         let currentMaker = null;
@@ -1596,17 +1660,25 @@ export default class SearchScreen extends React.Component {
                                         {
                                             text: translate("Agree"), onPress: () => {
                                                 roomBox.map((y) => {
+
+                                                    let _fullName = this.state.profile.FullName.indexOf('|') ? this.state.profile.FullName.split("|")[0] : this.state.profile.FullName
+
                                                     // Notify Landlord 
                                                     if (y.Images.split('|')[1] == 'true') {
                                                         notifyNBLAsync(y.Images.split('|')[0]//globalVariable.ADMIN_PUSH_TOKEN
                                                             , { "screen": "RoomDetailScreen", "params": { "roomBoxID": y.ID } } //{ ...roombox }
                                                             , "default"
-                                                            , this.state.profile.FullName + "-" + this.state.profile.UserName + " " + translate("Search") + ":"
+                                                            , _fullName + "-" + this.state.profile.UserName + " " + translate("Search") + ":"
                                                             , this.state.txtFilterResult
                                                             + ", " + translate("Radius within") + " " + this.state.radius + " " + translate("km from the searcher's location, including your post at the address") + ": "
                                                             + y.Address
                                                         ); //pushToken, data, sound, title, body
                                                     }
+
+                                                    // Send to Mailbox  
+                                                    this._postMailboxAsync(y.ID, y.CountView, // UserId
+                                                        _fullName + "-" + this.state.profile.UserName + " " + translate("Search") + ": " + this.state.txtFilterResult + ", " + translate("Radius within") + " " + this.state.radius + " " + translate("km from the searcher's location, including your post at the address") + ": " + y.Address
+                                                    )
                                                 })
 
                                                 if (Platform.OS === 'android') {
@@ -1615,6 +1687,8 @@ export default class SearchScreen extends React.Component {
                                                 else {
                                                     Alert.alert(translate("Notice"), translate("Send message successfully"));
                                                 }
+
+
                                             }
                                         },
                                     ]

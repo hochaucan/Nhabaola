@@ -163,6 +163,7 @@ export default class HomeScreen extends React.Component {
 
       ratingRoomId: 0,
       reportRoomId: 0,
+      toUserMailBox: '',
       flatListIsEnd: false,
       roomByCatHeigh: new Animated.Value(0),
       highLightBackgroundOpacity: new Animated.Value(-100),
@@ -1389,6 +1390,71 @@ export default class HomeScreen extends React.Component {
       console.log(error)
     }
 
+    // Send to Mailbox
+    this._postMailboxAsync('10',//this.state.toUserMailBox,
+      this.state.profile.FullName + " (" + this.state.profile.ID + ") " + translate("Complaint") + ": " + translate("Inaccurate Address or Not Called or Leased House"))
+
+  }
+
+  _postMailboxAsync = async (_toUserId, _AlertInfo) => {
+    //this.popupLoadingIndicator.show()
+
+
+    try {
+      await fetch("http://nhabaola.vn/api/Notification/FO_Notification_Add", {
+        method: 'POST',
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+
+          "UserId": _toUserId,
+          "AlertOption": this.state.reportRoomId,//"0",
+          "AlertInfo": _AlertInfo,
+          "IsActive": "1",
+          "CreatedBy": this.state.profile.ID,
+          "UpdatedBy": this.state.profile.UpdatedBy
+
+        }),
+      })
+        .then((response) => response.json())
+        .then((responseJson) => {
+
+          if (JSON.stringify(responseJson.ErrorCode) === "0") { // Report successful
+
+
+            if (Platform.OS === 'android') {
+              //ToastAndroid.showWithGravity('Cảm ơn bạn đã báo cáo chúng tôi!', ToastAndroid.SHORT, ToastAndroid.TOP);
+            }
+            else {
+              //this.setState({ modalReport: false, })
+              //Alert.alert('Thông báo', 'Cảm ơn bạn đã báo cáo chúng tôi!');
+            }
+
+
+
+          }
+          else { //Post Error
+            if (Platform.OS === 'android') {
+              //ToastAndroid.showWithGravity('Lỗi ' + JSON.stringify(responseJson) + ', vui lòng liên hệ Admin trong mục Giúp Đỡ!', ToastAndroid.SHORT, ToastAndroid.TOP);
+            }
+            else {
+              this.setState({ modalReport: false })
+              //Alert.alert('Thông báo', 'Lỗi ' + JSON.stringify(responseJson) + ', vui lòng liên hệ Admin trong mục Giúp Đỡ!');
+            }
+          }
+
+
+          // this.popupLoadingIndicator.dismiss()
+
+
+        }).
+        catch((error) => { console.log(error) });
+    } catch (error) {
+      console.log(error)
+    }
+
   }
 
   _getRoomBoxAsync = async (isNew) => {
@@ -2441,6 +2507,7 @@ export default class HomeScreen extends React.Component {
                       } else {
                         await this.setState({
                           reportRoomId: item.ID,
+                          toUserMailBox: item.CreatedBy
                         })
 
                         if (Platform.OS == 'ios') {
@@ -3831,7 +3898,7 @@ export default class HomeScreen extends React.Component {
                     , "default"
                     , this.state.profile.FullName + " " + translate("Complaint") + ":"
                     , translate("Inaccurate Address or Not Called or Leased House")
-                  ); //pushToken, data, sound, title, body
+                  ); //pushToken, data, sound, title, body       
 
                 }}
               />

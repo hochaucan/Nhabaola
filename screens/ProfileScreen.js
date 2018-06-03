@@ -642,6 +642,7 @@ export default class ProfileScreen extends React.Component {
                     marginTop: 25,
 
                 }}>
+                    {/* Post Room */}
                     <TouchableOpacity style={styles.profileMenuItem}
                         onPress={() => {
                             // this.props.navigation.navigate('PostRoomScreen')
@@ -655,6 +656,28 @@ export default class ProfileScreen extends React.Component {
                             <Text>  {translate("Post")}</Text>
                         </Ionicons>
                     </TouchableOpacity>
+
+                    {/* MailBox */}
+                    <TouchableOpacity style={styles.profileMenuItem}
+                        onPress={() => {
+
+                            this.props.navigation.navigate("MailboxScreen")
+
+                            //this._getMailBoxAsync();
+
+                            // this.props.navigation.navigate('PostRoomScreen')
+                            // this.props.navigation.navigate('PostRoomScreen', {
+                            //     onRefreshScreen: this.onRefreshScreen,
+                            //     _getWalletAsync: this._getWalletAsync,
+                            // })
+                        }}
+                    >
+                        <Ionicons style={styles.profileMenuItemText} name='ios-mail-open-outline'>
+                            <Text>  {translate("Mailbox")}</Text>
+                        </Ionicons>
+                    </TouchableOpacity>
+
+                    {/* History Room */}
                     <TouchableOpacity style={styles.profileMenuItem}
                         onPress={() => {
 
@@ -665,6 +688,8 @@ export default class ProfileScreen extends React.Component {
                             <Text>  {translate("Posted history")}</Text>
                         </Ionicons>
                     </TouchableOpacity>
+
+                    {/* Pinned */}
                     <TouchableOpacity style={styles.profileMenuItem}
                         onPress={() => {
 
@@ -675,6 +700,8 @@ export default class ProfileScreen extends React.Component {
                             <Text>  {translate("Pinned")}</Text>
                         </Ionicons>
                     </TouchableOpacity>
+
+                    {/* Wallet */}
                     <TouchableOpacity style={styles.profileMenuItem}
                         onPress={() => {
                             // if (Platform.OS == 'ios') {

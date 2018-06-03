@@ -1156,7 +1156,74 @@ export default class RoomByCategoryScreen extends React.Component {
       console.log(error)
     }
 
+    // Send to Mailbox
+    this._postMailboxAsync('10',//this.state.toUserMailBox,
+      this.state.profile.FullName + " (" + this.state.profile.ID + ") " + translate("Complaint") + ": " + translate("Inaccurate Address or Not Called or Leased House"))
+
+
   }
+
+  _postMailboxAsync = async (_toUserId, _AlertInfo) => {
+    //this.popupLoadingIndicator.show()
+
+
+    try {
+      await fetch("http://nhabaola.vn/api/Notification/FO_Notification_Add", {
+        method: 'POST',
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+
+          "UserId": _toUserId,
+          "AlertOption": this.state.reportRoomId,
+          "AlertInfo": _AlertInfo,
+          "IsActive": "1",
+          "CreatedBy": this.state.profile.ID,
+          "UpdatedBy": this.state.profile.UpdatedBy
+
+        }),
+      })
+        .then((response) => response.json())
+        .then((responseJson) => {
+
+          if (JSON.stringify(responseJson.ErrorCode) === "0") { // Report successful
+
+
+            if (Platform.OS === 'android') {
+              //ToastAndroid.showWithGravity('Cảm ơn bạn đã báo cáo chúng tôi!', ToastAndroid.SHORT, ToastAndroid.TOP);
+            }
+            else {
+              //this.setState({ modalReport: false, })
+              //Alert.alert('Thông báo', 'Cảm ơn bạn đã báo cáo chúng tôi!');
+            }
+
+
+
+          }
+          else { //Post Error
+            if (Platform.OS === 'android') {
+              //ToastAndroid.showWithGravity('Lỗi ' + JSON.stringify(responseJson) + ', vui lòng liên hệ Admin trong mục Giúp Đỡ!', ToastAndroid.SHORT, ToastAndroid.TOP);
+            }
+            else {
+              this.setState({ modalReport: false })
+              //Alert.alert('Thông báo', 'Lỗi ' + JSON.stringify(responseJson) + ', vui lòng liên hệ Admin trong mục Giúp Đỡ!');
+            }
+          }
+
+
+          // this.popupLoadingIndicator.dismiss()
+
+
+        }).
+        catch((error) => { console.log(error) });
+    } catch (error) {
+      console.log(error)
+    }
+
+  }
+
 
   _getRoomBoxHighlightAsync = async (isNew) => {
     await this.setState({ refresh: true })
@@ -1591,7 +1658,23 @@ export default class RoomByCategoryScreen extends React.Component {
 
         {/* Header */}
         <View style={{ flexDirection: 'row', padding: 10, backgroundColor: '#a4d227', alignItems: 'center' }}>
+
           <TouchableOpacity
+            style={{ flexDirection: 'row', alignItems: 'center' }}
+            onPress={() => {
+              this.props.navigation.goBack()
+            }}>
+            <Ionicons style={{ fontSize: 28, color: '#fff', paddingTop: 2 }} name='ios-arrow-back'></Ionicons>
+
+            <Text style={{
+              marginLeft: 10, color: '#fff',
+              fontSize: responsiveFontSize(2), //justifyContent: 'center'
+            }}>{this.props.navigation.state.params.CategoryName}</Text>
+          </TouchableOpacity>
+
+
+
+          {/* <TouchableOpacity
             style={{}}
             onPress={() => {
               this.props.navigation.goBack()
@@ -1605,7 +1688,7 @@ export default class RoomByCategoryScreen extends React.Component {
             marginLeft: 20, color: '#fff',
             fontSize: responsiveFontSize(2.2),
             justifyContent: 'center'
-          }}>{this.props.navigation.state.params.CategoryName}</Text>
+          }}>{this.props.navigation.state.params.CategoryName}</Text> */}
         </View>
 
 

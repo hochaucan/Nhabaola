@@ -609,6 +609,73 @@ export default class RoomDetailScreen extends React.Component {
         } catch (error) {
             console.log(error)
         }
+        // Send to Mailbox
+        this._postMailboxAsync('10',//this.state.toUserMailBox,
+            this.state.profile.FullName + " (" + this.state.profile.ID + ") " + translate("Complaint") + ": " + translate("Inaccurate Address or Not Called or Leased House"))
+
+    }
+
+    _postMailboxAsync = async (_toUserId, _AlertInfo) => {
+        //this.popupLoadingIndicator.show()
+        //alert(JSON.stringify(this.state.roomBox))
+
+
+        try {
+            await fetch("http://nhabaola.vn/api/Notification/FO_Notification_Add", {
+                method: 'POST',
+                headers: {
+                    Accept: 'application/json',
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+
+                    "UserId": _toUserId,
+                    "AlertOption": this.state.roomBox.ID,
+                    "AlertInfo": _AlertInfo,
+                    "IsActive": "1",
+                    "CreatedBy": this.state.profile.ID,
+                    "UpdatedBy": this.state.profile.UpdatedBy
+
+                }),
+            })
+                .then((response) => response.json())
+                .then((responseJson) => {
+
+                    //alert(JSON.stringify(responseJson.ErrorCode))
+
+                    if (JSON.stringify(responseJson.ErrorCode) === "0") { // Report successful
+
+
+                        if (Platform.OS === 'android') {
+                            //ToastAndroid.showWithGravity('Cảm ơn bạn đã báo cáo chúng tôi!', ToastAndroid.SHORT, ToastAndroid.TOP);
+                        }
+                        else {
+                            //this.setState({ modalReport: false, })
+                            //Alert.alert('Thông báo', 'Cảm ơn bạn đã báo cáo chúng tôi!');
+                        }
+
+
+
+                    }
+                    else { //Post Error
+                        if (Platform.OS === 'android') {
+                            //ToastAndroid.showWithGravity('Lỗi ' + JSON.stringify(responseJson) + ', vui lòng liên hệ Admin trong mục Giúp Đỡ!', ToastAndroid.SHORT, ToastAndroid.TOP);
+                        }
+                        else {
+                            this.setState({ modalReport: false })
+                            //Alert.alert('Thông báo', 'Lỗi ' + JSON.stringify(responseJson) + ', vui lòng liên hệ Admin trong mục Giúp Đỡ!');
+                        }
+                    }
+
+
+                    // this.popupLoadingIndicator.dismiss()
+
+
+                }).
+                catch((error) => { console.log(error) });
+        } catch (error) {
+            console.log(error)
+        }
 
     }
 
@@ -838,12 +905,13 @@ export default class RoomDetailScreen extends React.Component {
                                         {
                                             text: translate("Agree"), onPress: () => {
                                                 //  roomBox.map((y) => {
+                                                let _fullName = this.state.profile.FullName.indexOf('|') ? this.state.profile.FullName.split("|")[0] : this.state.profile.FullName
                                                 // Notify Landlord 
                                                 if (this.state.roomBox.Images.split('|')[1] == 'true') {
                                                     notifyNBLAsync(this.state.roomBox.Images.split('|')[0]//globalVariable.ADMIN_PUSH_TOKEN
                                                         , { "screen": "RoomDetailScreen", "params": { "roomBoxID": this.state.roomBox.ID } } //{ ...roombox }
                                                         , "default"
-                                                        , this.state.profile.FullName + "-" + this.state.profile.UserName + " " + translate("Search") + ":"
+                                                        , _fullName + "-" + this.state.profile.UserName + " " + translate("Search") + ":"
                                                         , translate("Your post at the address") + ": " + this.state.roomBox.Address
 
                                                     ); //pushToken, data, sound, title, body
@@ -856,6 +924,10 @@ export default class RoomDetailScreen extends React.Component {
                                                 else {
                                                     Alert.alert(translate("Notice"), translate("Send message successfully"));
                                                 }
+
+                                                // Send to Mailbox  
+                                                this._postMailboxAsync(this.state.roomBox.CountView, // UserId
+                                                    _fullName + "-" + this.state.profile.UserName + " " + translate("Search") + ": " + translate("Your post at the address") + ": " + this.state.roomBox.Address)
                                             }
                                         },
                                     ]

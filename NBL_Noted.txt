@@ -132,6 +132,9 @@ if (Platform.OS === 'android') {
 
   }
 
+* NHABAOLA PROMOTION VIDEO
+https://youtu.be/-mjB3ULrocY
+
 
 * INFOPLIST IOS
 https://developer.apple.com/library/content/qa/qa1937/_index.html
@@ -555,6 +558,7 @@ translate("Delete")
   translate("Comment")
   translate("Name")
   translate("Email")
+  translate("Mailbox")
   translate("Camera")
   translate("Radius")
   translate("Go")
