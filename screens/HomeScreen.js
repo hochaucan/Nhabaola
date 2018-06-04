@@ -2639,11 +2639,33 @@ export default class HomeScreen extends React.Component {
         {/* Action Button */}
         {
           this.state.isActionButtonVisible ?
-            <ActionButton buttonColor="#73aa2a" shadowStyle={{ elevation: 2 }}
+            <ActionButton
+              buttonColor="#73aa2a" s
+              //hadowStyle={{ elevation: 2 }}
               //bgColor={"red"}
               offsetX={20}
               offsetY={55}
-              //renderIcon={<Icon name="ios-contact" style={styles.actionButtonIcon} />}
+              renderIcon={active => active
+                ? (<Icon name="md-create" style={{
+                  fontSize: 25,
+                  height: 22,
+                  color: 'white',
+                }} />)
+                : (<Icon name="md-create" style={{
+                  fontSize: 25,
+                  height: 22,
+                  color: 'white',
+                }} />)}
+              // shadowStyle={{
+              //   shadowColor: "#000000",
+              //   shadowOpacity: 0.8,
+              //   shadowRadius: 2,
+              //   shadowOffset: {
+              //     height: 1,
+              //     width: 0
+              //   },
+              //   elevation: 2
+              // }}
               onPress={() => {
                 if (this.state.profile === null) {
                   // if (Platform.OS == 'ios') {
@@ -3688,7 +3710,9 @@ export default class HomeScreen extends React.Component {
             this.setState({ modalLogin: false })
           }}
           onShow={() => {
-            this.refs.iosUserNameInput.focus()
+            setTimeout(() => {
+              this.refs.iosUserNameInput.focus()
+            }, 150)
           }}
         >
 

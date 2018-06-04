@@ -2180,7 +2180,7 @@ export default class SearchScreen extends React.Component {
                     >
                         <TouchableOpacity
                             style={{
-                                elevation: 5,
+                                //elevation: 5,
                             }}
                             onPress={async () => {
                                 // this.fitAllMarkers();
