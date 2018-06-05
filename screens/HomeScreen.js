@@ -2035,7 +2035,7 @@ export default class HomeScreen extends React.Component {
               <Text style={{
                 color: '#6c6d6d',
                 padding: 20, fontSize: responsiveFontSize(2.5)
-              }}>{translate("Please check the INTERNET and reload the page")}</Text>
+              }}>Bạn vui lòng kiểm tra INTERNET và tải lại trang</Text>
             </TouchableOpacity>
           </View>
         }

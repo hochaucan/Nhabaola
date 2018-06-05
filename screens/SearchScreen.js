@@ -375,6 +375,7 @@ export default class SearchScreen extends React.Component {
             // isSearchNotify: false,
             registerLocation: null,
             findingBoxMaker: null,
+            modalRoomList: false,
         }
     }
 
@@ -417,10 +418,10 @@ export default class SearchScreen extends React.Component {
     fitAllMarkers() {
         this.map.fitToCoordinates(MARKERS, {
             edgePadding: {
-                top: Platform.OS == 'ios' ? responsiveHeight(10) : responsiveHeight(40),
-                bottom: Platform.OS == 'ios' ? responsiveHeight(10) : responsiveHeight(40),
-                right: Platform.OS == 'ios' ? responsiveHeight(10) : responsiveHeight(40),
-                left: Platform.OS == 'ios' ? responsiveHeight(10) : responsiveHeight(40)
+                top: 50,//Platform.OS == 'ios' ? responsiveHeight(10) : responsiveHeight(40),
+                bottom: 50,//Platform.OS == 'ios' ? responsiveHeight(10) : responsiveHeight(40),
+                right: 50,//Platform.OS == 'ios' ? responsiveHeight(10) : responsiveHeight(40),
+                left: 50//Platform.OS == 'ios' ? responsiveHeight(10) : responsiveHeight(40)
             },//DEFAULT_PADDING,
             animated: true,
         });
@@ -1862,7 +1863,7 @@ export default class SearchScreen extends React.Component {
 
                         /* style={{ paddingBottom: this.state.hackHeight, alignSelf: 'stretch', }} */
                         style={{
-                            //flex: 1,
+                            flex: 1,
                             //width: responsiveWidth(100),
                             //height: responsiveHeight(100),
                             alignSelf: 'stretch',
@@ -2159,7 +2160,7 @@ export default class SearchScreen extends React.Component {
                 {/* Room List */}
                 < Animated.View style={{
                     width: width,
-                    height: this.state.houseListHeigh, //responsiveHeight(28),
+                    height: 80,//this.state.houseListHeigh, //responsiveHeight(28),
                     backgroundColor: 'transparent',
                     zIndex: 10,
                     position: 'absolute',
@@ -2189,39 +2190,55 @@ export default class SearchScreen extends React.Component {
                                 //elevation: 5,
                             }}
                             onPress={async () => {
+
+                                //this.popupRoomList.show()
+                                this.setState({ modalRoomList: true })
+
+                                // setTimeout(() => {
+
+                                //     this.map.fitToCoordinates(MARKERS, {
+                                //         edgePadding: {
+                                //             top: 50,
+                                //             bottom: 500,//responsiveHeight(100),
+                                //             right: 50,
+                                //             left: 50,
+                                //         },//DEFAULT_PADDING,
+                                //         animated: true,
+                                //     });
+                                // }, 1000)
                                 // this.fitAllMarkers();
-                                if (Platform.OS == 'ios') {
-                                    this.map.fitToCoordinates(MARKERS, {
-                                        edgePadding: {
-                                            top: this.state.isHouseList ? responsiveHeight(10) : responsiveHeight(10),
-                                            bottom: this.state.isHouseList ? responsiveHeight(10) : responsiveHeight(60),
-                                            right: this.state.isHouseList ? responsiveHeight(10) : responsiveHeight(15),
-                                            left: this.state.isHouseList ? responsiveHeight(10) : responsiveHeight(15)
-                                        },//DEFAULT_PADDING,
-                                        animated: true,
-                                    });
-                                } else { // Android
-                                    this.map.fitToCoordinates(MARKERS, {
-                                        edgePadding: {
-                                            top: this.state.isHouseList ? responsiveHeight(40) : responsiveHeight(60),
-                                            bottom: this.state.isHouseList ? responsiveHeight(40) : responsiveHeight(250),
-                                            right: this.state.isHouseList ? responsiveHeight(40) : responsiveHeight(230),
-                                            left: this.state.isHouseList ? responsiveHeight(40) : responsiveHeight(230)
-                                        },//DEFAULT_PADDING,
-                                        animated: true,
-                                    });
-                                }
-                                Animated.timing(                  // Animate over time
-                                    this.state.houseListHeigh,            // The animated value to drive
-                                    {
-                                        toValue: this.state.isHouseList ? responsiveHeight(13) : responsiveHeight(60),
-                                        easing: Easing.bounce,
-                                        duration: 1200,              // Make it take a while
-                                    }
-                                ).start();
+                                // if (Platform.OS == 'ios') {
+                                //     this.map.fitToCoordinates(MARKERS, {
+                                //         edgePadding: {
+                                //             top: this.state.modalRoomList ? responsiveHeight(10) : responsiveHeight(10),
+                                //             bottom: this.state.modalRoomList ? responsiveHeight(10) : responsiveHeight(60),
+                                //             right: this.state.modalRoomList ? responsiveHeight(10) : responsiveHeight(15),
+                                //             left: this.state.modalRoomList ? responsiveHeight(10) : responsiveHeight(15)
+                                //         },//DEFAULT_PADDING,
+                                //         animated: true,
+                                //     });
+                                // } else { // Android
+                                //     this.map.fitToCoordinates(MARKERS, {
+                                //         edgePadding: {
+                                //             top: this.state.modalRoomList ? responsiveHeight(40) : responsiveHeight(60),
+                                //             bottom: this.state.modalRoomList ? responsiveHeight(40) : responsiveHeight(250),
+                                //             right: this.state.modalRoomList ? responsiveHeight(40) : responsiveHeight(230),
+                                //             left: this.state.modalRoomList ? responsiveHeight(40) : responsiveHeight(230)
+                                //         },//DEFAULT_PADDING,
+                                //         animated: true,
+                                //     });
+                                // }
+                                // Animated.timing(                  // Animate over time
+                                //     this.state.houseListHeigh,            // The animated value to drive
+                                //     {
+                                //         toValue: this.state.isHouseList ? responsiveHeight(13) : responsiveHeight(60),
+                                //         easing: Easing.bounce,
+                                //         duration: 1200,              // Make it take a while
+                                //     }
+                                // ).start();
 
 
-                                this.setState({ isHouseList: !this.state.isHouseList })
+                                //this.setState({ modalRoomList: !this.state.modalRoomList })
                             }}
                         >
                             {/* <Text>Keo len</Text> */}
@@ -2236,7 +2253,7 @@ export default class SearchScreen extends React.Component {
                                 shadowRadius: 2,
                                 //marginTop: -3,
 
-                            }} name={this.state.isHouseList ? 'ios-arrow-dropdown-circle-outline' : 'ios-arrow-dropup-circle-outline'} />
+                            }} name='ios-arrow-dropup-circle-outline' />
                         </TouchableOpacity>
 
                         <View
@@ -2388,139 +2405,6 @@ export default class SearchScreen extends React.Component {
                             </View>
                         </View>
 
-                        <FlatList
-                            //onScroll={this._onScroll}
-                            // ref='searchresult'
-                            refreshing={this.state.refreshFlatlist}
-                            keyboardShouldPersistTaps="always"
-                            removeClippedSubviews={true}
-                            initialNumToRender={2}
-                            shouldItemUpdate={this._shouldItemUpdate}
-
-                            // onRefresh={() => { this._refreshRoomBox() }}
-
-                            onEndReachedThreshold={0.2}
-                            onEndReached={() => {
-                                //alert("refreshing")
-                                // this._getRoomByFilter(false);
-
-                            }}
-
-
-                            data={roomBox}
-                            renderItem={({ item }) =>
-                                <TouchableOpacity
-                                    style={{}}
-                                    onPress={() => {
-                                        // this.props.navigation.navigate('RoomDetailScreen', { item });
-                                    }}
-                                >
-                                    <View style={{
-                                        flex: 1,
-                                        flexDirection: 'row',
-                                        paddingTop: 10,
-                                        paddingBottom: 10,
-                                        borderBottomWidth: 0.3,
-                                        borderColor: '#9B9D9D',
-                                    }}>
-                                        <TouchableOpacity
-                                            style={{
-                                                flex: 3,
-
-                                            }}
-                                            onPress={() => {
-                                                this.props.navigation.navigate('RoomDetailScreen', { item });
-                                            }}
-                                        >
-                                            <Image
-                                                style={{ flex: 1, borderRadius: 5, }}
-                                                source={{ uri: item.Title }} />
-                                        </TouchableOpacity>
-                                        <View style={styles.searchCardTextBox}>
-                                            <Text style={{
-                                                flex: 2,
-                                                fontSize: responsiveFontSize(1.5),
-                                            }}>{item.Address}</Text>
-                                            {/* <Text style={styles.searchCardPostDate}>Ngày đăng: {item.UpdatedDate}</Text> */}
-
-                                            <View style={{
-                                                flexDirection: 'row',
-                                            }}>
-                                                {
-                                                    this.state.roomCategory.map((y, i) => {
-                                                        return (
-                                                            y.ID == item.CategoryID &&
-                                                            <Text
-                                                                style={{ flex: 3, color: '#73aa2a', fontSize: responsiveFontSize(1.5) }}
-                                                                key={i}>{this.state.isVietnamease ? y.CatName : this.state.isEnglish ? y.CatImg.split('|')[0] : y.CatImg.split('|')[1]}</Text>
-                                                        )
-                                                    })
-                                                }
-
-                                                {/* Location Direction */}
-                                                <TouchableOpacity
-                                                    style={{
-                                                        flex: 1, justifyContent: 'center', alignItems: 'center',
-                                                        shadowColor: '#000',
-                                                        shadowOffset: { width: 0, height: 2 },
-                                                        shadowOpacity: 0.2,
-                                                        shadowRadius: 2,
-                                                    }}
-                                                    onPress={() => {
-                                                        const data = {
-                                                            source: {
-                                                                latitude: parseFloat(this.state.location.coords.latitude), //10.791609,//-33.8356372,
-                                                                longitude: parseFloat(this.state.location.coords.longitude), //106.702763,//18.6947617
-                                                            },
-                                                            destination: {
-                                                                latitude: parseFloat(item.Latitude), //-33.8600024,
-                                                                longitude: parseFloat(item.Longitude) //18.697459
-                                                            },
-                                                            params: [
-                                                                {
-                                                                    key: "dirflg",
-                                                                    value: "d"
-                                                                }
-                                                            ]
-                                                        }
-
-                                                        getDirections(data)
-                                                    }}
-                                                >
-                                                    <Ionicons style={{
-                                                        color: '#fff', fontSize: responsiveFontSize(1.5),
-                                                        padding: 4, borderRadius: 5, backgroundColor: '#73aa2a',
-                                                        marginTop: 3, marginBottom: 2, elevation: 2,
-
-                                                    }} name='md-return-right' >  {translate("Go")}</Ionicons>
-
-                                                </TouchableOpacity>
-
-
-                                            </View>
-
-                                            <View style={styles.searchCardPriceBox}>
-
-
-                                                <Text style={{ flex: 1, fontSize: responsiveFontSize(1.8) }}>{convertAmountToWording(item.Price)}</Text>
-                                                <View style={{ flex: 1, flexDirection: 'row', }}>
-                                                    <Text style={{ fontSize: responsiveFontSize(1.8) }} >{item.Acreage} m</Text>
-                                                    <Text style={{ fontSize: 8, marginBottom: 5 }}>2</Text>
-                                                </View>
-                                                <Ionicons style={styles.searCardDistanceIcon} name='md-pin' >  {item.Distance} km</Ionicons>
-                                            </View>
-
-
-
-
-
-
-                                        </View>
-                                    </View>
-                                </TouchableOpacity>
-                            }
-                            keyExtractor={item => item.ID + 'nhabaola'}
-                        />
 
                     </View>
 
@@ -2536,6 +2420,385 @@ export default class SearchScreen extends React.Component {
                 }}>
 
 
+                    {/* Modal Room List */}
+                    <Modal
+                        animationType={"slide"}
+                        transparent={false}
+                        visible={this.state.modalRoomList}
+                        onRequestClose={() => {
+                            this.setState({ modalRoomList: false })
+                        }}
+                    // onShow={() => {
+
+                    // }}
+                    >
+                        {/* <View
+                            style={{
+                                height: responsiveHeight(40),
+                                opacity: 0.5,
+                                backgroundColor: '#fff'
+                                // justifyContent: 'flex-end'
+                            }}
+                        >
+                        </View> */}
+                        <View
+                            style={{
+                                backgroundColor: '#fff',
+                                paddingTop: 30,
+                                paddingLeft: 20,
+                                paddingRight: 20,
+                                //height: responsiveHeight(60),
+
+                            }}
+                        >
+                            <TouchableOpacity
+                                style={{
+                                    //marginTop: 10,
+                                }}
+                                onPress={async () => {
+
+                                    //this.setState({ modalRoomList: this.state.isHouseList ? false : true })
+                                    this.setState({ modalRoomList: !this.state.modalRoomList })
+                                    this.map.fitToCoordinates(MARKERS, {
+                                        edgePadding: {
+                                            top: 50,
+                                            bottom: 50,
+                                            right: 50,
+                                            left: 50,
+                                        },//DEFAULT_PADDING,
+                                        animated: true,
+                                    });
+
+                                    // if (Platform.OS == 'ios') {
+                                    //     this.map.fitToCoordinates(MARKERS, {
+                                    //         edgePadding: {
+                                    //             top: responsiveHeight(10),
+                                    //             bottom: responsiveHeight(10),
+                                    //             right: responsiveHeight(10),
+                                    //             left: responsiveHeight(10),
+                                    //         },//DEFAULT_PADDING,
+                                    //         animated: true,
+                                    //     });
+                                    // } else { // Android
+                                    //     this.map.fitToCoordinates(MARKERS, {
+                                    //         edgePadding: {
+                                    //             top: this.state.modalRoomList ? responsiveHeight(40) : responsiveHeight(60),
+                                    //             bottom: this.state.modalRoomList ? responsiveHeight(40) : responsiveHeight(250),
+                                    //             right: this.state.modalRoomList ? responsiveHeight(40) : responsiveHeight(230),
+                                    //             left: this.state.modalRoomList ? responsiveHeight(40) : responsiveHeight(230)
+                                    //         },//DEFAULT_PADDING,
+                                    //         animated: true,
+                                    //     });
+                                    // }
+
+                                }}
+                            >
+                                {/* <Text>Keo len</Text> */}
+                                <Ionicons style={{
+                                    color: '#9B9D9D',
+                                    textAlign: 'center',
+                                    fontSize: responsiveFontSize(4),
+                                    elevation: 2,
+                                    shadowColor: '#000',
+                                    shadowOffset: { width: 0, height: 2 },
+                                    shadowOpacity: 0.2,
+                                    shadowRadius: 2,
+                                    //marginTop: -3,
+
+                                }} name='ios-arrow-dropdown-circle-outline' />
+                            </TouchableOpacity>
+                            <View
+                                style={{
+                                    flexDirection: 'row',
+                                    alignContent: 'center',
+                                    alignItems: 'center',
+                                    justifyContent: 'space-between',
+                                    paddingBottom:10,
+                                }}
+                            >
+                                <View
+                                    style={{
+                                        flex: 1,
+                                    }}
+                                >
+                                    <Text style={{
+                                        color: '#73aa2a',
+                                        //paddingBottom: 4,
+                                        fontSize: responsiveFontSize(2),
+
+                                        // }}>{translate("Finding")}  {roomBox.length}</Text>
+                                    }}>{translate("Finding")}  {this.state.roomCount}</Text>
+                                </View>
+
+                                <View
+                                    style={{
+                                        flex: 1,
+                                        flexDirection: 'row',
+                                        alignContent: 'center',
+                                        alignItems: 'center',
+                                        justifyContent: 'flex-end'
+                                    }}
+                                >
+
+                                    <Text
+                                        style={{
+                                            marginRight: 6,
+                                            fontSize: responsiveFontSize(1.7),
+                                            color: '#9B9D9D'
+                                        }}
+                                    >
+                                        {this.state.roomPageIndex + 1} - {(this.state.roomPageIndex + this.state.roomPageCount) > this.state.roomCount ? this.state.roomCount : (this.state.roomPageIndex + this.state.roomPageCount)}
+                                    </Text>
+                                    <TouchableOpacity
+                                        style={{
+
+                                        }}
+                                        onPress={() => {
+
+                                            if (this.state.page > 1) {
+                                                if (isFilterRoom) {
+                                                    this._getRoomByFilter(false, false)
+                                                } else {
+                                                    this._getFindingBoxAsync(false, false)
+                                                }
+                                            }
+                                        }}
+                                    >
+                                        <Ionicons style={{
+                                            color: this.state.page > 1 ? '#73aa2a' : '#fff',
+                                            fontSize: responsiveFontSize(4),
+                                            // marginRight: 5,
+                                        }}
+                                            name='ios-arrow-back'
+                                        />
+                                    </TouchableOpacity>
+
+                                    {/* <Text
+                                    style={{
+                                        marginLeft: 5,
+                                        marginRight: 5,
+                                        fontSize: responsiveFontSize(1.8),
+                                        color: '#73aa2a'
+                                    }}
+                                >{translate("Page")} {this.state.page}</Text> */}
+                                    <ModalDropdown
+                                        //options={['option 1', 'option 2']}
+                                        options={pageSize}
+                                        style={{
+                                            // marginRight: 2,
+                                            // marginLeft: 2,
+                                            // flexDirection: 'row',
+                                            // alignContent: 'center',
+                                            // alignItems: 'center',
+                                            // justifyContent: 'center'
+
+                                        }}
+                                        dropdownStyle={{ width: 50 }}
+                                        defaultValue='0'
+                                        //  onDropdownWillShow={this._dropdown_5_willShow.bind(this)}
+                                        // onDropdownWillHide={this._dropdown_5_willHide.bind(this)}
+                                        onSelect={(idx, value) => {
+                                            // alert(value)
+                                            if (isFilterRoom) {
+                                                this._getRoomByFilter(false, true, value)
+                                            } else {
+                                                this._getFindingBoxAsync(false, true, value)
+                                            }
+
+
+                                        }}
+
+                                    >
+
+                                        <Text
+                                            style={{
+                                                marginLeft: 5,
+                                                marginRight: 5,
+                                                fontSize: responsiveFontSize(1.8),
+                                                color: '#73aa2a'
+                                            }}
+                                        >{translate("Page")} {this.state.page} <Ionicons style={{ marginLeft: 2 }} name='ios-arrow-dropdown' /></Text>
+
+                                    </ModalDropdown>
+
+                                    <TouchableOpacity
+                                        style={{
+
+                                        }}
+                                        onPress={() => {
+
+                                            this.setState({
+                                                pageEnd: this.state.roomCount > 0 ? (this.state.roomCount / this.state.roomPageCount) : 0
+                                            })
+
+                                            //alert(this.state.pageEnd)
+
+                                            if (this.state.page <= this.state.pageEnd) {
+
+
+
+                                                if (isFilterRoom) {
+                                                    this._getRoomByFilter(false, true)
+                                                } else {
+                                                    this._getFindingBoxAsync(false, true)
+                                                }
+
+                                            }
+                                        }}
+                                    >
+                                        <Ionicons style={{
+                                            color: this.state.page <= this.state.pageEnd ? '#73aa2a' : '#fff',
+                                            fontSize: responsiveFontSize(4),
+                                        }}
+                                            name='ios-arrow-forward'
+                                        />
+                                    </TouchableOpacity>
+
+                                </View>
+                            </View>
+
+                            <FlatList
+                                //onScroll={this._onScroll}
+                                // ref='searchresult'
+                                refreshing={this.state.refreshFlatlist}
+                                keyboardShouldPersistTaps="always"
+                                removeClippedSubviews={true}
+                                initialNumToRender={2}
+                                shouldItemUpdate={this._shouldItemUpdate}
+
+                                // onRefresh={() => { this._refreshRoomBox() }}
+
+                                onEndReachedThreshold={0.2}
+                                onEndReached={() => {
+                                    //alert("refreshing")
+                                    // this._getRoomByFilter(false);
+
+                                }}
+
+
+                                data={roomBox}
+                                renderItem={({ item }) =>
+                                    <TouchableOpacity
+                                        style={{}}
+                                        onPress={() => {
+                                            // this.props.navigation.navigate('RoomDetailScreen', { item });
+                                        }}
+                                    >
+                                        <View style={{
+                                            flex: 1,
+                                            flexDirection: 'row',
+                                            paddingTop: 10,
+                                            paddingBottom: 10,
+                                            borderBottomWidth: 0.3,
+                                            borderColor: '#9B9D9D',
+                                        }}>
+                                            <TouchableOpacity
+                                                style={{
+                                                    flex: 3,
+
+                                                }}
+                                                onPress={() => {
+                                                    this.setState({ modalRoomList: false })
+                                                    this.props.navigation.navigate('RoomDetailScreen', { item });
+                                                }}
+                                            >
+                                                <Image
+                                                    style={{ flex: 1, borderRadius: 5, }}
+                                                    source={{ uri: item.Title }} />
+                                            </TouchableOpacity>
+                                            <View style={styles.searchCardTextBox}>
+                                                <Text style={{
+                                                    flex: 2,
+                                                    fontSize: responsiveFontSize(1.5),
+                                                }}>{item.Address}</Text>
+                                                {/* <Text style={styles.searchCardPostDate}>Ngày đăng: {item.UpdatedDate}</Text> */}
+
+                                                <View style={{
+                                                    flexDirection: 'row',
+                                                }}>
+                                                    {
+                                                        this.state.roomCategory.map((y, i) => {
+                                                            return (
+                                                                y.ID == item.CategoryID &&
+                                                                <Text
+                                                                    style={{ flex: 3, color: '#73aa2a', fontSize: responsiveFontSize(1.5) }}
+                                                                    key={i}>{this.state.isVietnamease ? y.CatName : this.state.isEnglish ? y.CatImg.split('|')[0] : y.CatImg.split('|')[1]}</Text>
+                                                            )
+                                                        })
+                                                    }
+
+                                                    {/* Location Direction */}
+                                                    <TouchableOpacity
+                                                        style={{
+                                                            //flex: 1, 
+                                                            justifyContent: 'center', alignItems: 'center',
+                                                            shadowColor: '#000',
+                                                            shadowOffset: { width: 0, height: 2 },
+                                                            shadowOpacity: 0.2,
+                                                            shadowRadius: 2,
+                                                            //padding: 4, 
+                                                            borderRadius: 5, backgroundColor: '#73aa2a',
+                                                        }}
+                                                        onPress={() => {
+                                                            const data = {
+                                                                source: {
+                                                                    latitude: parseFloat(this.state.location.coords.latitude), //10.791609,//-33.8356372,
+                                                                    longitude: parseFloat(this.state.location.coords.longitude), //106.702763,//18.6947617
+                                                                },
+                                                                destination: {
+                                                                    latitude: parseFloat(item.Latitude), //-33.8600024,
+                                                                    longitude: parseFloat(item.Longitude) //18.697459
+                                                                },
+                                                                params: [
+                                                                    {
+                                                                        key: "dirflg",
+                                                                        value: "d"
+                                                                    }
+                                                                ]
+                                                            }
+
+                                                            getDirections(data)
+                                                        }}
+                                                    >
+                                                        <Ionicons style={{
+                                                            color: '#fff', fontSize: responsiveFontSize(1.5),
+                                                            padding: 3,
+                                                            //borderRadius: 5, backgroundColor: '#73aa2a',
+                                                            marginTop: 3, marginBottom: 2, elevation: 2,
+
+                                                        }} name='md-return-right' >  {translate("Go")}</Ionicons>
+
+                                                    </TouchableOpacity>
+
+
+                                                </View>
+
+                                                <View style={styles.searchCardPriceBox}>
+
+
+                                                    <Text style={{ flex: 1, fontSize: responsiveFontSize(1.8) }}>{convertAmountToWording(item.Price)}</Text>
+                                                    <View style={{ flex: 1, flexDirection: 'row', }}>
+                                                        <Text style={{ fontSize: responsiveFontSize(1.8) }} >{item.Acreage} m</Text>
+                                                        <Text style={{ fontSize: 8, marginBottom: 5 }}>2</Text>
+                                                    </View>
+                                                    <Ionicons style={styles.searCardDistanceIcon} name='md-pin' >  {item.Distance} km</Ionicons>
+                                                </View>
+
+
+
+
+
+
+                                            </View>
+                                        </View>
+                                    </TouchableOpacity>
+                                }
+                                keyExtractor={item => item.ID + 'nhabaola'}
+                            />
+                        </View>
+
+                    </Modal>
+
 
                     {/* Modal Filter Searching */}
                     <Modal
@@ -2545,15 +2808,15 @@ export default class SearchScreen extends React.Component {
                         onRequestClose={() => {
                             this.setState({ modalSearchFilterVisible: false })
                         }}
-                        onShow={() => {
-                            this.setState({
-                                //  unitPriceSuffixLable: translate("million"),
-                                // unitAcreageSuffixLable: translate("Tens of square meters"),
-                                //  selectedBDS: translate("All real estate"),
-                                // iosSelectedCategory: translate("All real estate"),
-                            })
-                            // this._getLanguageFromStorageAsync()
-                        }}
+                    // onShow={() => {
+                    //     this.setState({
+                    //         //  unitPriceSuffixLable: translate("million"),
+                    //         // unitAcreageSuffixLable: translate("Tens of square meters"),
+                    //         //  selectedBDS: translate("All real estate"),
+                    //         // iosSelectedCategory: translate("All real estate"),
+                    //     })
+                    //     // this._getLanguageFromStorageAsync()
+                    // }}
                     >
                         <View style={{ flex: 1, marginTop: 30, padding: 10, }}>
                             <View style={{ flex: 1, }}>
@@ -2988,6 +3251,389 @@ export default class SearchScreen extends React.Component {
 
 
                 </View>
+
+                {/* Popup Room List */}
+                <PopupDialog
+                    ref={(popupRoomList) => { this.popupRoomList = popupRoomList; }}
+                    dialogAnimation={new ScaleAnimation()}
+                    dialogStyle={{
+                        marginBottom: 100, width: responsiveWidth(90),
+                        height: responsiveHeight(60),
+                        justifyContent: 'center', padding: 20
+                    }}
+
+                    dialogTitle={<DialogTitle title={translate("Login")} titleStyle={{}} titleTextStyle={{ color: '#73aa2a' }} />}
+                    dismissOnTouchOutside={false}
+
+
+
+                // onDismissed={() => {
+                //     Keyboard.dismiss();
+                // }}
+                // onShown={() => {
+
+                // }}
+                >
+
+
+                    <View
+                        style={{
+                            backgroundColor: '#fff',
+                            paddingTop: 10,
+                            paddingLeft: 20,
+                            paddingRight: 20,
+                            height: responsiveHeight(60),
+
+                        }}
+                    >
+                        <TouchableOpacity
+                            style={{
+                                //marginTop: 10,
+                            }}
+                            onPress={async () => {
+
+                                //this.setState({ modalRoomList: this.state.isHouseList ? false : true })
+                                this.popupRoomList.dismiss()
+                                // this.setState({ modalRoomList: !this.state.modalRoomList })
+                                this.map.fitToCoordinates(MARKERS, {
+                                    edgePadding: {
+                                        top: 50,
+                                        bottom: 50,
+                                        right: 50,
+                                        left: 50,
+                                    },//DEFAULT_PADDING,
+                                    animated: true,
+                                });
+
+                                // if (Platform.OS == 'ios') {
+                                //     this.map.fitToCoordinates(MARKERS, {
+                                //         edgePadding: {
+                                //             top: responsiveHeight(10),
+                                //             bottom: responsiveHeight(10),
+                                //             right: responsiveHeight(10),
+                                //             left: responsiveHeight(10),
+                                //         },//DEFAULT_PADDING,
+                                //         animated: true,
+                                //     });
+                                // } else { // Android
+                                //     this.map.fitToCoordinates(MARKERS, {
+                                //         edgePadding: {
+                                //             top: this.state.modalRoomList ? responsiveHeight(40) : responsiveHeight(60),
+                                //             bottom: this.state.modalRoomList ? responsiveHeight(40) : responsiveHeight(250),
+                                //             right: this.state.modalRoomList ? responsiveHeight(40) : responsiveHeight(230),
+                                //             left: this.state.modalRoomList ? responsiveHeight(40) : responsiveHeight(230)
+                                //         },//DEFAULT_PADDING,
+                                //         animated: true,
+                                //     });
+                                // }
+
+                            }}
+                        >
+                            {/* <Text>Keo len</Text> */}
+                            <Ionicons style={{
+                                color: '#9B9D9D',
+                                textAlign: 'center',
+                                fontSize: responsiveFontSize(4),
+                                elevation: 2,
+                                shadowColor: '#000',
+                                shadowOffset: { width: 0, height: 2 },
+                                shadowOpacity: 0.2,
+                                shadowRadius: 2,
+                                //marginTop: -3,
+
+                            }} name='ios-arrow-dropdown-circle-outline' />
+                        </TouchableOpacity>
+                        <View
+                            style={{
+                                flexDirection: 'row',
+                                alignContent: 'center',
+                                alignItems: 'center',
+                                justifyContent: 'space-between'
+                            }}
+                        >
+                            <View
+                                style={{
+                                    flex: 1,
+                                }}
+                            >
+                                <Text style={{
+                                    color: '#73aa2a',
+                                    //paddingBottom: 4,
+                                    fontSize: responsiveFontSize(2),
+
+                                    // }}>{translate("Finding")}  {roomBox.length}</Text>
+                                }}>{translate("Finding")}  {this.state.roomCount}</Text>
+                            </View>
+
+                            <View
+                                style={{
+                                    flex: 1,
+                                    flexDirection: 'row',
+                                    alignContent: 'center',
+                                    alignItems: 'center',
+                                    justifyContent: 'center'
+                                }}
+                            >
+
+                                <Text
+                                    style={{
+                                        marginRight: 4,
+                                        fontSize: responsiveFontSize(1.7),
+                                        color: '#9B9D9D'
+                                    }}
+                                >
+                                    {this.state.roomPageIndex + 1} - {(this.state.roomPageIndex + this.state.roomPageCount) > this.state.roomCount ? this.state.roomCount : (this.state.roomPageIndex + this.state.roomPageCount)}
+                                </Text>
+                                <TouchableOpacity
+                                    style={{
+
+                                    }}
+                                    onPress={() => {
+
+                                        if (this.state.page > 1) {
+                                            if (isFilterRoom) {
+                                                this._getRoomByFilter(false, false)
+                                            } else {
+                                                this._getFindingBoxAsync(false, false)
+                                            }
+                                        }
+                                    }}
+                                >
+                                    <Ionicons style={{
+                                        color: this.state.page > 1 ? '#73aa2a' : '#fff',
+                                        fontSize: responsiveFontSize(4),
+                                        // marginRight: 5,
+                                    }}
+                                        name='ios-arrow-back'
+                                    />
+                                </TouchableOpacity>
+
+                                {/* <Text
+                                    style={{
+                                        marginLeft: 5,
+                                        marginRight: 5,
+                                        fontSize: responsiveFontSize(1.8),
+                                        color: '#73aa2a'
+                                    }}
+                                >{translate("Page")} {this.state.page}</Text> */}
+                                <ModalDropdown
+                                    //options={['option 1', 'option 2']}
+                                    options={pageSize}
+                                    style={{
+                                        // marginRight: 2,
+                                        // marginLeft: 2,
+                                        // flexDirection: 'row',
+                                        // alignContent: 'center',
+                                        // alignItems: 'center',
+                                        // justifyContent: 'center'
+
+                                    }}
+                                    dropdownStyle={{ width: 50 }}
+                                    defaultValue='0'
+                                    //  onDropdownWillShow={this._dropdown_5_willShow.bind(this)}
+                                    // onDropdownWillHide={this._dropdown_5_willHide.bind(this)}
+                                    onSelect={(idx, value) => {
+                                        // alert(value)
+                                        if (isFilterRoom) {
+                                            this._getRoomByFilter(false, true, value)
+                                        } else {
+                                            this._getFindingBoxAsync(false, true, value)
+                                        }
+
+
+                                    }}
+
+                                >
+
+                                    <Text
+                                        style={{
+                                            marginLeft: 5,
+                                            marginRight: 5,
+                                            fontSize: responsiveFontSize(1.8),
+                                            color: '#73aa2a'
+                                        }}
+                                    >{translate("Page")} {this.state.page} <Ionicons style={{ marginLeft: 2 }} name='ios-arrow-dropdown' /></Text>
+
+                                </ModalDropdown>
+
+                                <TouchableOpacity
+                                    style={{
+
+                                    }}
+                                    onPress={() => {
+
+                                        this.setState({
+                                            pageEnd: this.state.roomCount > 0 ? (this.state.roomCount / this.state.roomPageCount) : 0
+                                        })
+
+                                        //alert(this.state.pageEnd)
+
+                                        if (this.state.page <= this.state.pageEnd) {
+
+
+
+                                            if (isFilterRoom) {
+                                                this._getRoomByFilter(false, true)
+                                            } else {
+                                                this._getFindingBoxAsync(false, true)
+                                            }
+
+                                        }
+                                    }}
+                                >
+                                    <Ionicons style={{
+                                        color: this.state.page <= this.state.pageEnd ? '#73aa2a' : '#fff',
+                                        fontSize: responsiveFontSize(4),
+                                    }}
+                                        name='ios-arrow-forward'
+                                    />
+                                </TouchableOpacity>
+
+                            </View>
+                        </View>
+
+                        <FlatList
+                            //onScroll={this._onScroll}
+                            // ref='searchresult'
+                            refreshing={this.state.refreshFlatlist}
+                            keyboardShouldPersistTaps="always"
+                            removeClippedSubviews={true}
+                            initialNumToRender={2}
+                            shouldItemUpdate={this._shouldItemUpdate}
+
+                            // onRefresh={() => { this._refreshRoomBox() }}
+
+                            onEndReachedThreshold={0.2}
+                            onEndReached={() => {
+                                //alert("refreshing")
+                                // this._getRoomByFilter(false);
+
+                            }}
+
+
+                            data={roomBox}
+                            renderItem={({ item }) =>
+                                <TouchableOpacity
+                                    style={{}}
+                                    onPress={() => {
+                                        // this.props.navigation.navigate('RoomDetailScreen', { item });
+                                    }}
+                                >
+                                    <View style={{
+                                        flex: 1,
+                                        flexDirection: 'row',
+                                        paddingTop: 10,
+                                        paddingBottom: 10,
+                                        borderBottomWidth: 0.3,
+                                        borderColor: '#9B9D9D',
+                                    }}>
+                                        <TouchableOpacity
+                                            style={{
+                                                flex: 3,
+
+                                            }}
+                                            onPress={() => {
+                                                this.setState({ modalRoomList: false })
+                                                this.props.navigation.navigate('RoomDetailScreen', { item });
+                                            }}
+                                        >
+                                            <Image
+                                                style={{ flex: 1, borderRadius: 5, }}
+                                                source={{ uri: item.Title }} />
+                                        </TouchableOpacity>
+                                        <View style={styles.searchCardTextBox}>
+                                            <Text style={{
+                                                flex: 2,
+                                                fontSize: responsiveFontSize(1.5),
+                                            }}>{item.Address}</Text>
+                                            {/* <Text style={styles.searchCardPostDate}>Ngày đăng: {item.UpdatedDate}</Text> */}
+
+                                            <View style={{
+                                                flexDirection: 'row',
+                                            }}>
+                                                {
+                                                    this.state.roomCategory.map((y, i) => {
+                                                        return (
+                                                            y.ID == item.CategoryID &&
+                                                            <Text
+                                                                style={{ flex: 3, color: '#73aa2a', fontSize: responsiveFontSize(1.5) }}
+                                                                key={i}>{this.state.isVietnamease ? y.CatName : this.state.isEnglish ? y.CatImg.split('|')[0] : y.CatImg.split('|')[1]}</Text>
+                                                        )
+                                                    })
+                                                }
+
+                                                {/* Location Direction */}
+                                                <TouchableOpacity
+                                                    style={{
+                                                        //flex: 1, 
+                                                        justifyContent: 'center', alignItems: 'center',
+                                                        shadowColor: '#000',
+                                                        shadowOffset: { width: 0, height: 2 },
+                                                        shadowOpacity: 0.2,
+                                                        shadowRadius: 2,
+                                                        //padding: 4, 
+                                                        borderRadius: 5, backgroundColor: '#73aa2a',
+                                                    }}
+                                                    onPress={() => {
+                                                        const data = {
+                                                            source: {
+                                                                latitude: parseFloat(this.state.location.coords.latitude), //10.791609,//-33.8356372,
+                                                                longitude: parseFloat(this.state.location.coords.longitude), //106.702763,//18.6947617
+                                                            },
+                                                            destination: {
+                                                                latitude: parseFloat(item.Latitude), //-33.8600024,
+                                                                longitude: parseFloat(item.Longitude) //18.697459
+                                                            },
+                                                            params: [
+                                                                {
+                                                                    key: "dirflg",
+                                                                    value: "d"
+                                                                }
+                                                            ]
+                                                        }
+
+                                                        getDirections(data)
+                                                    }}
+                                                >
+                                                    <Ionicons style={{
+                                                        color: '#fff', fontSize: responsiveFontSize(1.5),
+                                                        padding: 3,
+                                                        //borderRadius: 5, backgroundColor: '#73aa2a',
+                                                        marginTop: 3, marginBottom: 2, elevation: 2,
+
+                                                    }} name='md-return-right' >  {translate("Go")}</Ionicons>
+
+                                                </TouchableOpacity>
+
+
+                                            </View>
+
+                                            <View style={styles.searchCardPriceBox}>
+
+
+                                                <Text style={{ flex: 1, fontSize: responsiveFontSize(1.8) }}>{convertAmountToWording(item.Price)}</Text>
+                                                <View style={{ flex: 1, flexDirection: 'row', }}>
+                                                    <Text style={{ fontSize: responsiveFontSize(1.8) }} >{item.Acreage} m</Text>
+                                                    <Text style={{ fontSize: 8, marginBottom: 5 }}>2</Text>
+                                                </View>
+                                                <Ionicons style={styles.searCardDistanceIcon} name='md-pin' >  {item.Distance} km</Ionicons>
+                                            </View>
+
+
+
+
+
+
+                                        </View>
+                                    </View>
+                                </TouchableOpacity>
+                            }
+                            keyExtractor={item => item.ID + 'nhabaola'}
+                        />
+                    </View>
+
+
+                </PopupDialog>
 
                 {/* Popup Searching */}
                 <PopupDialog
