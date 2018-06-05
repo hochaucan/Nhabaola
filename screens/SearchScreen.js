@@ -296,7 +296,8 @@ export default class SearchScreen extends React.Component {
         return {
             tabBarOnPress: ({ previousScene, scene, jumpToIndex }) => {
                 // Inject event
-                DeviceEventEmitter.emit('updateLanguage')
+                setTimeout(() => { DeviceEventEmitter.emit('updateLanguage') }, 400)
+
 
                 //alert(JSON.stringify(navigation.state.params)) // navigation.state.params.setLanguage
 
@@ -1860,7 +1861,12 @@ export default class SearchScreen extends React.Component {
                         ref={ref => { this.map = ref; }}
 
                         /* style={{ paddingBottom: this.state.hackHeight, alignSelf: 'stretch', }} */
-                        style={{ flex: 1, alignSelf: 'stretch', }}
+                        style={{
+                            //flex: 1,
+                            //width: responsiveWidth(100),
+                            //height: responsiveHeight(100),
+                            alignSelf: 'stretch',
+                        }}
 
                         region={this.state.mapRegion}
                         // onRegionChange={this._handleMapRegionChange}

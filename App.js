@@ -191,7 +191,7 @@ const styles = StyleSheet.create({
   },
   statusBarUnderlay: {
     height: 24,
-    backgroundColor: Platform.OS === 'ios' ? '#73aa2a' : '#b8fb02', //b8fb02, ccff00, b4fe02, d1ff18
+    backgroundColor: Platform.OS === 'ios' ? '#73aa2a' :'#73aa2a'// '#b8fb02', //b8fb02, ccff00, b4fe02, d1ff18
   },
   headerBar: {
     height: 32,
