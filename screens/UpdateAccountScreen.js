@@ -244,7 +244,14 @@ export default class UpdateAccountScreen extends React.Component {
                             Alert.alert(translate("Notice"), translate("Your information is updated successfully"));
                         }
                     }
-                    else { alert(responseJson.ErrorCode) }
+                    else {  // Error 
+                        if (Platform.OS === 'android') {
+                            ToastAndroid.showWithGravity(translate("Error") + JSON.stringify(responseJson) + translate("Please contact Admin in the Help menu"), ToastAndroid.SHORT, ToastAndroid.TOP);
+                        }
+                        else {
+                            Alert.alert(translate("Notice"), translate("Error") + JSON.stringify(responseJson) + translate("Please contact Admin in the Help menu"));
+                        }
+                    }
 
                 }).
                 catch((error) => { console.log(error) });

@@ -136,12 +136,12 @@ export default class HomeScreen extends React.Component {
       loginPassword: '',
       reAutoLoginUsername: '',
       reAutoLoginPassword: '',
-      animation: {
-        usernamePostionLeft: new Animated.Value(795),
-        passwordPositionLeft: new Animated.Value(905),
-        loginPositionTop: new Animated.Value(1402),
-        statusPositionTop: new Animated.Value(1542)
-      },
+      // animation: {
+      //   usernamePostionLeft: new Animated.Value(795),
+      //   passwordPositionLeft: new Animated.Value(905),
+      //   loginPositionTop: new Animated.Value(1402),
+      //   statusPositionTop: new Animated.Value(1542)
+      // },
 
       // Register Account
       modalRegisterAccount: false,
@@ -2680,26 +2680,26 @@ export default class HomeScreen extends React.Component {
                   }
 
 
-                  const timing = Animated.timing;
-                  Animated.parallel([
-                    timing(this.state.animation.usernamePostionLeft, {
-                      toValue: 0,
-                      duration: 900
-                    }),
-                    timing(this.state.animation.passwordPositionLeft, {
-                      toValue: 0,
-                      duration: 1100
-                    }),
-                    timing(this.state.animation.loginPositionTop, {
-                      toValue: 0,
-                      duration: 700
-                    }),
-                    timing(this.state.animation.statusPositionTop, {
-                      toValue: 0,
-                      duration: 700
-                    })
+                  // const timing = Animated.timing;
+                  // Animated.parallel([
+                  //   timing(this.state.animation.usernamePostionLeft, {
+                  //     toValue: 0,
+                  //     duration: 900
+                  //   }),
+                  //   timing(this.state.animation.passwordPositionLeft, {
+                  //     toValue: 0,
+                  //     duration: 1100
+                  //   }),
+                  //   timing(this.state.animation.loginPositionTop, {
+                  //     toValue: 0,
+                  //     duration: 700
+                  //   }),
+                  //   timing(this.state.animation.statusPositionTop, {
+                  //     toValue: 0,
+                  //     duration: 700
+                  //   })
 
-                  ]).start()
+                  // ]).start()
 
                 } else { // Already Login
 
@@ -2858,26 +2858,26 @@ export default class HomeScreen extends React.Component {
                 }
 
 
-                const timing = Animated.timing;
-                Animated.parallel([
-                  timing(this.state.animation.usernamePostionLeft, {
-                    toValue: 0,
-                    duration: 900
-                  }),
-                  timing(this.state.animation.passwordPositionLeft, {
-                    toValue: 0,
-                    duration: 1100
-                  }),
-                  timing(this.state.animation.loginPositionTop, {
-                    toValue: 0,
-                    duration: 700
-                  }),
-                  timing(this.state.animation.statusPositionTop, {
-                    toValue: 0,
-                    duration: 700
-                  })
+                // const timing = Animated.timing;
+                // Animated.parallel([
+                //   timing(this.state.animation.usernamePostionLeft, {
+                //     toValue: 0,
+                //     duration: 900
+                //   }),
+                //   timing(this.state.animation.passwordPositionLeft, {
+                //     toValue: 0,
+                //     duration: 1100
+                //   }),
+                //   timing(this.state.animation.loginPositionTop, {
+                //     toValue: 0,
+                //     duration: 700
+                //   }),
+                //   timing(this.state.animation.statusPositionTop, {
+                //     toValue: 0,
+                //     duration: 700
+                //   })
 
-                ]).start()
+                // ]).start()
               } else {
                 this.props.navigation.navigate("ProfileScreen", {
                   onRefreshScreen: this.onRefreshScreen,
@@ -3227,7 +3227,7 @@ export default class HomeScreen extends React.Component {
           dialogTitle={<DialogTitle title={translate("Retrieve password")} titleStyle={{}} titleTextStyle={{ color: '#73aa2a' }} />}
           dismissOnTouchOutside={false}
           dialogStyle={{
-            marginBottom: 150, width: width * 0.9,
+            marginBottom: responsiveHeight(45), width: responsiveWidth(90),
             height: 240,
           }}
           onShown={() => {
@@ -3240,7 +3240,7 @@ export default class HomeScreen extends React.Component {
           }}>
             {/* Username */}
             <Animated.View style={{
-              position: 'relative', left: this.state.animation.usernamePostionLeft,
+              //position: 'relative', left: this.state.animation.usernamePostionLeft,
               flexDirection: 'row',
             }}>
               <Ionicons style={{ flex: 1, fontSize: 22, paddingTop: 12, textAlign: 'center', }} name='md-call' />
@@ -3318,7 +3318,7 @@ export default class HomeScreen extends React.Component {
 
             {/* Username */}
             <Animated.View style={{
-              position: 'relative', left: this.state.animation.usernamePostionLeft,
+              //position: 'relative', left: this.state.animation.usernamePostionLeft,
               flexDirection: 'row',
             }}>
               <Ionicons style={{ flex: 1, fontSize: 22, paddingTop: 12, textAlign: 'center', }} name='md-call' />
@@ -3374,7 +3374,7 @@ export default class HomeScreen extends React.Component {
           dialogTitle={<DialogTitle title={translate("New password")} titleStyle={{}} titleTextStyle={{ color: '#73aa2a' }} />}
           dismissOnTouchOutside={false}
           dialogStyle={{
-            marginBottom: 220, width: width * 0.9,
+            marginBottom: responsiveHeight(45), width: responsiveWidth(90),
 
           }}
           onShown={() => {
@@ -3388,7 +3388,7 @@ export default class HomeScreen extends React.Component {
             <Text style={{ textAlign: 'center', color: '#73aa2a' }}>{translate("Please check Email to get Activation Code for new password")}</Text>
             {/* Active Key */}
             <Animated.View style={{
-              position: 'relative', left: this.state.animation.usernamePostionLeft,
+              //position: 'relative', left: this.state.animation.usernamePostionLeft,
               flexDirection: 'row',
               marginTop: 5,
             }}>
@@ -3410,7 +3410,7 @@ export default class HomeScreen extends React.Component {
             </Animated.View>
             {/* New password  */}
             <Animated.View style={{
-              position: 'relative', left: this.state.animation.usernamePostionLeft,
+              //position: 'relative', left: this.state.animation.usernamePostionLeft,
               flexDirection: 'row',
             }}>
               <Ionicons style={{ flex: 1, fontSize: 22, paddingTop: 12, textAlign: 'center', }} name='md-lock' />
@@ -3488,7 +3488,7 @@ export default class HomeScreen extends React.Component {
             <Text style={{ textAlign: 'center', color: '#73aa2a' }}>{translate("Please check Email to get Activation Code for new password")}</Text>
             {/* Active Key */}
             <Animated.View style={{
-              position: 'relative', left: this.state.animation.usernamePostionLeft,
+              //position: 'relative', left: this.state.animation.usernamePostionLeft,
               flexDirection: 'row',
               marginTop: 10,
             }}>
@@ -3510,7 +3510,7 @@ export default class HomeScreen extends React.Component {
             </Animated.View>
             {/* New password  */}
             <Animated.View style={{
-              position: 'relative', left: this.state.animation.usernamePostionLeft,
+              //position: 'relative', left: this.state.animation.usernamePostionLeft,
               flexDirection: 'row',
             }}>
               <Ionicons style={{ flex: 1, fontSize: 22, paddingTop: 12, textAlign: 'center', }} name='md-lock' />
@@ -3571,7 +3571,7 @@ export default class HomeScreen extends React.Component {
           dialogAnimation={new ScaleAnimation()}
           dialogTitle={<DialogTitle title={translate("Login")} titleStyle={{}} titleTextStyle={{ color: '#73aa2a' }} />}
           dismissOnTouchOutside={false}
-          dialogStyle={{ marginBottom: 150, width: width * 0.9, }}
+          dialogStyle={{ marginBottom: responsiveHeight(45), width: responsiveWidth(90) }}
           onShown={() => {
             this.refs.userNameInput.focus()
           }}
@@ -3579,7 +3579,10 @@ export default class HomeScreen extends React.Component {
         >
           <View>
             {/* Username */}
-            <Animated.View style={{ position: 'relative', left: this.state.animation.usernamePostionLeft, flexDirection: 'row', padding: 10, }}>
+            <Animated.View style={{
+              //position: 'relative', left: this.state.animation.usernamePostionLeft,
+              flexDirection: 'row', padding: 10,
+            }}>
               <Ionicons style={{ flex: 1, fontSize: 22, paddingTop: 12, textAlign: 'center', }} name='ios-person' />
               <FormInput
                 ref='userNameInput'
@@ -3597,7 +3600,10 @@ export default class HomeScreen extends React.Component {
               />
             </Animated.View>
             {/* Password */}
-            <Animated.View style={{ position: 'relative', left: this.state.animation.passwordPositionLeft, flexDirection: 'row', padding: 10, paddingTop: 0, }}>
+            <Animated.View style={{
+              //position: 'relative', left: this.state.animation.passwordPositionLeft,
+              flexDirection: 'row', padding: 10, paddingTop: 0,
+            }}>
               <Ionicons style={{ flex: 1, fontSize: 22, paddingTop: 12, textAlign: 'center', }} name='md-lock' />
               <FormInput
                 ref='passwordInput'
@@ -3710,9 +3716,9 @@ export default class HomeScreen extends React.Component {
             this.setState({ modalLogin: false })
           }}
           onShow={() => {
-            setTimeout(() => {
-              this.refs.iosUserNameInput.focus()
-            }, 150)
+            // setTimeout(() => {
+            this.refs.iosUserNameInput.focus()
+            // }, 150)
           }}
         >
 
@@ -3730,8 +3736,8 @@ export default class HomeScreen extends React.Component {
 
             {/* Username */}
             <Animated.View style={{
-              position: 'relative',
-              left: this.state.animation.usernamePostionLeft,
+              //  position: 'relative',
+              //left: this.state.animation.usernamePostionLeft,
               flexDirection: 'row', padding: 10,
               marginTop: responsiveHeight(10),
             }}>
@@ -3752,7 +3758,10 @@ export default class HomeScreen extends React.Component {
               />
             </Animated.View>
             {/* Password */}
-            <Animated.View style={{ position: 'relative', left: this.state.animation.passwordPositionLeft, flexDirection: 'row', padding: 10, paddingTop: 0, }}>
+            <Animated.View style={{
+              //position: 'relative', left: this.state.animation.passwordPositionLeft,
+              flexDirection: 'row', padding: 10, paddingTop: 0,
+            }}>
               <Ionicons style={{ flex: 1, fontSize: 22, paddingTop: 12, textAlign: 'center', }} name='md-lock' />
               <FormInput
                 ref='passwordInput'
@@ -3879,7 +3888,7 @@ export default class HomeScreen extends React.Component {
           dialogAnimation={new ScaleAnimation()}
           dialogTitle={<DialogTitle title={translate("Violation report")} titleStyle={{}} titleTextStyle={{ color: '#73aa2a' }} />}
           dismissOnTouchOutside={false}
-          dialogStyle={{ marginBottom: 100, width: width * 0.9 }}
+          dialogStyle={{ marginBottom: responsiveHeight(45), width: responsiveWidth(90) }}
 
         >
           <View>
