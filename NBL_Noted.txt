@@ -682,6 +682,7 @@ translate("Register notification successfully")
     translate("Do you want to turn off notification from NBL")
 translate("Turn off notification")
 translate("App Rating")
+translate("Find this area")
 
 
 

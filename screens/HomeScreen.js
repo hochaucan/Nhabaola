@@ -24,6 +24,7 @@ import {
   Easing,
   TouchableHighlight,
   Linking,
+  Switch,
 
 } from 'react-native';
 import { WebBrowser, ImagePicker, Facebook, Google, Notifications, Permissions, BarCodeScanner } from 'expo';
@@ -174,6 +175,7 @@ export default class HomeScreen extends React.Component {
       isChinease: false,
       iosSelectedCategory: translate("All real estate"),
       isEnableQR: false,
+      // isTopupByQR: true,
     }
 
     // state = { selected: false };
@@ -4313,6 +4315,69 @@ export default class HomeScreen extends React.Component {
                 textAlign: 'center',
                 fontSize: responsiveFontSize(2.2)
               }}>{translate("QR Top Up")}</Text>
+
+              {/* <Switch
+                style={{ marginTop: 10, marginBottom: 10 }}
+                onValueChange={() => {
+                  this.setState({ isTopupByQR: !this.state.isTopupByQR })
+                }}
+                value={this.state.isTopupByQR}
+              /> */}
+
+              {/* {!this.state.isTopupByQR && */}
+              {/* <View
+                style={{
+                  flexDirection: 'row',
+                  justifyContent: 'center',
+                  alignContent: 'center',
+                  alignItems: 'center',
+                  marginBottom: 10,
+                }}
+              >
+                <FormLabel style={{}}>{translate("Contact Person")}</FormLabel>
+
+                <FormInput
+                  ref='contactNameInput'
+                  returnKeyType={'next'}//{Platform.OS == 'ios' ? "done" : "next"}
+                  onSubmitEditing={(event) => {
+                    //Keyboard.dismiss();
+                    this.refs['priceInput'].getElement().focus();
+                  }}
+                  onFocus={(event) => {
+                    this._scrollToInput(event.target)
+                  }}
+                  containerStyle={{
+                    borderBottomWidth: Platform.OS == 'ios' ? 0.8 : 0,
+                    borderColor: '#73aa2a',
+                    marginLeft: -1,
+                    width: Platform.OS == 'ios' ? responsiveWidth(63) : responsiveWidth(69)
+                  }}
+                  inputStyle={{ color: '#000' }}
+                  placeholder={translate("Maximum of 8 characters")}
+                  multiline={false}
+                  maxLength={8}
+                  //numberOfLines={5}
+                  //keyboardType='default'
+                  autoCapitalize='sentences'
+                  //maxLength={300}
+                  clearButtonMode='always'
+                  underlineColorAndroid='#73aa2a'
+                  blurOnSubmit={false}
+                  value={this.state.contactName}
+                  onChangeText={(contactName) => this.setState({ contactName })}
+                />
+
+                <TouchableOpacity style={styles.cardCommentSubmit}
+                  onPress={async () => {
+                    //  this._postCommentsAsync();
+                  }}
+                >
+                  <Text style={{ color: '#fff', }}>{translate("Send")}</Text>
+                </TouchableOpacity>
+
+              </View> */}
+              {/* } */}
+              {/* {this.state.isTopupByQR && */}
               <BarCodeScanner
                 onBarCodeRead={
                   this._handleBarCodeRead
@@ -4334,6 +4399,7 @@ export default class HomeScreen extends React.Component {
                 }} name='ios-qr-scanner' />
 
               </BarCodeScanner>
+              {/* } */}
               <TouchableOpacity
                 onPress={() => {
                   this.popupQRPay.dismiss()

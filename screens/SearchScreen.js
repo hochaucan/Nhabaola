@@ -248,7 +248,7 @@ const roomCords = {
 const DEFAULT_PADDING = { top: 40, right: 40, bottom: 40, left: 40 };
 const roomBox = [];
 const pageSize = [];
-//var temp = null;
+const mapRegion2 = null;
 
 export default class SearchScreen extends React.Component {
 
@@ -350,6 +350,7 @@ export default class SearchScreen extends React.Component {
 
             // Searhing address
             searchingMaker: null,
+            findingRegionMaker: null,
             watchLocation: null,
 
             refreshFlatlist: false,
@@ -364,6 +365,7 @@ export default class SearchScreen extends React.Component {
             //     longitude: null,
             // },
             isSearching: false,
+            isFindingRegion: false,
             isFocusSearchTextInput: false,
             houseListHeigh: new Animated.Value(responsiveHeight(13)),
             isHouseList: false,
@@ -378,13 +380,14 @@ export default class SearchScreen extends React.Component {
             registerLocation: null,
             findingBoxMaker: null,
             modalRoomList: false,
+            // findThisRegion: false,
         }
     }
 
-    static setLanguage = () => {
+    // static setLanguage = () => {
 
 
-    }
+    // }
 
     // saveDetails() {
     //     alert('Save Details');
@@ -464,52 +467,7 @@ export default class SearchScreen extends React.Component {
 
         DeviceEventEmitter.addListener('updateLanguage', this._getLanguageFromStorageAsync.bind(this))
         DeviceEventEmitter.addListener('fitAllMarkers', this.fitAllMarkers.bind(this))
-
-        // setTimeout(() => {
-        //     this.map.fitToCoordinates(MARKERS, {
-        //         edgePadding: {
-        //             top: 50,
-        //             bottom: 50,
-        //             right: 50,
-        //             left: 50,
-        //         },//DEFAULT_PADDING,
-        //         animated: true,
-        //     });
-        // }, 500)
-
-
-        //temp = await this._getLanguageFromStorageAsync() 
-        // this.props.navigation.setParams({ otherParam: 'Updated!' }) //this._getLanguageFromStorageAsync()}) 
-        //this.props.navigation.setParams({ setLanguage: this._getLanguageFromStorageAsync() }) //this._getLanguageFromStorageAsync()}) 
-
-        //  this.props.navigation.state.params({ onRefreshScreen: this.saveDetails, }) //.navigate("SearchScreen", {
-        // onRefreshScreen: this.saveDetails,
-        //    _getWalletAsync: this._getWalletAsync
-        // });
-        //this.props.navigation.setParams({ otherParam: 'Updated!' })
-
-        // this._tabPressedListener = NavigationEvents.addListener(
-        //     'selectedTabPressed',
-        //     route => {
-        //         if (route.key === 'SearchScreen') {
-        //             //this._scrollToTop();
-        //             alert("can")
-        //         }
-        //     }
-        // );
     }
-
-    // _fitMakers = () => {
-    //     this.map.fitToCoordinates(MARKERS, {
-    //         edgePadding: {
-    //             top: 50,
-    //             bottom: 50,
-    //             right: 50,
-    //             left: 50,
-    //         },//DEFAULT_PADDING,
-    //         animated: true,
-    //     });
-    // }
 
     componentWillUnmount() {
         DeviceEventEmitter.removeAllListeners()
@@ -593,6 +551,7 @@ export default class SearchScreen extends React.Component {
         }
 
         await this.setState({ mapRegion: region });
+        mapRegion2 = await region;
 
         // Fit Maker to Map for Android
         setTimeout(() => {
@@ -783,7 +742,7 @@ export default class SearchScreen extends React.Component {
         MARKERS = await [];
         pageSize = await [];
 
-        if (this.state.isSearching) { // Maker for Searching
+        if (this.state.isSearching && !this.state.isFindingRegion) { // Maker for Searching
             // await this.setState({
             //     houseCoords: {
             //         latitude: parseFloat(this.state.searchingMaker.latitude),
@@ -796,6 +755,12 @@ export default class SearchScreen extends React.Component {
                 longitude: parseFloat(this.state.searchingMaker.longitude),
             }
 
+        }
+        else if (!this.state.isSearching && this.state.isFindingRegion) { // Makder of finding Region
+            roomCords = await {
+                latitude: parseFloat(this.state.findingRegionMaker.latitude),
+                longitude: parseFloat(this.state.findingRegionMaker.longitude),
+            }
         }
         else { // Maker of current location
 
@@ -827,6 +792,26 @@ export default class SearchScreen extends React.Component {
         // alert(JSON.stringify(MARKERS))
         MARKERS.push(roomCords);
 
+        // let _latitude = this.state.isSearching === true ? this.state.searchingMaker.latitude : this.state.location.coords.latitude
+        //let _longitude = this.state.isSearching === true ? this.state.searchingMaker.longitude : this.state.location.coords.longitude
+
+        // Specify Cords
+        let _latitude = this.state.location.coords.latitude
+        let _longitude = this.state.location.coords.longitude
+
+        if (this.state.isSearching && !this.state.isFindingRegion) {
+            _latitude = this.state.searchingMaker.latitude
+            _longitude = this.state.searchingMaker.longitude
+        }
+        else if (!this.state.isSearching && this.state.isFindingRegion) {
+            _latitude = this.state.findingRegionMaker.latitude
+            _longitude = this.state.findingRegionMaker.longitude
+        }
+        else {
+            _latitude = this.state.location.coords.latitude
+            _longitude = this.state.location.coords.longitude
+        }
+
         try {
             await fetch("http://nhabaola.vn/api/RoomBox/FO_RoomBox_GetDataByFindingBox", {
                 method: 'POST',
@@ -836,8 +821,8 @@ export default class SearchScreen extends React.Component {
                 },
                 body: JSON.stringify({
                     "CategoryID": this.state.selectedCategory,
-                    "Latitude": this.state.isSearching === true ? this.state.searchingMaker.latitude : this.state.location.coords.latitude, //"10.7143264",
-                    "Longitude": this.state.isSearching === true ? this.state.searchingMaker.longitude : this.state.location.coords.longitude,//"106.6104477",
+                    "Latitude": _latitude,
+                    "Longitude": _longitude,
                     "Radius": this.state.radius,
                     "RoomPriceMin": this.state.minPrice,
                     "RoomPriceMax": this.state.maxPrice,//"9999999999",//this.state.maxPrice,
@@ -943,6 +928,23 @@ export default class SearchScreen extends React.Component {
             txtFilterResult: this.state.selectedBDS + this.state.unitPriceLable + this.state.unitAcreageLable
         })
 
+        // Specify Cords
+        let _latitude = this.state.location.coords.latitude
+        let _longitude = this.state.location.coords.longitude
+
+        if (this.state.isSearching && !this.state.isFindingRegion) {
+            _latitude = this.state.searchingMaker.latitude
+            _longitude = this.state.searchingMaker.longitude
+        }
+        else if (!this.state.isSearching && this.state.isFindingRegion) {
+            _latitude = this.state.findingRegionMaker.latitude
+            _longitude = this.state.findingRegionMaker.longitude
+        }
+        else {
+            _latitude = this.state.location.coords.latitude
+            _longitude = this.state.location.coords.longitude
+        }
+
         try {
             await fetch("http://nhabaola.vn/api/FindingBox/FO_FindingBox_Add", {
                 method: 'POST',
@@ -953,8 +955,8 @@ export default class SearchScreen extends React.Component {
                 body: JSON.stringify({
                     "UserName": this.state.profile.ID,
                     "CategoryId": this.state.selectedCategory,
-                    "Longitude": this.state.isSearching === true ? this.state.searchingMaker.longitude : this.state.location.coords.longitude,//"106.6104477",
-                    "Latitude": this.state.isSearching === true ? this.state.searchingMaker.latitude : this.state.location.coords.latitude, //"10.7143264",
+                    "Longitude": _longitude,//this.state.isSearching === true ? this.state.searchingMaker.longitude : this.state.location.coords.longitude,//"106.6104477",
+                    "Latitude": _latitude,//this.state.isSearching === true ? this.state.searchingMaker.latitude : this.state.location.coords.latitude, //"10.7143264",
                     "Radius": this.state.radius,
                     "RoomPriceMin": this.state.minPrice,
                     "RoomPriceMax": this.state.maxPrice,
@@ -1821,7 +1823,7 @@ export default class SearchScreen extends React.Component {
                                     selectedUnitPrice: 'ptr',
                                     iosSelectedCategory: translate("All real estate"),
                                 })
-                                this.setState({ modalSearchFilterVisible: false });
+                                // this.setState({ modalSearchFilterVisible: false });
                                 this._getRoomByFilter(true);
                             }}
                         >
@@ -1832,18 +1834,23 @@ export default class SearchScreen extends React.Component {
                 }
 
 
+
                 {/* Get current location */}
                 <TouchableOpacity
                     style={{
                         height: 50, position: 'absolute',
                         //top: responsiveHeight(18), 
-                        bottom: 65,
+                        bottom: 68,
                         zIndex: 20,
                         opacity: 0.9,
                         right: 15, backgroundColor: 'transparent'
                     }}
                     onPress={async () => {
-                        await this.setState({ isSearching: false, searchingMaker: null, findingBoxMaker: null })
+                        await this.setState({
+                            isSearching: false,
+                            isFindingRegion: false,
+                            searchingMaker: null, findingBoxMaker: null, findingRegionMaker: null
+                        })
 
                         // if (isRegisterRoom) {
                         //     this.setState({
@@ -1886,6 +1893,8 @@ export default class SearchScreen extends React.Component {
                     </View>
                 </TouchableOpacity>
 
+
+
                 {
                     this.state.mapRegion &&
                     <MapView
@@ -1899,22 +1908,28 @@ export default class SearchScreen extends React.Component {
                             alignSelf: 'stretch',
                         }}
 
-                        region={this.state.mapRegion}
+                        region={mapRegion2}//{this.state.mapRegion}
                         // onRegionChange={(mapRegion) => {
                         //     this.setState({ mapRegion })
                         // }}
-                        // onRegionChangeComplete={(mapRegion) => {
-                        //     this.setState({ mapRegion })
-                        // }}
+                        onRegionChangeComplete={async (mapRegion) => {
+                            //this.setState({ mapRegion })
+                            mapRegion2 = mapRegion
+
+                            // if (!this.state.findThisRegion) {
+                            //     this.setState({ findThisRegion: true })
+                            // }
+                        }}
                         // provider='google'
                         showsUserLocation={false}
                         showsMyLocationButton={false}
                         followsUserLocation={false}
                         loadingEnabled={true}
-                        onPress={(e) => this.onMapPress(e)}
+                    //onPress={(e) => this.onMapPress(e)}
                     /* customMapStyle={customStyle} */
                     >
                         {this.state.location && this.state.searchingMaker == null && this.state.findingBoxMaker == null
+                            && this.state.findingRegionMaker == null
                             ?
 
                             <MapView.Marker
@@ -1956,6 +1971,17 @@ export default class SearchScreen extends React.Component {
                         {this.state.findingBoxMaker &&
                             <MapView.Marker
                                 coordinate={this.state.findingBoxMaker}
+                                title={translate("Search location")}
+                            //description='Home'
+                            >
+
+                            </MapView.Marker>
+
+                        }
+
+                        {this.state.findingRegionMaker &&
+                            <MapView.Marker
+                                coordinate={this.state.findingRegionMaker}
                                 title={translate("Search location")}
                             //description='Home'
                             >
@@ -2189,10 +2215,11 @@ export default class SearchScreen extends React.Component {
                 </View> */}
 
 
+
                 {/* Room List */}
                 < Animated.View style={{
                     width: width,
-                    height: 80,//this.state.houseListHeigh, //responsiveHeight(28),
+                    height: 130,//this.state.houseListHeigh, //responsiveHeight(28),
                     backgroundColor: 'transparent',
                     zIndex: 10,
                     position: 'absolute',
@@ -2201,6 +2228,40 @@ export default class SearchScreen extends React.Component {
                     justifyContent: 'center',
                     alignItems: 'center',
                 }}>
+
+                    {/* Finding Region */}
+
+                    <TouchableOpacity
+                        style={{
+                            // position: 'absolute',
+                            //zIndex: 40,
+                            // bottom: 90,//responsiveHeight(30),
+                            //left: responsiveWidth(10),
+                            //marginBottom: 100,
+                            //width: responsiveWidth(80),
+                            backgroundColor: '#fff',
+                            opacity: 0.8,
+                            borderRadius: 20,
+                            padding: 10,
+                            marginBottom: 7
+                        }}
+                        onPress={async () => {
+                            //alert(JSON.stringify(mapRegion2))
+                            await this.setState({
+                                findingRegionMaker: {
+                                    latitude: mapRegion2.latitude,
+                                    longitude: mapRegion2.longitude
+                                },
+                                isFindingRegion: true,
+                                isSearching: false
+                            })
+                            this._getRoomByFilter(true)
+                        }}
+                    >
+                        {/* <Ionicons style={{ fontSize: responsiveFontSize(3), textAlign: 'center' }} name='ios-close' /> */}
+                        <Text style={{ color: '#73aa2a', textAlign: 'center' }}>{translate("Find this area")}</Text>
+                    </TouchableOpacity>
+
 
                     <View
                         style={{
@@ -3346,14 +3407,30 @@ export default class SearchScreen extends React.Component {
                                     longitude: details.geometry.location.lng,
                                 },
                                 isSearching: true,
+                                isFindingRegion: false,
                             })
 
+                            // let region = {
+                            //     latitude: details.geometry.location.lat,
+                            //     longitude: details.geometry.location.lng,
+                            //     latitudeDelta: LATITUDE_DELTA,
+                            //     longitudeDelta: LONGITUDE_DELTA
+                            // }
 
 
-                            //this.map.animateToRegion(this.state.mapRegion, 1000);
+                            // this.map.animateToRegion(region, 1000);
 
                             this.map.animateToCoordinate(this.state.searchingMaker, 1000)
-                            this._getRoomByFilter(true)
+
+                            if (Platform.OS == 'ios') {
+                                setTimeout(() => {
+                                    this._getRoomByFilter(true)
+                                }, 2000)
+                            }
+                            else {
+                                this._getRoomByFilter(true)
+                            }
+
 
                             {/* 
                             let currentMaker = {
@@ -3473,7 +3550,13 @@ export default class SearchScreen extends React.Component {
                             style={{ flex: 2, justifyContent: 'center', alignContent: 'center', }}
                             onPress={async () => {
                                 this.popupRegisterLocation.dismiss();
-                                await this.setState({ roomPageIndex: 0, roomPageCount: 50, page: 1, })
+                                await this.setState({
+                                    roomPageIndex: 0, roomPageCount: 50, page: 1,
+                                    isFindingRegion: false,
+                                    isSearching: false,
+                                    searchingMaker: null,
+                                    findingRegionMaker: null
+                                })
                                 this._getFindingBoxAsync(true)
 
                             }}
