@@ -683,8 +683,8 @@ translate("Register notification successfully")
 translate("Turn off notification")
 translate("App Rating")
 translate("Find this area")
-
-
+translate("Please enter top up code")
+translate("Or enter your top up code here")
 
 
 

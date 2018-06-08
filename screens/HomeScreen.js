@@ -176,6 +176,10 @@ export default class HomeScreen extends React.Component {
       iosSelectedCategory: translate("All real estate"),
       isEnableQR: false,
       // isTopupByQR: true,
+      topUpCode: {
+        data: ''
+      },
+      modalTopUpCode: false,
     }
 
     // state = { selected: false };
@@ -1826,6 +1830,7 @@ export default class HomeScreen extends React.Component {
     if (isScanQR) {
       isScanQR = await false
 
+
       if (data.data.indexOf("nbl") <= -1) {
 
         this.popupQRPay.dismiss();
@@ -1834,8 +1839,9 @@ export default class HomeScreen extends React.Component {
           ToastAndroid.showWithGravity(translate("QR is invalid"), ToastAndroid.SHORT, ToastAndroid.TOP);
         }
         else {
-          Alert.alert(translate("Notice"), translate("QR is invalid"));
-          // this.dropdown.alertWithType('success', translate("Notice"), translate("QR is invalid"));
+          //Alert.alert(translate("Notice"), translate("QR is invalid"));
+          this.dropdown.alertWithType('success', translate("Notice"), translate("QR is invalid"));
+          //setTimeout(() => { this.setState({ modalTopUpCode: true }) }, 400)
         }
         return;
       }
@@ -1888,8 +1894,8 @@ export default class HomeScreen extends React.Component {
                 ToastAndroid.showWithGravity(translate("QR has been used"), ToastAndroid.SHORT, ToastAndroid.TOP);
               }
               else {
-                Alert.alert(translate("Notice"), translate("QR has been used"));
-                //this.dropdown.alertWithType('success', translate("Notice"), translate("QR has been used"));
+                //Alert.alert(translate("Notice"), translate("QR has been used"));
+                this.dropdown.alertWithType('success', translate("Notice"), translate("QR has been used"));
               }
             }
             else {
@@ -1898,8 +1904,8 @@ export default class HomeScreen extends React.Component {
                 ToastAndroid.showWithGravity(translate("Error") + JSON.stringify(responseJson) + translate("Please contact Admin in the Help menu"), ToastAndroid.SHORT, ToastAndroid.TOP);
               }
               else {
-                Alert.alert(translate("Notice"), translate("Error") + JSON.stringify(responseJson) + translate("Please contact Admin in the Help menu"));
-                // this.dropdown.alertWithType('success', translate("Notice"), translate("Error") + JSON.stringify(responseJson) + translate("Please contact Admin in the Help menu"));
+                // Alert.alert(translate("Notice"), translate("Error") + JSON.stringify(responseJson) + translate("Please contact Admin in the Help menu"));
+                this.dropdown.alertWithType('success', translate("Notice"), translate("Error") + JSON.stringify(responseJson) + translate("Please contact Admin in the Help menu"));
               }
             }
 
@@ -1989,7 +1995,7 @@ export default class HomeScreen extends React.Component {
               backgroundColor: '#fff',
               zIndex: 30,
               padding: 15,
-              opacity: 0.9,
+              opacity: 0.6,
               borderRadius: 15,
               // shadowColor: '#000',
               // shadowOffset: { width: 0, height: 2 },
@@ -4316,75 +4322,14 @@ export default class HomeScreen extends React.Component {
                 fontSize: responsiveFontSize(2.2)
               }}>{translate("QR Top Up")}</Text>
 
-              {/* <Switch
-                style={{ marginTop: 10, marginBottom: 10 }}
-                onValueChange={() => {
-                  this.setState({ isTopupByQR: !this.state.isTopupByQR })
-                }}
-                value={this.state.isTopupByQR}
-              /> */}
 
-              {/* {!this.state.isTopupByQR && */}
-              {/* <View
-                style={{
-                  flexDirection: 'row',
-                  justifyContent: 'center',
-                  alignContent: 'center',
-                  alignItems: 'center',
-                  marginBottom: 10,
-                }}
-              >
-                <FormLabel style={{}}>{translate("Contact Person")}</FormLabel>
-
-                <FormInput
-                  ref='contactNameInput'
-                  returnKeyType={'next'}//{Platform.OS == 'ios' ? "done" : "next"}
-                  onSubmitEditing={(event) => {
-                    //Keyboard.dismiss();
-                    this.refs['priceInput'].getElement().focus();
-                  }}
-                  onFocus={(event) => {
-                    this._scrollToInput(event.target)
-                  }}
-                  containerStyle={{
-                    borderBottomWidth: Platform.OS == 'ios' ? 0.8 : 0,
-                    borderColor: '#73aa2a',
-                    marginLeft: -1,
-                    width: Platform.OS == 'ios' ? responsiveWidth(63) : responsiveWidth(69)
-                  }}
-                  inputStyle={{ color: '#000' }}
-                  placeholder={translate("Maximum of 8 characters")}
-                  multiline={false}
-                  maxLength={8}
-                  //numberOfLines={5}
-                  //keyboardType='default'
-                  autoCapitalize='sentences'
-                  //maxLength={300}
-                  clearButtonMode='always'
-                  underlineColorAndroid='#73aa2a'
-                  blurOnSubmit={false}
-                  value={this.state.contactName}
-                  onChangeText={(contactName) => this.setState({ contactName })}
-                />
-
-                <TouchableOpacity style={styles.cardCommentSubmit}
-                  onPress={async () => {
-                    //  this._postCommentsAsync();
-                  }}
-                >
-                  <Text style={{ color: '#fff', }}>{translate("Send")}</Text>
-                </TouchableOpacity>
-
-              </View> */}
-              {/* } */}
-              {/* {this.state.isTopupByQR && */}
               <BarCodeScanner
                 onBarCodeRead={
                   this._handleBarCodeRead
                 }
                 style={{
                   width: responsiveWidth(80),
-                  height: responsiveHeight(60),
+                  height: responsiveHeight(55),
                   alignItems: 'center',
                   alignContent: 'center',
                   justifyContent: 'center',
@@ -4399,7 +4344,41 @@ export default class HomeScreen extends React.Component {
                 }} name='ios-qr-scanner' />
 
               </BarCodeScanner>
-              {/* } */}
+
+              {/* Top Up Code */}
+              <View
+                style={{
+                  flexDirection: 'row',
+                  justifyContent: 'center',
+                  alignContent: 'center',
+                  alignItems: 'center',
+                  marginBottom: 10,
+                  marginTop: 10,
+                }}
+              >
+
+                <TouchableOpacity style={{
+                  //  flex: 2,
+                  // height: 40,
+                  // backgroundColor: '#73aa2a',
+                  //marginLeft: 10,
+                  //  borderRadius: 5,
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                }}
+                  onPress={async () => {
+                    //this._handleBarCodeRead(this.state.topUpCode)
+                    this.popupQRPay.dismiss()
+                    this.setState({ modalTopUpCode: true, })
+                    //  this._postCommentsAsync();
+                  }}
+                >
+                  <Text style={{ color: '#73aa2a', }}>{translate("Or enter your top up code here")}</Text>
+                </TouchableOpacity>
+
+              </View>
+
+
               <TouchableOpacity
                 onPress={() => {
                   this.popupQRPay.dismiss()
@@ -4420,6 +4399,125 @@ export default class HomeScreen extends React.Component {
             </View>
           </PopupDialog>
         }
+
+        {/* Modal Top Up Code */}
+        <Modal
+          animationType={"slide"}
+          transparent={false}
+          visible={this.state.modalTopUpCode}
+          onRequestClose={() => {
+            this.setState({ modalTopUpCode: false })
+          }}
+          onShow={() => {
+            this.refs.topUpCodeInput.focus()
+          }}
+        >
+          <View
+            style={{
+              flexDirection: 'row',
+              justifyContent: 'center',
+              alignContent: 'center',
+              alignItems: 'center',
+              //marginBottom: 10,
+              marginTop: 50,
+              marginBottom: 20,
+            }}
+          >
+            {/* <FormLabel style={{}}>{translate("Contact Person")}</FormLabel> */}
+
+            <Ionicons style={{ flex: 1, fontSize: 18, paddingTop: 12, paddingLeft: 5, textAlign: 'center', }} name='logo-usd' />
+            <FormInput
+              ref='topUpCodeInput'
+              returnKeyType={'done'}//{Platform.OS == 'ios' ? "done" : "next"}
+              onSubmitEditing={(event) => {
+
+                if (this.state.topUpCode.data == '') {
+                  if (Platform.OS === 'android') {
+                    ToastAndroid.showWithGravity(translate("Please enter top up code"), ToastAndroid.SHORT, ToastAndroid.TOP);
+                  }
+                  else {
+                    //Alert.alert('Thông báo', 'Vui lòng nhập Mã Nạp Tiền');
+                  }
+
+                  return
+                }
+                Keyboard.dismiss()
+                this.setState({ modalTopUpCode: false })
+                this._handleBarCodeRead(this.state.topUpCode)
+              }}
+              onFocus={(event) => {
+                // this._scrollToInput(event.target)
+              }}
+              containerStyle={{ flex: 15, marginLeft: Platform.OS === 'ios' ? 22 : 18 }}
+              inputStyle={{ color: '#000' }}
+              placeholder={translate("Top Up Code")}
+              multiline={false}
+              // maxLength={8}
+              //numberOfLines={5}
+              //keyboardType='default'
+              // autoCapitalize='sentences'
+              //maxLength={300}
+              clearButtonMode='always'
+              underlineColorAndroid='#73aa2a'
+              blurOnSubmit={false}
+              value={this.state.topUpCode.data}
+              onChangeText={(topUpCode) => this.setState({ topUpCode: { data: topUpCode } })}
+            />
+
+          </View>
+
+          {/* Form Button */}
+          <View style={{
+            height: 80, flexDirection: 'row',
+            alignItems: 'center', justifyContent: 'center',
+
+            // paddingBottom: 10,
+            // shadowColor: '#000',
+            // shadowOffset: { width: 0, height: 2 },
+            // shadowOpacity: 0.2,
+            // shadowRadius: 2,
+            // elevation: 2,
+          }}>
+            <Button
+              buttonStyle={{ backgroundColor: '#9B9D9D', padding: 10, borderRadius: 5, }}
+              raised={false}
+              icon={{ name: 'ios-backspace', type: 'ionicon' }}
+              title={translate("Cancel")}
+              onPress={() => {
+                Keyboard.dismiss()
+                this.setState({
+                  modalTopUpCode: false,
+                  isEnableQR: false,
+                })
+              }}
+            />
+
+            <Button
+              buttonStyle={{ backgroundColor: '#73aa2a', padding: 10, borderRadius: 5, }}
+              raised={false}
+              icon={{ name: 'md-checkmark', type: 'ionicon' }}
+              title={translate("Agree")}
+              onPress={async () => {
+
+
+                if (this.state.topUpCode.data == '') {
+                  if (Platform.OS === 'android') {
+                    ToastAndroid.showWithGravity(translate("Please enter top up code"), ToastAndroid.SHORT, ToastAndroid.TOP);
+                  }
+                  else {
+                    //Alert.alert('Thông báo', 'Vui lòng nhập Mã Nạp Tiền');
+                  }
+
+                  return
+                }
+                Keyboard.dismiss()
+                this.setState({ modalTopUpCode: false })
+                this._handleBarCodeRead(this.state.topUpCode)
+              }}
+            />
+          </View>
+
+        </Modal>
 
 
         {/* Popup Loading Indicator */}
