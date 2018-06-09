@@ -2253,7 +2253,8 @@ export default class SearchScreen extends React.Component {
                                     longitude: mapRegion2.longitude
                                 },
                                 isFindingRegion: true,
-                                isSearching: false
+                                isSearching: false,
+                                searchingMaker: null,
                             })
                             this._getRoomByFilter(true)
                         }}
@@ -3372,8 +3373,7 @@ export default class SearchScreen extends React.Component {
 
                 </View>
 
-                {/* Popup Room List */}
-                {/* 
+
                 {/* Popup Searching */}
                 <PopupDialog
                     ref={(popupSearching) => { this.popupSearching = popupSearching; }}
@@ -3408,6 +3408,7 @@ export default class SearchScreen extends React.Component {
                                 },
                                 isSearching: true,
                                 isFindingRegion: false,
+                                findingRegionMaker: null,
                             })
 
                             // let region = {

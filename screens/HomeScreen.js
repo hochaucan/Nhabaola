@@ -1846,6 +1846,8 @@ export default class HomeScreen extends React.Component {
         return;
       }
 
+      this.popupLoadingIndicator.show()
+
       try {
         await fetch("http://nhabaola.vn/api/Wallet/FO_Wallet_TopUp", {
           method: 'POST',
@@ -1857,7 +1859,7 @@ export default class HomeScreen extends React.Component {
             "UserID": this.state.profile.ID,
             "Code": data.data,
             "CreatedBy": this.state.profile.ID,
-            "UpdatedBy": this.state.profile.UpdatedBy,
+            "UpdatedBy": this.state.sessionKey//this.state.profile.UpdatedBy,
 
 
             // "UserID": "10",
@@ -1872,7 +1874,9 @@ export default class HomeScreen extends React.Component {
             //alert(JSON.stringify(responseJson))
             // this.popupQRPay.dismiss();
 
-            if (JSON.stringify(responseJson.ErrorCode) === "22") {
+            this.popupLoadingIndicator.dismiss()
+
+            if (JSON.stringify(responseJson.ErrorCode) === "22") { // Successful
               //isScanQR = ''
               if (Platform.OS === 'android') {
                 ToastAndroid.showWithGravity(translate("Top up successfully") + '\n'
@@ -1880,13 +1884,20 @@ export default class HomeScreen extends React.Component {
                   + translate("Wallet available") + ': ' + numberWithCommas(JSON.stringify(responseJson.obj.CurrentAmount)) + ' đ', ToastAndroid.LONG, ToastAndroid.TOP);
               }
               else {
-                Alert.alert(translate("Notice"), translate("Top up successfully") + '\n'
+                // Alert.alert(translate("Notice"), translate("Top up successfully") + '\n'
+                //   + JSON.stringify(responseJson.obj.Description) + '\n'
+                //   + translate("Wallet available") + ': ' + numberWithCommas(JSON.stringify(responseJson.obj.CurrentAmount)) + ' đ'
+                // );
+
+                this.dropdown.alertWithType('success', translate("Notice"), translate("Top up successfully") + '\n'
                   + JSON.stringify(responseJson.obj.Description) + '\n'
                   + translate("Wallet available") + ': ' + numberWithCommas(JSON.stringify(responseJson.obj.CurrentAmount)) + ' đ'
+
                 );
               }
 
               this._getWalletAsync()
+              this.setState({ topUpCode: { data: '' } })
             }
             else if (JSON.stringify(responseJson.ErrorCode) === "21") {
               // isScanQR = ''
@@ -2148,6 +2159,7 @@ export default class HomeScreen extends React.Component {
                   >
                     <Text style={{
                       fontSize: responsiveFontSize(2),
+
 
                     }}>{item.AccountName.indexOf('|') > -1
                       ?
@@ -4507,7 +4519,6 @@ export default class HomeScreen extends React.Component {
                   else {
                     //Alert.alert('Thông báo', 'Vui lòng nhập Mã Nạp Tiền');
                   }
-
                   return
                 }
                 Keyboard.dismiss()

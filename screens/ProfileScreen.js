@@ -587,7 +587,7 @@ export default class ProfileScreen extends React.Component {
 
                         <Text style={{
                             marginLeft: 10, color: '#fff',
-
+                   
                             fontSize: responsiveFontSize(2), //justifyContent: 'center'
                         }}>{translate("Personal page")}</Text>
                     </TouchableOpacity>
@@ -817,7 +817,7 @@ export default class ProfileScreen extends React.Component {
                         onPress={() => { this.setState({ modalHelp: true }) }}
                     >
                         <Ionicons style={styles.profileMenuItemText} name='md-help'>
-                            <Text>  {translate("Contact help")}</Text>
+                            <Text style={{}}>  {translate("Contact help")}</Text>
                         </Ionicons>
                     </TouchableOpacity>
 
@@ -1241,6 +1241,7 @@ export default class ProfileScreen extends React.Component {
                             <Ionicons style={{ fontSize: 28, color: '#a4d227', paddingTop: 2 }} name='ios-arrow-back'></Ionicons>
                             <Text style={{
                                 marginLeft: 10, color: '#73aa2a',
+                               
                                 fontSize: responsiveFontSize(2.2), justifyContent: 'center'
                             }}>{translate("Contact help")}</Text>
                         </TouchableOpacity>
@@ -1768,7 +1769,7 @@ const styles = StyleSheet.create({
 
 
     cardAvatarName: {
-
+      
         fontSize: responsiveFontSize(2.5),
         color: '#73aa2a'
     },
