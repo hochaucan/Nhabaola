@@ -2018,18 +2018,18 @@ export default class SearchScreen extends React.Component {
                                     longitude: parseFloat(item.Longitude)
                                 }}
                                 onPress={() => {
-                                    if (this.state.isHouseList) {
-                                        Animated.timing(
-                                            this.state.houseListHeigh,
-                                            {
-                                                toValue: responsiveHeight(13),
-                                                easing: Easing.bounce,
-                                                duration: 1200,
-                                            }
-                                        ).start();
+                                    // if (this.state.isHouseList) {
+                                    //     Animated.timing(
+                                    //         this.state.houseListHeigh,
+                                    //         {
+                                    //             toValue: responsiveHeight(13),
+                                    //             easing: Easing.bounce,
+                                    //             duration: 1200,
+                                    //         }
+                                    //     ).start();
 
-                                        this.setState({ isHouseList: false })
-                                    }
+                                    //     this.setState({ isHouseList: false })
+                                    // }
                                 }}
                             // title='Im here'
                             // description='Home'

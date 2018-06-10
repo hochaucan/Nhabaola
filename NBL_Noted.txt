@@ -3,6 +3,7 @@
 #a4d227 (Xanh sang)
 #9B9D9D (Xam)
 #6c6d6d (Xam hon)
+#edeeef (Xam Background)
 
  cardAvatarPhone:'#9B9D9D',
  React Native Icon: http://ionicframework.com/docs/ionicons/

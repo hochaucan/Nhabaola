@@ -2126,516 +2126,540 @@ export default class HomeScreen extends React.Component {
           data={roomBox}//{this.state.dataUsers}
           extraData={this.state}
           renderItem={({ item }) =>
-            <View style={{
-              flex: 1,
-              height: height * 0.8,
-              borderColor: '#d6d7da',
-              padding: 0,
-              flexDirection: 'column',
-              //backgroundColor: item.IsHighlight ? '#a4d227' : '#fff'
-            }}>
-              <View style={styles.cardHeader}>
-                <View style={styles.cardAvatarBox}>
-                  <TouchableOpacity
-                    onPress={() => {
-                      //alert("item.title")
-                      {/* this.props.navigation.navigate('ProfileScreen', { key: 'CanHo' }); */ }
-                    }}
-                  >
-                    <Image
-                      style={styles.cardAvatarImage}
-                      source={{ uri: item.AccountAvarta }} />
-                  </TouchableOpacity>
-                </View>
-                <View style={styles.cardAvatarTextBox}>
-                  <View
-                    style={{
-                      flexDirection: 'row',
-                      // alignContent: 'center',
-                      alignItems: 'center',
-                      // justifyContent: 'center',
-                      // paddingTop: 10
-                    }}
-                  >
-                    <Text style={{
-                      fontSize: responsiveFontSize(2),
+            <View
+              style={{
+                paddingLeft: 7, paddingRight: 7,
+                paddingBottom: 8,
+                paddingTop: 8,
+                backgroundColor: '#edeeef',
 
+              }}
+            >
+              <View style={{
+                flex: 1,
+                height: height * 0.8,
+                borderColor: '#d6d7da',
+                padding: 0,
+                flexDirection: 'column',
 
-                    }}>{item.AccountName.indexOf('|') > -1
-                      ?
-                      item.AccountName.split('|')[0]
-                      :
-                      item.AccountName
-                      }</Text>
+                borderRadius: 7,
+                elevation: 2,
 
-                    {/* Facebook Messenger */}
-                    {
-                      item.AccountName.indexOf('http://m.me/') > -1 &&
-                      <TouchableOpacity
-                        style={{
-                          // lexDirection: 'row',
-                          //flex: 2,
-                          //alignItems: 'center',
-                        }}
-                        onPress={() => {
-                          //const FANPAGE_ID = '1750146621679564'
-                          //const URL_FOR_APP = `fb://page/${FANPAGE_ID}`
-                          const URL_FOR_BROWSER = item.AccountName.slice(item.AccountName.indexOf('http://m.me/'),
-                            item.AccountName.indexOf('|', item.AccountName.indexOf('http://m.me/')))//'http://m.me/thomas.ho.5492216'//ho.can.7'
+                shadowColor: '#000',
+                shadowOffset: { width: 0, height: 0.3 },
+                shadowOpacity: 0.2,
+                shadowRadius: 2,
 
-                          Linking.canOpenURL(URL_FOR_BROWSER)
-                            .then((supported) => {
-                              if (!supported) {
-                                Linking.openURL(URL_FOR_BROWSER)
-                              } else {
-                                Linking.openURL(URL_FOR_BROWSER)
-                              }
-                            })
-                            .catch(err => console.error('An error occurred', err))
-                        }}
-                      >
-                        <Image style={{ width: 18, height: 25, marginLeft: 10, }} source={require('../assets/icons/chat_fm.png')} />
-                      </TouchableOpacity>
-                    }
-
-                    {/* Zalo Messenger */}
-                    {
-                      item.AccountName.indexOf('http://zalo.me/') > -1 &&
-                      <TouchableOpacity
-                        style={{
-                          // lexDirection: 'row',
-                          //flex: 2,
-                          //alignItems: 'center',
-                        }}
-                        onPress={() => {
-                          //const FANPAGE_ID = '1750146621679564'
-                          //const URL_FOR_APP = `fb://page/${FANPAGE_ID}`
-                          const URL_FOR_BROWSER = item.AccountName.slice(item.AccountName.indexOf('http://zalo.me/'),
-                            item.AccountName.indexOf('|', item.AccountName.indexOf('http://zalo.me/')))//'http://m.me/thomas.ho.5492216'//ho.can.7'
-
-                          Linking.canOpenURL(URL_FOR_BROWSER)
-                            .then((supported) => {
-                              if (!supported) {
-                                Linking.openURL(URL_FOR_BROWSER)
-                              } else {
-                                Linking.openURL(URL_FOR_BROWSER)
-                              }
-                            })
-                            .catch(err => console.error('An error occurred', err))
-                        }}
-                      >
-                        <Image style={{ width: 18, height: 25, marginLeft: 15, }} source={require('../assets/icons/chat_zalo.png')} />
-                      </TouchableOpacity>
-                    }
-
-                    {/* Whatapps Messenger */}
-                    {
-                      item.AccountName.indexOf('https://api.whatsapp.com/') > -1 &&
-                      <TouchableOpacity
-                        style={{
-                          // lexDirection: 'row',
-                          //flex: 2,
-                          //alignItems: 'center',
-                        }}
-                        onPress={() => {
-                          //const FANPAGE_ID = '1750146621679564'
-                          //const URL_FOR_APP = `fb://page/${FANPAGE_ID}`
-                          const URL_FOR_BROWSER = item.AccountName.slice(item.AccountName.indexOf('https://api.whatsapp.com/'),
-                            item.AccountName.indexOf('|', item.AccountName.indexOf('https://api.whatsapp.com/')))//'http://m.me/thomas.ho.5492216'//ho.can.7'
-
-                          Linking.canOpenURL(URL_FOR_BROWSER)
-                            .then((supported) => {
-                              if (!supported) {
-                                Linking.openURL(URL_FOR_BROWSER)
-                              } else {
-                                Linking.openURL(URL_FOR_BROWSER)
-                              }
-                            })
-                            .catch(err => console.error('An error occurred', err))
-                        }}
-                      >
-                        <Image style={{ width: 18, height: 20, marginLeft: 15, }} source={require('../assets/icons/chat_whatapps.png')} />
-                      </TouchableOpacity>
-                    }
-
-
-                    {/* <Ionicons style={{ marginLeft: 5, marginRight: 5, color: '#73aa2a' }} name='ios-arrow-forward' />
-                    <Text style={{ fontSize: responsiveFontSize(1.8), color: '#6c6d6d' }}>Chat ngay</Text> */}
-
+                backgroundColor: '#fff',
+                //backgroundColor: item.IsHighlight ? '#a4d227' : '#fff'
+              }}>
+                <View style={styles.cardHeader}>
+                  <View style={styles.cardAvatarBox}>
+                    <TouchableOpacity
+                      onPress={() => {
+                        //alert("item.title")
+                        {/* this.props.navigation.navigate('ProfileScreen', { key: 'CanHo' }); */ }
+                      }}
+                    >
+                      <Image
+                        style={styles.cardAvatarImage}
+                        source={{ uri: item.AccountAvarta }} />
+                    </TouchableOpacity>
                   </View>
-                  <TouchableOpacity style={styles.cardAvatarPhoneBox}
-                    onPress={() => {
-                      Communications.phonecall(
-                        item.ContactPhone.indexOf("|") > -1 ? item.ContactPhone.split('|')[0]
-                          : item.ContactPhone
-                        , true)
-                    }}
-                  >
-                    <Ionicons style={styles.cardAvatarPhoneIcon} name='logo-whatsapp' />
-                    <Text style={{
-                      color: '#7E7E7E',
-
-                      fontSize: responsiveFontSize(1.8),//13,
-                      paddingLeft: 8,
-                    }}>: {item.ContactPhone.indexOf("|") > -1 ? item.ContactPhone.split('|')[0] + '. LH: ' + item.ContactPhone.split('|')[1]
-                      : item.ContactPhone}</Text>
-                  </TouchableOpacity>
-
-                </View>
-              </View>
-
-              {/* Highlight */}
-              {item.IsHighlight &&
-
-                <Ionicons style={{
-                  position: 'absolute', right: 15, top: 30, zIndex: 10,
-                  fontSize: responsiveFontSize(6),
-                  color: '#73aa2a'
-                }} name="ios-flame" />
-
-                // <Image
-                //   style={{
-                //     position: 'absolute', right: 15, zIndex: 10, width: responsiveWidth(30),
-                //     height: responsiveWidth(30), top: 20
-                //   }}
-                //   source={require('../assets/images/nbl-highlight.gif')}
-                // />
-              }
-
-              {/* Wartermark */}
-              <Image
-                style={{
-                  position: 'absolute', top: 120, right: 15, zIndex: 10, opacity: 0.3,
-                  width: responsiveWidth(15),
-                  height: responsiveWidth(15),
-                  //borderRadius: 100,
-                }}
-                source={require('../images/app-icon.png')}
-              />
-
-              <TouchableWithoutFeedback
-                style={{
-                  flex: 6,
-                  paddingLeft: 20,
-                  paddingRight: 20,
-                }}
-                onPress={() => {
-                  //this._sendProps();
-                  //this._moveToRoomDetail(item)
-                  //alert(JSON.stringify(item))
-                  this.props.navigation.navigate('RoomDetailScreen', { item });
-                }
-                }
-              >
+                  <View style={styles.cardAvatarTextBox}>
+                    <View
+                      style={{
+                        flexDirection: 'row',
+                        // alignContent: 'center',
+                        alignItems: 'center',
+                        // justifyContent: 'center',
+                        // paddingTop: 10
+                      }}
+                    >
+                      <Text style={{
+                        fontSize: responsiveFontSize(2),
 
 
-                <Image
-                  style={styles.cardImage}
-                  //source={require('../images/1.jpg')}
-                  source={item.Title !== "" ? { uri: item.Title } : require("../images/nha-bao-la.jpg")}
-                />
-
-
-
-              </TouchableWithoutFeedback>
-              <View style={{ flexDirection: 'row', paddingLeft: 20, paddingRight: 20, paddingTop: 5, paddingBottom: 5, marginTop: -50, backgroundColor: '#000', opacity: 0.6 }}>
-                <Text
-                  style={{
-                    flex: 1, color: '#fff', fontWeight: '300',
-
-                    fontSize: responsiveFontSize(1.7)
-                  }}>
-                  {translate("Price")}: {convertAmountToWording(item.Price)}
-                </Text>
-
-                {
-
-                  this.state.roomCategory.map((y, i) => {
-                    return (
-                      y.ID == item.CategoryID &&
-                      <Text
-                        style={{
-                          flex: 2, color: '#fff', fontWeight: '300',
-
-                          fontSize: responsiveFontSize(1.7), textAlign: 'right'
-                        }}
-                        key={i}>{this.state.isVietnamease ? y.CatName : this.state.isEnglish ? y.CatImg.split('|')[0] : y.CatImg.split('|')[1]}:  {item.Acreage} m</Text>
-                      // : null
-                    )
-                  })
-                }
-                {/* <Text style={{ flex: 1, textAlign: 'right', color: '#fff' }}> {item.CategoryID} Diện tích:   {item.Acreage} m</Text> */}
-                <Text style={{ fontSize: 8, marginBottom: 5, color: '#fff', }}>2</Text>
-
-              </View>
-              <View style={styles.cardDesBox}>
-
-
-                <View style={{
-                  flexDirection: 'row',
-                  //marginLeft: 5,
-                  marginBottom: 10,
-                  marginTop: -10,
-                }}
-                >
-
-                  {/* Posting Date  */}
-                  <View
-                    style={{ flex: 1, flexDirection: 'row' }}
-                  >
-                    <Ionicons style={{
-                      color: '#7E7E7E',
-                      fontSize: responsiveFontSize(1.8),
-                    }} name='md-time' />
-                    <Text style={{
-                      color: '#7E7E7E',
-                      fontSize: responsiveFontSize(1.4),//13,
-                      paddingLeft: 2,
-                    }}>: {item.UpdatedDate}</Text>
-                  </View>
-
-                  {/* Room ID */}
-                  <View
-                    style={{
-                      flex: 1, flexDirection: 'row',
-                      justifyContent: 'flex-end',
-                    }}
-                  >
-                    <Ionicons style={{
-
-                      color: '#7E7E7E',
-                      fontSize: responsiveFontSize(1.8),
-                    }} name='ios-pricetag-outline' />
-                    <Text style={{
-                      color: '#7E7E7E',
-                      fontSize: responsiveFontSize(1.4),//13,
-                      paddingLeft: 2,
-                      marginLeft: 3,
-                    }}>{translate("RoomId")}: {item.ID}</Text>
-                  </View>
-                </View>
-
-                <Text style={{
-
-                  fontSize: responsiveFontSize(1.8)
-                }}
-                  ellipsizeMode='tail'
-                  numberOfLines={2}
-                >
-                  {translate("Address")}:   {item.Address}</Text>
-                <Text
-                  style={{
-                    marginTop: 10, color: '#9B9D9D', fontSize: responsiveFontSize(1.8),
-
-                  }}
-                  ellipsizeMode='tail'
-                  numberOfLines={2}
-                >
-                  {item.Description.indexOf('###') > -1 ? (this.state.isVietnamease ? item.Description.split('###')[0] : this.state.isEnglish ? item.Description.split('###')[1] : item.Description.split('###')[2]) : item.Description}</Text>
-
-                {/* <Text style={styles.cardDesText}>
-                  {item.Description}
-                </Text> */}
-                {/* <Text>{item.Images.split('|')[2]}</Text> */}
-              </View>
-              <View style={styles.cardBottom}>
-                {/* Room Icon Left */}
-                <View style={styles.cardBottomLeft}>
-                  <Text style={{
-                    color: '#8B8E8E'//item.Point == 5 ? '#a4d227' : '#8B8E8E',
-                  }}>{item.Point}</Text>
-
-                  {/* Rating */}
-                  <TouchableOpacity
-                    onPress={async () => {
-                      if (this.state.profile === null) {
-                        if (Platform.OS == 'ios') {
-                          Alert.alert(translate("Notice"), translate("Please login"))
-                        } else {
-                          ToastAndroid.showWithGravity(translate("Please login"), ToastAndroid.SHORT, ToastAndroid.TOP)
-                        }
-                      } else {
-                        await this.setState({
-                          ratingRoomId: item.ID,
-                          starCount: parseFloat(item.Point)
-                        })
-                        this.popupRating.show();
-                      }
-                    }}
-                  >
-                    <Ionicons style={{
-                      fontSize: 20,
-                      paddingRight: 25,
-                      paddingLeft: 5,
-                      color: item.Point == 5 ? '#a4d227' : '#8B8E8E',
-                    }} name='ios-star' />
-                  </TouchableOpacity>
-                  <Text style={styles.cardBottomIconText}></Text>
-
-                  {/* Comment */}
-                  <TouchableOpacity
-                    onPress={() => {
-                      //this._postTranslator(item.Address,'zh')
-                      this.props.navigation.navigate('RoomDetailScreen', { item, isComment: true });
-                    }}
-                  >
-                    <Ionicons style={styles.cardBottomIcon} name='ios-chatbubbles' />
-                  </TouchableOpacity>
-
-                  {/* Pinned */}
-                  <TouchableOpacity
-                    onPress={() => {
-                      if (this.state.profile === null) {
-                        if (Platform.OS == 'ios') {
-                          Alert.alert(translate("Notice"), translate("Please login"))
-                        } else {
-                          ToastAndroid.showWithGravity(translate("Please login"), ToastAndroid.SHORT, ToastAndroid.TOP)
-                        }
-                      } else {
-
-                        this._postPinnedByRoom("true", item.ID)
-                      }
-
-
-                    }}
-                  >
-                    <Ionicons style={{
-                      fontSize: 20,
-                      paddingRight: 25,
-                      paddingLeft: 5,
-                      color: '#8B8E8E',
-                    }} name='md-heart-outline' />
-                  </TouchableOpacity>
-
-                </View>
-
-                {/* Room Icon Righ */}
-                <View style={styles.cardBottomRight}>
-
-                  {/* Like Facebook */}
-                  <TouchableOpacity
-                    style={{}}
-                    onPress={() => {
-
-                      Alert.alert(
-                        translate("Notice"),
-                        translate("You need to login to Facebook to post this on your Timeline") + '.  \n' + translate("Do you want to login now"),
-                        [
-                          {
-                            text: translate("Cancel"), onPress: () => {
-
-                            }
-                          },
-                          {
-                            text: translate("Agree"), onPress: () => {
-                              this._handleFacebookLogin(item.Title, item.Description.indexOf('###') > -1 ? (this.state.isVietnamease ? item.Description.split('###')[0] : this.state.isEnglish ? item.Description.split('###')[1] : item.Description.split('###')[2]) : item.Description
-                                + '\n\n\n' + translate("Install the Nhabaola Application for more Real Estate")
-                                + '\n - iOS: https://itunes.apple.com/vn/app/nhabaola/id1287451307?mt=8'
-                                + '\n - Android: ' + 'https://play.google.com/store/apps/details?id=vn.nhabaola.nhabaola')
-                            }
-                          },
-                        ]
-                      );
-                    }}
-                  >
-                    <Ionicons style={styles.cardBottomIcon} name='logo-facebook' />
-                  </TouchableOpacity>
-
-                  {/* Sharing */}
-                  <TouchableOpacity
-                    onPress={async () => {
-
-                      let loadBDS = '';
-                      await this.state.roomCategory.map((y, i) => {
-                        if (y.ID == item.CategoryID) {
-                          loadBDS = this.state.isVietnamease ? y.CatName : this.state.isEnglish ? y.CatImg.split('|')[0] : y.CatImg.split('|')[1]
-                        }
-                      })
-
-                      const _contactName = item.ContactPhone.indexOf('|') > -1 ? item.ContactPhone.split('|')[1] : item.AccountName.indexOf('|') > -1
+                      }}>{item.AccountName.indexOf('|') > -1
                         ?
                         item.AccountName.split('|')[0]
                         :
                         item.AccountName
-                      const _contactPhone = item.ContactPhone.indexOf('|') > -1 ? item.ContactPhone.split('|')[0] : item.ContactPhone
-                      const _description = item.Description.indexOf('###') > -1 ? (this.state.isVietnamease ? item.Description.split('###')[0] : this.state.isEnglish ? item.Description.split('###')[1] : item.Description.split('###')[2]) : item.Description
+                        }</Text>
 
-                      if (Platform.OS == 'ios') {
-                        Share.share({
-                          message: translate("Share from Nhabaola application")
-                            + "\n\n" + translate("Contact") + ": " + _contactName
-                            + "\n" + translate("Cellphone") + ": " + _contactPhone
-                            + "\n\n" + translate("Type of real estate") + ": " + loadBDS
-                            + "\n" + translate("Price") + ": " + item.Price + " đồng"
-                            + "\n" + translate("Area") + ": " + item.Acreage + " " + translate("Square meters")
-                            + "\n" + translate("Address") + ": " + item.Address + "\n\n" + translate("Description") + ":\n" + _description
-                            + "\n\n" + translate("Installation") + ": "
-                            + "\nAndroid: \nhttps://play.google.com/store/apps/details?id=vn.nhabaola.nhabaola"
-                            + "\n\niOS: \nhttps://itunes.apple.com/vn/app/nhabaola/id1287451307?mt=8",
-                          //url: 'https://itunes.apple.com/vn/app/nhabaola/id1287451307?mt=8',
-                          title: translate("Share from Nhabaola application")
-                        }, {
-                            // Android only:
-                            dialogTitle: translate("Share from Nhabaola application"),
-                            // iOS only:
-                            excludedActivityTypes: [
-                              'http://nhabaola.vn'
-                            ]
-                          })
-                      } else { //Android
+                      {/* Facebook Messenger */}
+                      {
+                        item.AccountName.indexOf('http://m.me/') > -1 &&
+                        <TouchableOpacity
+                          style={{
+                            // lexDirection: 'row',
+                            //flex: 2,
+                            //alignItems: 'center',
+                          }}
+                          onPress={() => {
+                            //const FANPAGE_ID = '1750146621679564'
+                            //const URL_FOR_APP = `fb://page/${FANPAGE_ID}`
+                            const URL_FOR_BROWSER = item.AccountName.slice(item.AccountName.indexOf('http://m.me/'),
+                              item.AccountName.indexOf('|', item.AccountName.indexOf('http://m.me/')))//'http://m.me/thomas.ho.5492216'//ho.can.7'
 
-                        Share.share({
-                          message: translate("Share from Nhabaola application")
-                            + "\n\n" + translate("Contact") + ": " + _contactName
-                            + "\n" + translate("Cellphone") + ": " + _contactPhone
-                            + "\n\n" + translate("Type of real estate") + ": " + loadBDS
-                            + "\n" + translate("Price") + ": " + item.Price + " đồng"
-                            + "\n" + translate("Area") + ": " + item.Acreage + " " + translate("Square meters")
-                            + "\n" + translate("Address") + ": " + item.Address + "\n\n" + translate("Description") + ":\n" + _description
-                            + "\n\n" + translate("Installation") + ": "
-                            + "\niOS: \nhttps://itunes.apple.com/vn/app/nhabaola/id1287451307?mt=8"
-                            + "\n\nAndroid: \nhttps://play.google.com/store/apps/details?id=vn.nhabaola.nhabaola",
-                          url: 'https://play.google.com/store/apps/details?id=vn.nhabaola.nhabaola',
-                          title: translate("Share from Nhabaola application")
-                        }, {
-                            // Android only:
-                            dialogTitle: translate("Share from Nhabaola application"),
-                            // iOS only:
-                            excludedActivityTypes: [
-                              'http://nhabaola.vn'
-                            ]
-                          })
+                            Linking.canOpenURL(URL_FOR_BROWSER)
+                              .then((supported) => {
+                                if (!supported) {
+                                  Linking.openURL(URL_FOR_BROWSER)
+                                } else {
+                                  Linking.openURL(URL_FOR_BROWSER)
+                                }
+                              })
+                              .catch(err => console.error('An error occurred', err))
+                          }}
+                        >
+                          <Image style={{ width: 18, height: 25, marginLeft: 10, }} source={require('../assets/icons/chat_fm.png')} />
+                        </TouchableOpacity>
                       }
-                    }}>
-                    <Ionicons style={styles.cardBottomIcon} name='md-share' />
-                  </TouchableOpacity>
 
-                  {/* Report Admin */}
-                  <TouchableOpacity
-                    onPress={async () => {
-                      if (this.state.profile === null) {
-                        if (Platform.OS == 'ios') {
-                          Alert.alert(translate("Notice"), translate("Please login"))
+                      {/* Zalo Messenger */}
+                      {
+                        item.AccountName.indexOf('http://zalo.me/') > -1 &&
+                        <TouchableOpacity
+                          style={{
+                            // lexDirection: 'row',
+                            //flex: 2,
+                            //alignItems: 'center',
+                          }}
+                          onPress={() => {
+                            //const FANPAGE_ID = '1750146621679564'
+                            //const URL_FOR_APP = `fb://page/${FANPAGE_ID}`
+                            const URL_FOR_BROWSER = item.AccountName.slice(item.AccountName.indexOf('http://zalo.me/'),
+                              item.AccountName.indexOf('|', item.AccountName.indexOf('http://zalo.me/')))//'http://m.me/thomas.ho.5492216'//ho.can.7'
+
+                            Linking.canOpenURL(URL_FOR_BROWSER)
+                              .then((supported) => {
+                                if (!supported) {
+                                  Linking.openURL(URL_FOR_BROWSER)
+                                } else {
+                                  Linking.openURL(URL_FOR_BROWSER)
+                                }
+                              })
+                              .catch(err => console.error('An error occurred', err))
+                          }}
+                        >
+                          <Image style={{ width: 18, height: 25, marginLeft: 15, }} source={require('../assets/icons/chat_zalo.png')} />
+                        </TouchableOpacity>
+                      }
+
+                      {/* Whatapps Messenger */}
+                      {
+                        item.AccountName.indexOf('https://api.whatsapp.com/') > -1 &&
+                        <TouchableOpacity
+                          style={{
+                            // lexDirection: 'row',
+                            //flex: 2,
+                            //alignItems: 'center',
+                          }}
+                          onPress={() => {
+                            //const FANPAGE_ID = '1750146621679564'
+                            //const URL_FOR_APP = `fb://page/${FANPAGE_ID}`
+                            const URL_FOR_BROWSER = item.AccountName.slice(item.AccountName.indexOf('https://api.whatsapp.com/'),
+                              item.AccountName.indexOf('|', item.AccountName.indexOf('https://api.whatsapp.com/')))//'http://m.me/thomas.ho.5492216'//ho.can.7'
+
+                            Linking.canOpenURL(URL_FOR_BROWSER)
+                              .then((supported) => {
+                                if (!supported) {
+                                  Linking.openURL(URL_FOR_BROWSER)
+                                } else {
+                                  Linking.openURL(URL_FOR_BROWSER)
+                                }
+                              })
+                              .catch(err => console.error('An error occurred', err))
+                          }}
+                        >
+                          <Image style={{ width: 18, height: 20, marginLeft: 15, }} source={require('../assets/icons/chat_whatapps.png')} />
+                        </TouchableOpacity>
+                      }
+
+
+                      {/* <Ionicons style={{ marginLeft: 5, marginRight: 5, color: '#73aa2a' }} name='ios-arrow-forward' />
+                    <Text style={{ fontSize: responsiveFontSize(1.8), color: '#6c6d6d' }}>Chat ngay</Text> */}
+
+                    </View>
+                    <TouchableOpacity style={styles.cardAvatarPhoneBox}
+                      onPress={() => {
+                        Communications.phonecall(
+                          item.ContactPhone.indexOf("|") > -1 ? item.ContactPhone.split('|')[0]
+                            : item.ContactPhone
+                          , true)
+                      }}
+                    >
+                      <Ionicons style={styles.cardAvatarPhoneIcon} name='logo-whatsapp' />
+                      <Text style={{
+                        color: '#7E7E7E',
+
+                        fontSize: responsiveFontSize(1.8),//13,
+                        paddingLeft: 8,
+                      }}>: {item.ContactPhone.indexOf("|") > -1 ? item.ContactPhone.split('|')[0] + '. LH: ' + item.ContactPhone.split('|')[1]
+                        : item.ContactPhone}</Text>
+                    </TouchableOpacity>
+
+                  </View>
+                </View>
+
+                {/* Highlight */}
+                {item.IsHighlight &&
+
+                  // <Ionicons style={{
+                  //   position: 'absolute', right: 15, top: 30, zIndex: 10,
+                  //   fontSize: responsiveFontSize(6),
+                  //   color: '#73aa2a'
+                  // }} name="ios-flame" />
+
+                  <Image
+                    style={{
+                      position: 'absolute',
+                      top: Platform.OS == 'ios' ? -4 : -10,
+                      right: Platform.OS == 'ios' ? -4 : -10,
+                      zIndex: 50,
+                      width: responsiveWidth(30),
+                      height: responsiveWidth(30),
+                    }}
+                    source={require('../assets/icons/hot-ico.png')}
+                  />
+                }
+
+                {/* Wartermark */}
+                <Image
+                  style={{
+                    position: 'absolute', top: 120, right: 15, zIndex: 10, opacity: 0.3,
+                    width: responsiveWidth(15),
+                    height: responsiveWidth(15),
+                    //borderRadius: 100,
+                  }}
+                  source={require('../images/app-icon.png')}
+                />
+
+                <TouchableWithoutFeedback
+                  style={{
+                    flex: 6,
+                    paddingLeft: 20,
+                    paddingRight: 20,
+                  }}
+                  onPress={() => {
+                    //this._sendProps();
+                    //this._moveToRoomDetail(item)
+                    //alert(JSON.stringify(item))
+                    this.props.navigation.navigate('RoomDetailScreen', { item });
+                  }
+                  }
+                >
+
+
+                  <Image
+                    style={styles.cardImage}
+                    //source={require('../images/1.jpg')}
+                    source={item.Title !== "" ? { uri: item.Title } : require("../images/nha-bao-la.jpg")}
+                  />
+
+
+
+                </TouchableWithoutFeedback>
+                <View style={{ flexDirection: 'row', paddingLeft: 20, paddingRight: 20, paddingTop: 5, paddingBottom: 5, marginTop: -50, backgroundColor: '#000', opacity: 0.6 }}>
+                  <Text
+                    style={{
+                      flex: 1, color: '#fff', fontWeight: '300',
+
+                      fontSize: responsiveFontSize(1.7)
+                    }}>
+                    {translate("Price")}: {convertAmountToWording(item.Price)}
+                  </Text>
+
+                  {
+
+                    this.state.roomCategory.map((y, i) => {
+                      return (
+                        y.ID == item.CategoryID &&
+                        <Text
+                          style={{
+                            flex: 2, color: '#fff', fontWeight: '300',
+
+                            fontSize: responsiveFontSize(1.7), textAlign: 'right'
+                          }}
+                          key={i}>{this.state.isVietnamease ? y.CatName : this.state.isEnglish ? y.CatImg.split('|')[0] : y.CatImg.split('|')[1]}:  {item.Acreage} m</Text>
+                        // : null
+                      )
+                    })
+                  }
+                  {/* <Text style={{ flex: 1, textAlign: 'right', color: '#fff' }}> {item.CategoryID} Diện tích:   {item.Acreage} m</Text> */}
+                  <Text style={{ fontSize: 8, marginBottom: 5, color: '#fff', }}>2</Text>
+
+                </View>
+                <View style={styles.cardDesBox}>
+
+
+                  <View style={{
+                    flexDirection: 'row',
+                    //marginLeft: 5,
+                    marginBottom: 10,
+                    marginTop: -10,
+                  }}
+                  >
+
+                    {/* Posting Date  */}
+                    <View
+                      style={{ flex: 1, flexDirection: 'row' }}
+                    >
+                      <Ionicons style={{
+                        color: '#7E7E7E',
+                        fontSize: responsiveFontSize(1.8),
+                      }} name='md-time' />
+                      <Text style={{
+                        color: '#7E7E7E',
+                        fontSize: responsiveFontSize(1.4),//13,
+                        paddingLeft: 2,
+                      }}>: {item.UpdatedDate}</Text>
+                    </View>
+
+                    {/* Room ID */}
+                    <View
+                      style={{
+                        flex: 1, flexDirection: 'row',
+                        justifyContent: 'flex-end',
+                      }}
+                    >
+                      <Ionicons style={{
+
+                        color: '#7E7E7E',
+                        fontSize: responsiveFontSize(1.8),
+                      }} name='ios-pricetag-outline' />
+                      <Text style={{
+                        color: '#7E7E7E',
+                        fontSize: responsiveFontSize(1.4),//13,
+                        paddingLeft: 2,
+                        marginLeft: 3,
+                      }}>{translate("RoomId")}: {item.ID}</Text>
+                    </View>
+                  </View>
+
+                  <Text style={{
+
+                    fontSize: responsiveFontSize(1.8)
+                  }}
+                    ellipsizeMode='tail'
+                    numberOfLines={2}
+                  >
+                    {translate("Address")}:   {item.Address}</Text>
+                  <Text
+                    style={{
+                      marginTop: 10, color: '#9B9D9D', fontSize: responsiveFontSize(1.8),
+
+                    }}
+                    ellipsizeMode='tail'
+                    numberOfLines={2}
+                  >
+                    {item.Description.indexOf('###') > -1 ? (this.state.isVietnamease ? item.Description.split('###')[0] : this.state.isEnglish ? item.Description.split('###')[1] : item.Description.split('###')[2]) : item.Description}</Text>
+
+                  {/* <Text style={styles.cardDesText}>
+                  {item.Description}
+                </Text> */}
+                  {/* <Text>{item.Images.split('|')[2]}</Text> */}
+                </View>
+                <View style={styles.cardBottom}>
+                  {/* Room Icon Left */}
+                  <View style={styles.cardBottomLeft}>
+                    <Text style={{
+                      color: '#8B8E8E'//item.Point == 5 ? '#a4d227' : '#8B8E8E',
+                    }}>{item.Point}</Text>
+
+                    {/* Rating */}
+                    <TouchableOpacity
+                      onPress={async () => {
+                        if (this.state.profile === null) {
+                          if (Platform.OS == 'ios') {
+                            Alert.alert(translate("Notice"), translate("Please login"))
+                          } else {
+                            ToastAndroid.showWithGravity(translate("Please login"), ToastAndroid.SHORT, ToastAndroid.TOP)
+                          }
                         } else {
-                          ToastAndroid.showWithGravity(translate("Please login"), ToastAndroid.SHORT, ToastAndroid.TOP)
+                          await this.setState({
+                            ratingRoomId: item.ID,
+                            starCount: parseFloat(item.Point)
+                          })
+                          this.popupRating.show();
                         }
-                      } else {
-                        await this.setState({
-                          reportRoomId: item.ID,
-                          toUserMailBox: item.CreatedBy
+                      }}
+                    >
+                      <Ionicons style={{
+                        fontSize: 20,
+                        paddingRight: 25,
+                        paddingLeft: 5,
+                        color: item.Point == 5 ? '#a4d227' : '#8B8E8E',
+                      }} name='ios-star' />
+                    </TouchableOpacity>
+                    <Text style={styles.cardBottomIconText}></Text>
+
+                    {/* Comment */}
+                    <TouchableOpacity
+                      onPress={() => {
+                        //this._postTranslator(item.Address,'zh')
+                        this.props.navigation.navigate('RoomDetailScreen', { item, isComment: true });
+                      }}
+                    >
+                      <Ionicons style={styles.cardBottomIcon} name='ios-chatbubbles' />
+                    </TouchableOpacity>
+
+                    {/* Pinned */}
+                    <TouchableOpacity
+                      onPress={() => {
+                        if (this.state.profile === null) {
+                          if (Platform.OS == 'ios') {
+                            Alert.alert(translate("Notice"), translate("Please login"))
+                          } else {
+                            ToastAndroid.showWithGravity(translate("Please login"), ToastAndroid.SHORT, ToastAndroid.TOP)
+                          }
+                        } else {
+
+                          this._postPinnedByRoom("true", item.ID)
+                        }
+
+
+                      }}
+                    >
+                      <Ionicons style={{
+                        fontSize: 20,
+                        paddingRight: 25,
+                        paddingLeft: 5,
+                        color: '#8B8E8E',
+                      }} name='md-heart-outline' />
+                    </TouchableOpacity>
+
+                  </View>
+
+                  {/* Room Icon Righ */}
+                  <View style={styles.cardBottomRight}>
+
+                    {/* Like Facebook */}
+                    <TouchableOpacity
+                      style={{}}
+                      onPress={() => {
+
+                        Alert.alert(
+                          translate("Notice"),
+                          translate("You need to login to Facebook to post this on your Timeline") + '.  \n' + translate("Do you want to login now"),
+                          [
+                            {
+                              text: translate("Cancel"), onPress: () => {
+
+                              }
+                            },
+                            {
+                              text: translate("Agree"), onPress: () => {
+                                this._handleFacebookLogin(item.Title, item.Description.indexOf('###') > -1 ? (this.state.isVietnamease ? item.Description.split('###')[0] : this.state.isEnglish ? item.Description.split('###')[1] : item.Description.split('###')[2]) : item.Description
+                                  + '\n\n\n' + translate("Install the Nhabaola Application for more Real Estate")
+                                  + '\n - iOS: https://itunes.apple.com/vn/app/nhabaola/id1287451307?mt=8'
+                                  + '\n - Android: ' + 'https://play.google.com/store/apps/details?id=vn.nhabaola.nhabaola')
+                              }
+                            },
+                          ]
+                        );
+                      }}
+                    >
+                      <Ionicons style={styles.cardBottomIcon} name='logo-facebook' />
+                    </TouchableOpacity>
+
+                    {/* Sharing */}
+                    <TouchableOpacity
+                      onPress={async () => {
+
+                        let loadBDS = '';
+                        await this.state.roomCategory.map((y, i) => {
+                          if (y.ID == item.CategoryID) {
+                            loadBDS = this.state.isVietnamease ? y.CatName : this.state.isEnglish ? y.CatImg.split('|')[0] : y.CatImg.split('|')[1]
+                          }
                         })
 
-                        if (Platform.OS == 'ios') {
-                          this.setState({ modalReport: true })
-                        } else {
-                          this.popupReportNBL.show();
-                        }
+                        const _contactName = item.ContactPhone.indexOf('|') > -1 ? item.ContactPhone.split('|')[1] : item.AccountName.indexOf('|') > -1
+                          ?
+                          item.AccountName.split('|')[0]
+                          :
+                          item.AccountName
+                        const _contactPhone = item.ContactPhone.indexOf('|') > -1 ? item.ContactPhone.split('|')[0] : item.ContactPhone
+                        const _description = item.Description.indexOf('###') > -1 ? (this.state.isVietnamease ? item.Description.split('###')[0] : this.state.isEnglish ? item.Description.split('###')[1] : item.Description.split('###')[2]) : item.Description
 
-                      }
-                    }}
-                  >
-                    <Ionicons style={styles.cardBottomIconRightEnd} name='md-flag' />
-                  </TouchableOpacity>
+                        if (Platform.OS == 'ios') {
+                          Share.share({
+                            message: translate("Share from Nhabaola application")
+                              + "\n\n" + translate("Contact") + ": " + _contactName
+                              + "\n" + translate("Cellphone") + ": " + _contactPhone
+                              + "\n\n" + translate("Type of real estate") + ": " + loadBDS
+                              + "\n" + translate("Price") + ": " + item.Price + " đồng"
+                              + "\n" + translate("Area") + ": " + item.Acreage + " " + translate("Square meters")
+                              + "\n" + translate("Address") + ": " + item.Address + "\n\n" + translate("Description") + ":\n" + _description
+                              + "\n\n" + translate("Installation") + ": "
+                              + "\nAndroid: \nhttps://play.google.com/store/apps/details?id=vn.nhabaola.nhabaola"
+                              + "\n\niOS: \nhttps://itunes.apple.com/vn/app/nhabaola/id1287451307?mt=8",
+                            //url: 'https://itunes.apple.com/vn/app/nhabaola/id1287451307?mt=8',
+                            title: translate("Share from Nhabaola application")
+                          }, {
+                              // Android only:
+                              dialogTitle: translate("Share from Nhabaola application"),
+                              // iOS only:
+                              excludedActivityTypes: [
+                                'http://nhabaola.vn'
+                              ]
+                            })
+                        } else { //Android
+
+                          Share.share({
+                            message: translate("Share from Nhabaola application")
+                              + "\n\n" + translate("Contact") + ": " + _contactName
+                              + "\n" + translate("Cellphone") + ": " + _contactPhone
+                              + "\n\n" + translate("Type of real estate") + ": " + loadBDS
+                              + "\n" + translate("Price") + ": " + item.Price + " đồng"
+                              + "\n" + translate("Area") + ": " + item.Acreage + " " + translate("Square meters")
+                              + "\n" + translate("Address") + ": " + item.Address + "\n\n" + translate("Description") + ":\n" + _description
+                              + "\n\n" + translate("Installation") + ": "
+                              + "\niOS: \nhttps://itunes.apple.com/vn/app/nhabaola/id1287451307?mt=8"
+                              + "\n\nAndroid: \nhttps://play.google.com/store/apps/details?id=vn.nhabaola.nhabaola",
+                            url: 'https://play.google.com/store/apps/details?id=vn.nhabaola.nhabaola',
+                            title: translate("Share from Nhabaola application")
+                          }, {
+                              // Android only:
+                              dialogTitle: translate("Share from Nhabaola application"),
+                              // iOS only:
+                              excludedActivityTypes: [
+                                'http://nhabaola.vn'
+                              ]
+                            })
+                        }
+                      }}>
+                      <Ionicons style={styles.cardBottomIcon} name='md-share' />
+                    </TouchableOpacity>
+
+                    {/* Report Admin */}
+                    <TouchableOpacity
+                      onPress={async () => {
+                        if (this.state.profile === null) {
+                          if (Platform.OS == 'ios') {
+                            Alert.alert(translate("Notice"), translate("Please login"))
+                          } else {
+                            ToastAndroid.showWithGravity(translate("Please login"), ToastAndroid.SHORT, ToastAndroid.TOP)
+                          }
+                        } else {
+                          await this.setState({
+                            reportRoomId: item.ID,
+                            toUserMailBox: item.CreatedBy
+                          })
+
+                          if (Platform.OS == 'ios') {
+                            this.setState({ modalReport: true })
+                          } else {
+                            this.popupReportNBL.show();
+                          }
+
+                        }
+                      }}
+                    >
+                      <Ionicons style={styles.cardBottomIconRightEnd} name='md-flag' />
+                    </TouchableOpacity>
+                  </View>
                 </View>
               </View>
             </View>
