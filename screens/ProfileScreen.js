@@ -18,6 +18,7 @@ import {
     Keyboard,
     ActivityIndicator,
     Linking,
+    Share,
 } from 'react-native';
 import { ExpoLinksView } from '@expo/samples';
 import { Constants, ImagePicker, BarCodeScanner } from 'expo';
@@ -587,7 +588,7 @@ export default class ProfileScreen extends React.Component {
 
                         <Text style={{
                             marginLeft: 10, color: '#fff',
-                   
+
                             fontSize: responsiveFontSize(2), //justifyContent: 'center'
                         }}>{translate("Personal page")}</Text>
                     </TouchableOpacity>
@@ -737,28 +738,7 @@ export default class ProfileScreen extends React.Component {
                     </TouchableOpacity>
                     <View style={styles.profileMenuItemSeparator}></View>
 
-                    {/* Like Fanpage Facebook */}
-                    <TouchableOpacity style={styles.profileMenuItem}
-                        onPress={() => {
-                            const FANPAGE_ID = '1750146621679564'
-                            const FANPAGE_URL_FOR_APP = `fb://page/${FANPAGE_ID}`
-                            const FANPAGE_URL_FOR_BROWSER = `https://fb.com/${FANPAGE_ID}`
-                            Linking.canOpenURL(FANPAGE_URL_FOR_APP)
-                                .then((supported) => {
-                                    if (!supported) {
-                                        Linking.openURL(FANPAGE_URL_FOR_BROWSER)
-                                    } else {
-                                        Linking.openURL(FANPAGE_URL_FOR_APP)
-                                    }
-                                })
-                                .catch(err => console.error('An error occurred', err))
 
-                        }}
-                    >
-                        <Ionicons style={styles.profileMenuItemText} name='logo-facebook'>
-                            <Text style={{}} >  Fanpage Facebook</Text>
-                        </Ionicons>
-                    </TouchableOpacity>
 
                     {/* Update Profile */}
                     <TouchableOpacity style={styles.profileMenuItem}
@@ -840,6 +820,78 @@ export default class ProfileScreen extends React.Component {
                     >
                         <Ionicons style={styles.profileMenuItemText} name='md-document'>
                             <Text style={{}} >  {translate("Nhbaola Policy")}</Text>
+                        </Ionicons>
+                    </TouchableOpacity>
+
+                    <View style={styles.profileMenuItemSeparator}></View>
+
+                    {/* Like Fanpage Facebook */}
+                    <TouchableOpacity style={styles.profileMenuItem}
+                        onPress={() => {
+                            const FANPAGE_ID = '1750146621679564'
+                            const FANPAGE_URL_FOR_APP = `fb://page/${FANPAGE_ID}`
+                            const FANPAGE_URL_FOR_BROWSER = `https://fb.com/${FANPAGE_ID}`
+                            Linking.canOpenURL(FANPAGE_URL_FOR_APP)
+                                .then((supported) => {
+                                    if (!supported) {
+                                        Linking.openURL(FANPAGE_URL_FOR_BROWSER)
+                                    } else {
+                                        Linking.openURL(FANPAGE_URL_FOR_APP)
+                                    }
+                                })
+                                .catch(err => console.error('An error occurred', err))
+
+                        }}
+                    >
+                        <Ionicons style={styles.profileMenuItemText} name='logo-facebook'>
+                            <Text style={{}} >  Fanpage Facebook</Text>
+                        </Ionicons>
+                    </TouchableOpacity>
+
+                    {/* Apps Sharing */}
+                    <TouchableOpacity style={styles.profileMenuItem}
+                        onPress={() => {
+
+                            if (Platform.OS == 'ios') {
+                                Share.share({
+                                    message: translate("Share from Nhabaola application")
+                                        + "\n\n" + translate("Installation") + ": "
+                                        + "\nAndroid: \nhttps://play.google.com/store/apps/details?id=vn.nhabaola.nhabaola"
+                                        + "\n\niOS: \nhttps://itunes.apple.com/vn/app/nhabaola/id1287451307?mt=8",
+                                    //url: 'https://itunes.apple.com/vn/app/nhabaola/id1287451307?mt=8',
+                                    title: translate("Share from Nhabaola application")
+                                }, {
+                                        // Android only:
+                                        dialogTitle: translate("Share from Nhabaola application"),
+                                        // iOS only:
+                                        excludedActivityTypes: [
+                                            'http://nhabaola.vn'
+                                        ]
+                                    })
+                            } else { //Android
+
+                                Share.share({
+                                    message: translate("Share from Nhabaola application")
+                                        + "\n\n" + translate("Installation") + ": "
+                                        + "\niOS: \nhttps://itunes.apple.com/vn/app/nhabaola/id1287451307?mt=8"
+                                        + "\n\nAndroid: \nhttps://play.google.com/store/apps/details?id=vn.nhabaola.nhabaola",
+                                    url: 'https://play.google.com/store/apps/details?id=vn.nhabaola.nhabaola',
+                                    title: translate("Share from Nhabaola application")
+                                }, {
+                                        // Android only:
+                                        dialogTitle: translate("Share from Nhabaola application"),
+                                        // iOS only:
+                                        excludedActivityTypes: [
+                                            'http://nhabaola.vn'
+                                        ]
+                                    })
+                            }
+
+
+                        }}
+                    >
+                        <Ionicons style={styles.profileMenuItemText} name='md-share'>
+                            <Text style={{}} >  {translate("Share Application")}</Text>
                         </Ionicons>
                     </TouchableOpacity>
 
@@ -1241,7 +1293,7 @@ export default class ProfileScreen extends React.Component {
                             <Ionicons style={{ fontSize: 28, color: '#a4d227', paddingTop: 2 }} name='ios-arrow-back'></Ionicons>
                             <Text style={{
                                 marginLeft: 10, color: '#73aa2a',
-                               
+
                                 fontSize: responsiveFontSize(2.2), justifyContent: 'center'
                             }}>{translate("Contact help")}</Text>
                         </TouchableOpacity>
@@ -1769,7 +1821,7 @@ const styles = StyleSheet.create({
 
 
     cardAvatarName: {
-      
+
         fontSize: responsiveFontSize(2.5),
         color: '#73aa2a'
     },
