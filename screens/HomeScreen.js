@@ -2178,7 +2178,7 @@ export default class HomeScreen extends React.Component {
                     >
                       <Text style={{
                         fontSize: responsiveFontSize(2),
-
+                        fontWeight: 'bold',
 
                       }}>{item.AccountName.indexOf('|') > -1
                         ?
@@ -2361,11 +2361,26 @@ export default class HomeScreen extends React.Component {
 
 
                 </TouchableWithoutFeedback>
-                <View style={{ flexDirection: 'row', paddingLeft: 20, paddingRight: 20, paddingTop: 5, paddingBottom: 5, marginTop: -50, backgroundColor: '#000', opacity: 0.6 }}>
+                {/* <Text
+                  style={{
+                    position: 'absolute',
+                    top: 330, left: 8,
+                    zIndex: 50,
+                    flex: 1, color: '#fff', fontWeight: '300',
+                    //fontWeight: 'bold',
+                    fontSize: responsiveFontSize(1.7)
+                  }}>
+                  {translate("Price")}: {convertAmountToWording(item.Price)}
+                </Text> */}
+                <View style={{
+                  flexDirection: 'row', paddingLeft: 20,
+                  paddingRight: 20, paddingTop: 5, paddingBottom: 5, marginTop: -50,
+                  backgroundColor: '#000', opacity: 0.5
+                }}>
                   <Text
                     style={{
                       flex: 1, color: '#fff', fontWeight: '300',
-
+                      fontWeight: 'bold',
                       fontSize: responsiveFontSize(1.7)
                     }}>
                     {translate("Price")}: {convertAmountToWording(item.Price)}
@@ -2379,7 +2394,7 @@ export default class HomeScreen extends React.Component {
                         <Text
                           style={{
                             flex: 2, color: '#fff', fontWeight: '300',
-
+                            fontWeight: 'bold',
                             fontSize: responsiveFontSize(1.7), textAlign: 'right'
                           }}
                           key={i}>{this.state.isVietnamease ? y.CatName : this.state.isEnglish ? y.CatImg.split('|')[0] : y.CatImg.split('|')[1]}:  {item.Acreage} m</Text>
@@ -2388,7 +2403,7 @@ export default class HomeScreen extends React.Component {
                     })
                   }
                   {/* <Text style={{ flex: 1, textAlign: 'right', color: '#fff' }}> {item.CategoryID} Diện tích:   {item.Acreage} m</Text> */}
-                  <Text style={{ fontSize: 8, marginBottom: 5, color: '#fff', }}>2</Text>
+                  <Text style={{ fontSize: 8, marginBottom: 5, color: '#fff', fontWeight: 'bold', }}>2</Text>
 
                 </View>
                 <View style={styles.cardDesBox}>
