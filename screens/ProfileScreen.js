@@ -991,7 +991,7 @@ export default class ProfileScreen extends React.Component {
                     dialogAnimation={new ScaleAnimation()}
                     dialogTitle={<DialogTitle title={translate("Change password")} titleStyle={{}} titleTextStyle={{ color: '#73aa2a' }} />}
                     dismissOnTouchOutside={false}
-                    dialogStyle={{ marginBottom: 150, width: width * 0.9, height: height * 0.5, }}
+                    dialogStyle={{ marginBottom: responsiveHeight(40), width: width * 0.9, height: height * 0.5, }}
                     onShown={() => {
                         this.refs.popupOldPasswordInput.focus()
                     }}
@@ -1446,25 +1446,49 @@ export default class ProfileScreen extends React.Component {
                                         source={require('../assets/icons/chat_whatapps.png')} />
 
 
-                                    {/* <Text style={{
-                                    fontSize: responsiveFontSize(2),
-                                    //flex: 4, 
-                                    color: '#9B9D9D'
-                                }} > <Ionicons style={{ fontSize: responsiveFontSize(2.5) }} name="ios-chatbubbles" /> Admin</Text> */}
                                 </TouchableOpacity>
+                                {/* <TouchableOpacity
+                                    style={{
+                                        // lexDirection: 'row',
+                                        //flex: 1,
+                                        marginLeft: 20,
+                                        //alignItems: 'center',
+                                    }}
+                                    onPress={() => {
+                                        //const FANPAGE_ID = '1750146621679564'
+                                        //const URL_FOR_APP = `fb://page/${FANPAGE_ID}`
+                                        const URL_FOR_BROWSER = 'viber://chat:+84963988367'//'http://zalo.me/0963988367'//'http://m.me/ho.can.7'
+                                        Linking.canOpenURL(URL_FOR_BROWSER)
+                                            .then((supported) => {
+                                                if (!supported) {
+                                                    Linking.openURL(URL_FOR_BROWSER)
+                                                } else {
+                                                    Linking.openURL(URL_FOR_BROWSER)
+                                                }
+                                            })
+                                            .catch(err => console.error('An error occurred', err))
+                                    }}
+                                >
+
+                                    <Image
+                                        style={{}}
+                                        source={require('../assets/icons/chat_whatapps.png')} />
+
+
+                                </TouchableOpacity> */}
                             </View>
                         </View>
 
-                        <Text style={{
+                        {/* <Text style={{
                             fontSize: responsiveFontSize(2), color: '#73aa2a',
                             marginTop: 25, marginBottom: 5
-                        }} >{translate("User manual")}</Text>
+                        }} >{translate("User manual")}</Text> */}
                         <TouchableOpacity
                             style={{ flexDirection: 'row', alignItems: 'center' }}
                             onPress={() => {
                                 //const FANPAGE_ID = '1750146621679564'
                                 //const URL_FOR_APP = `fb://page/${FANPAGE_ID}`
-                                const URL_FOR_BROWSER = 'https://www.youtube.com/watch?v=KqEJ4m3OylQ'//'https://docs.google.com/document/d/1AJZpbCWJNlba-jgOmq00-iwhF0-l1Z0_XxfW9JafAqk/edit'
+                                const URL_FOR_BROWSER = 'https://docs.google.com/document/d/1iDtGBSX-WO7dQNZwR8BWXNraWQGQCN00wI_XWbKCHP4/edit?usp=drivesdk'//'https://www.youtube.com/watch?v=KqEJ4m3OylQ'//'https://docs.google.com/document/d/1AJZpbCWJNlba-jgOmq00-iwhF0-l1Z0_XxfW9JafAqk/edit'
                                 Linking.canOpenURL(URL_FOR_BROWSER)
                                     .then((supported) => {
                                         if (!supported) {
@@ -1477,15 +1501,21 @@ export default class ProfileScreen extends React.Component {
                             }}
                         >
                             {/* <Text style={{ alignItems: 'center', fontSize: responsiveFontSize(2) }}>https://docs.google.com/document/d/1AJZpbCWJNlba-jgOmq00-iwhF0-l1Z0_XxfW9JafAqk</Text> */}
-                            <Ionicons style={{
+                            {/* <Ionicons style={{
                                 color: '#6c6d6d',
                                 fontSize: responsiveFontSize(2.5),
                                 marginLeft: 5,
                                 marginRight: 5,
-                            }} name='ios-arrow-dropright-outline' />
+                            }} name='ios-arrow-dropright-outline' /> */}
                             <Text
-                                style={{ alignItems: 'center', fontSize: responsiveFontSize(2) }}
-                            > {translate("Post")}</Text>
+                                style={{
+                                    fontSize: responsiveFontSize(2), color: '#73aa2a',
+                                    marginTop: 30, marginBottom: 5,
+
+                                    // alignItems: 'center',
+                                    // fontSize: responsiveFontSize(2)
+                                }}
+                            > {translate("User manual")}</Text>
                         </TouchableOpacity>
 
                         {/* <Accordion
@@ -1715,6 +1745,7 @@ const styles = StyleSheet.create({
     profileMenuItemText: {
         fontSize: responsiveFontSize(2.2),//16,
         // height: 20,
+        paddingBottom: 1,
     },
     profileMenuItem: {
         paddingBottom: 20,

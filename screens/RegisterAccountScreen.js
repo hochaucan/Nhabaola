@@ -21,6 +21,7 @@ import {
     ActivityIndicator,
     Keyboard,
     KeyboardAvoidingView,
+    Linking,
 } from 'react-native';
 import { WebBrowser, ImagePicker, Facebook } from 'expo';
 import { MonoText } from '../components/StyledText';
@@ -61,6 +62,7 @@ export default class RegisterAccountScreen extends React.Component {
             registerFacebookMessanger: '',
             registerZalo: '',
             registerWhatapps: '',
+            isAgreePolicy: false,
         }
     }
 
@@ -128,6 +130,11 @@ export default class RegisterAccountScreen extends React.Component {
                 return;
             }
 
+            if (this.state.isAgreePolicy === false) {
+                ToastAndroid.showWithGravity(translate("You do not agree to the Nhabaola Policy"), ToastAndroid.SHORT, ToastAndroid.TOP);
+                return;
+            }
+
         }
         else { //IOS
             if (this.state.registerAccountImage === null) {
@@ -170,8 +177,12 @@ export default class RegisterAccountScreen extends React.Component {
                 //this.refs.emailInput.focus();
                 return;
             }
-
+            if (this.state.isAgreePolicy === false) {
+                Alert.alert(translate("Notice"), translate("You do not agree to the Nhabaola Policy"));
+                return;
+            }
         }
+
 
         this.popupLoadingIndicator.show();
 
@@ -560,6 +571,10 @@ export default class RegisterAccountScreen extends React.Component {
                                 />
 
                             </View>
+
+
+
+
                             {/* Verify Cellphone */}
                             {/* <View style={{ flexDirection: 'row', padding: 10, paddingTop: 0, }}>
                             <FormInput
@@ -591,9 +606,58 @@ export default class RegisterAccountScreen extends React.Component {
                     </KeyboardAvoidingView>
                 </KeyboardAwareScrollView>
 
+
+                {/* Term of Service */}
+                <View style={{
+                    flexDirection: 'row',
+                    padding: 10,
+                    paddingTop: 0,
+                    alignItems: 'center',
+                    width: responsiveWidth(100)
+
+                }}>
+                    {/* <Ionicons style={{ flex: 1, fontSize: 22, paddingTop: 12, textAlign: 'center', color: '#fff' }} name='ios-chatbubbles' /> */}
+                    {/* <Image style={{ flex: 1, paddingTop: 12, width: 30, height: 22 }} source={require('../assets/icons/chat_whatapps.png')} /> */}
+
+                    <CheckBox
+                        // title={translate("I agree to the Nhabaola Policy")}
+                        //    center
+                        containerStyle={{ backgroundColor: '#fff', borderColor: '#fff' ,width:41,}}
+                        size={24}
+                        checked={this.state.isAgreePolicy}
+                        onPress={() => {
+                            this.setState({
+                                isAgreePolicy: !this.state.isAgreePolicy
+                            })
+                        }}
+                    />
+
+                    <TouchableOpacity
+                        style={{
+
+                        }}
+                        onPress={() => {
+                            const URL_FOR_BROWSER = "https://drive.google.com/file/d/0B2isr9FvXieAQVg0dFFDYkNla3VoX2NZNGI0eUNMMExUWHFv/view?usp=drivesdk"
+
+                            Linking.canOpenURL(URL_FOR_BROWSER)
+                                .then((supported) => {
+                                    if (!supported) {
+                                        Linking.openURL(URL_FOR_BROWSER)
+                                    } else {
+                                        Linking.openURL(URL_FOR_BROWSER)
+                                    }
+                                })
+                                .catch(err => console.error('An error occurred', err))
+                        }}
+                    >
+                        <Text style={{ fontSize: responsiveFontSize(1.8), color: '#73aa2a' }}>{translate("I agree to the Nhabaola Policy")}</Text>
+                    </TouchableOpacity>
+
+                </View>
+
                 {/* Form Button */}
                 <View style={{
-                    height: 80, flexDirection: 'row',
+                    height: 50, flexDirection: 'row',
                     alignItems: 'center', justifyContent: 'center',
                     // paddingBottom: 10,
                     // shadowColor: '#000',
@@ -602,6 +666,7 @@ export default class RegisterAccountScreen extends React.Component {
                     // shadowRadius: 2,
                     // elevation: 2,
                 }}>
+
                     <Button
                         buttonStyle={{ backgroundColor: '#9B9D9D', padding: 10, borderRadius: 5, }}
                         raised={false}

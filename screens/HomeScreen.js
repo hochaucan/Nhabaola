@@ -1474,7 +1474,7 @@ export default class HomeScreen extends React.Component {
       }));
     }
     else { // Refresh page
-      roomBox = [];
+      roomBox = await [];
       this.setState({ page: 1, flatListIsEnd: false })
     }
 
@@ -1498,10 +1498,12 @@ export default class HomeScreen extends React.Component {
         .then((response) => response.json())
         .then((responseJson) => {
 
-          responseJson.obj.map((y) => {
-            roomBox.push(y);
-          })
-
+          //alert(JSON.stringify(responseJson.obj.length))
+          if (JSON.stringify(responseJson.obj.length) > 0) {
+            responseJson.obj.map((y) => {
+              roomBox.push(y);
+            })
+          }
 
           setTimeout(
             () => {

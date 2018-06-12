@@ -636,6 +636,7 @@ translate("Cancel Facebook login")
  translate("Contact Person")
  translate("Maximum of 8 characters")
  translate("Image library")
+ translate("You do not agree to the Nhabaola Policy")
  translate("The effective end date is not less than the start date")
  translate("The highlight end date is not less than the start date")
  translate("Update successful")
@@ -686,6 +687,7 @@ translate("App Rating")
 translate("Find this area")
 translate("Please enter top up code")
 translate("Or enter your top up code here")
+translate("I agree to the Nhabaola Policy")
 
 
 
