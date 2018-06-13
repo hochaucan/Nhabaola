@@ -29,7 +29,7 @@
       "backgroundColor": "#a4d227"
     },
     "splash": {
-      "image": "./assets/icons/splash.jpg",
+      "image": "./assets/icons/splash.png",
       "resizeMode": "cover"
     },
     "packagerOpts": {
