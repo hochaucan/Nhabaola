@@ -9,7 +9,7 @@
       "ios",
       "android"
     ],
-    "version": "1.1.7",
+    "version": "1.1.8",
     "orientation": "portrait",
     "primaryColor": "#cccccc",
     "icon": "./assets/icons/app-icon.png",
@@ -49,7 +49,7 @@
     },
     "android": {
       "package": "vn.nhabaola.nhabaola",
-      "versionCode": 17,
+      "versionCode": 18,
       "config": {
         "googleMaps": {
           "apiKey": "AIzaSyDjGSoHkMu6Q55FifG90l25DR8SfMo3quM"
