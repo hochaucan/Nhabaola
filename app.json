@@ -28,6 +28,10 @@
       "hideExponentText": true,
       "backgroundColor": "#a4d227"
     },
+    "splash": {
+      "image": "./assets/icons/splash.jpg",
+      "resizeMode": "cover"
+    },
     "packagerOpts": {
       "assetExts": [
         "ttf"

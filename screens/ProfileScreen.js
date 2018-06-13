@@ -617,9 +617,27 @@ export default class ProfileScreen extends React.Component {
                 }}>
                     {/* <Text>{JSON.stringify(this.props.navigation.state.params)}</Text> */}
 
-                    <View style={styles.cardHeader}>
+                    <View style={{
+                        // flex: 2,
+                        flexDirection: 'row',
+                        padding: 10,
+                        // borderBottomWidth: 0.7,
+                        // borderColor: '#a4d227',
+                        alignItems: 'center',
+                        backgroundColor: '#edeeef',
+                        shadowColor: '#000',
+                        shadowOffset: { width: 0, height: 0 },
+                        shadowOpacity: 0.3,
+                        shadowRadius: 2,
+                        //elevation:5,
+                        borderBottomColor: Platform.OS == 'ios' ? '#fff' : '#9B9D9D',
+                        borderBottomWidth: 0.5,
 
-                        <View style={{ marginTop: 10, }}>
+                    }}>
+
+                        <View style={{
+                            marginTop: 10,
+                        }}>
                             <TouchableOpacity
                                 onPress={() => {
                                     {/* this.props.navigation.navigate('ProfileScreen'); */ }
@@ -661,7 +679,7 @@ export default class ProfileScreen extends React.Component {
                 </View>
                 <ScrollView style={{
                     flex: 1,
-                    marginTop: 25,
+                    marginTop: 10,
 
                 }}>
                     {/* Post Room */}
@@ -674,9 +692,12 @@ export default class ProfileScreen extends React.Component {
                             })
                         }}
                     >
-                        <Ionicons style={styles.profileMenuItemText} name='md-cloud-upload'>
+                        {/* <Ionicons style={styles.profileMenuItemText} name='md-cloud-upload'>
                             <Text style={{}} >  {translate("Post")}</Text>
-                        </Ionicons>
+                        </Ionicons> */}
+
+                        <Ionicons style={styles.profileMenuItemText} name='md-cloud-upload' />
+                        <Text style={styles.profileMenuItemTextRight} >{translate("Post")}</Text>
                     </TouchableOpacity>
 
                     {/* MailBox */}
@@ -695,8 +716,9 @@ export default class ProfileScreen extends React.Component {
                         }}
                     >
                         <Ionicons style={styles.profileMenuItemText} name='ios-mail-open-outline'>
-                            <Text style={{}} >  {translate("Mailbox")}</Text>
+
                         </Ionicons>
+                        <Text style={styles.profileMenuItemTextRight} >{translate("Mailbox")}</Text>
                     </TouchableOpacity>
 
                     {/* History Room */}
@@ -707,8 +729,9 @@ export default class ProfileScreen extends React.Component {
                         }}
                     >
                         <Ionicons style={styles.profileMenuItemText} name='md-folder'>
-                            <Text style={{}} >  {translate("Posted history")}</Text>
+
                         </Ionicons>
+                        <Text style={styles.profileMenuItemTextRight} >{translate("Posted history")}</Text>
                     </TouchableOpacity>
 
                     {/* Pinned */}
@@ -719,8 +742,9 @@ export default class ProfileScreen extends React.Component {
                         }}
                     >
                         <Ionicons style={styles.profileMenuItemText} name='md-heart-outline'>
-                            <Text style={{}} >  {translate("Pinned")}</Text>
+
                         </Ionicons>
+                        <Text style={styles.profileMenuItemTextRight}  >{translate("Pinned")}</Text>
                     </TouchableOpacity>
 
                     {/* Wallet */}
@@ -732,9 +756,10 @@ export default class ProfileScreen extends React.Component {
                         }}
                     >
                         <Ionicons style={styles.profileMenuItemText} name='logo-usd'>
-                            <Text style={{}} >  {translate("Wallet")}:  </Text>
-                            <Text style={{ color: '#73aa2a' }}>{numberWithCommas(this.state.wallet)} đ</Text>
+
                         </Ionicons>
+                        <Text style={styles.profileMenuItemTextRight} >{translate("Wallet")}:
+                        <Text style={{ color: '#73aa2a' }}>   {numberWithCommas(this.state.wallet)} đ</Text></Text>
                     </TouchableOpacity>
                     <View style={styles.profileMenuItemSeparator}></View>
 
@@ -755,8 +780,9 @@ export default class ProfileScreen extends React.Component {
                         }}
                     >
                         <Ionicons style={styles.profileMenuItemText} name='md-information-circle'>
-                            <Text style={{}} >  {translate("Personal information")}</Text>
+
                         </Ionicons>
+                        <Text style={styles.profileMenuItemTextRight} >{translate("Personal information")}</Text>
                     </TouchableOpacity>
                     <TouchableOpacity style={styles.profileMenuItem}
                         onPress={() => {
@@ -790,15 +816,17 @@ export default class ProfileScreen extends React.Component {
                         }}
                     >
                         <Ionicons style={styles.profileMenuItemText} name='md-lock'>
-                            <Text style={{}} >  {translate("Change password")}</Text>
+
                         </Ionicons>
+                        <Text style={styles.profileMenuItemTextRight} >{translate("Change password")}</Text>
                     </TouchableOpacity>
                     <TouchableOpacity style={styles.profileMenuItem}
                         onPress={() => { this.setState({ modalHelp: true }) }}
                     >
                         <Ionicons style={styles.profileMenuItemText} name='md-help'>
-                            <Text style={{}}>  {translate("Contact help")}</Text>
+
                         </Ionicons>
+                        <Text style={styles.profileMenuItemTextRight} >{translate("Contact help")}</Text>
                     </TouchableOpacity>
 
                     {/* Policy */}
@@ -819,8 +847,9 @@ export default class ProfileScreen extends React.Component {
                         }}
                     >
                         <Ionicons style={styles.profileMenuItemText} name='md-document'>
-                            <Text style={{}} >  {translate("Nhbaola Policy")}</Text>
+
                         </Ionicons>
+                        <Text style={styles.profileMenuItemTextRight} >{translate("Nhbaola Policy")}</Text>
                     </TouchableOpacity>
 
                     <View style={styles.profileMenuItemSeparator}></View>
@@ -844,8 +873,9 @@ export default class ProfileScreen extends React.Component {
                         }}
                     >
                         <Ionicons style={styles.profileMenuItemText} name='logo-facebook'>
-                            <Text style={{}} >  Fanpage Facebook</Text>
+
                         </Ionicons>
+                        <Text style={styles.profileMenuItemTextRight} >Fanpage Facebook</Text>
                     </TouchableOpacity>
 
                     {/* Apps Sharing */}
@@ -891,8 +921,9 @@ export default class ProfileScreen extends React.Component {
                         }}
                     >
                         <Ionicons style={styles.profileMenuItemText} name='md-share'>
-                            <Text style={{}} >  {translate("Share Application")}</Text>
+
                         </Ionicons>
+                        <Text style={styles.profileMenuItemTextRight} >{translate("Share Application")}</Text>
                     </TouchableOpacity>
 
                     {/* Apps Rating */}
@@ -916,8 +947,9 @@ export default class ProfileScreen extends React.Component {
                         }}
                     >
                         <Ionicons style={styles.profileMenuItemText} name='ios-star-half'>
-                            <Text style={{}} >  {translate("App Rating")}</Text>
+
                         </Ionicons>
+                        <Text style={styles.profileMenuItemTextRight} >{translate("App Rating")}</Text>
                     </TouchableOpacity>
 
 
@@ -962,8 +994,9 @@ export default class ProfileScreen extends React.Component {
                             }}
                         >
                             <Ionicons style={styles.profileMenuItemText} name='md-exit'>
-                                <Text style={{}} >  {translate("Sign out")}</Text>
+
                             </Ionicons>
+                            <Text style={styles.profileMenuItemTextRight} >{translate("Sign out")}</Text>
                         </TouchableOpacity>
                         : null}
                 </ScrollView>
@@ -1743,21 +1776,33 @@ const styles = StyleSheet.create({
 
 
     profileMenuItemText: {
-        fontSize: responsiveFontSize(2.2),//16,
+        fontSize: responsiveFontSize(2.8),//16,
         // height: 20,
-        paddingBottom: 1,
+        //paddingBottom: 1,
+        flex: 1,
+    },
+    profileMenuItemTextRight: {
+        flex: 9,
+        fontSize: responsiveFontSize(2.2)
     },
     profileMenuItem: {
+        //borderWidth:1,
         paddingBottom: 20,
         padding: 10,
         paddingLeft: 15,
-
+        flexDirection: 'row',
+        alignContent: 'center',
+        alignItems: 'center',
+        justifyContent: 'center',
     },
     profileMenuItemSeparator: {
-        height: 0.7,
+        height: 0.6,
         // width: width,
-        backgroundColor: '#a4d227',
+        backgroundColor: '#9B9D9D',
         marginBottom: 10,
+
+        //borderBottomColor: '#9B9D9D',
+        // borderBottomWidth:0.5,
     },
     container: {
         flex: 1,
@@ -1840,14 +1885,14 @@ const styles = StyleSheet.create({
     //     padding: 0,
     //     flexDirection: 'column',
     // },
-    cardHeader: {
-        // flex: 2,
-        flexDirection: 'row',
-        padding: 10,
-        // borderBottomWidth: 0.7,
-        // borderColor: '#a4d227',
-        alignItems: 'center'
-    },
+    // cardHeader: {
+    //     // flex: 2,
+    //     flexDirection: 'row',
+    //     padding: 10,
+    //     // borderBottomWidth: 0.7,
+    //     // borderColor: '#a4d227',
+    //     alignItems: 'center'
+    // },
 
 
 
