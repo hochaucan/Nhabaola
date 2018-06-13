@@ -15,7 +15,7 @@
     "icon": "./assets/icons/app-icon.png",
     "notification": {
       "icon": "./assets/icons/app-icon.png",
-      "color": "#000000"
+      "color": "#fff"
     },
     "updates": {
       "fallbackToCacheTimeout": 0
