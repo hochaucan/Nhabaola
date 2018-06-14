@@ -2060,7 +2060,7 @@ export default class HomeScreen extends React.Component {
             </TouchableOpacity>
           </View>
         }
-
+        {/* Banner Marketing */}
         {Banner.length > 0 &&
           <View
             style={{
@@ -2088,7 +2088,7 @@ export default class HomeScreen extends React.Component {
                   return (
                     <Image
                       key={i}
-                      style={styles.cardImage}
+                      style={{ flex: 1 }}
                       source={{ uri: y.Description }} />
                   )
 
