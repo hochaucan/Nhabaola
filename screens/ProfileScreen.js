@@ -630,8 +630,8 @@ export default class ProfileScreen extends React.Component {
                         shadowOpacity: 0.3,
                         shadowRadius: 2,
                         //elevation:5,
-                        borderBottomColor: Platform.OS == 'ios' ? '#fff' : '#9B9D9D',
-                        borderBottomWidth: 0.5,
+                      //  borderBottomColor: Platform.OS == 'ios' ? '#fff' : '#9B9D9D',
+                       // borderBottomWidth: 0.5,
 
                     }}>
 
@@ -647,7 +647,7 @@ export default class ProfileScreen extends React.Component {
                             >
                                 {this.state.profile === null
                                     ? <Image style={{ borderRadius: Platform.OS === 'ios' ? 23 : 50, height: 60, width: 60, }} source={require('../images/nha-bao-la.jpg')} />
-                                    : <Image source={{ uri: this.state.profile.Avarta }} style={{ width: 60, height: 60, borderRadius: Platform.OS === 'ios' ? 30 : 100, }} />
+                                    : <Image source={{ uri: this.state.profile.Avarta }} style={{borderWidth:5,borderColor:'#fff', width: 60, height: 60, borderRadius: Platform.OS === 'ios' ? 30 : 100, }} />
                                 }
 
                             </TouchableOpacity>
