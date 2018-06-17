@@ -190,7 +190,7 @@ export default class RegisterAccountScreen extends React.Component {
         let _fullName = this.state.registerFullName
         if (this.state.registerFacebookMessanger != '') { _fullName = _fullName + '|http://m.me/' + this.state.registerFacebookMessanger }
         if (this.state.registerZalo != '') { _fullName = _fullName + '|http://zalo.me/' + this.state.registerZalo }
-        if (this.state.registerWhatapps != '') { _fullName = _fullName + '|https://api.whatsapp.com/send?phone=' + this.state.registerWhatapps }
+        if (this.state.registerWhatapps != '') { _fullName = _fullName + '|https://api.whatsapp.com/send?phone=+84' + this.state.registerWhatapps }
         if (_fullName.indexOf('|') > -1) { _fullName = _fullName + '|' }
 
 
@@ -557,7 +557,7 @@ export default class RegisterAccountScreen extends React.Component {
                                     }}
                                     containerStyle={{ flex: 15, marginLeft: Platform.OS === 'ios' ? 22 : 18 }}
                                     inputStyle={{ paddingLeft: Platform.OS === 'android' ? 4 : 0 }}
-                                    placeholder={'Whatapps (+84963988367)'}
+                                    placeholder={'Whatapps (0963988367)'}
                                     // keyboardType='email-address'
                                     underlineColorAndroid={'#73aa2a'}
                                     value={this.state.registerWhatapps}

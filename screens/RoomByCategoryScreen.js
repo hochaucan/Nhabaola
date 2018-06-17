@@ -1844,96 +1844,6 @@ export default class RoomByCategoryScreen extends React.Component {
                         item.AccountName
                       }</Text>
 
-                      {/* Facebook Messenger */}
-                      {
-                        item.AccountName.indexOf('http://m.me/') > -1 &&
-                        <TouchableOpacity
-                          style={{
-                            // lexDirection: 'row',
-                            //flex: 2,
-                            //alignItems: 'center',
-                          }}
-                          onPress={() => {
-                            //const FANPAGE_ID = '1750146621679564'
-                            //const URL_FOR_APP = `fb://page/${FANPAGE_ID}`
-                            const URL_FOR_BROWSER = item.AccountName.slice(item.AccountName.indexOf('http://m.me/'),
-                              item.AccountName.indexOf('|', item.AccountName.indexOf('http://m.me/')))//'http://m.me/thomas.ho.5492216'//ho.can.7'
-
-                            Linking.canOpenURL(URL_FOR_BROWSER)
-                              .then((supported) => {
-                                if (!supported) {
-                                  Linking.openURL(URL_FOR_BROWSER)
-                                } else {
-                                  Linking.openURL(URL_FOR_BROWSER)
-                                }
-                              })
-                              .catch(err => console.error('An error occurred', err))
-                          }}
-                        >
-                          <Image style={{ width: 18, height: 28, marginLeft: 10, }} source={require('../assets/icons/chat_fm.png')} />
-                        </TouchableOpacity>
-                      }
-
-                      {/* Zalo Messenger */}
-                      {
-                        item.AccountName.indexOf('http://zalo.me/') > -1 &&
-                        <TouchableOpacity
-                          style={{
-                            // lexDirection: 'row',
-                            //flex: 2,
-                            //alignItems: 'center',
-                          }}
-                          onPress={() => {
-                            //const FANPAGE_ID = '1750146621679564'
-                            //const URL_FOR_APP = `fb://page/${FANPAGE_ID}`
-                            const URL_FOR_BROWSER = item.AccountName.slice(item.AccountName.indexOf('http://zalo.me/'),
-                              item.AccountName.indexOf('|', item.AccountName.indexOf('http://zalo.me/')))//'http://m.me/thomas.ho.5492216'//ho.can.7'
-
-                            Linking.canOpenURL(URL_FOR_BROWSER)
-                              .then((supported) => {
-                                if (!supported) {
-                                  Linking.openURL(URL_FOR_BROWSER)
-                                } else {
-                                  Linking.openURL(URL_FOR_BROWSER)
-                                }
-                              })
-                              .catch(err => console.error('An error occurred', err))
-                          }}
-                        >
-                          <Image style={{ width: 18, height: 28, marginLeft: 10, }} source={require('../assets/icons/chat_zalo.png')} />
-                        </TouchableOpacity>
-                      }
-
-                      {/* Whatapps Messenger */}
-                      {
-                        item.AccountName.indexOf('https://api.whatsapp.com/') > -1 &&
-                        <TouchableOpacity
-                          style={{
-                            // lexDirection: 'row',
-                            //flex: 2,
-                            //alignItems: 'center',
-                          }}
-                          onPress={() => {
-                            //const FANPAGE_ID = '1750146621679564'
-                            //const URL_FOR_APP = `fb://page/${FANPAGE_ID}`
-                            const URL_FOR_BROWSER = item.AccountName.slice(item.AccountName.indexOf('https://api.whatsapp.com/'),
-                              item.AccountName.indexOf('|', item.AccountName.indexOf('https://api.whatsapp.com/')))//'http://m.me/thomas.ho.5492216'//ho.can.7'
-
-                            Linking.canOpenURL(URL_FOR_BROWSER)
-                              .then((supported) => {
-                                if (!supported) {
-                                  Linking.openURL(URL_FOR_BROWSER)
-                                } else {
-                                  Linking.openURL(URL_FOR_BROWSER)
-                                }
-                              })
-                              .catch(err => console.error('An error occurred', err))
-                          }}
-                        >
-                          <Image style={{ width: 18, height: 28, marginLeft: 10, }} source={require('../assets/icons/chat_whatapps.png')} />
-                        </TouchableOpacity>
-                      }
-
 
                       {/* <Ionicons style={{ marginLeft: 5, marginRight: 5, color: '#73aa2a' }} name='ios-arrow-forward' />
                     <Text style={{ fontSize: responsiveFontSize(1.8), color: '#6c6d6d' }}>Chat ngay</Text> */}
@@ -1957,6 +1867,111 @@ export default class RoomByCategoryScreen extends React.Component {
                       }}>: {item.ContactPhone.indexOf("|") > -1 ? item.ContactPhone.split('|')[0] + '. LH: ' + item.ContactPhone.split('|')[1]
                         : item.ContactPhone}</Text>
                     </TouchableOpacity>
+
+                    {/* Chat Now */}
+                    <View
+                      style={{
+                        flexDirection: 'row',
+                        alignContent: 'center',
+                        alignItems: 'center',
+                        marginTop: 4,
+                        marginLeft: -2,
+                      }}
+                    >
+
+                      {/* Facebook Messenger */}
+                      {
+                        item.AccountName.indexOf('http://m.me/') > -1 &&
+                        <TouchableOpacity
+                          style={{
+                            // lexDirection: 'row',
+                            //flex: 2,
+                            //alignItems: 'center',
+                            paddingRight: 15,
+                          }}
+                          onPress={() => {
+                            //const FANPAGE_ID = '1750146621679564'
+                            //const URL_FOR_APP = `fb://page/${FANPAGE_ID}`
+                            const URL_FOR_BROWSER = item.AccountName.slice(item.AccountName.indexOf('http://m.me/'),
+                              item.AccountName.indexOf('|', item.AccountName.indexOf('http://m.me/')))//'http://m.me/thomas.ho.5492216'//ho.can.7'
+
+                            Linking.canOpenURL(URL_FOR_BROWSER)
+                              .then((supported) => {
+                                if (!supported) {
+                                  Linking.openURL(URL_FOR_BROWSER)
+                                } else {
+                                  Linking.openURL(URL_FOR_BROWSER)
+                                }
+                              })
+                              .catch(err => console.error('An error occurred', err))
+                          }}
+                        >
+                          <Image style={{ width: 18, height: 25, }} source={require('../assets/icons/chat_fm.png')} />
+                        </TouchableOpacity>
+                      }
+
+                      {/* Zalo Messenger */}
+                      {
+                        item.AccountName.indexOf('http://zalo.me/') > -1 &&
+                        <TouchableOpacity
+                          style={{
+                            // lexDirection: 'row',
+                            //flex: 2,
+                            //alignItems: 'center',
+                            paddingRight: 15,
+                          }}
+                          onPress={() => {
+                            //const FANPAGE_ID = '1750146621679564'
+                            //const URL_FOR_APP = `fb://page/${FANPAGE_ID}`
+                            const URL_FOR_BROWSER = item.AccountName.slice(item.AccountName.indexOf('http://zalo.me/'),
+                              item.AccountName.indexOf('|', item.AccountName.indexOf('http://zalo.me/')))//'http://m.me/thomas.ho.5492216'//ho.can.7'
+
+                            Linking.canOpenURL(URL_FOR_BROWSER)
+                              .then((supported) => {
+                                if (!supported) {
+                                  Linking.openURL(URL_FOR_BROWSER)
+                                } else {
+                                  Linking.openURL(URL_FOR_BROWSER)
+                                }
+                              })
+                              .catch(err => console.error('An error occurred', err))
+                          }}
+                        >
+                          <Image style={{ width: 18, height: 25, }} source={require('../assets/icons/chat_zalo.png')} />
+                        </TouchableOpacity>
+                      }
+
+                      {/* Whatapps Messenger */}
+                      {
+                        item.AccountName.indexOf('https://api.whatsapp.com/') > -1 &&
+                        <TouchableOpacity
+                          style={{
+                            // lexDirection: 'row',
+                            //flex: 2,
+                            //alignItems: 'center',
+                            paddingRight: 15,
+                          }}
+                          onPress={() => {
+                            //const FANPAGE_ID = '1750146621679564'
+                            //const URL_FOR_APP = `fb://page/${FANPAGE_ID}`
+                            const URL_FOR_BROWSER = item.AccountName.slice(item.AccountName.indexOf('https://api.whatsapp.com/'),
+                              item.AccountName.indexOf('|', item.AccountName.indexOf('https://api.whatsapp.com/')))//'http://m.me/thomas.ho.5492216'//ho.can.7'
+
+                            Linking.canOpenURL(URL_FOR_BROWSER)
+                              .then((supported) => {
+                                if (!supported) {
+                                  Linking.openURL(URL_FOR_BROWSER)
+                                } else {
+                                  Linking.openURL(URL_FOR_BROWSER)
+                                }
+                              })
+                              .catch(err => console.error('An error occurred', err))
+                          }}
+                        >
+                          <Image style={{ width: 18, height: 20, }} source={require('../assets/icons/chat_whatapps.png')} />
+                        </TouchableOpacity>
+                      }
+                    </View>
                   </View>
                 </View>
 

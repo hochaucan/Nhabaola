@@ -137,7 +137,7 @@ export default class PostRoomScreen extends React.Component {
             () => {
                 this.popupSearching.show()
             },
-            1200);
+            1000);
     }
 
     _getLanguageFromStorageAsync = async () => {
