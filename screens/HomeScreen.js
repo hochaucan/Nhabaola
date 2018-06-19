@@ -83,6 +83,23 @@ function numberWithCommas(x) {
   return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
 }
 
+function moveElementInArray(arr, old_index, new_index) {
+  while (old_index < 0) {
+    old_index += arr.length;
+  }
+  while (new_index < 0) {
+    new_index += arr.length;
+  }
+  if (new_index >= arr.length) {
+    var k = new_index - arr.length;
+    while ((k--) + 1) {
+      arr.push(undefined);
+    }
+  }
+  arr.splice(new_index, 0, arr.splice(old_index, 1)[0]);
+  return arr;
+}
+
 export default class HomeScreen extends React.Component {
   static navigationOptions = {
     tabBarLabel: 'Trang chủ',
@@ -166,9 +183,10 @@ export default class HomeScreen extends React.Component {
       reportRoomId: 0,
       toUserMailBox: '',
       flatListIsEnd: false,
-      roomByCatHeigh: new Animated.Value(0),
-      highLightBackgroundOpacity: new Animated.Value(-100),
-      languageOpacity: new Animated.Value(0),
+      //roomByCatHeigh: new Animated.Value(0),
+      //highLightBackgroundOpacity: new Animated.Value(-100),
+      //languageOpacity: new Animated.Value(0),
+      showBanner: new Animated.Value(0),
       isInternetIssue: false,
       isVietnamease: false,
       isEnglish: false,
@@ -424,7 +442,7 @@ export default class HomeScreen extends React.Component {
       //this.setState({ roomByCatHeigh: 40 })
 
       Animated.timing( // Show Category
-        this.state.roomByCatHeigh,
+        this.state.showBanner,
         {
           toValue: 0,
           // easing: Easing.linear,
@@ -432,20 +450,11 @@ export default class HomeScreen extends React.Component {
         }
       ).start();
 
-      // Animated.timing( // Hide Highlight Room Button
-      //   this.state.highLightBackgroundOpacity,
-      //   {
-      //     toValue: -100,
-      //     // easing: Easing.linear,
-      //     duration: 50,
-      //   }
-      // ).start();
-
     } else {
       //this.setState({ roomByCatHeigh: 0 })
 
       Animated.timing( // Hide Category
-        this.state.roomByCatHeigh,
+        this.state.showBanner,
         {
           toValue: -100,
           // easing: Easing.linear,
@@ -453,29 +462,11 @@ export default class HomeScreen extends React.Component {
         }
       ).start();
 
-      // Animated.timing( // Show Highlight Room Button
-      //   this.state.highLightBackgroundOpacity,
-      //   {
-      //     toValue: 1,
-      //     //  easing: Easing.linear,
-      //     duration: 50,
-      //   }
-      // ).start();
+
     }
     // Update your scroll position
-    this._listViewOffset = currentOffset
-    // setTimeout(() => { }, 50)
+    // this._listViewOffset = currentOffset
 
-
-
-    //   Animated.timing(
-    //     this.state.roomByCatHeigh,
-    //     {
-    //         toValue: 20,
-    //         easing: Easing.bounce,
-    //         duration: 500,
-    //     }
-    // ).start();
   }
 
   _getProfileFromStorageAsync = async () => {
@@ -1505,6 +1496,24 @@ export default class HomeScreen extends React.Component {
             })
           }
 
+          if (isNew) {
+            if (roomBox[0].Sort == 10) {
+              moveElementInArray(roomBox, 0, 9)
+            }
+            if (roomBox[0].Sort == 8) {
+              moveElementInArray(roomBox, 0, 7)
+            }
+            if (roomBox[0].Sort == 6) {
+              moveElementInArray(roomBox, 0, 5)
+            }
+            if (roomBox[0].Sort == 4) {
+              moveElementInArray(roomBox, 0, 3)
+            }
+            if (roomBox[0].Sort == 2) {
+              moveElementInArray(roomBox, 0, 1)
+            }
+          }
+
           setTimeout(
             () => {
               this.setState({
@@ -2061,14 +2070,15 @@ export default class HomeScreen extends React.Component {
           </View>
         }
         {/* Banner Marketing */}
+
         {Banner.length > 0 &&
-          <View
+          <Animated.View
             style={{
               height: 80,
 
               borderRadius: 7,
               elevation: 2,
-
+              marginTop: this.state.showBanner,
 
             }}
           >
@@ -2118,7 +2128,7 @@ export default class HomeScreen extends React.Component {
                 // <Image source={require("../images/nha-bao-la.jpg")} />
               }
             </Swiper>
-          </View>
+          </Animated.View>
         }
 
         {/* Flatlist RoomBox */}
@@ -2174,7 +2184,8 @@ export default class HomeScreen extends React.Component {
                 shadowRadius: 2,
 
                 backgroundColor: '#fff',
-                //backgroundColor: item.IsHighlight ? '#a4d227' : '#fff'
+                // borderWidth: 0.8,
+                //borderColor: item.Sort != 0 ? '#73aa2a' : '#fff'
               }}>
                 <View style={styles.cardHeader}>
                   <View style={styles.cardAvatarBox}>
