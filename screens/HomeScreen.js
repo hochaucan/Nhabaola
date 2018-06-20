@@ -1459,17 +1459,17 @@ export default class HomeScreen extends React.Component {
   _getRoomBoxAsync = async (isNew) => {
     await this.setState({ refresh: true })
 
-    if (!isNew) { // Loading more page 
-      this.setState((prevState, props) => ({
+    if (isNew === false) { // Loading more page 
+      await this.setState((prevState, props) => ({
         page: prevState.page + 1,
       }));
     }
     else { // Refresh page
       roomBox = await [];
-      this.setState({ page: 1, flatListIsEnd: false })
+      await this.setState({ page: 1, flatListIsEnd: false })
     }
 
-    this.setState({ // Calculate page index
+    await this.setState({ // Calculate page index
       roomPageIndex: (this.state.page - 1) * this.state.roomPageCount
     })
 
@@ -1490,26 +1490,26 @@ export default class HomeScreen extends React.Component {
         .then((responseJson) => {
 
           //alert(JSON.stringify(responseJson.obj.length))
-          if (JSON.stringify(responseJson.obj.length) > 0) {
-            responseJson.obj.map((y) => {
-              roomBox.push(y);
-            })
-          }
+          // if (JSON.stringify(responseJson.obj.length) > 0) {
+          responseJson.obj.map((y) => {
+            roomBox.push(y);
+          })
+          // }
 
           if (isNew) {
-            if (roomBox[0].Sort == 10) {
+            if (roomBox[0].Sort === 10) {
               moveElementInArray(roomBox, 0, 9)
             }
-            if (roomBox[0].Sort == 8) {
+            if (roomBox[0].Sort === 8) {
               moveElementInArray(roomBox, 0, 7)
             }
-            if (roomBox[0].Sort == 6) {
+            if (roomBox[0].Sort === 6) {
               moveElementInArray(roomBox, 0, 5)
             }
-            if (roomBox[0].Sort == 4) {
+            if (roomBox[0].Sort === 4) {
               moveElementInArray(roomBox, 0, 3)
             }
-            if (roomBox[0].Sort == 2) {
+            if (roomBox[0].Sort === 2) {
               moveElementInArray(roomBox, 0, 1)
             }
           }
@@ -2102,6 +2102,7 @@ export default class HomeScreen extends React.Component {
 
                   return (
                     <TouchableOpacity
+                      key={i}
                       style={{
                         flex: 1,
                         shadowColor: '#000',
