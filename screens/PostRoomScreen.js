@@ -120,6 +120,7 @@ export default class PostRoomScreen extends React.Component {
             isChinease: false,
             detailInfoEnglish: '',
             detailInfoChinease: '',
+            config: '',
         }
     }
 
@@ -207,6 +208,21 @@ export default class PostRoomScreen extends React.Component {
             console.log(e);
         }
 
+    }
+
+    _getConfigFromStorageAsync = async () => {
+        try {
+            var value = await AsyncStorage.getItem('FO_Config_GetAllData');
+
+            if (value !== null) {
+                this.setState({
+                    config: JSON.parse(value)
+                })
+            }
+
+        } catch (e) {
+            console.log(e);
+        }
     }
 
     _getCategoryFromStorageAsync = async () => {
@@ -1297,6 +1313,21 @@ export default class PostRoomScreen extends React.Component {
                 </KeyboardAwareScrollView>
                 {/* Button */}
                 <View style={{ marginTop: 20, }}>
+                    <TouchableOpacity
+                        style={{}}
+                        onPress={() => {
+                            this._getConfigFromStorageAsync()
+                            this.popupPricing.show()
+                        }}
+                    >
+                        <Text
+                            style={{
+                                textAlign: 'center',
+                                fontSize: responsiveFontSize(2),
+
+                            }}
+                        >Đẩy Tin</Text>
+                    </TouchableOpacity>
                     <View style={{ height: 80, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', paddingBottom: 20, }}>
                         <Button
                             buttonStyle={{ backgroundColor: '#9B9D9D', padding: 15, borderRadius: 10 }}
@@ -1322,6 +1353,24 @@ export default class PostRoomScreen extends React.Component {
                 </View>
 
                 {/* POPUP AND MODAL AREA */}
+
+                {/* Popup Pricing */}
+                <PopupDialog
+                    ref={(popupPricing) => { this.popupPricing = popupPricing; }}
+                    dialogAnimation={new ScaleAnimation()}
+                    dialogStyle={{ marginBottom: 100, width: 80, height: 80, justifyContent: 'center', padding: 20 }}
+                    dismissOnTouchOutside={false}
+                    onDismissed={() => {
+                        Keyboard.dismiss();
+                    }}
+                >
+                    <ActivityIndicator
+                        style={{}}
+                        animating={true}
+                        size="large"
+                        color="#73aa2a"
+                    />
+                </PopupDialog>
 
                 {/* Popup Loading Indicator */}
                 <PopupDialog

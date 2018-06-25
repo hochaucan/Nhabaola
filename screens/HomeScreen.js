@@ -290,6 +290,7 @@ export default class HomeScreen extends React.Component {
 
     // Register Push Notification
     this._notificationSubscription = this._registerForPushNotifications();
+    this._getConfigAsync()
 
     // setTimeout(() => {
     //   Animated.timing( // Language opacity
@@ -1185,7 +1186,36 @@ export default class HomeScreen extends React.Component {
 
   }
 
+  _getConfigAsync = async () => {
+    try {
+      await fetch("http://nhabaola.vn/api/Config/FO_Config_GetAllData", {
+        method: 'POST',
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          "PageIndex": "0",
+          "PageCount": "10",
+        }),
+      })
+        .then((response) => response.json())
+        .then((responseJson) => {
 
+          // alert(JSON.stringify(responseJson.obj))
+          this._saveStorageAsync('FO_Config_GetAllData', JSON.stringify(responseJson.obj))
+
+
+          // this.setState({
+          //   roomCategory: responseJson.obj
+          // })
+        }).
+        catch((error) => { console.log(error) });
+    } catch (error) {
+      console.log(error)
+    }
+
+  }
 
 
   _getCategoryAsync = async () => {
