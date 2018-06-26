@@ -47,6 +47,7 @@ const LATITUDE = 37.78825;
 const LONGITUDE = -122.4324;
 const LATITUDE_DELTA = 0.02;
 const LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO;
+//const config = []
 
 var today = new Date();
 var dd = today.getDate() == 1 ? '01' : today.getDate();;
@@ -120,7 +121,7 @@ export default class PostRoomScreen extends React.Component {
             isChinease: false,
             detailInfoEnglish: '',
             detailInfoChinease: '',
-            config: '',
+            config: [],
         }
     }
 
@@ -215,6 +216,8 @@ export default class PostRoomScreen extends React.Component {
             var value = await AsyncStorage.getItem('FO_Config_GetAllData');
 
             if (value !== null) {
+
+                //  config = await JSON.parse(value)
                 this.setState({
                     config: JSON.parse(value)
                 })
@@ -223,6 +226,8 @@ export default class PostRoomScreen extends React.Component {
         } catch (e) {
             console.log(e);
         }
+        // alert(JSON.stringify(config))
+
     }
 
     _getCategoryFromStorageAsync = async () => {
@@ -1312,11 +1317,13 @@ export default class PostRoomScreen extends React.Component {
 
                 </KeyboardAwareScrollView>
                 {/* Button */}
-                <View style={{ marginTop: 20, }}>
+                <View style={{
+                    marginTop: 5,
+                }}>
                     <TouchableOpacity
                         style={{}}
-                        onPress={() => {
-                            this._getConfigFromStorageAsync()
+                        onPress={async () => {
+                            await this._getConfigFromStorageAsync()
                             this.popupPricing.show()
                         }}
                     >
@@ -1324,7 +1331,10 @@ export default class PostRoomScreen extends React.Component {
                             style={{
                                 textAlign: 'center',
                                 fontSize: responsiveFontSize(2),
-
+                                paddingLeft: 115,
+                                //paddingTop:5,
+                                paddingBottom: 5,
+                                color: '#73aa2a',
                             }}
                         >Đẩy Tin</Text>
                     </TouchableOpacity>
@@ -1358,18 +1368,36 @@ export default class PostRoomScreen extends React.Component {
                 <PopupDialog
                     ref={(popupPricing) => { this.popupPricing = popupPricing; }}
                     dialogAnimation={new ScaleAnimation()}
-                    dialogStyle={{ marginBottom: 100, width: 80, height: 80, justifyContent: 'center', padding: 20 }}
-                    dismissOnTouchOutside={false}
+                    dialogStyle={{
+                        marginBottom: 100,
+                        width: responsiveWidth(90),
+                        //height: 80,
+                        justifyContent: 'center', padding: 20
+                    }}
+                    dismissOnTouchOutside={true}
                     onDismissed={() => {
                         Keyboard.dismiss();
                     }}
                 >
-                    <ActivityIndicator
-                        style={{}}
-                        animating={true}
-                        size="large"
-                        color="#73aa2a"
-                    />
+                    <View>
+
+                        {this.state.config.map((y, i) => {
+                            return (
+                                y.Key === 'Pricing' &&
+                                <Text>
+                                    {y.Description}
+                                </Text>
+                            )
+                        })}
+
+                        {/* <Text>{
+                            
+                            JSON.stringify(this.state.config)
+                        
+                        }
+                        
+                        </Text> */}
+                    </View>
                 </PopupDialog>
 
                 {/* Popup Loading Indicator */}
