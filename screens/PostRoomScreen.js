@@ -1187,7 +1187,10 @@ export default class PostRoomScreen extends React.Component {
                             </View>
                         }
                         <KeyboardAvoidingView behavior={Platform.OS == 'ios' ? 'height' : 'padding'}
-                            style={{ marginBottom: Platform.OS == 'ios' ? 430 : 90 }}
+                            style={{
+                                marginBottom: Platform.OS == 'ios' ? 550 : 50,
+                                
+                            }}
                         >
 
 
@@ -1223,18 +1226,36 @@ export default class PostRoomScreen extends React.Component {
                             {/* English Detail Info */}
                             <TouchableOpacity
                                 style={{
-                                    marginTop: 30, zIndex: 20,
+                                    marginTop: 30,
+                                    //zIndex: 20,
+                                    marginLeft: Platform.OS == 'ios' ? 20 : 15,
                                     flexDirection: 'row',
-                                    alignContent: 'center', alignItems: 'center', //justifyContent: 'center',
+                                    alignContent: 'center', alignItems: 'center', justifyContent: 'center',
+                                    // padding:15,
+                                    width: 120,//responsiveWidth(30),
+                                    height: 30,
+                                    borderWidth: 0.5,
+                                    borderColor: '#6c6d6d',
+                                    backgroundColor: '#edeeef',
+
+                                    borderRadius: 10,
                                 }}
                                 onPress={() => {
                                     this._postTranslator('English', this.state.detailInfo, 'en')
                                 }}
                             >
-                                <Ionicons style={{ paddingLeft: 20, paddingBottom: Platform.OS == 'ios' ? 20 : 0, fontSize: responsiveFontSize(2.5), color: '#73aa2a' }} name="ios-arrow-forward-outline" />
+                                {/* <Ionicons style={{ paddingLeft: 20, paddingBottom: Platform.OS == 'ios' ? 20 : 0, fontSize: responsiveFontSize(2.5), color: '#73aa2a' }} name="ios-arrow-forward-outline" /> */}
                                 <Text style={{
-                                    paddingLeft: 5, paddingBottom: 3,
-                                    fontSize: responsiveFontSize(1.8), color: '#73aa2a'
+                                    padding: 5,
+                                    //marginLeft:20,
+                                    // paddingLeft: 5, paddingBottom: 3,
+                                    fontSize: responsiveFontSize(1.8), //color: '#73aa2a',
+                                    // borderWidth:0.5,
+                                    // borderColor:'#6c6d6d',
+                                    // backgroundColor:'#edeeef',
+                                    color: '#000',
+                                    textAlign: 'center',
+                                    // borderRadius:10,
                                 }}>{translate("Automatic translation to English")}</Text>
 
                             </TouchableOpacity>
@@ -1268,20 +1289,36 @@ export default class PostRoomScreen extends React.Component {
 
                             <TouchableOpacity
                                 style={{
-                                    marginTop: 30, zIndex: 20,
-                                    flexDirection: 'row', alignContent: 'center', alignItems: 'center',
-                                    // borderWidth: 1,
-                                    //padding: 10,
+                                    marginTop: 30,
+                                    //zIndex: 20,
+                                    marginLeft: Platform.OS == 'ios' ? 20 : 15,
+                                    flexDirection: 'row',
+                                    alignContent: 'center', alignItems: 'center', justifyContent: 'center',
+                                    // padding:15,
+                                    width: 120,//responsiveWidth(30),
+                                    height: 30,
+                                    borderWidth: 0.5,
+                                    borderColor: '#6c6d6d',
+                                    backgroundColor: '#edeeef',
 
+                                    borderRadius: 10,
                                 }}
                                 onPress={() => {
                                     this._postTranslator('English', this.state.detailInfo, 'zh')
                                 }}
                             >
-                                <Ionicons style={{ paddingLeft: 20, paddingBottom: Platform.OS == 'ios' ? 20 : 0, fontSize: responsiveFontSize(2.5), color: '#73aa2a' }} name="ios-arrow-forward-outline" />
+                                {/* <Ionicons style={{ paddingLeft: 20, paddingBottom: Platform.OS == 'ios' ? 20 : 0, fontSize: responsiveFontSize(2.5), color: '#73aa2a' }} name="ios-arrow-forward-outline" /> */}
                                 <Text style={{
-                                    paddingLeft: 5, paddingBottom: 3,
-                                    fontSize: responsiveFontSize(1.8), color: '#73aa2a'
+                                    padding: 5,
+                                    //marginLeft:20,
+                                    // paddingLeft: 5, paddingBottom: 3,
+                                    fontSize: responsiveFontSize(1.8), //color: '#73aa2a',
+                                    // borderWidth:0.5,
+                                    // borderColor:'#6c6d6d',
+                                    // backgroundColor:'#edeeef',
+                                    color: '#000',
+                                    textAlign: 'center',
+                                    // borderRadius:10,
                                 }}>{translate("Automatic translation to Chinese")}</Text>
 
                             </TouchableOpacity>
@@ -1296,7 +1333,7 @@ export default class PostRoomScreen extends React.Component {
                                 onFocus={(event) => {
                                     this._scrollToInput(event.target)
                                 }}
-                                containerStyle={{ borderWidth: 0.5, borderColor: '#73aa2a', borderRadius: 10, marginTop: 10 }}
+                                containerStyle={{ borderWidth: 0.5, borderColor: '#73aa2a', borderRadius: 10, marginTop: 10, }}
                                 inputStyle={{ padding: 10, height: 120, paddingRight: Platform.OS == 'ios' ? 50 : 0 }}
                                 placeholder='中文'//{translate("Please enter detailed information")}
                                 multiline={true}
@@ -1331,7 +1368,7 @@ export default class PostRoomScreen extends React.Component {
                             style={{
                                 textAlign: 'center',
                                 fontSize: responsiveFontSize(2),
-                                paddingLeft: 115,
+                                paddingLeft: 110,
                                 //paddingTop:5,
                                 paddingBottom: 5,
                                 color: '#73aa2a',
@@ -1379,24 +1416,29 @@ export default class PostRoomScreen extends React.Component {
                         Keyboard.dismiss();
                     }}
                 >
-                    <View>
+                    <View
+                        style={{
+                            justifyContent: 'center', alignItems: 'center', alignContent: 'center',
+                        }}
+                    >
 
-                        {this.state.config.map((y, i) => {
+                        {/* {this.state.config.map((y, i) => {
                             return (
                                 y.Key === 'Pricing' &&
                                 <Text>
                                     {y.Description}
                                 </Text>
                             )
-                        })}
+                        })} */}
 
-                        {/* <Text>{
-                            
-                            JSON.stringify(this.state.config)
-                        
-                        }
-                        
-                        </Text> */}
+                        <Image
+                            style={{
+                                // zIndex:20,
+                                width: responsiveWidth(90),
+                                height: responsiveHeight(50),
+                            }}
+                            source={require('../assets/icons/pricing.png')}
+                        />
                     </View>
                 </PopupDialog>
 
