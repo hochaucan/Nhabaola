@@ -13,10 +13,10 @@ import {
   Platform,
   TextInput,
   findNodeHandle,
-
+  ScrollView,
 }
   from 'react-native';
-import { Constants, Location, Permissions } from 'expo';
+import { Constants, Location, Permissions, AdMobBanner, AdMobInterstitial, PublisherBanner, AdMobRewarded } from 'expo';
 import MapView from 'react-native-maps';
 import ActionButton from 'react-native-action-button';
 import Icon from 'react-native-vector-icons/Ionicons';
@@ -33,11 +33,25 @@ import { setLocalization, translate, Translate } from 'react-native-translate';
 
 
 
+
+const BannerExample = ({ style, title, children, ...props }) => (
+  <View {...props} style={[styles.example, style]}>
+    <Text style={styles.title}>{title}</Text>
+    <View>
+      {children}
+    </View>
+  </View>
+);
+
+const bannerWidths = [200, 250, 320];
+
+
+
+
+
 var date = new Date();
 var timeZone = (-1) * date.getTimezoneOffset() / 60;
-const options = ['Option1', 'Option2', 'Option3'];
-// Labels is optional
-const labels = ['Banana', 'Apple', 'Pear'];
+
 
 export default class Testing extends React.Component {
   static navigationOptions = {
@@ -48,7 +62,7 @@ export default class Testing extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-
+      fluidSizeIndex: 0,
       txt: 'Hoang Oanh',
       location: null,
       errorMessage: null,
@@ -57,59 +71,81 @@ export default class Testing extends React.Component {
   }
 
   componentWillMount() {
-    if (Platform.OS === 'android' && !Constants.isDevice) {
-      this.setState({
-        errorMessage: 'Oops, this will not work on Sketch in an Android emulator. Try it on your device!',
-      });
-    } else {
-      this._getLocationAsync();
-    }
 
-    setLocalization(zhTranslation);
+
   }
 
-  _getLocationAsync = async () => {
-    let { status } = await Permissions.askAsync(Permissions.LOCATION);
-    if (status !== 'granted') {
-      this.setState({
-        errorMessage: 'Permission to access location was denied',
-      });
-    }
 
-    let location = await Location.getCurrentPositionAsync({});
-    this.setState({ location });
-  };
 
-  handleSettingsPress = () => {
-    this.props.navigation.navigate('Settings4');
-  };
+  componentDidMount() {
+    // AdMobRewarded.setTestDevices([AdMobRewarded.simulatorId]);
+    AdMobRewarded.setAdUnitID('ca-app-pub-8456002137529566/9357593079');
 
-  _scrollToInput(reactNode) {
-    // Add a 'scroll' ref to your ScrollView
-    //this.scroll.props.scrollToFocusedInput(reactNode)
-    //this.scroll.props.scrollToPosition(0, 20)
-    //alert(reactNode)
+    AdMobRewarded.addEventListener('rewarded',
+      (reward) => console.log('AdMobRewarded => rewarded', reward)
+    );
+    AdMobRewarded.addEventListener('adLoaded',
+      () => console.log('AdMobRewarded => adLoaded')
+    );
+    AdMobRewarded.addEventListener('adFailedToLoad',
+      (error) => console.warn(error)
+    );
+    AdMobRewarded.addEventListener('adOpened',
+      () => console.log('AdMobRewarded => adOpened')
+    );
+    AdMobRewarded.addEventListener('videoStarted',
+      () => console.log('AdMobRewarded => videoStarted')
+    );
+    AdMobRewarded.addEventListener('adClosed',
+      () => {
+        console.log('AdMobRewarded => adClosed');
+        AdMobRewarded.requestAd().catch(error => console.warn(error));
+      }
+    );
+    AdMobRewarded.addEventListener('adLeftApplication',
+      () => console.log('AdMobRewarded => adLeftApplication')
+    );
+
+    AdMobRewarded.requestAd().catch(error => console.warn(error));
+
+    // AdMobInterstitial.setTestDevices([AdMobInterstitial.simulatorId]);
+    AdMobInterstitial.setAdUnitID('ca-app-pub-8456002137529566/9357593079');
+
+    AdMobInterstitial.addEventListener('adLoaded',
+      () => console.log('AdMobInterstitial adLoaded')
+    );
+    AdMobInterstitial.addEventListener('adFailedToLoad',
+      (error) => console.warn(error)
+    );
+    AdMobInterstitial.addEventListener('adOpened',
+      () => console.log('AdMobInterstitial => adOpened')
+    );
+    AdMobInterstitial.addEventListener('adClosed',
+      () => {
+        console.log('AdMobInterstitial => adClosed');
+        AdMobInterstitial.requestAd().catch(error => console.warn(error));
+      }
+    );
+    AdMobInterstitial.addEventListener('adLeftApplication',
+      () => console.log('AdMobInterstitial => adLeftApplication')
+    );
+
+    AdMobInterstitial.requestAd().catch(error => console.warn(error));
   }
 
-  handleGetDirections = () => {
-    const data = {
-      source: {
-        latitude: -33.8356372,
-        longitude: 18.6947617
-      },
-      destination: {
-        latitude: -33.8600024,
-        longitude: 18.697459
-      },
-      params: [
-        {
-          key: "dirflg",
-          value: "w"
-        }
-      ]
-    }
 
-    getDirections(data)
+
+  componentWillUnmount() {
+    AdMobRewarded.removeAllListeners();
+    AdMobInterstitial.removeAllListeners();
+  }
+
+  showRewarded() {
+    AdMobRewarded.showAd().catch(error => console.warn(error));
+  }
+
+  showInterstitial() {
+    AdMobInterstitial.showAd().catch(error => console.warn(error));
   }
 
 
@@ -118,8 +154,104 @@ export default class Testing extends React.Component {
 
     return (
       <View style={styles.container}>
+        <ScrollView>
+          <BannerExample >
+            <AdMobBanner
+              adSize="banner"
+              adUnitID="ca-app-pub-8456002137529566/9357593079"
+              ref={el => (this._basicExample = el)}
+            />
+            {/* <Button
+              title="Reload"
+              onPress={() => this._basicExample.loadBanner()}
+            /> */}
+          </BannerExample>
 
-        <Translate value="Sale of apartments" />
+          {/* <BannerExample title="Smart Banner">
+            <AdMobBanner
+              adSize="smartBannerPortrait"
+              adUnitID="ca-app-pub-3940256099942544/6300978111"
+              ref={el => (this._smartBannerExample = el)}
+            />
+            <Button
+              title="Reload"
+              onPress={() => this._smartBannerExample.loadBanner()}
+            />
+          </BannerExample> */}
+
+          {/* <BannerExample title="Rewarded">
+            <Button
+              title="Show Rewarded Video and preload next"
+              onPress={this.showRewarded}
+            />
+          </BannerExample>
+          <BannerExample title="Interstitial">
+            <Button
+              title="Show Interstitial and preload next"
+              onPress={this.showInterstitial}
+            />
+          </BannerExample>
+          <BannerExample title="DFP - Multiple Ad Sizes">
+            <PublisherBanner
+              adSize="banner"
+              validAdSizes={['banner', 'largeBanner', 'mediumRectangle']}
+              adUnitID="/6499/example/APIDemo/AdSizes"
+              ref={el => (this._adSizesExample = el)}
+            />
+            <Button
+              title="Reload"
+              onPress={() => this._adSizesExample.loadBanner()}
+            />
+          </BannerExample>
+          <BannerExample title="DFP - App Events" style={this.state.appEventsExampleStyle}>
+            <PublisherBanner
+              style={{ height: 50 }}
+              adUnitID="/6499/example/APIDemo/AppEvents"
+              onAdFailedToLoad={(error) => console.warn(error)}
+              onAppEvent={(event) => {
+                if (event.name === 'color') {
+                  this.setState({
+                    appEventsExampleStyle: { backgroundColor: event.info },
+                  });
+                }
+              }}
+              ref={el => (this._appEventsExample = el)}
+            />
+            <Button
+              title="Reload"
+              onPress={() => this._appEventsExample.loadBanner()}
+              style={styles.button}
+            />
+          </BannerExample>
+          <BannerExample title="DFP - Fluid Ad Size">
+            <View
+              style={[
+                { backgroundColor: '#f3f', paddingVertical: 10 },
+                this.state.fluidAdSizeExampleStyle,
+              ]}
+            >
+              <PublisherBanner
+                adSize="fluid"
+                adUnitID="/6499/example/APIDemo/Fluid"
+                ref={el => (this._appFluidAdSizeExample = el)}
+                style={{ flex: 1 }}
+              />
+            </View>
+            <Button
+              title="Change Banner Width"
+              onPress={() => this.setState(prevState => ({
+                fluidSizeIndex: prevState.fluidSizeIndex + 1,
+                fluidAdSizeExampleStyle: { width: bannerWidths[prevState.fluidSizeIndex % bannerWidths.length] },
+              }))}
+              style={styles.button}
+            />
+            <Button
+              title="Reload"
+              onPress={() => this._appFluidAdSizeExample.loadBanner()}
+              style={styles.button}
+            />
+          </BannerExample> */}
+        </ScrollView>
       </View>
 
     );
@@ -135,36 +267,15 @@ export default class Testing extends React.Component {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#efecc9',
+    marginTop: (Platform.OS === 'ios') ? 0 : 0,
   },
-
-  welcome: {
-    fontSize: 20,
-    textAlign: 'center',
+  example: {
+    paddingVertical: 10,
+  },
+  title: {
     margin: 10,
-  },
-
-  paragraph: {
-    textAlign: 'center',
-    color: '#002f2f',
-    marginBottom: 5,
-    fontWeight: 'bold',
-    fontSize: 18,
+    fontSize: 20,
   },
 });
 
 
-class HandlerOne extends Component {
-  render() {
-    return (
-      <Image style={styles.image} source={{ uri: 'https://upload.wikimedia.org/wikipedia/commons/3/39/Cloud_banner.jpg' }}>
-        <View style={styles.textContainer}>
-          <Text style={styles.handlerText}>Another Sample Text</Text>
-        </View>
-      </Image>
-    );
-  }
-};
