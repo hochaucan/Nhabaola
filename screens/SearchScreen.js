@@ -23,7 +23,10 @@ import {
     DeviceEventEmitter,
 } from 'react-native';
 //import { ExpoLinksView } from '@expo/samples';
-import { Constants, Location, Permissions, Notifications } from 'expo';
+import {
+    Constants, Location, Permissions, Notifications,
+    BarCodeScanner, AdMobBanner, AdMobInterstitial, PublisherBanner, AdMobRewarded
+} from 'expo';
 import { Ionicons } from '@expo/vector-icons';
 import { Button, FormLabel, FormInput, SocialIcon, Icon } from 'react-native-elements'
 import MapView from 'react-native-maps';
@@ -471,12 +474,76 @@ export default class SearchScreen extends React.Component {
 
     componentWillUnmount() {
         DeviceEventEmitter.removeAllListeners()
+
+        AdMobRewarded.removeAllListeners();
+        AdMobInterstitial.removeAllListeners();
     }
 
 
+    showRewarded() {
+        AdMobRewarded.showAd().catch(error => console.warn(error));
+    }
+
+    showInterstitial() {
+        AdMobInterstitial.showAd().catch(error => console.warn(error));
+    }
+
 
     componentDidMount() {
+        // start Admob
+        AdMobRewarded.setAdUnitID('ca-app-pub-8456002137529566/9357593079');
 
+        AdMobRewarded.addEventListener('rewarded',
+            (reward) => console.log('AdMobRewarded => rewarded', reward)
+        );
+        AdMobRewarded.addEventListener('adLoaded',
+            () => console.log('AdMobRewarded => adLoaded')
+        );
+        AdMobRewarded.addEventListener('adFailedToLoad',
+            (error) => console.warn(error)
+        );
+        AdMobRewarded.addEventListener('adOpened',
+            () => console.log('AdMobRewarded => adOpened')
+        );
+        AdMobRewarded.addEventListener('videoStarted',
+            () => console.log('AdMobRewarded => videoStarted')
+        );
+        AdMobRewarded.addEventListener('adClosed',
+            () => {
+                console.log('AdMobRewarded => adClosed');
+                AdMobRewarded.requestAd().catch(error => console.warn(error));
+            }
+        );
+        AdMobRewarded.addEventListener('adLeftApplication',
+            () => console.log('AdMobRewarded => adLeftApplication')
+        );
+
+        AdMobRewarded.requestAd().catch(error => console.warn(error));
+
+        // AdMobInterstitial.setTestDevices([AdMobInterstitial.simulatorId]);
+        AdMobInterstitial.setAdUnitID('ca-app-pub-8456002137529566/9357593079');
+
+        AdMobInterstitial.addEventListener('adLoaded',
+            () => console.log('AdMobInterstitial adLoaded')
+        );
+        AdMobInterstitial.addEventListener('adFailedToLoad',
+            (error) => console.warn(error)
+        );
+        AdMobInterstitial.addEventListener('adOpened',
+            () => console.log('AdMobInterstitial => adOpened')
+        );
+        AdMobInterstitial.addEventListener('adClosed',
+            () => {
+                console.log('AdMobInterstitial => adClosed');
+                AdMobInterstitial.requestAd().catch(error => console.warn(error));
+            }
+        );
+        AdMobInterstitial.addEventListener('adLeftApplication',
+            () => console.log('AdMobInterstitial => adLeftApplication')
+        );
+
+        AdMobInterstitial.requestAd().catch(error => console.warn(error));
+        // end Admob
     }
 
     _getLanguageFromStorageAsync = async () => {
@@ -1360,13 +1427,22 @@ export default class SearchScreen extends React.Component {
                     />
                 }
 
+                {/* Admob */}
+                <View style={{ marginTop: 5, paddingBottom: 5, backgroundColor: "#edeeef" }}>
+                    <AdMobBanner
+                        adSize="banner"
+                        adUnitID={Platform.OS == 'ios' ? "ca-app-pub-8456002137529566/3974752921" : "ca-app-pub-8456002137529566/6804343662"}
+                        ref={el => (this._basicExample = el)}
+                    />
+                </View>
+
                 {/* Searching Menu */}
                 <Animated.View
                     style={{
                         flexDirection: 'row',
                         width: responsiveWidth(100),
-                        position: 'absolute',
-                        top: 10,
+                        //position: 'absolute',
+                        //top: 30,
                         zIndex: 10,
                         backgroundColor: '#fff',
                         paddingTop: Platform.OS == 'ios' ? 5 : 0,
@@ -1760,8 +1836,9 @@ export default class SearchScreen extends React.Component {
                             alignContent: 'center',
                             alignItems: 'center',
                             justifyContent: 'center',
-                            position: 'absolute',
-                            top: 55,
+                            // position: 'absolute',
+                            //top: 55,
+                            marginTop: 5,
                             zIndex: 10,
                             backgroundColor: '#fff',
                             padding: 5,
