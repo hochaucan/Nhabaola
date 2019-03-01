@@ -135,11 +135,11 @@ export default class PostRoomScreen extends React.Component {
     componentDidMount() {
 
         // Auto popup to ask Address when post Room
-        setTimeout(
-            () => {
-                this.popupSearching.show()
-            },
-            1000);
+        // setTimeout(
+        //     () => {
+        //         this.popupSearching.show()
+        //     },
+        //     1000);
     }
 
     _getLanguageFromStorageAsync = async () => {
@@ -1189,7 +1189,7 @@ export default class PostRoomScreen extends React.Component {
                         <KeyboardAvoidingView behavior={Platform.OS == 'ios' ? 'height' : 'padding'}
                             style={{
                                 marginBottom: Platform.OS == 'ios' ? 550 : 50,
-                                
+
                             }}
                         >
 
@@ -1357,7 +1357,7 @@ export default class PostRoomScreen extends React.Component {
                 <View style={{
                     marginTop: 5,
                 }}>
-                    <TouchableOpacity
+                    {/* <TouchableOpacity
                         style={{}}
                         onPress={async () => {
                             await this._getConfigFromStorageAsync()
@@ -1374,7 +1374,7 @@ export default class PostRoomScreen extends React.Component {
                                 color: '#73aa2a',
                             }}
                         >Đẩy Tin</Text>
-                    </TouchableOpacity>
+                    </TouchableOpacity> */}
                     <View style={{ height: 80, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', paddingBottom: 20, }}>
                         <Button
                             buttonStyle={{ backgroundColor: '#9B9D9D', padding: 15, borderRadius: 10 }}
@@ -1477,7 +1477,7 @@ export default class PostRoomScreen extends React.Component {
                     <GooglePlacesAutocomplete
                         placeholder={translate("Please input address")}
                         minLength={1} // minimum length of text to search
-                        autoFocus={true}
+                        autoFocus={false}
                         returnKeyType={'search'} // Can be left out for default return key https://facebook.github.io/react-native/docs/textinput.html#returnkeytype
                         listViewDisplayed="auto" // true/false/undefined
                         fetchDetails={true}

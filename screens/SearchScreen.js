@@ -1428,13 +1428,13 @@ export default class SearchScreen extends React.Component {
                 }
 
                 {/* Admob */}
-                <View style={{ marginTop: 5, paddingBottom: 5, backgroundColor: "#edeeef" }}>
+                {/* <View style={{ marginTop: 5, paddingBottom: 5, backgroundColor: "#edeeef" }}>
                     <AdMobBanner
                         adSize="banner"
                         adUnitID={Platform.OS == 'ios' ? "ca-app-pub-8456002137529566/3974752921" : "ca-app-pub-8456002137529566/6804343662"}
                         ref={el => (this._basicExample = el)}
                     />
-                </View>
+                </View> */}
 
                 {/* Searching Menu */}
                 <Animated.View

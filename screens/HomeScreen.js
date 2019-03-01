@@ -886,7 +886,7 @@ export default class HomeScreen extends React.Component {
               ToastAndroid.showWithGravity(translate("Login successful"), ToastAndroid.SHORT, ToastAndroid.TOP);
             }
             else {
-              Alert.alert(translate("Notice"), translate("Login successful"), );
+              Alert.alert(translate("Notice"), translate("Login successful"));
             }
 
           }
@@ -2231,13 +2231,15 @@ export default class HomeScreen extends React.Component {
             </Swiper>
           </Animated.View>
         }
-        <View style={{ marginTop: 5, paddingBottom: 5, backgroundColor:"#edeeef" }}>
+
+        {/* Admob */}
+        {/* <View style={{ marginTop: 5, paddingBottom: 5, backgroundColor: "#edeeef" }}>
           <AdMobBanner
             adSize="banner"
             adUnitID={Platform.OS == 'ios' ? "ca-app-pub-8456002137529566/6615879661" : "ca-app-pub-8456002137529566/9357593079"}
             ref={el => (this._basicExample = el)}
           />
-        </View>
+        </View> */}
         {/* Flatlist RoomBox */}
         <FlatList
           onScroll={this._onScroll}
@@ -2248,7 +2250,8 @@ export default class HomeScreen extends React.Component {
           initialNumToRender={2}
           shouldItemUpdate={this._shouldItemUpdate}
           onRefresh={() => { this._refreshRoomBox() }}
-          horizontal={false}
+          // horizontal={false}
+          // numColumns={2}
           onEndReachedThreshold={0.2}
           onEndReached={() => {
             // this.setState({
@@ -2277,7 +2280,8 @@ export default class HomeScreen extends React.Component {
             >
               <View style={{
                 flex: 1,
-                height: height * 0.8,
+                height: responsiveHeight(60),
+                // width: responsiveWidth(50),
                 borderColor: '#d6d7da',
                 padding: 0,
                 flexDirection: 'column',
@@ -2698,15 +2702,19 @@ export default class HomeScreen extends React.Component {
                     </View>
                   </View>
 
-                  <Text style={{
+                  {/* Address */}
+                  {/* <Text style={{
 
                     fontSize: responsiveFontSize(1.8)
                   }}
                     ellipsizeMode='tail'
                     numberOfLines={2}
                   >
-                    {translate("Address")}:   {item.Address}</Text>
-                  <Text
+                    {translate("Address")}:   {item.Address}
+                  </Text> */}
+
+                  {/* Description */}
+                  {/* <Text
                     style={{
                       marginTop: 10, color: '#9B9D9D', fontSize: responsiveFontSize(1.8),
 
@@ -2714,7 +2722,8 @@ export default class HomeScreen extends React.Component {
                     ellipsizeMode='tail'
                     numberOfLines={2}
                   >
-                    {item.Description.indexOf('###') > -1 ? (this.state.isVietnamease ? item.Description.split('###')[0] : this.state.isEnglish ? item.Description.split('###')[1] : item.Description.split('###')[2]) : item.Description}</Text>
+                    {item.Description.indexOf('###') > -1 ? (this.state.isVietnamease ? item.Description.split('###')[0] : this.state.isEnglish ? item.Description.split('###')[1] : item.Description.split('###')[2]) : item.Description}
+                  </Text> */}
 
                   {/* <Text style={styles.cardDesText}>
                   {item.Description}
@@ -2796,7 +2805,7 @@ export default class HomeScreen extends React.Component {
                   <View style={styles.cardBottomRight}>
 
                     {/* Like Facebook */}
-                    <TouchableOpacity
+                    {/* <TouchableOpacity
                       style={{}}
                       onPress={() => {
 
@@ -2822,7 +2831,7 @@ export default class HomeScreen extends React.Component {
                       }}
                     >
                       <Ionicons style={styles.cardBottomIcon} name='logo-facebook' />
-                    </TouchableOpacity>
+                    </TouchableOpacity> */}
 
                     {/* Sharing */}
                     <TouchableOpacity
@@ -2926,8 +2935,7 @@ export default class HomeScreen extends React.Component {
           }
           keyExtractor={item => item.ID + 'nhabaola'}
 
-        /* horizontal={false}
-        numColumns={3} */
+
         />
         {
           this.state.refresh && Platform.OS == 'ios' &&

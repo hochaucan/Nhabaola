@@ -1021,13 +1021,13 @@ export default class RoomDetailScreen extends React.Component {
                 </View>
 
                 {/* Admob */}
-                <View style={{ marginTop: 5, paddingBottom: 5, backgroundColor: "#edeeef" }}>
+                {/* <View style={{ marginTop: 5, paddingBottom: 5, backgroundColor: "#edeeef" }}>
                     <AdMobBanner
                         adSize="banner"
                         adUnitID={Platform.OS == 'ios' ? "ca-app-pub-8456002137529566/6545075945" : "ca-app-pub-8456002137529566/3080721071"}
                         ref={el => (this._basicExample = el)}
                     />
-                </View>
+                </View> */}
 
                 {/* Avatar */}
                 <View style={{
@@ -1522,7 +1522,7 @@ export default class RoomDetailScreen extends React.Component {
                             <View style={styles.cardBottomRight}>
 
                                 {/* Like Facebook */}
-                                <TouchableOpacity
+                                {/* <TouchableOpacity
                                     style={{}}
                                     onPress={() => {
 
@@ -1548,7 +1548,7 @@ export default class RoomDetailScreen extends React.Component {
                                     }}
                                 >
                                     <Ionicons style={styles.cardBottomIcon} name='logo-facebook' />
-                                </TouchableOpacity>
+                                </TouchableOpacity> */}
 
                                 {/* Sharing */}
                                 <TouchableOpacity
